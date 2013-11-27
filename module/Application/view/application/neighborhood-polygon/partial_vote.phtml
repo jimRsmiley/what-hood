@@ -1,0 +1,51 @@
+<?php
+$neighborhoodPolygonId = $this->neighborhoodPolygonId;
+$whathoodUserId = $this->whathoodUserId;
+
+if( empty( $neighborhoodPolygonId ) )
+    throw new \InvalidArgumentException("in partial_vote, neighborhoodPolygonId must be defined" );
+
+
+?>
+
+<div id="vote_section">
+    <div class="vote_results">
+        
+    </div>
+<?php if( $this->auth()->isLoggedIn() ) : ?>
+
+    <p id='user_vote_status'></p>
+    
+    <button id="vote_up" class="btn"><i class="icon-thumbs-up"></i> Vote Up</button>
+    <button id="vote_down" class="btn"><i class="icon-thumbs-up"></i> Vote Down</button>
+
+<?php else : ?>
+<a href="<?=$this->auth()->loginUrl()?>">You must log in to vote for the neighborhood</a>
+<?php endif; ?>
+</div>
+
+<script>
+    
+    $( function() {
+        
+        WV = new WhathoodVote( {
+            neighborhoodPolygonId: '<?=$neighborhoodPolygonId?>',
+            userLoggedIn: <?=$this->auth()->isLoggedIn()?>,
+            upButtonId: '#vote_up',
+            downButtonId: '#vote_down',
+            userVoteMessageId: '#user_vote_status'
+        });
+        
+        $('#vote_up').click( function() {
+            console.log("upvote clicked");
+            WV.cast('up');
+        });
+        
+        $('#vote_down').click( function() {
+            console.log( 'vote_down was clicked' );
+            WV.cast('down');
+        });
+    });
+    
+</script>
+    

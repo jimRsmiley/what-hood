@@ -1,0 +1,25 @@
+{
+    "name": "what-hood",
+    "description": "the what-hood project",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "whathood"
+    ],
+    "homepage": "http://whathood.in",
+    "require": {
+        "php": ">=5.3.3",
+         
+        "zendframework/zendframework": "2.2.1",
+        "zendframework/zend-developer-tools": "*",
+        "zendframework/zendoauth": "2.0.*",
+        "doctrine/orm": "2.3.3",
+        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/dbal": "2.3.3",
+        "doctrine/data-fixtures": "dev-master",
+        "creof/doctrine2-spatial": "dev-master",
+        "beberlei/DoctrineExtensions": "dev-master",
+        "facebook/php-sdk": "dev-master",
+        "willdurand/geocoder": "*",
+        "kriswallsmith/buzz": "*"
+    }
+}

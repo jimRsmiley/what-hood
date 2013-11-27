@@ -1,0 +1,204 @@
+html, body {
+    font-family: 'Arvo', serif;
+}
+
+div.container.header {
+    width: 100%;
+}
+
+.navbar-inner {
+     background-color: #000;
+}
+
+.morepadding {
+    padding: 20px;
+}
+
+.centertext {
+    text-align: center;
+}
+
+.nomargin {
+    margin: 0;
+}
+
+.input-margin {
+    margin: 5px 0;
+}
+
+.niceborder {
+    border: 2px solid #ccc;
+}
+
+.automargin {
+    margin: 0 auto;
+}
+
+.main-container {
+    padding-bottom: 50px;
+    background: white;
+}
+
+.brand-header {
+    padding-bottom: 20px;
+}
+
+.brand-header h1 {
+    font-size: 4em;
+    font-style: italic;
+}
+
+.brand-header .subtitle {
+    color: #8a0505
+}
+
+.tri-content {
+    padding: 0 40px;
+}
+
+.tri-content h3 {
+    margin-bottom: 10px;
+}
+
+.tri-content p {
+    margin: 0;
+}
+
+.tri-content-content {
+    
+}
+
+.tri-content-footer {
+    background: #6b0000;
+    color: #fffefe;
+    z-index: 100;
+}
+
+.tri-content-footer a {
+    color: white;
+    padding: 10px 5px;
+    font-size: 1.1em;
+}
+
+
+/* Large desktop */
+@media (min-width: 980px) {
+    
+    /*.main-container {
+        position: relative;
+        float: right;
+        height: 80%;
+    }*/
+    
+    /*#map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+    }*/
+    
+    #map {
+        height: 600px;
+    }
+
+}
+
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+    #map {
+        position: relative;
+        height: 600px;
+    }
+    
+    footer {
+        position: relative;
+    }
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+    #map {
+        position: relative;
+        height: 400px;
+    } 
+
+    footer {
+        position: relative;
+    }
+
+    .tri-content {
+        padding-top: 20px;
+    }
+
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) { 
+    #map {
+        position: relative;
+        height: 400px;
+    } 
+
+    footer {
+        position: relative;
+    }
+}
+
+
+
+.header {
+    background: white;
+}
+
+footer {
+    /*margin-top: 100px;*/
+    background: white;
+}
+
+#region-links {
+    color: #192b70;
+    font-size: 24px;
+}
+
+.search_results h4 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.search_results h4 span.query {
+    font-style: italic;
+}
+
+.search_results h3 {
+    
+}
+
+.search_results div.neighborhood {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+form#addressLookupForm legend {
+    text-align: center;
+}
+
+div#vote_section {
+    text-align: center;
+    margin: 15 0;
+}
+
+#no-match-neighborhood {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: center
+}
+
+#disqus_thread {
+    padding-top: 40px;
+}
