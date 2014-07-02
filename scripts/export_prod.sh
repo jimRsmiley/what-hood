@@ -1,1 +1,0 @@
-mysqldump -u whathood_prod -pYnmrGefe9qVJu6jv whathood_prod > ~/scripts/data/whathood_prod.sql
