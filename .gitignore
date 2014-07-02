@@ -1,3 +1,5 @@
+composer.phar
+draft/
 data/DoctrineORMModule
 module/Whathood/test/ApplicationTest/data/DoctrineORMModule/Proxy
 ._*
@@ -12,3 +14,4 @@ vendor/
 public/test
 draft
 logs/
+
