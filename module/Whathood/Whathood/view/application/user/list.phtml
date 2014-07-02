@@ -1,0 +1,7 @@
+<?php foreach( $this->users as $neighborhood ) : ?>
+<div>
+    <span><?=$neighborhood->getId()?></span>
+    <span><?=$neighborhood->getName()?></span>
+    <span><a href="/application/neighborhood/page?user_id=<?=$neighborhood->getId()?>">Show Neighborhoods</a></span>
+</div>
+<?php endforeach; ?>

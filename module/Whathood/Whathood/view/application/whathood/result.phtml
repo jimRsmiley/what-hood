@@ -1,0 +1,64 @@
+<?php
+$styles = "
+p {
+    font-size: 1.3em;
+    }
+    
+emphasis {
+    font-size: 1.5em;
+    line-height: 1.2em;
+}
+";
+$this->headStyle()->appendStyle( $styles );
+
+$address = $this->whathoodResult->getAddress();
+$lat = $this->whathoodResult->getLat();
+$lng = $this->whathoodResult->getLng();
+$totalVotes = $this->whathoodResult->getConsensus()->getTotalVotes();
+$regionName = $this->whathoodResult->getRegionName();
+$consensus = $this->whathoodResult->getConsensus();
+
+$percentileView = function($votes,$totalVotes) {
+    return $votes / $totalVotes;
+};
+?>
+
+<?php echo $this->mybreadcrumbs( array(
+        'regionName' => $this->regionName,
+        'address'    => $this->address,
+        'currentLocation' => $this->currentLocation
+    )); ?>
+
+<div class="whathood-result centertext">
+    <?php
+    /**
+     * Static Map Image
+     */?>
+    <section class="row-fluid">
+        <div class="nomargin span12"><img class="nomargin" src="<?=$this->staticGoogleMapImageUrl($lat,$lng)?>" alt=""/>
+    </section>
+       <?php
+        /**
+         * Consensus
+         */
+        ?>
+    <div class='row-fluid morepadding well-large'>
+        <p><?=$this->whathoodResultSummary( $consensus )?></p>
+        <?php foreach( $consensus->getUnits() as $unit ) : ?>
+        <p><?=$this->numberFormat($percentileView( $unit->getVotes(), $totalVotes ),3 )?> <small>on <?=$unit->getVotes()?> <?=$this->translatePlural('vote','votes',$unit->getVotes());?></small> <a href="/<?=$regionName?>/<?=$unit->getName()?>/"><?=$unit->getName()?></a></p><br/>
+        <?php endforeach; ?>
+
+        <div>
+            <div class="btn">
+                <a href='<?=$this->url('neighborhood_page', array( 
+                                        'center' => $lat.','.$lng,
+                                        'page'  => '1'
+                        ));?>'>
+                    Browse These Neighborhoods
+                </a>
+            </div>
+        </div>
+            
+    </div>
+    
+</div>
