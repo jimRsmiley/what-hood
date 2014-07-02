@@ -1,0 +1,90 @@
+<form class="form-inline centertext"  method="GET" id="addressLookupForm" action="/a">
+    
+    
+    
+    <span style='padding: 0; margin: 0'>
+            <img src='/images/geolocate.png'id="currentLocationButton" class="btn btn-sm" alt='geolocate'/>
+        <input id="address" name="address" type="text" placeholder="enter address" class="input-sm">
+    </span>
+    
+    <input id="region" name="region" value="Philadelphia" type="text" class="input-large input-margin" required="" readonly>
+    
+    <div id="no_match_city" style="height: 30px; color: red"></div>
+    
+    <input id="addressSubmitButton" type="submit" name="singlebutton" class="btn btn-primary btn-block centertext input-margin automargin">
+    </input>
+    
+    <input type="hidden" id='lat' name="lat" value=""/>
+    <input type="hidden" id='lng' name="lng" value=""/>
+</form>
+
+
+<script>
+$('document').ready( function() {
+    
+    // hide the no-match div
+    
+    $('#no_match_city').hide();
+    
+    var availableRegions = [<?=$this->arrayToDoubleQuoteElementedCSV($this->regionNames)?>];
+    
+
+    /*
+     * attach the autocomplete to the cities
+     */
+    $( "input[name=region]" ).autocomplete({
+      source: availableRegions,
+      response: function(event, ui) {
+            // ui.content is the array that's about to be sent to the response callback.
+            if (ui.content.length === 0) {
+                $("#no_match_city").html("We're currently not serving that city yet, stay tuned!");
+            } else {
+                $("#no_match_city").empty();
+            }
+        }
+    });
+    
+    $('#currentLocationButton').click( function() {
+        var address = $("input[name=address]").val();
+        console.log( 'clicked' );
+        /*
+         * use the browser's current location
+         */
+        if( address === 'Use Current Location' || address === '' ) {
+            console.log("form submit: using browser location");
+            
+            navigator.geolocation.getCurrentPosition(function(location) {
+                lat = location.coords.latitude;
+                lng = location.coords.longitude;
+                
+                //alert( 'browser says lat=' + lat + ' lng='+lng );
+                $('#lat').val( lat );
+                $('#lng').val( lng );
+                window.location.replace( "/whathood?lat=" + lat + '&lng=' + lng );
+                return false;
+            },
+            // failure?
+            function failure() {
+                alert("not able to get your current location; please type in an address");
+            });
+        }
+    });
+        
+    /*
+     * use the form to find the neighborhoods
+     */
+    $('#addressSubmitButton').click( function() {
+        console.log( 'submitting address lookup form' );
+        // tack on the region name to aid in geolocation
+        var address = $("input[name=address]").val();
+        var regionName = $("input[name=region]").val();
+        console.log( 'geocoding address: ' + address );
+        
+        window.location.replace( "/a/" + regionName + '/' + encodeURIComponent(address).replace(/%20/g, "+") );
+        
+        return false;
+    });
+}); // end $(document.ready()
+    
+    
+</script>

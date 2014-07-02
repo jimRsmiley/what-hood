@@ -1,5 +1,18 @@
 html, body {
-    font-family: 'Arvo', serif;
+    font-family: 'Cabin', serif;
+    height: 100%;
+}
+
+.credit {
+    text-align: center;
+    font-size: .9em;
+    padding: 3px 0;
+    background: white;
+    width: 100%;
+}
+
+.summary p {
+    font-size: 16px;
 }
 
 div.container.header {
@@ -35,12 +48,13 @@ div.container.header {
 }
 
 .main-container {
-    padding-bottom: 50px;
-    background: white;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    height: 600px;
 }
 
 .brand-header {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .brand-header h1 {
@@ -80,62 +94,27 @@ div.container.header {
     font-size: 1.1em;
 }
 
-
-/* Large desktop */
-@media (min-width: 980px) {
-    
-    /*.main-container {
-        position: relative;
-        float: right;
-        height: 80%;
-    }*/
-    
-    /*#map {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 100;
-    }*/
-    
-    #map {
-        height: 600px;
-    }
-
+.map {
+    position: absolute;
+    top: 51px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
 }
 
-
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px) {
-    #map {
-        position: relative;
-        height: 600px;
-    }
-    
-    footer {
-        position: relative;
-    }
+.user_polygon_page_map {
+    top: 200px;
 }
 
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) { 
-    #map {
-        position: relative;
-        height: 400px;
-    } 
-
-    footer {
-        position: relative;
-    }
-
-    .tri-content {
-        padding-top: 20px;
-    }
-
+.map_add {
+    top: 300px;
 }
+
+.user_polygon_pagination {
+    margin: 0;
+}
+
 
 /* Landscape phones and down */
 @media (max-width: 480px) { 
@@ -149,14 +128,7 @@ div.container.header {
     }
 }
 
-
-
 .header {
-    background: white;
-}
-
-footer {
-    /*margin-top: 100px;*/
     background: white;
 }
 
@@ -201,4 +173,14 @@ div#vote_section {
 
 #disqus_thread {
     padding-top: 40px;
+}
+
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,.95);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    opacity: 100;
 }

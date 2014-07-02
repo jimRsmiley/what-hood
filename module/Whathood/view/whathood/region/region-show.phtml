@@ -1,0 +1,22 @@
+<?php
+$regionName = $this->region->getName();
+$createEventId = $this->setNumber;
+?>
+
+<div class="row">
+    <div id="map" class="map"></div>
+</div>
+
+<script>
+    $('document').ready( function() {
+        
+        map = new RegionMap('map');
+        map.addStreetLayer();
+
+        map.addGeoJson('/whathood/neighborhood-polygon/show-region?region_name=<?=$regionName?>&create_event_id=<?=$createEventId?>&format=json', 
+            function() { 
+                map.addContentiousPoints( <?=$createEventId?> ); 
+            }
+        );
+    });
+</script>

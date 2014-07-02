@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Element;
 use Zend\Form\Form;
@@ -28,7 +28,7 @@ class WhathoodUser extends Form {
          */
         $this->add(array(
             'name'  => 'user',
-            'type' => 'Application\Form\WhathoodUserFieldset',
+            'type' => 'Whathood\Form\WhathoodUserFieldset',
             'options' => array(
                 'use_as_base_fieldset' => true
             )

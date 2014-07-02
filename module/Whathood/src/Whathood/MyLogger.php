@@ -1,5 +1,5 @@
 <?php
-namespace Application;
+namespace Whathood;
 
 /**
  * Description of MyLogger

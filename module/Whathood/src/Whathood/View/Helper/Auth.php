@@ -1,5 +1,5 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 
 use Zend\ServiceManager\ServiceManager;
 /**
@@ -19,7 +19,7 @@ class Auth extends \Zend\View\Helper\AbstractHelper {
     public function getAuthenticationService() {
         
         if( $this->auth == null ) {
-            $this->auth = $this->sm->get('Application\Model\AuthenticationService');
+            $this->auth = $this->sm->get('Whathood\Model\AuthenticationService');
         }
         
         return $this->auth;
@@ -38,12 +38,12 @@ class Auth extends \Zend\View\Helper\AbstractHelper {
     
     public function logoutUrl() {
         $redirectTo =  $this->getServerUri();
-        return '/application/auth/logout?redirect_to='.$redirectTo;
+        return '/whathood/auth/logout?redirect_to='.$redirectTo;
     }
     
     public function loginUrl() {
         $redirectTo =  $this->getServerUri();
-        return '/application/auth/login?redirect_to='.$redirectTo;
+        return '/whathood/auth/login?redirect_to='.$redirectTo;
     }
     
     public function getServerUri() {

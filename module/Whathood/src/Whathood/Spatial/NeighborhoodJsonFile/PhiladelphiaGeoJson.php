@@ -1,13 +1,13 @@
 <?php
-namespace Application\Spatial\NeighborhoodJsonFile;
+namespace Whathood\Spatial\NeighborhoodJsonFile;
 
-use Application\Entity\WhathoodUser;
-use Application\Entity\Neighborhood;
-use Application\Entity\NeighborhoodPolygon;
-use Application\Entity\Region;
+use Whathood\Entity\WhathoodUser;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\UserPolygon;
+use Whathood\Entity\Region;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
 
 class PhiladelphiaGeoJson {
     

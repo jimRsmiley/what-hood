@@ -1,5 +1,5 @@
 <?php
-namespace Application\Mapper;
+namespace Whathood\Mapper;
 /**
  * Description of BaseMapper
  *
@@ -25,10 +25,20 @@ abstract class BaseMapper {
         $this->em = $doctrineEntityManager;
     }
     
+
+    
+    public function flush() {
+        $this->em->flush();
+    }
+    
+    public function clear() {
+        $this->em->clear();
+    }
+    
     public function neighborhoodPolygonMapper() {
         if( $this->neighborhoodPolygonMapper == null )
             $this->neighborhoodPolygonMapper = 
-                $this->sm->get('Application\Mapper\NeighborhoodPolygonMapper');
+                $this->sm->get('Whathood\Mapper\UserPolygonMapper');
         
         return $this->neighborhoodPolygonMapper;
     }
@@ -36,20 +46,20 @@ abstract class BaseMapper {
     public function neighborhoodMapper() {
         if( $this->neighborhoodMapper == null )
             $this->neighborhoodMapper = 
-                $this->sm->get('Application\Mapper\NeighborhoodMapper');
+                $this->sm->get('Whathood\Mapper\NeighborhoodMapper');
         
         return $this->neighborhoodMapper;
     }
     
     public function regionMapper() {
         if( $this->regionMapper == null )
-            $this->regionMapper = $this->sm->get('Application\Mapper\RegionMapper');
+            $this->regionMapper = $this->sm->get('Whathood\Mapper\RegionMapper');
         return $this->regionMapper;
     }
     
     public function whathoodUserMapper() {
         if( $this->whathoodUserMapper == null )
-            $this->whathoodUserMapper = $this->sm->get('Application\Mapper\WhathoodUserMapper');
+            $this->whathoodUserMapper = $this->sm->get('Whathood\Mapper\WhathoodUserMapper');
         return $this->whathoodUserMapper;
     }
     
@@ -61,7 +71,17 @@ abstract class BaseMapper {
         return new \DateTime('now');
     }
     
-    public abstract function getQueryBuilder();
+    public function detach( $entity ) {
+        $this->em->detach( $entity );
+    }
+    
+    public function getLastCreateEventId() {
+        $sql = "SELECT DISTINCT id FROM neighborhood_polygons_create_event ORDER BY id DESC LIMIT 1";
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+        $rsm->addScalarResult('id', 'id');
+        $query = $this->em->createNativeQuery( $sql, $rsm );
+        $result = $query->getSingleResult();
+        return $result['id'];
+    }
 }
-
 ?>

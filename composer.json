@@ -9,16 +9,18 @@
     "require": {
         "php": ">=5.3.3",
          
-        "zendframework/zendframework": "2.2.1",
+        "zendframework/zendframework": "*",
         "zendframework/zend-developer-tools": "*",
-        "zendframework/zendoauth": "2.0.*",
-        "doctrine/orm": "2.3.3",
-        "doctrine/doctrine-orm-module": "0.*",
-        "doctrine/dbal": "2.3.3",
-        "doctrine/data-fixtures": "dev-master",
-        "creof/doctrine2-spatial": "dev-master",
-        "beberlei/DoctrineExtensions": "dev-master",
-        "facebook/php-sdk": "dev-master",
+        "zendframework/zendoauth": "2.*",
+        
+        "doctrine/doctrine-module": "*",
+        "doctrine/orm": "*",
+        "doctrine/doctrine-orm-module": "*",
+        "doctrine/dbal": "*",
+        "doctrine/data-fixtures": "*",
+        "creof/doctrine2-spatial": "*",
+        "beberlei/DoctrineExtensions": "*",
+        "facebook/php-sdk": "*",
         "willdurand/geocoder": "*",
         "kriswallsmith/buzz": "*"
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ApplicationTest;//Change this namespace for your test
+namespace WhathoodTest;//Change this namespace for your test
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -52,7 +52,7 @@ class Bootstrap
         $config = ArrayUtils::merge($baseConfig, $testConfig);
 
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
-        $serviceManager->setService('ApplicationConfig', $config);
+        $serviceManager->setService('WhathoodConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
 
         static::$serviceManager = $serviceManager;

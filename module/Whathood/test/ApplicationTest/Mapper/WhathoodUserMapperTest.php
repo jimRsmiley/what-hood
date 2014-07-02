@@ -1,10 +1,10 @@
 <?php
 
-namespace ApplicationTest\Mapper;
+namespace WhathoodTest\Mapper;
 
-use Application\PHPUnit\DoctrineBaseTest;
-use Application\Entity\WhathoodUser;
-use Application\PHPUnit\DummyEntityBuilder;
+use Whathood\PHPUnit\DoctrineBaseTest;
+use Whathood\Entity\WhathoodUser;
+use Whathood\PHPUnit\DummyEntityBuilder;
 /**
  * Description of NeighborhoodORMTest
  *
@@ -18,12 +18,12 @@ class WhathoodUserMapperTest extends DoctrineBaseTest {
         parent::setUp();
         $this->initDb();
         $this->object = $this->getServiceManager()
-                                            ->get( 'Application\Mapper\WhathoodUserMapper' );
+                                            ->get( 'Whathood\Mapper\WhathoodUserMapper' );
     }
     
     public function testNoFbUserSave() {
         
-        $user = new \Application\Entity\WhathoodUser(
+        $user = new \Whathood\Entity\WhathoodUser(
                 array( 
                     'userName' => 'Azevea3',
             ));
@@ -37,7 +37,7 @@ class WhathoodUserMapperTest extends DoctrineBaseTest {
      */
     public function testWithFbUserSave() {
         $this->initDb();
-        $user = new \Application\Entity\WhathoodUser(
+        $user = new \Whathood\Entity\WhathoodUser(
                 array( 
                     'userName' => 'Azevea3',
                     'facebookUser' => DummyEntityBuilder::facebookUser()

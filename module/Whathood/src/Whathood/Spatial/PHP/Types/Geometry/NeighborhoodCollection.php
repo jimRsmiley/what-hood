@@ -1,7 +1,7 @@
 <?php
-namespace Application\Spatial\PHP\Types\Geometry;
+namespace Whathood\Spatial\PHP\Types\Geometry;
 
-use Application\Entity\Neighborhood;
+use Whathood\Entity\Neighborhood;
 /**
  * Description of NeighborhoodCollection
  *

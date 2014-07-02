@@ -1,0 +1,87 @@
+
+    <!-- 
+        jQuery
+    ==========================================================-->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>    
+    
+        
+    <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',)); ?>
+    
+    <!--
+        Twitter Bootstrap
+    ===========================================================-->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+
+    <!--
+        Leaflet.js
+    ==========================================================-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.6.4/leaflet.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.6.4/leaflet.js"></script>
+    
+    <!--
+        Leaflet.draw
+    ==========================================================-->
+	<script src="/js/leaflet-draw/js/leaflet.draw.js"></script>
+    <!--[if lte IE 8]><link rel="stylesheet" href="/js/leaflet-draw/libs/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="/js/leaflet-draw/css/leaflet.draw.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="/js/leaflet-draw/css/leaflet.draw.ie.css" /><![endif]-->
+    
+    <!--
+        Spin.js
+    ==========================================================-->
+	<script src="/js/spin.min.js"></script>
+    
+    <!--
+        Leaflet.spin
+    ========================================================-->
+	<script src="/js/leaflet.spin.js"></script>
+
+    <script src="/js/Leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+    <link rel="stylesheet" href="/js/Leaflet.markercluster/dist/MarkerCluster.css">
+    <link rel="stylesheet" href="/js/Leaflet.markercluster/dist/MarkerCluster.Default.css">
+    
+    <!--
+        JQueryUI
+    =====================================================-->
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    
+    <!--
+        Google Maps
+    ======================================================-->
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7AjCGLXahpd8NO8DZ0kHBwWSR_r58kMI&sensor=false">
+    </script>
+    
+    <!--
+        HeatMap.js
+    ======================================================-->
+    <script type="text/javascript" src="/js/heatmapjs/src/QuadTree.js"></script>
+    <script type="text/javascript" src="/js/heatmapjs/src/heatmap.js"></script>
+    <script type="text/javascript" src="/js/heatmapjs/src/heatmap-leaflet-jsmiley-edit.js"></script>
+
+    <script type="text/javascript" src="/js/TileLayer.GeoJSON.js"></script>
+    
+    <!--
+        Whathood
+    ====================================================-->
+    <script type="text/javascript" src="/js/whathood.js"></script>
+    <?php echo $this->headLink()
+                    ->prependStylesheet( '/css/style.css' )?>
+
+    <!-- any other javascript
+    ===================================================-->
+    <?php echo $this->headScript(); ?>
+         
+    <!-- any other styles 
+    =================================================-->
+    <?php echo $this->headStyle(); ?>
+
+    <!-- choose a font
+    =================================================-->
+    <link href='http://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Stoke' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Cabin' rel='stylesheet' type='text/css'>

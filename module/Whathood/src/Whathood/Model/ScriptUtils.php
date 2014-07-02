@@ -1,5 +1,5 @@
 <?php
-namespace Application\Model;
+namespace Whathood\Model;
 /**
  * Description of ScriptUtils
  *

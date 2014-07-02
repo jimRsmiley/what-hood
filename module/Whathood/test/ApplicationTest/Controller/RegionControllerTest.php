@@ -1,6 +1,6 @@
 <?php
 
-namespace ApplicationTest\Controller;
+namespace WhathoodTest\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
@@ -14,7 +14,7 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase,
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class RegionControllerTest extends \Application\PHPUnit\BaseControllerTest {
+class RegionControllerTest extends \Whathood\PHPUnit\BaseControllerTest {
 
     public function setUp()
     {
@@ -30,7 +30,7 @@ class RegionControllerTest extends \Application\PHPUnit\BaseControllerTest {
         $this->getRequest()
                 ->setMethod('GET');
         
-        $this->dispatch( '/application/region/list-regions');
+        $this->dispatch( '/whathood/region/list-regions');
         $this->printResponse();
         $this->assertResponseStatusCode(200);
     }

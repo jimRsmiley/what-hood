@@ -7,9 +7,9 @@ use DoctrineExtensions\PHPUnit\OrmTestCase,
  PHPUnit\Extensions\Database\Operation\Composite,
  PHPUnit\Extensions\Database\Operation\Factory,
  ApplicationTest\Bootstrap,
- Application\Entity\Neighborhood,
- Application\Entity\Region;
-use Application\PHPUnit\DoctrineBaseTest;
+ Whathood\Entity\Neighborhood,
+ Whathood\Entity\Region;
+use Whathood\PHPUnit\DoctrineBaseTest;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 /**
  * Description of NeighborhoodORMTest

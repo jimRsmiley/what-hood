@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Model\HeatMap;
+namespace Whathood\Model\HeatMap;
 /**
  * I need a class that will will determine the heat map's top of scale.  I don't
  * want to set a max value if it only occurs once, let's use the mostly occurring
@@ -28,9 +28,6 @@ class MaxCalculator {
     public function getMaxValue() {
         asort( $this->distribution );
         end( $this->distribution );
-        
-        //\Zend\Debug\Debug::dump( $this->distribution );
-        //exit;
         return key( $this->distribution );
     }
 }

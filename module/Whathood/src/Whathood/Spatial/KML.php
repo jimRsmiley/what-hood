@@ -1,5 +1,5 @@
 <?php
-namespace Application\Spatial;
+namespace Whathood\Spatial;
 /**
  * KML Main Class File
  *

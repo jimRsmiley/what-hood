@@ -1,7 +1,7 @@
 <?php
-namespace Application\Mapper;
+namespace Whathood\Mapper;
 
-use Application\Entity\WhathoodUser as UserEntity;
+use Whathood\Entity\WhathoodUser as UserEntity;
 /**
  * Description of RegionMapper
  *
@@ -17,10 +17,9 @@ class WhathoodUserMapper extends BaseMapper {
         
         $qb = $this->em->createQueryBuilder();
         
-        $qb->select('whu', 'fbu')
-            ->from('Application\Entity\WhathoodUser','whu')
-            ->innerjoin('whu.facebookUser', 'fbu')
-            ->where( $qb->expr()->eq('fbu.id', ':facebookId' ) )
+        $qb->select('whu')
+            ->from('Whathood\Entity\WhathoodUser','whu')
+            ->where( $qb->expr()->eq('whu.facebookUserId', ':facebookId' ) )
             ->setParameter('facebookId', $facebookId );
         
         return $qb->getQuery()->getSingleResult();
@@ -35,7 +34,7 @@ class WhathoodUserMapper extends BaseMapper {
         $qb = $this->em->createQueryBuilder();
         
         $qb->select('u')
-            ->from('Application\Entity\WhathoodUser','u')
+            ->from('Whathood\Entity\WhathoodUser','u')
             ->where( 'u.id = :id' )
             ->setParameter('id', $id );
 
@@ -49,7 +48,7 @@ class WhathoodUserMapper extends BaseMapper {
                 
         $qb = $this->em->createQueryBuilder();
         $qb->select('u')
-                ->from('Application\Entity\WhathoodUser','u')
+                ->from('Whathood\Entity\WhathoodUser','u')
                 ->where( $qb->expr()->eq('u.userName', ':userName' ) )
                 ->setParameter('userName', $userName );
 
@@ -57,7 +56,7 @@ class WhathoodUserMapper extends BaseMapper {
     }
     
     public function fetchAll() {
-        $users = $this->em->getRepository( 'Application\Entity\WhathoodUser' )
+        $users = $this->em->getRepository( 'Whathood\Entity\WhathoodUser' )
                 ->findAll();
         return $users;
     }
@@ -70,7 +69,7 @@ class WhathoodUserMapper extends BaseMapper {
         if( $user->getId() == null ) {
             print "why didn't this save?\n";
             \Zend\Debug\Debug::dump( $user );
-            $obj = $this->em->find( "Application\Entity\WhathoodUser",1);
+            $obj = $this->em->find( "Whathood\Entity\WhathoodUser",1);
             \Zend\Debug\Debug::dump( $obj );
             exit;
         }

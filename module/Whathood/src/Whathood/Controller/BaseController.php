@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace Whathood\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -12,44 +12,56 @@ use Zend\View\Model\ViewModel;
  */
 class BaseController extends AbstractActionController {
     
-    protected $neighborhoodMapper;
-    protected $neighborhoodPolygonMapper;
-    protected $whathoodUserMapper;
-    protected $regionMapper;
-    protected $neighborhoodPolygonVoteMapper;
+    private $neighborhoodMapper;
+    private $userPolygonMapper;
+    private $neighborhoodPolygonMapper;
+    private $whathoodUserMapper;
+    private $regionMapper;
+    private $neighborhoodStrengthOfIdentityMapper;
+    private $testPointMapper;
+    private $contentiousPointMapper;
     
     public function neighborhoodMapper() {
         
         if( $this->neighborhoodMapper == null ) {
             $this->neighborhoodMapper = $this->getServiceLocator()
-                    ->get( 'Application\Mapper\NeighborhoodMapper' );
+                    ->get( 'Whathood\Mapper\NeighborhoodMapper' );
         }
         return $this->neighborhoodMapper;
+    }
+    
+    public function userPolygonMapper() {
+        
+        if( $this->userPolygonMapper == null ) {
+            $this->userPolygonMapper = $this->getServiceLocator()
+                    ->get( 'Whathood\Mapper\UserPolygonMapper' );
+        }
+        return $this->userPolygonMapper;
+    }
+    
+    public function testPointMapper() {
+        
+        if( $this->testPointMapper == null ) {
+            $this->testPointMapper = $this->getServiceLocator()
+                    ->get( 'Whathood\Mapper\TestPointMapper' );
+        }
+        return $this->testPointMapper;
     }
     
     public function neighborhoodPolygonMapper() {
         
         if( $this->neighborhoodPolygonMapper == null ) {
             $this->neighborhoodPolygonMapper = $this->getServiceLocator()
-                    ->get( 'Application\Mapper\NeighborhoodPolygonMapper' );
+                    ->get( 'Whathood\Mapper\NeighborhoodPolygonMapper' );
         }
         return $this->neighborhoodPolygonMapper;
-    }
-    
-    public function neighborhoodPolygonVoteMapper() {
-        
-        if( $this->neighborhoodPolygonVoteMapper == null ) {
-            $this->neighborhoodPolygonVoteMapper = $this->getServiceLocator()
-                    ->get( 'Application\Mapper\NeighborhoodPolygonVoteMapper' );
-        }
-        return $this->neighborhoodPolygonVoteMapper;
     }
     
     public function regionMapper() {
         
         if( $this->regionMapper == null ) {
             $this->regionMapper = $this->getServiceLocator()
-                    ->get( 'Application\Mapper\RegionMapper' );
+                    ->get( 'Whathood\Mapper\RegionMapper' );
         }
         return $this->regionMapper;
     }
@@ -58,14 +70,31 @@ class BaseController extends AbstractActionController {
         
         if( $this->whathoodUserMapper == null ) {
             $this->whathoodUserMapper = $this->getServiceLocator()
-                ->get('Application\Mapper\WhathoodUserMapper');
+                ->get('Whathood\Mapper\WhathoodUserMapper');
         }
         return $this->whathoodUserMapper;
     }
     
+    public function neighborhoodStrengthOfIdentityMapper() {
+        if( $this->neighborhoodStrengthOfIdentityMapper == null ) {
+            $this->neighborhoodStrengthOfIdentityMapper = $this->getServiceLocator()
+                                    ->get('Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper');
+        }
+        return $this->neighborhoodStrengthOfIdentityMapper;
+    }
+    
+    public function contentiousPointMapper() {
+        
+        if( $this->contentiousPointMapper == null ) {
+            $this->contentiousPointMapper = $this->getServiceLocator()
+                ->get('Whathood\Mapper\ContentiousPointMapper');
+        }
+        return $this->contentiousPointMapper;
+    }
+    
     public function getAuthenticationService() {
         return $this->getServiceLocator()
-                    ->get( 'Application\Model\AuthenticationService' );
+                    ->get( 'Whathood\Model\AuthenticationService' );
     }
     
     public function getUriParameter($key) {

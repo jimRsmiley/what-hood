@@ -1,13 +1,15 @@
 <?php
-namespace Application\Entity;
+namespace Whathood\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
- * @ORM\Table(name="whathood_user",uniqueConstraints={
- *              @ORM\UniqueConstraint(name="whathood_user_idx", 
- *                  columns={"user_name"})})
+ * @ORM\Table(name="whathood_user",
+ * uniqueConstraints={
+ *   @ORM\UniqueConstraint(name="whathood_user_idx",columns={"user_name"})
+ * }
+ * )
  */
 class WhathoodUser extends \ArrayObject {
    
@@ -27,17 +29,16 @@ class WhathoodUser extends \ArrayObject {
     protected $id = null;
     
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\FacebookUser",cascade="persist")
-     * @ORM\JoinColumn(name="facebook_user_id", referencedColumnName="id",nullable=true)
+     * @ORM\Column(name="facebook_user_id",type="bigint",nullable=true)
      */
-    protected $facebookUser = null;
+    protected $facebookUserId = null;
     
-    public function setFacebookUser( FacebookUser $facebookUser ) {
-        $this->facebookUser = $facebookUser;
+    public function setFacebookUserId( $facebookUserId ) {
+        $this->facebookUserId = $facebookUserId;
     }
     
-    public function getFacebookUser() {
-        return $this->facebookUser;
+    public function getFacebookUserId() {
+        return $this->facebookUserId;
     }
     
     /** 
@@ -53,11 +54,6 @@ class WhathoodUser extends \ArrayObject {
         $this->userName = $userName;
     }
     
-    /** 
-     * @ORM\Column(type="boolean",name="authority",nullable=true) 
-     */
-    protected $isAuthority = null;
-    
     public function getId() {
         return $this->id;
     }
@@ -65,29 +61,7 @@ class WhathoodUser extends \ArrayObject {
     public function setId( $id ) {
         $this->id = $id;
     }
-    
-    /**
-     * @ORM\OneToMany(targetEntity="NeighborhoodPolygonVote",mappedBy="whathoodUser")
-     */
-    protected $votes;
-    
-    public function getVotes() {
-        return $this->votes;
-    }
-    
-    public function setVotes( ArrayCollection $votes ) {
-        $this->votes = $votes;
-    }
 
-    
-    public function isAuthority() {
-        return $this->isAuthority;
-    }
-    
-    public function setAuthority($isAuthority) {
-        $this->isAuthority = $isAuthority;
-    }
-    
     public function toArray() {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
         

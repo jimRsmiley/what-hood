@@ -1,7 +1,7 @@
 <?php
-namespace Application\Spatial\DBAL\Types;
+namespace Whathood\Spatial\DBAL\Types;
 
-use Application\Spatial\PHP\Types\Geometry\Polygon as WhathoodPolygon;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon as WhathoodPolygon;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use CrEOF\Spatial\DBAL\Types\BinaryParser;
 /**

@@ -4,7 +4,8 @@
 $modules = array(
     'DoctrineModule',
     'DoctrineORMModule',
-    'Application',
+    'JsMappingUtils',
+    'Whathood',
 );
 
 if( getenv("APPLICATION_ENV") == 'development' ) {
@@ -31,7 +32,7 @@ return array(
         // provided by modules themselves. Paths may use GLOB_BRACE notation.
         'config_glob_paths' => array(
             //'config/autoload/{global,local}.php',
-            'config/autoload/{,*.}' . (getenv('APPLICATION_ENV') ?: 'production') . '.{global,local}.php',
+            'config/autoload/{,*.}' . (getenv('APPLICATION_ENV') ?: 'development') . '.{global,local}.php',
             'config/autoload/whathood.local.php',
             //'config/autoload/zdt.local.php',
         ),
@@ -39,7 +40,7 @@ return array(
     
     // ZfcUser specific config
     'zfcuser' => array(
-        'user_entity_class'       => 'Application\Entity\WhathoodUser',
+        'user_entity_class'       => 'Whathood\Entity\WhathoodUser',
         'enable_default_entities' => false,
     ),
 );

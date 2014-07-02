@@ -1,18 +1,18 @@
 <?php
-namespace Application\PHPUnit;
+namespace Whathood\PHPUnit;
 
 use ApplicationTest\Bootstrap;
-use Application\Spatial\PHP\Types\Geometry\LineString;
-use Application\Spatial\PHP\Types\Geometry\Point;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Entity\Neighborhood;
-use Application\Entity\NeighborhoodVote;
-use Application\Entity\Region;
-use Application\Entity\HeatMap;
-use Application\Entity\WhathoodUser;
-use Application\Entity\FacebookUser;
-use Application\Entity\NeighborhoodPolygon;
-use Application\Model\HeatMap\Point as HeatMapPoint;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\NeighborhoodVote;
+use Whathood\Entity\Region;
+use Whathood\Entity\HeatMap;
+use Whathood\Entity\WhathoodUser;
+use Whathood\Entity\FacebookUser;
+use Whathood\Entity\UserPolygon;
+use Whathood\Model\HeatMap\Point as HeatMapPoint;
 /**
  * responsible for anything to do with the database
  *
@@ -64,21 +64,21 @@ class DoctrineBaseTest extends \PHPUnit_Framework_TestCase {
 
     public function whathoodUserMapper() {
         if( $this->whathoodUserMapper == null )
-            $this->whathoodUserMapper = $this->getServiceManager()->get('Application\Mapper\WhathoodUserMapper');
+            $this->whathoodUserMapper = $this->getServiceManager()->get('Whathood\Mapper\WhathoodUserMapper');
             
         return $this->whathoodUserMapper;
     }
     
     public function neighborhoodMapper() {
         if( $this->neighborhoodMapper == null )
-            $this->neighborhoodMapper = $this->getServiceManager()->get('Application\Mapper\NeighborhoodMapper');
+            $this->neighborhoodMapper = $this->getServiceManager()->get('Whathood\Mapper\NeighborhoodMapper');
         
         return $this->neighborhoodMapper;
     }
     
     public function neighborhoodPolygonMapper() {
         if( $this->neighborhoodPolygonMapper == null )
-            $this->neighborhoodPolygonMapper = $this->getServiceManager()->get('Application\Mapper\NeighborhoodPolygonMapper');
+            $this->neighborhoodPolygonMapper = $this->getServiceManager()->get('Whathood\Mapper\UserPolygonMapper');
         
         return $this->neighborhoodPolygonMapper;
     }
@@ -86,14 +86,14 @@ class DoctrineBaseTest extends \PHPUnit_Framework_TestCase {
     public function neighborhoodVoteMapper() {
         if( $this->neighborhoodVoteMapper == null )
             $this->neighborhoodVoteMapper = 
-                $this->getServiceManager()->get('Application\Mapper\NeighborhoodPolygonVoteMapper');
+                $this->getServiceManager()->get('Whathood\Mapper\NeighborhoodPolygonVoteMapper');
         
         return $this->neighborhoodVoteMapper;
     }
     
     public function regionMapper() {
         if( $this->regionMapper == null )
-            $this->regionMapper = $this->getServiceManager()->get('Application\Mapper\RegionMapper');
+            $this->regionMapper = $this->getServiceManager()->get('Whathood\Mapper\RegionMapper');
         
         return $this->regionMapper;
     }

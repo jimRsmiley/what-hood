@@ -1,7 +1,7 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 
-use Application\Entity\Neighborhood;
+use Whathood\Entity\Neighborhood;
 /**
  * Description of UserRegionUrlHelper
  *
@@ -9,7 +9,7 @@ use Application\Entity\Neighborhood;
  */
 class UserRegionUrlHelper extends \Zend\View\Helper\AbstractHelper {
     
-    protected $root = '/application/neighborhood/by-id';
+    protected $root = '/whathood/neighborhood/by-id';
     
     public function __invoke( Neighborhood $n ) {
        

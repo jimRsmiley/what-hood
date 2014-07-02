@@ -1,7 +1,7 @@
 <?php
-namespace Application\Model\Whathood;
+namespace Whathood\Model\Whathood;
 /**
- * I need to store single neighborhood data somewhere, WhathoodResult will store
+ * For one point, I need to store single neighborhood data somewhere, WhathoodResult will store
  * a bunch of these as the result
  *
  * @author Jim Smiley twitter:@jimRsmiley

@@ -1,16 +1,16 @@
 <?php
 
-namespace ApplicationTest\Controller;
+namespace WhathoodTest\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Stdlib\Parameters;
-use Application\PHPUnit\BaseControllerTest;
-use Application\PHPUnit\DummyEntityBuilder;
-use Application\Model\AuthenticationService;
-use Application\Entity\NeighborhoodPolygonVote;
+use Whathood\PHPUnit\BaseControllerTest;
+use Whathood\PHPUnit\DummyEntityBuilder;
+use Whathood\Model\AuthenticationService;
+use Whathood\Entity\NeighborhoodPolygonVote;
 
 /**
  * Description of NeighborhoodControllerTest
@@ -117,7 +117,7 @@ class NeighborhoodPolygonVoteControllerTest extends BaseControllerTest {
         } catch( \Exception $e ) {
             $this->assertTrue( false );
         }
-        $this->assertInstanceof( '\Application\Entity\NeighborhoodPolygonVote', 
+        $this->assertInstanceof( '\Whathood\Entity\NeighborhoodPolygonVote', 
                                                     $neigbhorhoodPolygonVote );
     }
     

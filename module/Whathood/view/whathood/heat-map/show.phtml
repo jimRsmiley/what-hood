@@ -1,0 +1,47 @@
+<?php
+/*
+ * application/heat-map/show.phtml
+ */
+$heatMapJsData      = $this->heatMapJson;
+
+$heatMapMax         = 100;
+
+$regionName         = $this->regionName;
+$neighborhoodName   = $this->neighborhoodName;
+
+$userPolygons = $this->userPolygon;
+
+
+$this->headTitle()->prepend( $neighborhoodName . ", " . $regionName . " Neighborhood Boundaries" );
+$this->headMeta()->setProperty('description', "The neighborhood boundaries for $neighborhoodName, $regionName");
+?>
+<?php
+echo $this->mybreadcrumbs( array(
+    'regionName'        => $regionName,
+    'neighborhoodName'  => $neighborhoodName
+));?>
+
+
+<div class="morepadding">
+    <p>This heat map for <br><?=$neighborhoodName?>, <?=$regionName?></b>.  The bolder the area, the more that area is identified with <?=$neighborhoodName?>. It was built using the neighborhood borders from these users:</p>
+   
+    <p>Disagree? <a href='/n/add?regionName=<?=$regionName?>&neighborhood_name=<?=$neighborhoodName?>'>Add your neighborhood boundary here</a> and we'll include it in the heatmap!</a>
+</div>
+<div class="row-fluid">
+    <?=$this->partial('whathood/snippets/partial_whathood_click_notification.phtml');?>
+    <div id="map" class="map"></div>
+</div>
+
+<?php
+echo $this->heatMapDisqus( $this->regionName,$this->neighborhoodName );
+?>
+
+<script>
+    $('document').ready( function() {
+        map = new NeighborhoodHeatMap('map');
+        map.addStreetLayer();
+        var data = <?=$heatMapJsData?>;
+        map.addData( data );
+        map.whathoodClick(true);
+    });
+</script>

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
@@ -16,7 +16,7 @@ class WhathoodUserFieldset extends Fieldset implements InputFilterProviderInterf
         
         parent::__construct('user');
         
-        $this->setObject( new \Application\Entity\WhathoodUser() );
+        $this->setObject( new \Whathood\Entity\WhathoodUser() );
         $this->setHydrator(new ClassMethodsHydrator(
                                             $underscoreSeparatedKeys = false));
 

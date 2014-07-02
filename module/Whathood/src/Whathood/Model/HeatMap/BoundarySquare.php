@@ -1,35 +1,40 @@
 <?php
-namespace Application\Model\HeatMap;
+namespace Whathood\Model\HeatMap;
 
-use Application\Spatial\PHP\Types\Geometry\LineString;
-use Application\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Spatial\PHP\Types\Geometry\Point;
+
 /**
  * Description of BoundarySquare
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
 class BoundarySquare {
-    protected $latMin;
-    protected $latMax;
-    protected $lngMin;
-    protected $lngMax;
+    protected $yMin;
+    protected $yMax;
+    protected $xMin;
+    protected $xMax;
     
-    public function __construct( $data ) {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-        $hydrator->hydrate($data, $this);
+    public function __construct( $data = null ) {
+        
+        if( null !== $data ) {
+            $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
+            $hydrator->hydrate($data, $this);
+        }
     }
     
     public function getTestPoints( $interval ) {
-        $latDiff = abs($this->latMax - $this->latMin);
-        $latIncrements = $latDiff / $interval;
+        
+        $yDiff = abs($this->yMax - $this->yMin);
+        $yIncrements = $yDiff / $interval;
 
-        $lngDiff = $this->latMax - $this->latMin;
-        $lngIncrements = $lngDiff / $interval;
+        $xDiff = $this->yMax - $this->yMin;
+        $xIncrements = $xDiff / $interval;
 
         $points = array();
-        for( $lat = $this->latMin; $lat < $this->latMax; $lat += $latIncrements ) {
-            for( $lng = $this->lngMin; $lng < $this->lngMax; $lng += $lngIncrements ) {
-                $points[] = new \Application\Spatial\PHP\Types\Geometry\Point($lat,$lng);
+        for( $y = $this->yMin; $y < $this->yMax; $y += $yIncrements ) {
+            for( $x = $this->xMin; $x < $this->xMax; $x += $xIncrements ) {
+                $points[] = new Point($x,$y);
             }
         }
         
@@ -38,46 +43,43 @@ class BoundarySquare {
     
     public function getLineString() {
         return new LineString( array(
-            new Point( $this->latMin, $this->lngMin ),
-            new Point( $this->latMin, $this->lngMax ),
-            new Point( $this->latMax, $this->lngMax ),
-            new Point( $this->latMax, $this->lngMin )
+            new Point( $this->yMin, $this->xMin ),
+            new Point( $this->yMin, $this->xMax ),
+            new Point( $this->yMax, $this->xMax ),
+            new Point( $this->yMax, $this->xMin )
         ));
     }
     
-	public function getLatMin(){
-		return $this->latMin;
+	public function getYMin(){
+		return $this->yMin;
 	}
 
-	public function setLatMin($latMin){
-		$this->latMin = $latMin;
+	public function setYMin($latMin){
+		$this->yMin = $latMin;
 	}
 
-	public function getLatMax(){
-		return $this->latMax;
+	public function getYMax(){
+		return $this->yMax;
 	}
 
-	public function setLatMax($latMax){
-		$this->latMax = $latMax;
+	public function setYMax($latMax){
+		$this->yMax = $latMax;
 	}
 
-	public function getLngMin(){
-		return $this->lngMin;
+	public function getXMin(){
+		return $this->xMin;
 	}
 
-	public function setLngMin($lngMin){
-		$this->lngMin = $lngMin;
+	public function setXMin($lngMin){
+		$this->xMin = $lngMin;
 	}
 
-	public function getLngMax(){
-		return $this->lngMax;
+	public function getXMax(){
+		return $this->xMax;
 	}
 
-	public function setLngMax($lngMax){
-		$this->lngMax = $lngMax;
+	public function setXMax($lngMax){
+		$this->xMax = $lngMax;
 	}
-
-
 }
-
 ?>

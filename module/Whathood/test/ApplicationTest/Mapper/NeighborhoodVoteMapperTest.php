@@ -1,11 +1,11 @@
 <?php
 
-namespace ApplicationTest\Mapper;
+namespace WhathoodTest\Mapper;
 
-use Application\PHPUnit\DoctrineBaseTest;
-use Application\Entity\NeighborhoodVote;
-use Application\Entity\Neighborhood;
-use Application\PHPUnit\DummyEntityBuilder;
+use Whathood\PHPUnit\DoctrineBaseTest;
+use Whathood\Entity\NeighborhoodVote;
+use Whathood\Entity\Neighborhood;
+use Whathood\PHPUnit\DummyEntityBuilder;
 /**
  * Description of NeighborhoodORMTest
  *
@@ -19,7 +19,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
         
         parent::setUp();
         $this->object = $this->getServiceManager()->get(
-                        'Application\Mapper\NeighborhoodPolygonVoteMapper' );
+                        'Whathood\Mapper\NeighborhoodPolygonVoteMapper' );
         $this->em = $this->getServiceManager()->get('mydoctrineentitymanager');
         
         $this->initDb();
@@ -32,7 +32,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
                                     'creatorUser','my neighborhood polygon' );
         
               
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser,
                 'neighborhoodPolygon'  => $neighborhoodPolygon,
@@ -56,7 +56,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
         
         $n2 = $this->getSavedNeighborhoodPolygon('user2','Dummy2');
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser1,
                 'neighborhoodPolygon'  => $n1,
@@ -65,7 +65,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
        
         $this->object->save($neighborhoodVote);
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser2,
                 'neighborhoodPolygon'  => $n1,
@@ -89,7 +89,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
         
         $this->neighborhoodPolygonMapper()->save($np2);
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser,
                 'neighborhoodPolygon'  => $np1,
@@ -98,7 +98,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
        
         $this->object->save($neighborhoodVote);
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser,
                 'neighborhoodPolygon'  => $np2,
@@ -120,7 +120,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
         $n1 = DummyEntityBuilder::neighborhoodPolygon($votingUser);
         $this->neighborhoodPolygonMapper()->save($n1);
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser,
                 'neighborhoodPolygon'  => $n1,
@@ -129,7 +129,7 @@ class NeighborhoodVoteMapperTest extends DoctrineBaseTest {
        
         $this->object->save($neighborhoodVote);
         
-        $neighborhoodVote = new \Application\Entity\NeighborhoodPolygonVote(
+        $neighborhoodVote = new \Whathood\Entity\NeighborhoodPolygonVote(
             array( 
                 'whathoodUser' => $votingUser,
                 'neighborhoodPolygon'  => $n1,

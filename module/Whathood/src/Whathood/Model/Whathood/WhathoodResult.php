@@ -1,5 +1,5 @@
 <?php
-namespace Application\Model\Whathood;
+namespace Whathood\Model\Whathood;
 /**
  * Description of WhatHoodResult
  *

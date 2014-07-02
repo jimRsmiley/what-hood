@@ -1,5 +1,5 @@
 <?php
-namespace Application;
+namespace Whathood;
 /**
  * Description of Schema
  *
@@ -21,7 +21,7 @@ class SchemaTool {
     }
     
     public function neighborhoodsToFile($file) {
-        $json = \Application\Entity\Neighborhood
+        $json = \Whathood\Entity\Neighborhood
                                     ::neighborhoodsToJson( $neighborhoods );
         file_put_contents($file, $json );
     }
@@ -29,17 +29,17 @@ class SchemaTool {
     public function neighborhoodsFromFile($file) {
         $json = file_get_contents($file);
 
-        return \Application\Entity\Neighborhood::jsonToNeighborhoods( $json );
+        return \Whathood\Entity\Neighborhood::jsonToNeighborhoods( $json );
     }
     public function backupDb($file) {
-        $neighborhoodMapper = $this->sm->get('Application\Mapper\Neighborhood');
+        $neighborhoodMapper = $this->sm->get('Whathood\Mapper\Neighborhood');
 
         $neighborhoods = $neighborhoodMapper->fetchAll();
 
         foreach( $neighborhoods as $n ) {
             print $n->getName()."\n";
         }
-        $json = \Application\Entity\Neighborhood::neighborhoodsToJson( $neighborhoods );
+        $json = \Whathood\Entity\Neighborhood::neighborhoodsToJson( $neighborhoods );
 
         file_put_contents($file, $json );
     }
@@ -48,12 +48,12 @@ class SchemaTool {
         
         if( !$this->autoIncrementNeighborhoodIds ) {
             $metadata = $this->em->getClassMetaData(
-                                            'Application\Entity\Neighborhood');
+                                            'Whathood\Entity\Neighborhood');
             $metadata->setIdGeneratorType(
                     \Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE );
         }
         
-        $mapper = $this->sm->get('Application\Mapper\Neighborhood');
+        $mapper = $this->sm->get('Whathood\Mapper\Neighborhood');
         foreach( $neighborhoods as $n ) {
             print getenv('APPLICATION_ENV') . " saving " 
                     . $n->getId() . " " . $n->getName() . "\n";
@@ -105,7 +105,7 @@ class SchemaTool {
     
     function initAzevea( $sm, $region, $user ) {
 
-        $azeveaFile = $sm->get('Application\Spatial\NeighborhoodJsonFile\Azevea' );
+        $azeveaFile = $sm->get('Whathood\Spatial\NeighborhoodJsonFile\Azevea' );
 
         $azeveaFile->getWhathoodUser( $user );
         $azeveaFile->setRegion( $region );
@@ -113,7 +113,7 @@ class SchemaTool {
         $neighborhoods = $azeveaFile->getPolygon( 
                                     $file = '../draft/Philadelphia_neighborhoods.json' );
 
-        $neighborhoodMapper = $sm->get('Application\Mapper\Neighborhood');
+        $neighborhoodMapper = $sm->get('Whathood\Mapper\Neighborhood');
         foreach( $neighborhoods as $n ) {
             $n->setAuthority(true);
             $neighborhoodMapper->save($n);
@@ -129,7 +129,7 @@ class SchemaTool {
 
     function initUpenn( $sm, $region, $user ) {
 
-        $uPennFile = $sm->get('Application\Spatial\NeighborhoodJsonFile\Upenn');
+        $uPennFile = $sm->get('Whathood\Spatial\NeighborhoodJsonFile\Upenn');
 
 
         $uPennFile->getWhathoodUser( $user );
@@ -138,7 +138,7 @@ class SchemaTool {
         $neighborhoods = $uPennFile->getPolygon( 
                                     $file = '../draft/nis_neighborhood.json' );
 
-        $neighborhoodMapper = $sm->get('Application\Mapper\Neighborhood');
+        $neighborhoodMapper = $sm->get('Whathood\Mapper\Neighborhood');
         foreach( $neighborhoods as $n ) {
             $neighborhoodMapper->save($n);
             print "saved " 

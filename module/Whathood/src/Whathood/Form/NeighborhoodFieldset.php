@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-use Application\Entity\Neighborhood;
+use Whathood\Entity\Neighborhood;
 
 class NeighborhoodFieldset extends Fieldset implements InputFilterProviderInterface {
     
@@ -43,7 +43,7 @@ class NeighborhoodFieldset extends Fieldset implements InputFilterProviderInterf
 
         $this->add(array(
             'name' => 'region',
-            'type' => 'Application\Form\RegionFieldset',
+            'type' => 'Whathood\Form\RegionFieldset',
             'attributes ' => array(
                 'required' => 'false',
             ),

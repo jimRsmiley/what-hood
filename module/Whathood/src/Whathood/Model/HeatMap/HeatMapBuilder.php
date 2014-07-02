@@ -1,15 +1,15 @@
 <?php //
-namespace Application\Model\HeatMap;
+namespace Whathood\Model\HeatMap;
 
-use Application\Entity\Neighborhood;
-use Application\Entity\HeatMap;
-use Application\Entity\Region;
-use Application\Model\Whathood\WhathoodConsensus;
-use Application\Model\HeatMap\Point as HeatMapPoint;
-use Application\Mapper\HeatMapMapper;
-use Application\Spatial\PHP\Types\Geometry\LineString;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\HeatMap;
+use Whathood\Entity\Region;
+use Whathood\Model\Whathood\EntityConsensus;
+use Whathood\Entity\NeighborhoodHeatMapPoint as HeatMapPoint;
+use Whathood\Mapper\NeighborhoodHeatMapMapper;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\Common\Collections\ArrayCollection;
 /**
  * We need to create a box that encoloses all neighborhood polygons for a
@@ -24,16 +24,16 @@ class HeatMapBuilder {
     
     protected $heatMapMapper;
     
-    public function __construct( HeatMapMapper $heatMapMapper ) {
+    public function __construct( NeighborhoodHeatMapMapper $heatMapMapper ) {
         $this->heatMapMapper = $heatMapMapper;
     }
     
     /**
      * 
-     * @param \Application\Entity\Neighborhood $testNeighborhood
-     * @param \Application\Entity\Region $testRegion
+     * @param \Whathood\Entity\Neighborhood $testNeighborhood
+     * @param \Whathood\Entity\Region $testRegion
      * @param type $sideLength
-     * @return null|\Application\Entity\HeatMap
+     * @return null|\Whathood\Entity\HeatMap
      * @throws \InvalidArgumentException
      */
     public function getLatestHeatMap( 
@@ -48,58 +48,50 @@ class HeatMapBuilder {
         $testRegionName = $testRegion->getName();
         
         $neighborhoodPolygons = $this->neighborhoodPolygonMapper()
-                                ->byNeighborhoodName( 
+                                ->getNeighborhoodByName( 
                                         $testNeighborhoodName,$testRegionName);
 
-        if( empty( $neighborhoodPolygons ) )
-            throw new \Exception("neighborhoodPolygons cannot be empty");
-        
-        
         $testPoints = $this->getBoundarySquare($neighborhoodPolygons)
                                                 ->getTestPoints($sideLength);
         
+        $heatMapPoints = $this->getHeatMapPoints($testPoints, $testNeighborhoodName);
+        
+        if( count( $heatMapPoints ) > 0 ) {
+            return new HeatMap( array(
+                    'neighborhood'          => $testNeighborhood,
+                    'region'                => $testRegion,
+                    'heatMapPoints'         => $heatMapPoints,
+                    'neighborhoodPolygons'  => new ArrayCollection($neighborhoodPolygons)
+                ));
+        } else {
+            return null;
+        }
+    }
+    
+    protected function getHeatMapPoints($testPoints, $testNeighborhoodName) {
+        
         $heatMapPoints = array(); 
-        $maxValueCalculator = new MaxCalculator();
-        $counter = 1;
         
-        $npCollection = new ArrayCollection($neighborhoodPolygons);
-        
-        /*
-         * for each test point in the boundary square
-         */
         foreach( $testPoints as $point ) {
             
             // get all the neighborhood polygons that overlap that point
             $neighborhoodPolygons = $this->neighborhoodPolygonMapper()
-                                                            ->byPoint($point);
-            
+                                        ->getNeghborhoodPolygonsByPoint($point);
             
             $consensus = new WhathoodConsensus( $neighborhoodPolygons );
             $votes = $consensus->getVoteNum( $testNeighborhoodName );
             
             if( 0 < $votes )
-                $maxValueCalculator->add( $consensus->getTotalVotes() );
         
             if( $votes > 0 ) {
-                $heatMapPoints[] = new HeatMapPoint(
-                                        $point->getX(),
-                                        $point->getY(),
-                                        $votes
-                                    );
+                
+                $heatMapPoints[] = new HeatMapPoint( array(
+                                        'point'  => $point,
+                                        'weight' => $votes
+                                    ));
             }
         }
-        
-        if( count( $heatMapPoints ) > 0 ) {
-            return new HeatMap( array(
-                    'neighborhood'  => $testNeighborhood,
-                    'region'            => $testRegion,
-                    'points'            => $heatMapPoints,
-                    'max'               => $maxValueCalculator->getMaxValue(),
-                    'neighborhoodPolygons' => $npCollection
-                ));
-        } else {
-            return null;
-        }
+        return $heatMapPoints;
     }
     
     /**
@@ -111,47 +103,43 @@ class HeatMapBuilder {
         if( count( $neighborhoods ) == 0 )
             throw new \InvalidArgumentException('neighborhoods may not be empty');
         
-        $latMin = null;$latMax = null;$lngMin = null; $lngMax = null;
+        $yMin = null;$yMax = null;$xMin = null; $xMax = null;
         
         foreach( $neighborhoods as $neighborhood ) {
             $polygon = $neighborhood->getPolygon();
 
             foreach( $polygon->getRings() as $ring ) {
-                foreach( $ring->getPoints() as $point ) {
+                foreach( $ring->getHeatMapPoints() as $point ) {
                     $x = $point->getX();
                     $y = $point->getY();
                     
-                    if( $latMin == null || $latMin > $point->getX() ){
-                        $latMin = $x;
+                    if( $yMin == null || $yMin > $point->getY() ){
+                        $yMin = $y;
                     }
-                    if( $latMax == null || $latMax < $point->getX() ) {
-                        $latMax = $x;
+                    if( $yMax == null || $yMax < $point->getY() ) {
+                        $yMax = $y;
                     }
-                    if( $lngMin == null || $lngMin > $point->getY() ) {
-                        $lngMin = $y;
+                    if( $xMin == null || $xMin > $point->getX() ) {
+                        $xMin = $x;
                     }
-                    if( $lngMax == null || $lngMax < $point->getY() ) {
-                        $lngMax = $y;
+                    if( $xMax == null || $xMax < $point->getX() ) {
+                        $xMax = $x;
                     }
                 } // foreach point in the ring
             } // foreach ring
         } // foreach neighborhood
-
-        if( empty( $latMin ) ) {
-            die( 'it should be impossible to have an empty latMin here' );
-        }
         
         return new BoundarySquare( array(
-            'latMin' => $latMin,
-            'latMax' => $latMax,
-            'lngMin' => $lngMin,
-            'lngMax' => $lngMax
+            'yMin' => $yMin,
+            'yMax' => $yMax,
+            'xMin' => $xMin,
+            'xMax' => $xMax
         ));
     }
     
-    public static function neighborhoodExists( $neighborhoodName, $haystack ) {
+    public static function neighborhoodExists( $neighborhoodName, $neighborhoodHaystack ) {
         
-        foreach( $haystack as $n ) {
+        foreach( $neighborhoodHaystack as $n ) {
             if( $n->getName() == $neighborhoodName )
                 return true;
         }

@@ -1,9 +1,9 @@
 <?php
 
-namespace ApplicationTest\Mapper;
+namespace WhathoodTest\Mapper;
 
-use Application\PHPUnit\DoctrineBaseTest;
-use Application\Entity\WhathoodUser;
+use Whathood\PHPUnit\DoctrineBaseTest;
+use Whathood\Entity\WhathoodUser;
 
 /**
  * Description of NeighborhoodORMTest
@@ -16,17 +16,17 @@ class FacebookUserMapperTest extends DoctrineBaseTest {
 
     public function setUp() {
         parent::setUp();
-        $this->object = $this->sm->get( 'Application\Mapper\WhathoodUserMapper' );
+        $this->object = $this->sm->get( 'Whathood\Mapper\WhathoodUserMapper' );
     }
     
     public function testSave() {
         print "running test save\n";
         
-        $user = new \Application\Entity\WhathoodUser(
+        $user = new \Whathood\Entity\WhathoodUser(
                 array( 
                     'userName' => 'Azevea3',
                     'authority' => true,
-                    'facebookUser'  => new \Application\Entity\FacebookUser(
+                    'facebookUser'  => new \Whathood\Entity\FacebookUser(
                             array(
                                 'name' => 'Joe Schmoe',
                                 'id'    => '123'

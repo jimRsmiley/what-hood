@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace Application\Spatial\ORM\Query\AST\Functions\MySql;
+namespace Whathood\Spatial\ORM\Query\AST\Functions\MySql;
 
 use CrEOF\Spatial\ORM\Query\AST\Functions\AbstractSpatialDQLFunction;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Doctrine\ORM\Query;
+namespace Whathood\Doctrine\ORM\Query;
 /**
  * Description of AbstractQueryBuilder
  *

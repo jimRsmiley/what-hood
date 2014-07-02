@@ -8,8 +8,8 @@
 class NeighborhoodFormTest extends PHPUnit_Framework_TestCase {
     
     public function testSetData() {
-        $neighborhood = new \Application\Entity\Neighborhood();
-        $form = new \Application\Form\NeighborhoodPolygonForm();
+        $neighborhood = new \Whathood\Entity\Neighborhood();
+        $form = new \Whathood\Form\NeighborhoodPolygonForm();
         
         
         $data = array(

@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Model;
+namespace Whathood\Model;
 
-use \Application\Entity\WhathoodUser;
+use \Whathood\Entity\WhathoodUser;
 /**
  * Description of AuthenticationStorage
  *

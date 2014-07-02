@@ -1,5 +1,5 @@
 <?php
-namespace Application\Doctrine\ORM\Query;
+namespace Whathood\Doctrine\ORM\Query;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
@@ -16,7 +16,7 @@ class HeatMapQueryBuilder extends AbstractQueryBuilder {
         $this->qb = $qb;
         
         $this->qb->select( array( 'hm','n','r' ) )
-            ->from('Application\Entity\HeatMap', 'hm')
+            ->from('Whathood\Entity\HeatMap', 'hm')
             ->join('hm.region','r')
             ->join('hm.neighborhood', 'n')
             ;

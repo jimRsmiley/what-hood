@@ -1,13 +1,13 @@
 <?php
 
 use 
- Application\Entity\Neighborhood,
- Application\Entity\Region,
- Application\Model\HeatMap\Point,
+ Whathood\Entity\Neighborhood,
+ Whathood\Entity\Region,
+ Whathood\Model\HeatMap\Point,
  CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 
-use Application\Entity\HeatMap;
-use Application\PHPUnit\DoctrineBaseTest as BaseTest;
+use Whathood\Entity\HeatMap;
+use Whathood\PHPUnit\DoctrineBaseTest as BaseTest;
 
 /**
  * Description of NeighborhoodORMTest
@@ -20,14 +20,14 @@ class HeatMapMapperTest extends BaseTest {
     
     public function setUp() {
         parent::setUp();
-        $this->object = $this->sm->get('Application\Mapper\HeatMapMapper');
+        $this->object = $this->sm->get('Whathood\Mapper\HeatMapMapper');
     }
 
     public function testSave() {
         
         $heatMap = $this->getDummyHeatMap();
                 
-        $heatMapMapper = $this->sm->get('Application\Mapper\HeatMapMapper');
+        $heatMapMapper = $this->sm->get('Whathood\Mapper\HeatMapMapper');
         
         $this->neighborhoodMapper()->save( $heatMap->getNeighborhood() );
         // no exception?  it probably worked out

@@ -1,11 +1,11 @@
 <?php
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-use Application\Entity\Region;
+use Whathood\Entity\Region;
 
 /**
  * Description of RegionFieldset

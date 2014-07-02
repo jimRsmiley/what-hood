@@ -1,6 +1,6 @@
 <?php
 
-namespace ApplicationTest\Controller;
+namespace WhathoodTest\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
@@ -14,7 +14,7 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase,
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class RoutingTest extends \Application\PHPUnit\BaseControllerTest {
+class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
 
     public function setUp()
     {
@@ -65,9 +65,9 @@ class RoutingTest extends \Application\PHPUnit\BaseControllerTest {
         
         $this->assertResponseStatusCode(302);
         
-        $auth = Bootstrap::getServiceManager()->get('Application\Model\AuthenticationService');
+        $auth = Bootstrap::getServiceManager()->get('Whathood\Model\AuthenticationService');
         
-        $auth->setWhathoodUser( new \Application\Entity\WhathoodUser( array(
+        $auth->setWhathoodUser( new \Whathood\Entity\WhathoodUser( array(
             'id' => 1,
         )));
 

@@ -1,10 +1,10 @@
 <?php
-namespace Application\Controller;
+namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-use Application\Spatial\PHP\Types\Geometry\FeatureCollection;
-use Application\Spatial\PHP\Types\Geometry\Feature;
+use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
+use Whathood\Spatial\PHP\Types\Geometry\Feature;
 
 /**
  * Description of RegionController
@@ -14,54 +14,37 @@ use Application\Spatial\PHP\Types\Geometry\Feature;
 class RegionController extends BaseController {
     
     public function showAction() {
-        
         $regionName = $this->getUriParameter('region_name');
+        $setNumber = $this->getUriParameter('set_number');
         
         if( empty( $regionName ) ) {
-            throw new \InvalidArgumentException('regionName may not be null');
+            $regionName = 'Philadelphia';
         }
         
+        if( empty( $setNumber ) )
+            $setNumber = $this->neighborhoodPolygonMapper ()->getLastCreateEventId();
+        
         try {
-            $region = $this->regionMapper()->byName( $regionName );
+            $region = $this->regionMapper()->getRegionByName( $regionName );
         } catch( \Doctrine\ORM\NoResultException $e ) {
             $viewModel = new ViewModel( array( 'regionName' => $regionName ) );
-            $viewModel->setTemplate('application/region/no-region-by-name.phtml');
+            $viewModel->setTemplate('whathood/region/no-region-by-name.phtml');
             return $viewModel;
         }   
         
-        $featureCollection = new FeatureCollection();
-        $featureCollection->addGeometry(
-                                new Feature( $region->getBorderPolygon() ) );
-        
         $viewModel = $this->getViewModel( array( 
-                    'region'    => $region,
-                    'featureCollection' => $featureCollection
+            'region'    => $region,
+            'setNumber' => $setNumber
             )
         );
-        $viewModel->setTemplate('application/region/region-show.phtml');
+        $viewModel->setTemplate('whathood/region/region-show.phtml');
         return $viewModel;
-    }
-    
-    public function borderAction() {
-        $regionName = $this->getUriParameter('region_name');
-        
-        if( empty( $regionName ) ) {
-            throw new \InvalidArgumentException('regionName may not be null');
-        }
-        
-        $region = $this->regionMapper()->byName( $regionName );
-        
-        $featureCollection = new FeatureCollection();
-        $featureCollection->addGeometry(
-                                new Feature( $region->getBorderPolygon() ) );
-        
-        return new JsonModel( $featureCollection->toGeoJsonArray() );
     }
     
     public function listRegionsAction() {
         
         $mapper = $this->getServiceLocator()
-                ->get('Application\Mapper\RegionMapper');
+                ->get('Whathood\Mapper\RegionMapper');
 
         $regions = $mapper->fetchAll();
        
@@ -85,7 +68,7 @@ class RegionController extends BaseController {
                     'userName'      => $userName
                 ) 
             );
-        $viewModel->setTemplate('application/region/region-show.phtml');
+        $viewModel->setTemplate('whathood/region/region-show.phtml');
         return $viewModel;
     }
 }

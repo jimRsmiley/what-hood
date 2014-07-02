@@ -1,5 +1,5 @@
 <?php
-namespace Application\Model;
+namespace Whathood\Model;
 
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Smtp as SmtpTransport;

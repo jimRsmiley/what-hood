@@ -7,11 +7,10 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Controller;
+namespace Whathood\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Application\Module;
+use Whathood\Module;
 class AuthController extends BaseController
 {
     public function loginAction()
@@ -45,12 +44,10 @@ class AuthController extends BaseController
         // Login or logout url will be needed depending on current user state.
         if ($facebookUserId) {
 
-            $facebookUser = new \Application\Entity\FacebookUser($facebookUserProfile);
-            
             // see if we've already stored the user
             try {
                 $whathoodUser = $this->whathoodUserMapper()
-                                    ->byFacebookId( $facebookUser->getId() );
+                                    ->byFacebookId( $facebookUserId );
             }
             /**
              * No whathoodUser found in database
@@ -71,7 +68,7 @@ class AuthController extends BaseController
                 /*
                  * create it and save it
                  */
-                $whathoodUser = new \Application\Entity\WhathoodUser( array(
+                $whathoodUser = new \Whathood\Entity\WhathoodUser( array(
                     'userName'      => $userName,
                     'facebookUser'  => $facebookUser 
                 ));
@@ -110,7 +107,7 @@ class AuthController extends BaseController
             $viewModel = new ViewModel();
             $viewModel->setVariable(
                     'loginUrl', $facebook->getLoginUrl() );
-            $viewModel->setTemplate('application/auth/login-prompt.phtml');
+            $viewModel->setTemplate('whathood/auth/login-prompt.phtml');
         }
         
         return $viewModel;
@@ -135,7 +132,7 @@ class AuthController extends BaseController
     
     public function getAuthService() {
         return $this->getServiceLocator()
-                ->get('Application\Model\AuthenticationService');
+                ->get('Whathood\Model\AuthenticationService');
     }
     
     public function isAuthenticateRoute( $urlString ) {

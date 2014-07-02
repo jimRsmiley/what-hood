@@ -1,5 +1,5 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 /**
  * Description of NeighborhoodPolygonDisqus
  *

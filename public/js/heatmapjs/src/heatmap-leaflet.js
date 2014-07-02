@@ -20,11 +20,6 @@
         }
 	},
 
-    getBounds: function() {
-        var self = this;
-        console.log("we're in my function yaaaay!");
-    },
-            
 	initialize: function (options, data) {
         var self = this;
         L.Util.setOptions(this, options);

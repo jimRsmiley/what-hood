@@ -7,7 +7,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application;
+namespace Whathood;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -18,18 +18,18 @@ class Module
     
     public static $authenticateRoutes = array( 
             array(
-                'controller' => 'Application\Controller\NeighborhoodPolygon',
+                'controller' => 'Whathood\Controller\UserPolygon',
                 'action' => 'add' 
                 ),
             array(
-                'controller' => 'Application\Controller\NeighborhoodPolygonVote',
+                'controller' => 'Whathood\Controller\NeighborhoodPolygonVote',
                 'action' => 'cast' 
                 ),
             );
     
     protected $adminRoutes = array( 
             array(
-                'controller' => 'Application\Controller\User',
+                'controller' => 'Whathood\Controller\User',
                 'action' => 'add' 
                 ),
             );
@@ -44,14 +44,14 @@ class Module
         /*
          * Log exceptions
          */
-        $eventManager->attach('dispatch.error', function($event){
+        /*$eventManager->attach('dispatch.error', function($event){
             $exception = $event->getResult()->exception;
             if ($exception) {
                 $sm = $event->getApplication()->getServiceManager();
-                $service = $sm->get('Application\Service\ErrorHandling');
+                $service = $sm->get('Whathood\Service\ErrorHandling');
                 $service->logException($exception);
             }
-        });
+        });*/
         
         $this->checkForAuthentication(
                 $eventManager,
@@ -134,7 +134,7 @@ class Module
                     }
                     
                     if( !$inArray ) {
-                        throw new \Application\AuthenticationException("you aren't authorized for this");
+                        throw new \Whathood\AuthenticationException("you aren't authorized for this");
                     }
                 }
                 return;
@@ -142,7 +142,7 @@ class Module
             
             
             // Redirect to the user login page, as an example
-            $url      = '/application/auth/login';
+            $url      = '/whathood/auth/login';
 
             $url .= '?redirect_to='.'http://'.$_SERVER['SERVER_NAME'].$e->getRequest()->getUri()->getPath();
             
@@ -179,7 +179,7 @@ class Module
     
     public function getAuthService($e) {
         return $e->getApplication()->getServiceManager()
-                    ->get('Application\Model\AuthenticationService');
+                    ->get('Whathood\Model\AuthenticationService');
     }
 
 }

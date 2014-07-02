@@ -4,7 +4,7 @@ return array(
     'modules' => array(
         'DoctrineModule',
         'DoctrineORMModule',
-        'Application',
+        'Whathood',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(

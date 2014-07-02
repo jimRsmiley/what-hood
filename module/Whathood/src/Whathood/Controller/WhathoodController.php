@@ -1,9 +1,9 @@
 <?php
-namespace Application\Controller;
+namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
-use Application\Model\Whathood\WhathoodResult;
+use Whathood\Model\Whathood\WhathoodResult;
 /**
  * Description of SearchController
  *
@@ -81,8 +81,8 @@ class WhathoodController extends BaseController {
     }
     
     public function getPolygon( $lat, $lng ) {
-        $neighborhoodPolygonMapper = $this->neighborhoodPolygonMapper();
-        $neighborhoods = $neighborhoodPolygonMapper->byLatLng($lat,$lng);
+        $userPolygonMapper = $this->userPolygonMapper();
+        $neighborhoods = $userPolygonMapper->getNeighborhoodPolygonsByLatLng($lng,$lat);
         
         $whathoodResult = new WhathoodResult();
         $whathoodResult->setLatLng( $lat, $lng );

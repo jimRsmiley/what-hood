@@ -1,13 +1,13 @@
 <?php
 
-namespace ApplicationTest\Controller;
+namespace WhathoodTest\Controller;
 
 use Zend\Http\Request;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Stdlib\Parameters;
-use Application\PHPUnit\BaseControllerTest;
+use Whathood\PHPUnit\BaseControllerTest;
 /**
  * Description of NeighborhoodControllerTest
  *
@@ -23,7 +23,7 @@ class NeighborhoodPolygonControllerTest extends BaseControllerTest {
     public function testByIdJson() {
         
         $whathoodUser = $this->getSavedAuthenticatedWhathoodUser();
-        $neighborhoodPolygon = \Application\PHPUnit\DummyEntityBuilder::neighborhoodPolygon($whathoodUser);
+        $neighborhoodPolygon = \Whathood\PHPUnit\DummyEntityBuilder::neighborhoodPolygon($whathoodUser);
         $this->neighborhoodPolygonMapper()->save( $neighborhoodPolygon );
         
         $this->getRequest()
@@ -49,7 +49,7 @@ class NeighborhoodPolygonControllerTest extends BaseControllerTest {
     public function testAddNeighborhoodAction() {
         $this->initDb();
         $whathoodUser = $this->getSavedAuthenticatedWhathoodUser();
-        $neighborhoodPolygon = \Application\PHPUnit\DummyEntityBuilder::neighborhoodPolygon($whathoodUser);
+        $neighborhoodPolygon = \Whathood\PHPUnit\DummyEntityBuilder::neighborhoodPolygon($whathoodUser);
         $this->neighborhoodPolygonMapper()->save( $neighborhoodPolygon );
         
 

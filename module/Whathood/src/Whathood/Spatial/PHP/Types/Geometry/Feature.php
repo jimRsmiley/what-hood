@@ -1,5 +1,5 @@
 <?php
-namespace Application\Spatial\PHP\Types\Geometry;
+namespace Whathood\Spatial\PHP\Types\Geometry;
 /**
  * Description of FeatureCollection
  *
@@ -15,10 +15,10 @@ class Feature {
         $this->properties = array();
     }
     
-    public function toGeoJsonArray() {
+    public function toArray() {
         return array(
             'type'      => 'Feature', 
-            'geometry'  => $this->geometry->toGeoJsonArray(),
+            'geometry'  => $this->geometry->toArray(),
             'properties' => null
         );
     }

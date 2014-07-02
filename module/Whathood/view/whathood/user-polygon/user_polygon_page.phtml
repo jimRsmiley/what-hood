@@ -1,0 +1,23 @@
+<?php
+$neighborhoodPolygon = $this->paginator->getItem( 0, $this->paginator->getCurrentPageNumber() );
+
+?>
+
+<?php echo $this->paginationControl($this->paginator,
+                                    'Sliding',
+                                    'whathood/user-polygon/user_polygon_pagination_control.phtml', 
+                                    array(
+                                        'paginator' => $this->paginator,
+                                        'route' => 'neighborhood',
+                                        
+                                        'regionName' => $this->regionName,
+                                        'neighborhoodName' => $this->neighborhoodName ) ); ?>
+
+<?php
+foreach( $this->paginator as $item ) :
+    $form = new \Whathood\Form\NeighborhoodPolygonForm();
+    $form->bind( $item );
+echo $this->partial( 'whathood/user-polygon/view.phtml', 
+                    array( 'form'=> $form, 'center' => $this->center ) );
+endforeach;
+?>

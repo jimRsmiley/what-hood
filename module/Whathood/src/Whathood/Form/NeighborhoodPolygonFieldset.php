@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
-use Application\Entity\NeighborhoodPolygon;
+use Whathood\Entity\UserPolygon;
 
 class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProviderInterface {
     
@@ -14,7 +14,7 @@ class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProvide
     {
         parent::__construct('neighborhoodPolygon');
         
-        $this->setObject( new NeighborhoodPolygon() );
+        $this->setObject( new UserPolygon() );
         $this->setHydrator(new ClassMethodsHydrator(false));
         
         $this->add(array(
@@ -31,7 +31,7 @@ class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProvide
 
         $this->add(array(
             'name' => 'neighborhood',
-            'type' => 'Application\Form\NeighborhoodFieldset',
+            'type' => 'Whathood\Form\NeighborhoodFieldset',
             'attributes ' => array(
                 'required' => 'false',
             ),
@@ -42,7 +42,7 @@ class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProvide
         
         $this->add(array(
             'name' => 'whathoodUser',
-            'type' => 'Application\Form\WhathoodUserFieldset',
+            'type' => 'Whathood\Form\WhathoodUserFieldset',
             'attributes ' => array(
                 'required' => 'false',
             ),

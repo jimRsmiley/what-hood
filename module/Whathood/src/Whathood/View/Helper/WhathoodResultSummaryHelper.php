@@ -1,5 +1,5 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 
 use Zend\View\Renderer\RendererInterface as Renderer;
 /**
@@ -13,7 +13,7 @@ class WhathoodResultSummaryHelper extends \Zend\View\Helper\AbstractHelper {
     
 
     
-    public function __invoke( \Application\Model\Whathood\WhathoodConsensus $consensus ) {
+    public function __invoke( \Whathood\Model\Whathood\EntityConsensus $consensus ) {
         
         $winners = $consensus->getWinnerUnits();
         

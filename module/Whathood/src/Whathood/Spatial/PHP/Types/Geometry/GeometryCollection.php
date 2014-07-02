@@ -1,5 +1,5 @@
 <?php
-namespace Application\Spatial\PHP\Types\Geometry;
+namespace Whathood\Spatial\PHP\Types\Geometry;
 /**
  * Description of GeometryCollection
  *

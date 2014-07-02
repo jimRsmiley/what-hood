@@ -1,7 +1,7 @@
 <?php
-namespace Application\Model;
+namespace Whathood\Model;
 
-use Application\Entity\NeighborhoodPolygon;
+use Whathood\Entity\UserPolygon;
 /**
  * Description of EmailMessageBuilder
  *
@@ -9,7 +9,7 @@ use Application\Entity\NeighborhoodPolygon;
  */
 class EmailMessageBuilder {
     
-    public static function neighborhoodAdd( NeighborhoodPolygon $np ) {
+    public static function neighborhoodAdd( UserPolygon $np ) {
         return 'A new neighborhood polygon has been added<br/><br/>'
         . '<a href="http://whathood.in/n/id/'.$np->getId().'">Go to neighborhood</a>';
     }

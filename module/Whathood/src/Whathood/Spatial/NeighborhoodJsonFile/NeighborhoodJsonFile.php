@@ -1,13 +1,13 @@
 <?php
-namespace Application\Spatial\NeighborhoodJsonFile;
+namespace Whathood\Spatial\NeighborhoodJsonFile;
 
-use Application\Entity\Neighborhood;
-use Application\Entity\WhathoodUser;
-use Application\Entity\NeighborhoodPolygon;
-use Application\Entity\Region;
-use Application\Spatial\PHP\Types\Geometry\Point;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\WhathoodUser;
+use Whathood\Entity\UserPolygon;
+use Whathood\Entity\Region;
+use Whathood\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
 /**
  * Description of NeighborhoodJson
  *
@@ -70,13 +70,13 @@ abstract class NeighborhoodJsonFile {
             $points = array();
             foreach( $array as $point ) {
                 list($lng,$lat) = explode(",", $point );
-                $points[] = new Point( $lat, $lng );
+                $points[] = new Point(  $lng, $lat );
             }
             $lineString = new LineString( $points );
             $lineString->close();
             $polygon = new Polygon( array( $lineString) );
 
-            $neighborhoodPolygon = new NeighborhoodPolygon();
+            $neighborhoodPolygon = new UserPolygon();
             $neighborhoodPolygon->setWhathoodUser( $whathoodUser );
             $neighborhoodPolygon->setAuthority( $this->isAuthority() );
             $neighborhoodPolygon->setNeighborhood($neighborhood);

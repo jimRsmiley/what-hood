@@ -1,0 +1,47 @@
+
+<?php if ($this->pageCount): ?>
+<div class="centertext" style="width: 100%">
+    <ul class="pagination user_polygon_pagination centertext">    
+<!-- 
+Previous page link 
+==============================================
+-->
+<?php if (isset($this->previous)): ?>
+    <li><a href="<?=$this->paginator->pageUrl($this->previous)?>">
+        Prev
+        </a>
+    </li>
+<?php else: ?>
+    <li  class="disabled"><a href="#">Prev</a></li>
+<?php endif; ?>
+
+<!-- 
+Numbered page links 
+================================================
+-->
+<?php foreach ($this->pagesInRange as $page): ?>
+  <?php if ($page != $this->current): ?>
+    <li>
+
+    <a href="<?=$this->paginator->pageUrl($page)?>">
+        <?php echo $page; ?>
+    </a>
+    </li>
+  <?php else: ?>
+    <li class="active"><span><?=$page?></span></li>
+  <?php endif; ?>
+<?php endforeach; ?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)): ?>
+<li>
+  <a href="<?=$this->paginator->pageUrl($this->next)?>">
+    Next
+  </a>
+    </li>
+<?php else: ?>
+   <li  class="disabled"><a href="#">Next</a></li>
+<?php endif; ?>
+    </ul>
+</div>
+<?php endif; ?>

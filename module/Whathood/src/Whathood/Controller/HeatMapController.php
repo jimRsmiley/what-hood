@@ -1,13 +1,13 @@
 <?php
-namespace Application\Controller;
+namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Spatial\PHP\Types\Geometry\FeatureCollection;
-use Application\Spatial\PHP\Types\Geometry\Feature;
-use Application\Spatial\PHP\Types\Geometry\LineString;
-use Application\Entity\Neighborhood;
-use Application\Entity\Region;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
+use Whathood\Spatial\PHP\Types\Geometry\Feature;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\Region;
 /**
  * Description of NeighborhoodController
  *
@@ -15,52 +15,6 @@ use Application\Entity\Region;
  */
 class HeatMapController extends BaseController
 {
-    protected $heatMapMapper = null;
-    
-    /*
-     * I want to be able to visualize neighborhood bounds
-     */
-    public function showNeighborhoodBoundsAction() {
-        $regionName = $this->getUriParameter('regionName');
-        $neighborhoodName = $this->getUriParameter('neighborhoodName');
-        
-        if( empty( $regionName ) )
-            throw new \InvalidArgumentException('regionName may not be null');
-        
-        if( empty( $neighborhoodName ) )
-            throw new \InvalidArgumentException('neighborhoodName may not be null');
-        
-        $regionName         = str_replace('_', ' ', $regionName );
-        $neighborhoodName   = str_replace('_', ' ', $neighborhoodName );
-        
-        $neighborhoodPolygons = $this->neighborhoodPolygonMapper()
-                ->byNeighborhoodName($neighborhoodName,$regionName);
-        
-        $heatMapTool = $this->getServiceLocator()
-                ->get('Application\Model\HeatMap\HeatMapBuilder');
-        
-        $boundarySquare = $heatMapTool->getBoundarySquare($neighborhoodPolygons);
-        $lineString = $boundarySquare->getLineString();
-        $lineString->close();
-        
-        $featureCollection = new FeatureCollection();
-        $featureCollection->addGeometry( 
-            new Feature( new Polygon( array($lineString) )
-        ));
-        
-        /*
-         * add the neighborhoodPolygons
-         */
-        foreach( $neighborhoodPolygons as $np ) {
-            $featureCollection->addGeometry( new Feature(
-                    $np ) );
-        }
-        
-        return $this->getViewModel( array(
-            'featureCollection' => $featureCollection
-        ));
-    }
-    
     public function showAction() {
         $regionName       = $this->getUriParameter('region_name');
         $neighborhoodName = $this->getUriParameter('neighborhood_name');
@@ -69,44 +23,46 @@ class HeatMapController extends BaseController
         $regionName = str_replace('_', ' ', $regionName );
         $neighborhoodName = str_replace('_', ' ', $neighborhoodName );
         
-        
-        $neighborhood = new Neighborhood( array(
-            'name' => $neighborhoodName,
-            'region' => new Region( array(
-                'name'  => $regionName
-            ))
-        ));
-        
         try {
-            $heatMap = $this->heatMapMapper()->getLatestHeatMap($neighborhood);
 
             if( $format == 'json' ) {
                 return new JsonModel( $heatMap->toJsonArray() );
             } else {
+                $neighborhood = $this->neighborhoodMapper()
+                    ->getNeighborhoodByName($neighborhoodName,$regionName);
+                
+                $heatMap = $this->neighborhoodStrengthOfIdentityMapper()
+                                    ->getHeatMapByNeighborhood($neighborhood);
+                
+                $jsonData = array();
+                foreach( $heatMap as $r ) {
+                    $arr = array( 
+                        'lat' => $r['y'], 
+                        'lon' => $r['x'], 
+                        'value' => $r['strength_of_identity'] * 100 );
+                    array_push( $jsonData, $arr);
+                }
                 return $this->getViewModel( array(
                     'heatMap' => $heatMap,
+                    'heatMapJson' => \Zend\Json\Json::encode( $jsonData )
                 ));
             }
         }
         catch( \Doctrine\ORM\NoResultException $e ) {
             
-            $viewModel = new ViewModel( array(
-                'message' => 'No heatmaps exist for ' . $neighborhoodName . " " . $regionName
-            ));
-            
-            $viewModel->setTemplate( 'application/show-message.phtml' );
-            return $viewModel;
+            return new ErrorViewModel( array( 'message' => 
+                'No heatmaps exist for ' . $neighborhoodName . " " . $regionName ) );
         }
-        
-        
     }
     
-    public function heatMapMapper() {
-        if( $this->heatMapMapper == null ) {
-            $this->heatMapMapper = $this->getServiceLocator()
-                                    ->get('Application\Mapper\HeatMapMapper');
-        }
-        return $this->heatMapMapper;
+    public function showLatestRegionNeighborhoodBordersAction() {
+        
+        $philadelphiaRegionId = 1;
+        $geoJson = $this->neighborhoodStrengthOfIdentityMapper()
+                ->getLatestNeighborhoodBordersByRegionIdAsGeoJson($philadelphiaRegionId);
+        
+        \Zend\Debug\Debug::dump( $geoJson );
+        exit;
     }
 }
 

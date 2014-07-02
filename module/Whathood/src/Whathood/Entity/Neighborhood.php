@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Entity;
+namespace Whathood\Entity;
 
 // need this even though Netbeans says you don't
 use Doctrine\ORM\Mapping as ORM;
@@ -14,6 +14,47 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Neighborhood extends \ArrayObject {
     
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id = null;
+    
+    /**
+     * @ORM\Column(name="name")
+     */
+    protected $name = null;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Whathood\Entity\Region",cascade="persist")
+     * @ORM\JoinColumn(name="region_id", referencedColumnName="id",nullable=false)
+     */
+    protected $region = null;
+
+    /**
+     * @ORM\Column(name="date_time_added",type="string")
+     */
+    protected $dateTimeAdded = null;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="UserPolygon",
+     *                              mappedBy="neighborhood",cascade="persist")
+     */
+    protected $userPolygons = null;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="NeighborhoodPolygon",
+     *                              mappedBy="neighborhood",cascade="persist")
+     */
+    protected $neighborhoodPolygons = null;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="NeighborhoodHeatMapPoint",
+     *                              mappedBy="neighborhood",cascade="persist")
+     */
+    protected $heatMapPoints = null;
+    
     public function __construct( $array = null ) {
         
         if( $array !== null ) {
@@ -21,13 +62,6 @@ class Neighborhood extends \ArrayObject {
             $hydrator->hydrate( $array, $this );
         }
     }
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id = null;
     
     public function getId() {
         return $this->id;
@@ -37,11 +71,6 @@ class Neighborhood extends \ArrayObject {
         $this->id = $id;
     }
     
-    /**
-     * @ORM\Column(name="name")
-     */
-    protected $name = null;
-    
     public function getName() {
         return $this->name;
     }
@@ -50,12 +79,6 @@ class Neighborhood extends \ArrayObject {
         $this->name = $name;
     }
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Region",cascade="persist")
-     * @ORM\JoinColumn(name="region_id", referencedColumnName="id",nullable=false)
-     */
-    protected $region = null;
-
     public function getRegion() {
         return $this->region;
     }
@@ -69,12 +92,7 @@ class Neighborhood extends \ArrayObject {
             throw new \InvalidArgumentException( 
                                     'data must be array or Region object' );
     }
-    
-    /**
-     * @ORM\Column(name="date_time_added",type="string")
-     */
-    protected $dateTimeAdded = null;
-    
+
     public function getDateTimeAdded() {
         return $this->dateTimeAdded;
     }
@@ -83,18 +101,12 @@ class Neighborhood extends \ArrayObject {
         $this->dateTimeAdded = $dateTimeAdded;
     }
     
-    /**
-     * @ORM\OneToMany(targetEntity="NeighborhoodPolygon",
-     *                              mappedBy="neighborhood",cascade="persist")
-     */
-    protected $neighborhoodPolygons = null;
-    
     public function setNeighborhoodPolygons( ArrayCollection $arrayCollection ) {
-        $this->neighborhoodPolygons = $arrayCollection;
+        $this->userPolygons = $arrayCollection;
     }
     
     public function getNeighbhorhoodPolygons() {
-        return $this->neighborhoodPolygons;
+        return $this->userPolygons;
     }
         
     public function toArray() {

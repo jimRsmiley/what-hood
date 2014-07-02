@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Service;
+namespace Whathood\Service;
  
 class ErrorHandling
 {
@@ -15,7 +15,7 @@ class ErrorHandling
  
     function logException(\Exception $e)
     {
-        $trace = $e->getTraceAsString();
+        /*$trace = $e->getTraceAsString();
         $i = 1;
         do {
             $messages[] = $i++ . ": " . $e->getMessage();
@@ -25,7 +25,7 @@ class ErrorHandling
         $log .= 'User Agent:' . $this->getUserAgent() . "\n";
         $log .= "\nTrace:\n" . $trace;
  
-        $this->logger->err($subject = 'ERROR ENCOUNTERED', $log);
+        $this->logger->err($subject = 'ERROR ENCOUNTERED', $log);*/
     }
     
     function getUserAgent() {

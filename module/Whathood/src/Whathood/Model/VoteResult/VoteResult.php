@@ -1,7 +1,7 @@
 <?php
-namespace Application\Model\VoteResult;
+namespace Whathood\Model\VoteResult;
 
-use Application\Entity\NeighborhoodPolygonVote;
+use Whathood\Entity\NeighborhoodPolygonVote;
 
 /**
  * when querying whathood, we need a container that will hold the 

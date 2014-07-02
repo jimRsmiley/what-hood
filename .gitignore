@@ -1,3 +1,5 @@
+data/DoctrineORMModule
+module/Whathood/test/ApplicationTest/data/DoctrineORMModule/Proxy
 ._*
 .~lock.*
 .buildpath
@@ -5,6 +7,8 @@
 .idea
 .project
 .settings
-composer.lock
-vendor/bin
-*.local.php
+vendor/
+.local.php
+public/test
+draft
+logs/

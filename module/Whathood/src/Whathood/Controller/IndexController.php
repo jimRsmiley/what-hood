@@ -1,7 +1,8 @@
 <?php
-namespace Application\Controller;
+namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
+
 /**
  * Description of RegionController
  *
@@ -15,9 +16,13 @@ class IndexController extends BaseController {
         return new ViewModel( array( 'regionNames' => $regions ) );
     }
     
+    public function aboutAction() {
+        return new ViewModel();
+    }
+    
     public function neighborhoodMapper() {
         return $this->getServiceLocator()
-                        ->get('Application\Mapper\Neighborhood');
+                        ->get('Whathood\Mapper\Neighborhood');
     }
     
     public function testExceptionLoggingAction() {

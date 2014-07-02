@@ -1,7 +1,9 @@
 <?php
-namespace Application\Mapper;
+namespace Whathood\Mapper;
 
-use Application\Entity\Region as RegionEntity;
+use Whathood\Entity\Region as RegionEntity;
+use Doctrine\ORM\Query\ResultSetMapping;
+
 /**
  * Description of RegionMapper
  *
@@ -9,7 +11,7 @@ use Application\Entity\Region as RegionEntity;
  */
 class RegionMapper extends BaseMapper {
     
-    public function byName( $name ) {
+    public function getRegionByName( $name ) {
         
         if( empty( $name ) ) {
             throw new \InvalidArgumentException("regionName may not be null");
@@ -18,7 +20,7 @@ class RegionMapper extends BaseMapper {
         $qb = $this->em->createQueryBuilder();
         
         $qb->select('r')
-                ->from('Application\Entity\Region','r')
+                ->from('Whathood\Entity\Region','r')
                 ->where( $qb->expr()->eq('r.name', ':name' ) )
                 ->setParameter('name', $name );
         $region = $qb->getQuery()->getSingleResult();
@@ -35,7 +37,7 @@ class RegionMapper extends BaseMapper {
         $qb = $this->em->createQueryBuilder();
         
         $qb->select('r')
-                ->from('Application\Entity\Region','r')
+                ->from('Whathood\Entity\Region','r')
                 ->where( $qb->expr()->like('LOWER(r.name)', 'LOWER(:name)' ) )
                 ->setParameter('name', '%'.$name.'%' );
         
@@ -44,7 +46,7 @@ class RegionMapper extends BaseMapper {
     
     public function fetchDistinctRegionNames() {
         $query = $this->em->createQuery( 'SELECT region.name'
-                . ' FROM Application\Entity\Region region'
+                . ' FROM Whathood\Entity\Region region'
                 . ' GROUP BY region.name' 
         );
         $regions = $query->getResult();
@@ -57,17 +59,35 @@ class RegionMapper extends BaseMapper {
         return $regionNames;
     }
     
+    public function pointIsInRegion( $regionId, $point ) {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('result','result');
+        $sql = "SELECT ST_Contains( polygon, ST_SetSRID(ST_MakePoint( :x, :y ),4326) ) as result FROM region WHERE id = :regionId";
+        $query = $this->em->createNativeQuery( $sql, $rsm );
+        $query->setParameter( ':x', $point->getX() );
+        $query->setParameter( ':y', $point->getY() );
+        $query->setParameter( ':regionId', $regionId );
+        $result = $query->getSingleResult();
+        
+        return $result['result'];
+    }
+    
     public function fetchAll() {
-        $regions = $this->em->getRepository( 'Application\Entity\Region' )
+        $regions = $this->em->getRepository( 'Whathood\Entity\Region' )
                 ->findAll();
         return $regions;
     }
     
     public function save( RegionEntity $region ) {
-        
         $this->em->persist( $region );
         $this->em->flush( $region );
     }
+
+    public function merge( RegionEntity $region ) {
+        $this->em->merge( $region );
+        $this->em->flush( $region );
+    }
+
     
     public function getQueryBuilder() {
         throw new \Exception("not yet implmeneted");

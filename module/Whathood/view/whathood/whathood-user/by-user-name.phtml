@@ -1,0 +1,14 @@
+<?php
+$whathoodUserName = $this->whathoodUserName;
+?>
+<div id="map" class="map"></div>
+<script>
+$('document').ready( function() {
+    map = new RegionMap('map');
+    map.addStreetLayer();
+    map.addGeoJson(
+        '/whathood/whathood-user/by-user-name?whathood_user_name=<?=$whathoodUserName?>&format=json'
+    );
+        
+});
+</script>

@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Mapper;
+namespace Whathood\Mapper;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use Application\Entity\Neighborhood as NeighborhoodEntity;
-use Application\Spatial\PHP\Types\Geometry\NeighborhoodCollection;
-use Application\Doctrine\ORM\Query\NeighborhoodQueryBuilder;
+use Whathood\Entity\Neighborhood as NeighborhoodEntity;
+use Whathood\Spatial\PHP\Types\Geometry\NeighborhoodCollection;
+use Whathood\Doctrine\ORM\Query\NeighborhoodQueryBuilder;
 
 /**
  * Description of NeighborhoodMapper
@@ -20,7 +20,7 @@ class NeighborhoodMapper extends BaseMapper {
             throw new \InvalidArgumentException("region may not be null");
         }
         
-        $dql = "SELECT n FROM Application\Entity\Neighborhood  n JOIN n.region r WHERE r.id = $regionId AND n.deleted = 0";
+        $dql = "SELECT n FROM Whathood\Entity\Neighborhood  n JOIN n.region r WHERE r.id = $regionId AND n.deleted = 0";
         
         return $this->em->createQuery($dql)->getResult();
     }
@@ -51,33 +51,37 @@ class NeighborhoodMapper extends BaseMapper {
         $qb = $this->em->createQueryBuilder();
         
         $qb->select('n')
-                ->from('Application\Entity\Neighborhood','n')
+                ->from('Whathood\Entity\Neighborhood','n')
                 ->where( $qb->expr()->like('LOWER(n.name)', 'LOWER(:name)' ) )
                 ->setParameter('name', '%'.$name.'%' );
         
         return $qb->getQuery()->getResult();
     }
     
-    public function byId( $id ) {
+    public function getNeighborhoodById( $id ) {
         
         if( empty( $id ) )
             throw new \InvalidArgumentException( 'id may not be null' );
         
         $qb = $this->em->createQueryBuilder();
-        $qb->select( array( 'n','r','u' ) )
-                ->from('Application\Entity\Neighborhood', 'n')
+        $qb->select( array( 'n','r' ) )
+                ->from('Whathood\Entity\Neighborhood', 'n')
                 ->innerjoin( 'n.region','r')
-                ->innerjoin( 'n.whathoodUser','u')
                 ->where( 'n.id = ?1' )
                 ->setParameter(1, $id );
         
-        return $qb->getQuery()->getSingleResult();
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch( \Exception $e ) {
+            print $e->getMessage();
+            exit;
+        }
     }
 
-   public function byNeighborhoodName( $neighborhoodName, $regionName ) {
+   public function getNeighborhoodByName( $neighborhoodName, $regionName ) {
         
         $dql = "SELECT n"
-                . " FROM Application\Entity\Neighborhood n"
+                . " FROM Whathood\Entity\Neighborhood n"
                 . " JOIN n.region r"
                 . " WHERE n.name = ?1"
                 . ' AND r.name = ?2';
@@ -91,7 +95,6 @@ class NeighborhoodMapper extends BaseMapper {
         return $query->getSingleResult();
     }
 
-    
     public function save( NeighborhoodEntity $neighborhood ) {
 
         if( $neighborhood->getName() == null )
@@ -103,7 +106,7 @@ class NeighborhoodMapper extends BaseMapper {
          */
         try {
             $region = $this->regionMapper()
-                            ->byName($neighborhood->getRegion()->getName() );
+                            ->getRegionByName($neighborhood->getRegion()->getName() );
             $neighborhood->setRegion($region);
         }
         // guess there was no region by that name            
@@ -116,9 +119,7 @@ class NeighborhoodMapper extends BaseMapper {
         $this->em->persist( $neighborhood );
         $this->em->flush( $neighborhood );
     }
-    
 
-    
     /*
      * fetch all neighborhoods, ALL of them
      */
@@ -133,9 +134,8 @@ class NeighborhoodMapper extends BaseMapper {
     }
 
     public function getQueryBuilder() {
-        return new \Application\Doctrine\ORM\Query\NeighborhoodQueryBuilder(
+        return new \Whathood\Doctrine\ORM\Query\NeighborhoodQueryBuilder(
                 $this->em->createQueryBuilder() );
     }
 }
-
 ?>

@@ -1,18 +1,18 @@
 <?php
-namespace Application\PHPUnit;
+namespace Whathood\PHPUnit;
 
-use Application\Spatial\PHP\Types\Geometry\LineString;
-use Application\Spatial\PHP\Types\Geometry\Point;
-use Application\Spatial\PHP\Types\Geometry\Polygon;
-use Application\Entity\Neighborhood;
-use Application\Entity\NeighborhoodVote;
-use Application\Entity\Region;
-use Application\Entity\HeatMap;
-use Application\Entity\WhathoodUser;
-use Application\Entity\FacebookUser;
-use Application\Entity\NeighborhoodPolygon;
-use Application\Entity\NeighborhoodPolygonVote;
-use Application\Model\HeatMap\Point as HeatMapPoint;
+use Whathood\Spatial\PHP\Types\Geometry\LineString;
+use Whathood\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\NeighborhoodVote;
+use Whathood\Entity\Region;
+use Whathood\Entity\HeatMap;
+use Whathood\Entity\WhathoodUser;
+use Whathood\Entity\FacebookUser;
+use Whathood\Entity\UserPolygon;
+use Whathood\Entity\NeighborhoodPolygonVote;
+use Whathood\Model\HeatMap\Point as HeatMapPoint;
 /**
  * Description of DummyEntityBuilder
  *
@@ -51,7 +51,7 @@ class DummyEntityBuilder {
         if( empty( $whathoodUser ) )
             throw new \InvalidArgumentException('must supply an already saved whathoodUser');
         
-        $n = new NeighborhoodPolygon( array(
+        $n = new UserPolygon( array(
             'neighborhood'  => self::neighborhood(),
             'region'        => self::region(),
             'polygon'       => self::polygon(),

@@ -1,5 +1,5 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 
 use Zend\View\Renderer\RendererInterface as Renderer;
 /**
@@ -13,7 +13,7 @@ class IsNeighborhoodOwnerHelper extends \Zend\View\Helper\AbstractHelper {
     
 
     public function __invoke(
-            \Application\Form\NeighborhoodPolygonFieldset $neighborhood, 
+            \Whathood\Form\NeighborhoodPolygonFieldset $neighborhood, 
             $user ) {
         
         if( empty( $user ) )

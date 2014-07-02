@@ -1,15 +1,15 @@
 <?php
 
 use 
- Application\Entity\Neighborhood,
- Application\Entity\Region,
- Application\Spatial\PHP\Types\Geometry\Point,
- Application\Spatial\PHP\Types\Geometry\LineString,
- Application\Spatial\PHP\Types\Geometry\Polygon;
+ Whathood\Entity\Neighborhood,
+ Whathood\Entity\Region,
+ Whathood\Spatial\PHP\Types\Geometry\Point,
+ Whathood\Spatial\PHP\Types\Geometry\LineString,
+ Whathood\Spatial\PHP\Types\Geometry\Polygon;
 
-use Application\Entity\WhathoodUser;
-use Application\PHPUnit\DoctrineBaseTest;
-use Application\PHPUnit\DummyEntityBuilder;
+use Whathood\Entity\WhathoodUser;
+use Whathood\PHPUnit\DoctrineBaseTest;
+use Whathood\PHPUnit\DummyEntityBuilder;
 
 /**
  * Description of NeighborhoodORMTest

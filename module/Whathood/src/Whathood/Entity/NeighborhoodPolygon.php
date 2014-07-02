@@ -1,26 +1,22 @@
 <?php
 
-namespace Application\Entity;
+namespace Whathood\Entity;
 
 // need this even though Netbeans says you don't
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodHydrator;
-use Application\Spatial\PHP\Types\Geometry\Polygon as WhathoodPolygon;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon as WhathoodPolygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 /**
  * @ORM\Entity
- * @ORM\Table(name="neighborhood_polygon")
+ * @ORM\Table(name="neighborhood_polygon",
+ * uniqueConstraints={
+ *   @ORM\UniqueConstraint(name="neighborhood_polygon_set_number_idx",columns={"neighborhood_id","set_number"})
+ * }
+ * )
  */
 class NeighborhoodPolygon extends \ArrayObject {
-    
-    public function __construct( $array = null ) {
-        
-        if( $array !== null ) {
-            $hydrator = new ClassMethodHydrator();
-            $hydrator->hydrate( $array, $this );
-        }
-    }
     
     /**
      * @ORM\Id
@@ -28,14 +24,6 @@ class NeighborhoodPolygon extends \ArrayObject {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id = null;
-    
-    public function getId() {
-        return $this->id;
-    }
-    
-    public function setId( $id ) {
-        $this->id = $id;
-    }
     
     /**
      * @ORM\ManyToOne(targetEntity="Neighborhood",
@@ -45,6 +33,43 @@ class NeighborhoodPolygon extends \ArrayObject {
      */
     protected $neighborhood = null;
     
+    /**
+     * @ORM\Column(name="polygon",type="polygon",nullable=false)
+     */
+    protected $polygon = null;
+    
+    /**
+     * @ORM\Column(name="num_user_polygons",type="integer",nullable=false)
+     */
+    protected $numUserPolygons = null;
+    
+    /**
+     * @ORM\Column(name="set_number",type="integer",nullable=false)
+     */
+    protected $setNumber = null;
+    
+    /** 
+     * @ORM\Column(name="timestamp",type="datetimetz",nullable=false)
+     */
+    protected $timestamp = null;
+    
+    
+    public function __construct( $array = null ) {
+        
+        if( $array !== null ) {
+            $hydrator = new ClassMethodHydrator();
+            $hydrator->hydrate( $array, $this );
+        }
+    }
+    
+    public function getId() {
+        return $this->id;
+    }
+    
+    public function setId( $id ) {
+        $this->id = $id;
+    }
+    
     public function getNeighborhood() {
         return $this->neighborhood;
     }
@@ -52,72 +77,12 @@ class NeighborhoodPolygon extends \ArrayObject {
     public function setNeighborhood( $data ) {
         if( is_array( $data ) )
             $this->neighborhood = new Neighborhood( $data );
-        else if( $data instanceof \Application\Entity\Neighborhood )
+        else if( $data instanceof \Whathood\Entity\Neighborhood )
             $this->neighborhood = $data;
         else
             throw new \InvalidArgumentException(
                                 'data must be array or Neighborhood object');
     }
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Region",
-     *      inversedBy="neighborhoodPolygons")
-     * @ORM\JoinColumn(name="region_id", referencedColumnName="id",
-     *      nullable=false)
-     */
-    protected $region = null;
-    
-    public function getRegion() {
-        return $this->region;
-    }
-    
-    public function setRegion( $data ) {
-        if( is_array( $data ) )
-            $this->region = new Region( $data );
-        else if( $data instanceof \Application\Entity\Region )
-            $this->region = $data;
-        else
-            throw new \InvalidArgumentException(
-                                'data must be array or Region object');
-    }
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="WhathoodUser")
-     * @ORM\JoinColumn(name="whathood_user_id", referencedColumnName="id",
-     *      nullable=false)
-     */
-    protected $whathoodUser = null;
-    
-    public function getWhathoodUser() {
-        return $this->whathoodUser;
-    }
-    
-    public function setWhathoodUser( $data ) {
-        if( is_array( $data ) )
-            $this->whathoodUser = new WhathoodUser( $data );
-        else if( $data instanceof \Application\Entity\WhathoodUser )
-            $this->whathoodUser = $data;
-        else
-            throw new \InvalidArgumentException('data must be array or User object');
-    }
-    
-    /**
-     * @ORM\Column(name="date_time_added")
-     */
-    protected $dateTimeAdded = null;
-    
-    public function getDateTimeAdded() {
-        return $this->dateTimeAdded;
-    }
-    
-    public function setDateTimeAdded($dateTimeAdded) {
-        $this->dateTimeAdded = $dateTimeAdded;
-    }
-    
-    /**
-     * @ORM\Column(name="polygon",type="polygon",nullable=false)
-     */
-    protected $polygon = null;
     
     public function setPolygon(  $data ) {
         if( $data instanceof Polygon )
@@ -138,46 +103,15 @@ class NeighborhoodPolygon extends \ArrayObject {
         return $this->polygon;
     }
     
-    /**
-     * @ORM\Column(name="authority",type="boolean")
-     */
-    protected $authority = false;
-    
-    public function getAuthrotiy() {
-        return $this->authority;
+    public function setSetNumber( $setNumber ) {
+        $this->setNumber = $setNumber;
     }
     
-    public function setAuthority( $authority ) {
-        $this->authority = $authority;
+    public function getSetNumber() {
+        return $this->setNumber;
     }
     
-    /**
-     * @ORM\Column(name="is_deleted",type="boolean")
-     */
-    protected $deleted = false;
-    
-    public function getDeleted() {
-        return $this->deleted;
-    }
-    
-    public function setDeleted( $bool ) {
-        $this->deleted = $bool;
-    }
-    
-    /*
-     * @ORM\OneToMany(targetEntity="NeighborhoodPolygonVote",mappedBy="neighborhoodPolygon")
-     */
-    protected $neighborhoodVotes;
-
-    public function getNeighborhoodVotes() {
-        return $this->neighborhoodVotes;
-    }
-
-    public function setNeighborhoodVotes( $neighborhoodVotes ) {
-        $this->neighborhoodVotes =  $neighborhoodVotes;
-    }
-    
-    public function toGeoJsonArray() {
+    public function toArray() {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
         
         $array = $hydrator->extract($this);
@@ -189,17 +123,39 @@ class NeighborhoodPolygon extends \ArrayObject {
         unset( $array['polygon']);
 
         // for geojson, we want to merge the polygon
-        $array = array_merge( $array, WhathoodPolygon::toGeoJsonArray( $this->polygon ) );
+        $array = array_merge( $array, $this->polygonToGeoJsonArray( $this->polygon ) );
         
         if( $this->getNeighborhood() != null ) {
             $array['neighborhood'] = $this->getNeighborhood()->toArray();
         }
         
-        if( $this->getWhathoodUser() != null ) {
-            $array['user'] = $this->getWhathoodUser()->toArray();
+        return $array;
+    }
+    
+    public static function polygonToGeoJsonArray( $polygon ) {
+        
+        $coordinates = array();
+        
+        foreach( $polygon->getRings() as $ring ) {
+            array_push( $coordinates, $ring->toArray() );
         }
         
-        return $array;
+        $arr = array( 
+            'type'      => 'Polygon',
+            'coordinates' => $coordinates
+        ); 
+        
+        return $arr;
+    }
+    
+    public static function fromGeoJsonArray( $array ) {
+        
+        $type = $array['type'];
+        $coordinates = $array['coordinates'];
+        
+        $polygon = new Polygon( array( new LineString( $coordinates ) ) );
+        
+        return $polgyon;
     }
     
     /*
@@ -210,7 +166,7 @@ class NeighborhoodPolygon extends \ArrayObject {
         
         $jsonArray = array();
         foreach( $neighborhoodArray as $n )
-            $jsonArray['neighborhoods'][] = $n->toGeoJsonArray();
+            $jsonArray['neighborhoods'][] = $n->toArray();
             
         return  \Zend\Json\Json::encode($jsonArray);
     }
@@ -225,14 +181,14 @@ class NeighborhoodPolygon extends \ArrayObject {
         
         $neighborhoodPolygons = array();
         foreach( $array['neighborhoods'] as $neighborhoodArray ) {
-            $neighborhoodPolygons[] = new NeighborhoodPolygon( $neighborhoodArray );
+            $neighborhoodPolygons[] = new UserPolygon( $neighborhoodArray );
         }
         return $neighborhoodPolygons;
     }
     
     /**
      * if the dateTimeAdded timestamps don't exist, create them using the time now
-     * @param \Application\Mapper\ArrayCollection $neighborhoodPolygons
+     * @param \Whathood\Mapper\ArrayCollection $neighborhoodPolygons
      */
     public static function setTimes( 
                                     ArrayCollection $neighborhoodPolygons ) {
@@ -247,10 +203,10 @@ class NeighborhoodPolygon extends \ArrayObject {
     
     /**
      * if the dateTimeAdded timestamps don't exist, create them using the time now
-     * @param \Application\Mapper\ArrayCollection $neighborhoodPolygons
+     * @param \Whathood\Mapper\ArrayCollection $neighborhoodPolygons
      */
     public static function setNeighborhoods( 
-                                    ArrayCollection $neighborhoodPolygons,
+                                    $neighborhoodPolygons,
                                     Neighborhood $neighborhood ) {
         
         if( empty( $neighborhoodPolygons ) )

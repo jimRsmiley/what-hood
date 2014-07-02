@@ -1,6 +1,6 @@
 <?php
 
-use Application\Entity\Neighborhood;
+use Whathood\Entity\Neighborhood;
 
 /**
  * Description of NeighborhoodTest
@@ -22,7 +22,7 @@ class NeighborhoodTest extends PHPUnit_Framework_TestCase {
             'name'  => 'Northwood'
         ));
         
-        $object = new \Application\Model\Whathood\WhathoodConsensus( array( $n1, $n2 ) );
+        $object = new \Whathood\Model\Whathood\EntityConsensus( array( $n1, $n2 ) );
         
         $winningUnits = $object->getWinnerUnits();
         

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Doctrine\ORM\Query;
+namespace Whathood\Doctrine\ORM\Query;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
@@ -14,7 +14,7 @@ class NeighborhoodQueryBuilder extends AbstractQueryBuilder {
         $this->qb = $qb;
         
         $this->qb->select( array( 'n' ) )
-            ->from('Application\Entity\Neighborhood', 'n')
+            ->from('Whathood\Entity\Neighborhood', 'n')
             ->join('n.region','r')
             ;
     }

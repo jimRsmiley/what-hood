@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form;
+namespace Whathood\Form;
 
 use Zend\Form\Element;
 use Zend\Form\Form;
@@ -18,7 +18,7 @@ class NeighborhoodPolygonForm extends Form {
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'type' => 'submit',
+                'type' => 'Submit',
                 'value' => 'Save Neighborhood',
             )
         ));
@@ -28,7 +28,7 @@ class NeighborhoodPolygonForm extends Form {
          */
         $this->add(array(
             'name'  => 'neighborhoodPolygon',
-            'type' => 'Application\Form\NeighborhoodPolygonFieldset',
+            'type' => 'Whathood\Form\NeighborhoodPolygonFieldset',
             'options' => array(
                 'use_as_base_fieldset' => true
             )

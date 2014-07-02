@@ -1,5 +1,5 @@
 <?php
-namespace Application\Spatial\PHP\Types\Geometry;
+namespace Whathood\Spatial\PHP\Types\Geometry;
 
 use CrEOF\Spatial\PHP\Types\Geometry\LineString as CrEOFLineString;
 /**

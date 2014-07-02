@@ -1,5 +1,5 @@
 <?php
-namespace Application\PHPUnit;
+namespace Whathood\PHPUnit;
 
 use ApplicationTest\Bootstrap;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
@@ -61,19 +61,19 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
 
     public function whathoodUserMapper() {
         return $this->whathoodUserMapper = $this->sm->get(
-                                                    'Application\Mapper\WhathoodUserMapper');
+                                                    'Whathood\Mapper\WhathoodUserMapper');
     }
     
     public function neighborhoodMapper() {
         if( $this->neighborhoodMapper == null )
-            $this->neighborhoodMapper = $this->sm->get('Application\Mapper\NeighborhoodMapper');
+            $this->neighborhoodMapper = $this->sm->get('Whathood\Mapper\NeighborhoodMapper');
         
         return $this->neighborhoodMapper;
     }
     
-    public function neighborhoodPolygonMapper() {
+    public function userPolygonMapper() {
         if( $this->neighborhoodPolygonMapper == null )
-            $this->neighborhoodPolygonMapper = $this->sm->get('Application\Mapper\NeighborhoodPolygonMapper');
+            $this->neighborhoodPolygonMapper = $this->sm->get('Whathood\Mapper\UserPolygonMapper');
         
         return $this->neighborhoodPolygonMapper;
     }
@@ -81,20 +81,20 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
     public function neighborhoodVoteMapper() {
         if( $this->neighborhoodVoteMapper == null )
             $this->neighborhoodVoteMapper = 
-                $this->sm->get('Application\Mapper\NeighborhoodPolygonVoteMapper');
+                $this->sm->get('Whathood\Mapper\NeighborhoodPolygonVoteMapper');
         
         return $this->neighborhoodVoteMapper;
     }
     
     public function regionMapper() {
         if( $this->regionMapper == null )
-            $this->regionMapper = $this->sm->get('Application\Mapper\Region');
+            $this->regionMapper = $this->sm->get('Whathood\Mapper\Region');
         
         return $this->regionMapper;
     }
     
     public function getAuthenticationService() {
-        return $this->sm->get('Application\Model\AuthenticationService');
+        return $this->sm->get('Whathood\Model\AuthenticationService');
     }
     
     public function getSavedAuthenticatedWhathoodUser($userName = null) {

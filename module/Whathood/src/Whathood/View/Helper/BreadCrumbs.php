@@ -1,5 +1,5 @@
 <?php
-namespace Application\View\Helper;
+namespace Whathood\View\Helper;
 
 use Zend\View\Renderer\RendererInterface as Renderer;
 /**

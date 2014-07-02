@@ -1,0 +1,12 @@
+<?php
+$uriString = $this->uriString;
+if( empty( $uriString ) )
+    throw new \Exception('you must define uriString');
+?>
+<div class="centertext">Choose one of the regions we show</div>
+
+<div class="centertext">
+    <?php foreach( $this->regionNames as $name ) :?>
+        <a class="morepadding" href="<?=$uriString?>?region_name=<?=$name?>"><?=$name?></a>
+    <?php endforeach; ?>
+</div>
