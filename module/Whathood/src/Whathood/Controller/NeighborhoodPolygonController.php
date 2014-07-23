@@ -47,6 +47,33 @@ class NeighborhoodPolygonController extends BaseController
             return $viewModel;
         }
     }
+
+    public function byCreateEventAction() {
+
+        $createEventId = $this->getUriParameter('create_event_id');
+        
+        if( empty($neighborhoodPolygonId) )
+            return new ErrorViewModel('id may not be empty');
+        
+        if( $format === 'json' ) {
+        
+            try {
+                $neighborhoodPolygons = $this->neighborhoodPolygonMapper()->getNpByCreateEventId($createEventId);
+            } catch( \Doctrine\ORM\NoResultException $e ) {
+                return new ErrorViewModel( array(
+                    'message'   => 'No Neighborhood exists with id ' . $neighborhoodPolygonId
+                ));
+            }
+            return new JsonModel( $neighborhoodPolygon->toArray() );
+        }
+        
+        /*
+         * return HTML
+         */
+        else {
+            return new ViewModel(array('neighborhoodPolygonId' => $neighborhoodPolygonId ) );
+        }
+    }
     
     public function byIdAction() {
 

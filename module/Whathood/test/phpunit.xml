@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="Bootstrap.php" APPLICATION_ENV="test">
+    
+    <php>
+        <env name="APPLICATION_ENV" value="test"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="WhathoodTestSuite">
+            <directory>./WhathoodTest</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

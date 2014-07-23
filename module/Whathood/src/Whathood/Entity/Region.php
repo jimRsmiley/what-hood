@@ -72,6 +72,7 @@ class Region extends \ArrayObject {
     public function setId( $id ) {
         $this->id = $id;
     }
+    
     public function toArray() {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
         

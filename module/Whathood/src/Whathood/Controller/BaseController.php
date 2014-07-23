@@ -91,6 +91,15 @@ class BaseController extends AbstractActionController {
         }
         return $this->contentiousPointMapper;
     }
+
+    public function createEventMapper() {
+        
+        if( $this->contentiousPointMapper == null ) {
+            $this->contentiousPointMapper = $this->getServiceLocator()
+                ->get('Whathood\Mapper\CreateEventMapper');
+        }
+        return $this->contentiousPointMapper;
+    }
     
     public function getAuthenticationService() {
         return $this->getServiceLocator()

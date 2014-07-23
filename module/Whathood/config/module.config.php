@@ -22,6 +22,7 @@ return array(
                     ),
                 ),
             ),
+
             
             'neighborhood' => array(
                 'type'    => 'Segment',
@@ -33,6 +34,78 @@ return array(
                         'action'        => 'show',
                     ),
                 ),
+            ),
+
+            // The following is a route to simplify getting started creating
+            // new controllers and actions without needing to create a new
+            // module. Simply drop new controllers in, and you can access them
+            // using the path /application/:controller/:action
+            'whathood_default' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/whathood',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Index',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/',
+                    'constraints' => array(
+                        'regionName'    => 'Philadelphia'
+                    ),
+                    'defaults' => array(
+                        'controller'    => 'Whathood\Controller\Region',
+                        'action'        => 'show',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'about' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => 'about',
+                            'defaults' => array(
+                                'controller'    => 'Whathood\Controller\Index',
+                                'action' => 'about'
+                            )
+                        ),
+                    )
+                )
+            ),
+
+            'regionrest' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/regionrest[/:id][/]',
+                    'constraints' => array(
+                        'id' => '[0-9]*'
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'RegionRest'
+                    )
+                )
             ),
             
             'address_search' => array(
@@ -189,75 +262,11 @@ return array(
                 ),
             ),
             
-            'heatmap' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route'    => '/heatmap[/:controller][/:index]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\HeatMap',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
+
+
+
             
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'constraints' => array(
-                        'regionName'    => 'Philadelphia'
-                    ),
-                    'defaults' => array(
-                        'controller'    => 'Whathood\Controller\Region',
-                        'action'        => 'show',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'about' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => 'about',
-                            'defaults' => array(
-                                'controller'    => 'Whathood\Controller\Index',
-                                'action' => 'about'
-                            )
-                        ),
-                    )
-                )
-            ),
-            
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
-            'whathood_default' => array(
-                'type'    => 'Literal',
-                'options' => array(
-                    'route'    => '/whathood',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+
         ),
     ),
     'service_manager' => array(
@@ -303,6 +312,12 @@ return array(
                 return new \Whathood\SchemaTool($sm);
             },
                     
+            'Whathood\Mapper\CreateEventMapper'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\CreateEventMapper( $sm, $em );
+                return $mapper;
+            },
+
             'Whathood\Mapper\HeatMapMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodHeatMapMapper( $sm, $em );
@@ -392,25 +407,22 @@ return array(
                 $em = $sm->get('mydoctrineentitymanager');
                 return new \Whathood\Mapper\ContentiousPointMapper($sm,$em);
             },
-        ),
-    ),
-                    
-    'translator' => array(
-        'locale' => 'en_US',
-        'translation_file_patterns' => array(
-            array(
-                'type'     => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
-            ),
+
+            'Whathood\Mapper\CreateEventMapper' => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                return new \Whathood\Mapper\CreateEventMapper($sm,$em);
+            },
         ),
     ),
                 
     'controllers' => array(
         'invokables' => array(
+            'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
+            'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
             'Whathood\Controller\NeighborhoodPolygon' => 'Whathood\Controller\NeighborhoodPolygonController',
             'Whathood\Controller\Region' => 'Whathood\Controller\RegionController',
+            'Whathood\Controller\RegionRest' => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodUser' => 'Whathood\Controller\WhathoodUserController',
             'Whathood\Controller\Whathood' => 'Whathood\Controller\WhathoodController',
             'Whathood\Controller\Auth' => 'Whathood\Controller\AuthController',
@@ -418,7 +430,6 @@ return array(
             'Whathood\Controller\Search' => 'Whathood\Controller\SearchController',
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
-            'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
         ),
     ),
                 

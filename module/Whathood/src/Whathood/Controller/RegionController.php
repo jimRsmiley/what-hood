@@ -13,16 +13,30 @@ use Whathood\Spatial\PHP\Types\Geometry\Feature;
  */
 class RegionController extends BaseController {
     
+
+
+    /**
+    *    will default to the last create event if one isn't supplied in the get
+    *   parameter set_number
+    */    
     public function showAction() {
+
         $regionName = $this->getUriParameter('region_name');
         $setNumber = $this->getUriParameter('set_number');
         
+        /**
+        *   let's default to Philadelphia when not supplied
+        */
         if( empty( $regionName ) ) {
             $regionName = 'Philadelphia';
         }
         
-        if( empty( $setNumber ) )
+        if( empty( $setNumber ) ) {
             $setNumber = $this->neighborhoodPolygonMapper ()->getLastCreateEventId();
+
+            // @TODO: remove this
+            $setNumber = 5;
+        }
         
         try {
             $region = $this->regionMapper()->getRegionByName( $regionName );

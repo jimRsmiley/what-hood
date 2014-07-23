@@ -28,6 +28,23 @@ class RegionMapper extends BaseMapper {
         return $region;
     }
     
+    public function byId( $id ) {
+        
+        if( empty( $id ) ) {
+            throw new \InvalidArgumentException("regionName may not be null");
+        }
+        
+        $qb = $this->em->createQueryBuilder();
+        
+        $qb->select('r')
+                ->from('Whathood\Entity\Region','r')
+                ->where( $qb->expr()->eq('r.id', ':id' ) )
+                ->setParameter('id', $id );
+        $region = $qb->getQuery()->getSingleResult();
+        
+        return $region;
+    }
+
     public function nameLike( $name ) {
         
         if( empty( $name ) ) {

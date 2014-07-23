@@ -1,0 +1,10 @@
+<?php foreach( $this->createEvents as $createEvent ): ?>
+<div class="create_event">
+    <div><span>Id</span><span><?php echo $createEvent->getId(); ?></span></div>
+    <div><span>Description</span><span><?php echo $createEvent->getDescription(); ?></span></div>
+    <div><span>Created</span><span><?php echo $createEvent->getDateTimeCreated(); ?></span></div>
+    <div><span>Meter Span between test points</span><span><?php echo $createEvent->getTestPointMeterWidth(); ?></span></div>
+    <div><span>Concave Hull Precision</span><span><?php echo $createEvent->getConcaveHullTargetPrecision(); ?></span></div>
+    <div><a href="/whathood/neighborhood-polygon/by-create-event/create_event_id=<?=$createEvent->getId()?>">Neighborhood Polygons</a></a></div>
+</div>
+<?php endforeach; ?>

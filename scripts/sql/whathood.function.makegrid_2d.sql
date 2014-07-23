@@ -1,9 +1,17 @@
-﻿CREATE OR REPLACE FUNCTION public.makegrid_2d (
+DROP FUNCTION whathood.makegrid_2d(bound_polygon public.geometry,
+  grid_step integer,
+  metric_srid integer
+);
+--
+--  makegrid_2d
+--
+-- returns a fishnet grid of points inside the public geometry
+CREATE OR REPLACE FUNCTION whathood.makegrid_2d (
   bound_polygon public.geometry,
   grid_step integer,
   metric_srid integer = 2251 --metric SRID optimal for the PA in state plane
 )
-RETURNS public.geometry AS
+RETURNS BOOLEAN AS
 $body$
 DECLARE
   BoundM public.geometry; --Bound polygon transformed to metric projection (with metric_srid SRID)
@@ -12,7 +20,7 @@ DECLARE
   Ymax DOUBLE PRECISION;
   X DOUBLE PRECISION;
   Y DOUBLE PRECISION;
-  points public.geometry[];
+  point public.geometry;
   i INTEGER;
   j INTEGER;
 BEGIN
@@ -22,8 +30,6 @@ BEGIN
   Ymax := ST_YMax(BoundM);
 
   Y := ST_YMin(BoundM); --current sector's corner coordinate
-  i := -1;
-  j := 0;
   <<yloop>>
   LOOP
     IF (Y > Ymax) THEN  --Better if generating polygons exceeds bound for one step. You always can crop the result. But if not you may get not quite correct data for outbound polygons (if you calculate frequency per a sector  e.g.)
@@ -37,33 +43,18 @@ BEGIN
           EXIT;
       END IF;
 
-      i := i + 1;
-
       -- we only want points that are inside the bound_polygon
       IF( SELECT ST_Contains( bound_polygon, ST_Transform( ST_PointFromText('POINT('||X||' '||Y||')', $3), ST_SRID($1)) ) = true ) THEN
-	      points[j] := ST_PointFromText('POINT('||X||' '||Y||')', $3);
-	      j := j + 1;
+        point := ST_PointFromText('POINT('||X||' '||Y||')', $3);
+        INSERT INTO test_point (point,set_num) VALUES( point, grid_step );
       END IF;
-      
+
       X := X + $2;
     END LOOP xloop;
     Y := Y + $2;
   END LOOP yloop;
 
-  RETURN ST_Transform(ST_Collect(points), ST_SRID($1));
+  RETURN True;
 END;
 $body$
 LANGUAGE 'plpgsql';
-
-INSERT INTO test_point (set_num,point) (
-  SELECT 
-  150 as set_num,
-  (ST_Dump(
-	-- 500 turns into  16095 points  in  19,132 ms
-	-- 400 turns into  25159 points  in  35,201 ms
-	-- 300 turns into  44696 points  in  61,698 ms
-	-- 200 turns into 100575 points  in 231,979 ms
-	-- 180 turns into 124154 poings  in 355,330 ms
-	makegrid_2d(region.polygon,150)
-  )).geom AS point FROM region WHERE region.name = 'Philadelphia'
-);

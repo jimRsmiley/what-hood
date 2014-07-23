@@ -49,7 +49,15 @@ function getURLParameter(name) {
     );
 }
 
+/**
 
+functions:
+
+    addStreetLayer() - adds the street layer
+
+    addGeoJson( url, callback ) - add geojson to the map from the url
+
+**/
 var NewWhathoodMap = L.Map.extend( {
     
     _layerGroup: null,

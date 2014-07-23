@@ -25,8 +25,6 @@ abstract class BaseMapper {
         $this->em = $doctrineEntityManager;
     }
     
-
-    
     public function flush() {
         $this->em->flush();
     }

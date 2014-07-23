@@ -128,8 +128,10 @@ $('document').ready( function() {
                                     'format'            => 'json'
             ))?>';
                         
-    new WhathoodMap( options );
-
+    map = new NewWhathoodMap( 'map' );
+    map.addGeoJson( options.geoJsonSrc );
+    map.addStreetLayer();
+    
     <?php if( $this->neighborhoodNames != null ) : ?>
       
     var availableNeighborhoods = [<?=$this->arrayToDoubleQuoteElementedCSV($neighborhoodNames)?>];
