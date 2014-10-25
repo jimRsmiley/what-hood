@@ -1,18 +1,32 @@
 ﻿--
 --  whathood.functions.sql
---
+-- 
 -- sql functions needed to run whathood.sql
 --
 --
 
+-- **************** functions *********************
+--
+-- whathood.create_test_points(point_width::int)
+--
+-- whathood.make_grid_2d
+--
 
 
-
+-- ***************** views ************************
+--
+-- create_event
 
 --
 --  makegrid_2d
 --
 -- returns a fishnet grid of points inside the public geometry
+DROP FUNCTION IF EXISTS whathood.makegrid_2d (
+  bound_polygon public.geometry,
+  grid_step integer,
+  metric_srid integer 
+);
+
 CREATE OR REPLACE FUNCTION whathood.makegrid_2d (
   bound_polygon public.geometry,
   grid_step integer,
@@ -56,8 +70,8 @@ BEGIN
 
       -- we only want points that are inside the bound_polygon
       IF( SELECT ST_Contains( bound_polygon, ST_Transform( ST_PointFromText('POINT('||X||' '||Y||')', $3), ST_SRID($1)) ) = true ) THEN
-  points[j] := ST_PointFromText('POINT('||X||' '||Y||')', $3);
-  j := j + 1;
+	points[j] := ST_PointFromText('POINT('||X||' '||Y||')', $3);
+	j := j + 1;
       END IF;
       
       X := X + $2;
@@ -70,6 +84,36 @@ END;
 $body$
 LANGUAGE 'plpgsql';
 
+
+--
+-- NAME: create_test_points(_point_width)
+--
+-- returns a count of inserted test points
+--
+DROP FUNCTION IF EXISTS whathood.create_test_points(_point_width integer);
+CREATE OR REPLACE FUNCTION whathood.create_test_points(_point_width integer)
+RETURNS integer
+AS
+$BODY$
+DECLARE _count integer;
+BEGIN
+
+  INSERT INTO test_point (set_num,point) (
+    SELECT 
+      _point_width,
+      (ST_Dump(
+        makegrid_2d(region.border,_point_width)
+      )).geom AS point 
+    FROM region 
+    WHERE region.name = 'Philadelphia'
+  );
+
+  SELECT COUNT(*) INTO _count FROM test_point WHERE set_num = _point_width;
+
+  RETURN _count;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
 --
 -- function name: associate_test_points_w_user_polygons
 --
@@ -457,3 +501,16 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW test_point_info AS
+  SELECT set_num,count(*) as count
+  FROM test_point
+  GROUP BY set_num ORDER BY count DESC;
+
+CREATE OR REPLACE VIEW create_event_info AS
+  SELECT a.*, count 
+  FROM neighborhood_polygons_create_event a
+  INNER JOIN (
+    SELECT set_num, COUNT(*) FROM test_point GROUP BY set_num
+    ) as b
+  ON a.test_point_meter_width = b.set_num;
