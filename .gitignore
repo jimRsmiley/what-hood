@@ -1,7 +1,7 @@
 app/composer.phar
 composer.phar
-draft/
-data/DoctrineORMModule
+app/draft/
+app/data/DoctrineORMModule
 module/Whathood/test/ApplicationTest/data/DoctrineORMModule/Proxy
 ._*
 .~lock.*
@@ -10,9 +10,9 @@ module/Whathood/test/ApplicationTest/data/DoctrineORMModule/Proxy
 .idea
 .project
 .settings
-vendor/
+app/vendor/
 .local.php
-public/test
-draft
-logs/
-
+app/public/test
+app/draft
+app/logs/
+*.swp
