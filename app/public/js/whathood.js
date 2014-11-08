@@ -1,3 +1,5 @@
+var mapbox_map_id = 'jimrsmiley.k5eep890';
+
 String.prototype.pluralize = function(count, plural)
 {
   if (plural == null)
@@ -90,7 +92,7 @@ var NewWhathoodMap = L.Map.extend( {
                 '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
                 'Imagery © <a href="http://mapbox.com">Mapbox</a> | ' +
                 'Neighborhood borders provided by <a href="http://www.azavea.com/blogs/newsletter/v8i2/philly-neighborhoods-map/">Azavea</a>',
-            id: 'jimrsmiley.i5pbfdje'
+            id: mapbox_map_id
         }).addTo(this);
         this.layerGroup().addLayer( streetLayer );
         this.centerOnRegion();
