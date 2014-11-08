@@ -11,17 +11,11 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+        <a class="brand" href="#">Where do you think you live?</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a class="active" href="/">Home</a></li>
-          
-          <?php echo $this->partial('layout/partial_login-menu-item.phtml'); ?>
-
-          <li><a href="/whathood/user-polygon/add">Add a Neighborhood</a></li>
-        </ul>
         <form class="navbar-form navbar-right" role="search"  action="<?=$this->url( 'search' )?>">
           <div class="form-group">
             <input type="text" name="q" class="search-query" placeholder="enter neighborhood or city">
