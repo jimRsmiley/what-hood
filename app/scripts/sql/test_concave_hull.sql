@@ -1,1 +1,0 @@
-SELECT ST_AsGeoJSON( ST_SetSRID( ST_ConcaveHull( ST_Collect( heat_map_point.point ),.99 ),4326) ) FROM heat_map_point WHERE heat_map_id = 1 AND strength_of_identity > .5;

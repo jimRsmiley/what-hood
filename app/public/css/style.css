@@ -1,6 +1,7 @@
 html, body {
     font-family: 'Cabin', serif;
     height: 100%;
+    text-transform: uppercase;
 }
 
 .credit {
