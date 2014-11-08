@@ -11,6 +11,3 @@ CREATE OR REPLACE VIEW heat_map_count AS
     FROM test_point
     INNER JOIN my_temp_table on my_temp_table.test_point_id = test_point.id
     INNER JOIN neighborhood ON my_temp_table.neighborhood_id = neighborhood.id;
-
-
-SELECT * FROM heat_map_count ORDER BY strength_of_identity ASC;

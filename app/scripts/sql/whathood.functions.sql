@@ -485,32 +485,19 @@ BEGIN
   END IF;
 
   -- 50 seconds
-  --PERFORM whathood.associate_test_points_w_user_polygons( _create_event::neighborhood_polygons_create_event );
+  PERFORM whathood.associate_test_points_w_user_polygons( _create_event::neighborhood_polygons_create_event );
 
   -- 132 seconds
-  --PERFORM whathood.create_strength_of_identity( _create_event::neighborhood_polygons_create_event );
+  PERFORM whathood.create_strength_of_identity( _create_event::neighborhood_polygons_create_event );
 
   -- 20 seconds
-  --PERFORM whathood.create_neighborhood_polygons( _create_event::neighborhood_polygons_create_event );
+  PERFORM whathood.create_neighborhood_polygons( _create_event::neighborhood_polygons_create_event );
 
   -- 16 seconds
-  --PERFORM whathood.associate_np_w_up( _create_event::neighborhood_polygons_create_event );
+  PERFORM whathood.associate_np_w_up( _create_event::neighborhood_polygons_create_event );
 
   -- 2 seconds
-  --PERFORM whathood.create_contentious_points(_create_event.id );
+  PERFORM whathood.create_contentious_points(_create_event.id );
 END;
 $BODY$
 LANGUAGE plpgsql;
-
-CREATE OR REPLACE VIEW test_point_info AS
-  SELECT set_num,count(*) as count
-  FROM test_point
-  GROUP BY set_num ORDER BY count DESC;
-
-CREATE OR REPLACE VIEW create_event_info AS
-  SELECT a.*, count 
-  FROM neighborhood_polygons_create_event a
-  INNER JOIN (
-    SELECT set_num, COUNT(*) FROM test_point GROUP BY set_num
-    ) as b
-  ON a.test_point_meter_width = b.set_num;
