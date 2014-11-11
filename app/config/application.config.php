@@ -1,6 +1,4 @@
 <?php
-
-
 $modules = array(
     'DoctrineModule',
     'DoctrineORMModule',
@@ -34,6 +32,7 @@ return array(
             //'config/autoload/{global,local}.php',
             'config/autoload/{,*.}' . (getenv('APPLICATION_ENV') ?: 'development') . '.{global,local}.php',
             'config/autoload/whathood.local.php',
+	    'config/autoload/local.php'
             //'config/autoload/zdt.local.php',
         ),
     ),
@@ -44,3 +43,4 @@ return array(
         'enable_default_entities' => false,
     ),
 );
+
