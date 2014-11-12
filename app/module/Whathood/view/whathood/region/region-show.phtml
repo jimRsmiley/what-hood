@@ -7,8 +7,12 @@ $createEventId = $this->setNumber;
     <div id="map" class="map"></div>
 </div>
 
-<div id="dialog" title="Basic dialog">
-  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+<div id="dialog">
+    <form action="/whathood-search">
+	<input type="text" name="" placeholder="enter an address"/>
+	<div>-- OR --</div>
+	<div><button id="close_button" onclick="return false">Close to Explore Map</button>
+    </form>  
 </div>
 
 <script>
@@ -23,8 +27,9 @@ $createEventId = $this->setNumber;
             }
         );
 
-	$(function() {
-    $( "#dialog" ).dialog();
-  });
+    	$( "#dialog" ).dialog();
+	$("#close_button").click( function() {
+	    $("#dialog").close();
+	});
     });
 </script>
