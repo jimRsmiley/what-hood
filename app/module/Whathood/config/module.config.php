@@ -261,13 +261,22 @@ return array(
                     ),
                 ),
             ),
-            
-
-
-
-            
-
         ),
+    ),
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'up' => array(
+                    'options' => array(
+                        'route' => 'up',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\UserPolygon',
+                            'action' => 'consoledefault'
+                        )
+                    )
+                )
+            )
+        )
     ),
     'service_manager' => array(
         'factories' => array(
