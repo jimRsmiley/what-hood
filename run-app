@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd app/
+php public/index.php $*
