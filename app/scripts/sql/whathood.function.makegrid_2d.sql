@@ -1,17 +1,18 @@
-DROP FUNCTION whathood.makegrid_2d(bound_polygon public.geometry,
-  grid_step integer,
-  metric_srid integer
-);
 --
 --  makegrid_2d
 --
 -- returns a fishnet grid of points inside the public geometry
+
+
+DROP FUNCTION whathood.makegrid_2d(
+  bound_polygon public.geometry,
+  grid_step numeric
+);
 CREATE OR REPLACE FUNCTION whathood.makegrid_2d (
   bound_polygon public.geometry,
-  grid_step integer,
-  metric_srid integer = 2251 --metric SRID optimal for the PA in state plane
+  grid_step numeric
 )
-RETURNS BOOLEAN AS
+RETURNS geometry[] AS
 $body$
 DECLARE
   BoundM public.geometry; --Bound polygon transformed to metric projection (with metric_srid SRID)
@@ -21,10 +22,12 @@ DECLARE
   X DOUBLE PRECISION;
   Y DOUBLE PRECISION;
   point public.geometry;
+  points geometry[];
   i INTEGER;
   j INTEGER;
+  count INTEGER = 0;
 BEGIN
-  BoundM := ST_Transform($1, $3); --From WGS84 (SRID 4326) to metric projection, to operate with step in meters
+  BoundM := $1;
   Xmin := ST_XMin(BoundM);
   Xmax := ST_XMax(BoundM);
   Ymax := ST_YMax(BoundM);
@@ -44,17 +47,17 @@ BEGIN
       END IF;
 
       -- we only want points that are inside the bound_polygon
-      IF( SELECT ST_Contains( bound_polygon, ST_Transform( ST_PointFromText('POINT('||X||' '||Y||')', $3), ST_SRID($1)) ) = true ) THEN
-        point := ST_PointFromText('POINT('||X||' '||Y||')', $3);
-        INSERT INTO test_point (point,set_num) VALUES( point, grid_step );
+      IF( SELECT ST_Contains( bound_polygon, ST_PointFromText('POINT('||X||' '||Y||')', 4326)) = true ) THEN
+        point := ST_PointFromText('POINT('||X||' '||Y||')', 4326);
+        points := array_append(points,point);
+        count := count + 1;
       END IF;
-
-      X := X + $2;
+      X := X + grid_step;
     END LOOP xloop;
-    Y := Y + $2;
+    Y := Y + grid_step;
   END LOOP yloop;
 
-  RETURN True;
+  RETURN points;
 END;
 $body$
 LANGUAGE 'plpgsql';
