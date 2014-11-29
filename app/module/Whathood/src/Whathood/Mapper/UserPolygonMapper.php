@@ -16,6 +16,13 @@ use Doctrine\ORM\Query\ResultSetMapping;
  */
 class UserPolygonMapper extends BaseMapper {
     
+    public function fetchAll() {
+        $qb = $this->em->createQueryBuilder()->select( array( 'up' ) )
+            ->from('Whathood\Entity\UserPolygon', 'up')
+            ->orderBy('up.id','ASC');
+        return $qb->getQuery()->getResult();
+    }
+    
     public function byId( $id ) {
         
         if( empty( $id ) )
