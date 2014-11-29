@@ -13,7 +13,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Spatial\PHP\Types\Geometry\LineString;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use Whathood\View\Model\ErrorViewModel;
-
+use Whathood\Collection;
 /**
  * Description of NeighborhoodController
  *
@@ -359,6 +359,12 @@ class UserPolygonController extends BaseController
         $neighborhood = $this->neighborhoodMapper()->byId($neighborhoodId);
         $neighborhood->setDeleted(true);
         $this->neighborhoodMapper()->update( $neighborhood );
+    }
+
+    public function consoledefaultAction() {
+
+        $collection = new Collection($this->userPolygonMapper()->fetchAll());
+        print $collection->__toString();
     }
 }
 
