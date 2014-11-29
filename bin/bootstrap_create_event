@@ -1,0 +1,30 @@
+#!/bin/bash
+
+GRID_RES=.003
+DBNAME=jim_whathood
+
+function exec_sql {
+   date
+   # --tuples-only doesn't print out extra info like totals or column names
+   psql --tuples-only $DBNAME -c "$1"
+   date
+}
+
+psql $DBNAME -f app/scripts/sql/whathood.view.user_polygons_not_in_neighborhoods.sql
+psql $DBNAME -f app/scripts/sql/whathood.function.merge_user_polygons.sql
+exit
+echo "selecting user polygons that need to be calculated"
+psql $DBNAME -f app/scripts/sql/whathood.function.makegrid_2d.sql
+#psql $DBNAME -c "SELECT ST_AsText((up.polygon,2251)) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
+#psql $DBNAME -c "SELECT ST_AsText(ST_Transform(up.polygon,4326)) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
+
+
+
+# get a count of points that have made up the polygon
+sql_cmd="SELECT array_length(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),1) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
+exec_sql "$sql_cmd"
+# get all the points as a polygon
+sql_cmd="SELECT ST_AsGeoJSON(ST_Collect(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES))) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
+exec_sql "$sql_cmd"
+
+sql_cmd="SELECT whathood.merge_user_polygons(
