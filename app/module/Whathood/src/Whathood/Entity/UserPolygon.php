@@ -5,6 +5,7 @@ namespace Whathood\Entity;
 // need this even though Netbeans says you don't
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodHydrator;
+use Zend\Config\Config;
 use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 /**
@@ -138,31 +139,6 @@ class UserPolygon extends \ArrayObject {
     public function getPolygon() {
         return $this->polygon;
     }
-
-    public function toArray() {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-        
-        $array = $hydrator->extract($this);
-
-        unset( $array['iterator_class'] );
-        unset( $array['iterator']);
-        unset( $array['flags']);
-        unset( $array['array_copy']);
-        unset( $array['polygon']);
-
-        // for geojson, we want to merge the polygon
-        $array = array_merge( $array, $this->polygonToGeoJsonArray( $this->polygon ) );
-        
-        if( $this->getNeighborhood() != null ) {
-            $array['neighborhood'] = $this->getNeighborhood()->toArray();
-        }
-        
-        if( $this->getWhathoodUser() != null ) {
-            $array['user'] = $this->getWhathoodUser()->toArray();
-        }
-        
-        return $array;
-    }
     
     public static function polygonToGeoJsonArray( $polygon ) {
         
@@ -246,6 +222,48 @@ class UserPolygon extends \ArrayObject {
         
         foreach( $neighborhoodPolygons as $neighborhoodPolygon )
             $neighborhoodPolygon->setNeighborhood( $neighborhood );
+    }
+
+    public function toArray($opts=null) {
+        $config = new Config($opts); 
+
+        if($config->get('strings-only')) {
+            $array=array(
+                'id' => $this->getId(),
+                'neighborhood_name' => $this->getNeighborhood()->getName(),
+                'datetime_added' => $this->getDateTimeAdded()
+            );
+        }
+        else {
+            $array = $hydrator->extract($this);
+            unset( $array['iterator_class'] );
+            unset( $array['iterator']);
+            unset( $array['flags']);
+            unset( $array['array_copy']);
+            unset( $array['polygon']);
+
+            // for geojson, we want to merge the polygon
+            $array = array_merge( $array, $this->polygonToGeoJsonArray( $this->polygon ) );
+            
+            if( $this->getNeighborhood() != null ) {
+                $array['neighborhood'] = $this->getNeighborhood()->toArray();
+            }
+            
+            if( $this->getWhathoodUser() != null ) {
+                $array['user'] = $this->getWhathoodUser()->toArray();
+            }
+        }  
+        return $array;
+    }
+
+    public function __toString() {
+        $str = ""; 
+        foreach($this->toArray(array('strings-only'=>true)) as $key => $value) {
+            if(is_string($value) or is_numeric($value))
+                $str .= "$key: $value ";
+        }
+
+        return $str;
     }
 }
 ?>
