@@ -41,7 +41,3 @@ To Do
 * Create a developer API to serve up neighborhood given an address
 
 * Get Google, Foursquare, Yelp, and real estate sites to use published shapefiles
-
-Credits
--------
-originally developed by [Jim Smiley](http://jimsmiley.us) and Justin Crone
