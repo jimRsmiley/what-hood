@@ -23,33 +23,17 @@ AS
 $$
   DECLARE
     _test_point geometry;
-    r merge_user_polygon_res_holder%rowtype;
-    _ret_val polygon_counts_result[];
+    _r polygon_counts_result%rowtype;
+    _polygon_count_result_array polygon_counts_result[];
     _polygon_counts_result polygon_counts_result;
   BEGIN
   
     FOREACH _test_point IN ARRAY test_points LOOP
-      SELECT whathood.polygon_counts(_test_point,_neighborhood_id) INTO _polygon_counts_result;
-      _ret_val := _polygon_counts_result;
---      END LOOP;
---FOR r IN 
---        SELECT
---          ST_AsText(_test_point),
---          cast(_test_point as geometry),
---          COUNT(*) as count1
---        FROM user_polygon 
---        WHERE 
---          ST_Contains(polygon,_test_point) = 'true'
---          AND neighborhood_id = _neighborhood_id 
---      LOOP
-      --FOR r IN SELECT ST_Point(1,1), 12 as num1 LOOP
---        IF r.num_user_polygons > 0 THEN
---          RETURN NEXT r;
---        END IF;
---      END LOOP;
+      SELECT * INTO _r FROM whathood.polygon_counts(_test_point,_neighborhood_id);
+      _polygon_count_result_array := array_append( _polygon_count_result_array, _r);
     END LOOP;
 
-    RETURN _ret_val;
+    RETURN _polygon_count_result_array;
   END;
 $$
 LANGUAGE plpgsql;
