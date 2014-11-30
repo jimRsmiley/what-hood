@@ -3,6 +3,8 @@
 --
 DROP TYPE IF EXISTS polygon_counts_result CASCADE;
 CREATE TYPE polygon_counts_result AS (
+  point_as_text text,
+  point geometry,
   num_in_neighborhood integer, 
   total_user_polygons integer
 );
@@ -18,6 +20,7 @@ RETURNS polygon_counts_result
 AS
 $$
 DECLARE
+  _point_as_text text;
   _ret_val polygon_counts_result%rowtype;
   _num_in_neighborhood integer;
   _total_user_polygons integer;
@@ -33,8 +36,13 @@ BEGIN
   WHERE
     ST_Contains(up.polygon,_test_point) = 'true';
 
+  SELECT ST_AsText(_test_point) INTO _point_as_text;
+
+  _ret_val.point_as_text       := _point_as_text;
+  _ret_val.point               := _test_point;
   _ret_val.num_in_neighborhood := _num_in_neighborhood;
   _ret_val.total_user_polygons := _total_user_polygons;
+  
   RETURN _ret_val;
 END;
 $$
