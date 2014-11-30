@@ -1,1 +1,0 @@
-﻿CREATE OR REPLACE FUNCTION get_test_point_geojson( set_num integer ) 
