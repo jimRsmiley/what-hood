@@ -14,7 +14,7 @@ TEST_UP_ID=158
 
 function exec_sql {
   #date
-  #echo $@
+  echo $@
   result=`psql --tuples-only $DBNAME -c "$@"`
 
   echo $result
@@ -55,5 +55,5 @@ sql_cmd="SELECT whathood.polygon_counts( ST_SetSRID(ST_Point(-75.170623168945,39
 #
 #  get the user polygon count per test point
 #
-sql_cmd="SELECT whathood.merge_user_polygons(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),$TEST_NEIGHBORHOOD_ID) FROM user_polygon up WHERE up.id = $TEST_UP_ID"
+sql_cmd="SELECT (whathood.merge_user_polygons(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),$TEST_NEIGHBORHOOD_ID)).* FROM user_polygon up WHERE up.id = $TEST_UP_ID"
 exec_sql "$sql_cmd"
