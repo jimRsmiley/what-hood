@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION  whathood.merge_user_polygons(
   test_points geometry[],
   _neighborhood_id integer 
 )
-RETURNS polygon_counts_result[]
+RETURNS SETOF polygon_counts_result
 AS
 $$
   DECLARE
@@ -30,10 +30,8 @@ $$
   
     FOREACH _test_point IN ARRAY test_points LOOP
       SELECT * INTO _r FROM whathood.polygon_counts(_test_point,_neighborhood_id);
-      _polygon_count_result_array := array_append( _polygon_count_result_array, _r);
-    END LOOP;
-
-    RETURN _polygon_count_result_array;
+      RETURN NEXT _r;
+   END LOOP;
   END;
 $$
 LANGUAGE plpgsql;
