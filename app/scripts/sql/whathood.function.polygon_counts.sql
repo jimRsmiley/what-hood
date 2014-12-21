@@ -6,7 +6,7 @@ DROP TYPE IF EXISTS polygon_counts_result CASCADE;
 CREATE TYPE polygon_counts_result AS (
   point_as_text text,
   point geometry,
-  num_in_neighborhood integer, 
+  num_in_neighborhood integer,
   total_user_polygons integer,
   strength_of_identity double precision
 );
@@ -14,8 +14,8 @@ CREATE TYPE polygon_counts_result AS (
 --
 -- function whathood.polygon_counts
 --
-CREATE OR REPLACE FUNCTION whathood.polygon_counts ( 
-  _test_point geometry, 
+CREATE OR REPLACE FUNCTION whathood.polygon_counts (
+  _test_point geometry,
   _neighborhood_id integer
 )
 RETURNS polygon_counts_result
@@ -29,8 +29,8 @@ DECLARE
 BEGIN
   SELECT COUNT(*) INTO _num_in_neighborhood
   FROM user_polygon up
-  WHERE 
-    neighborhood_id = _neighborhood_id 
+  WHERE
+    neighborhood_id = _neighborhood_id
     AND ST_Contains(up.polygon,_test_point) = 'true';
 
   SELECT COUNT(*) INTO _total_user_polygons
