@@ -7,18 +7,19 @@ DBNAME=jim_whathood
 SCRIPT_DIR=app/scripts/sql
 
 # the test neighborhood_id
-TEST_NEIGHBORHOOD_ID=178
+TEST_NEIGHBORHOOD_ID=87
 
 # the test user polygon id
-TEST_UP_ID=158
+TEST_UP_ID=174
 
 function exec_sql {
-  #date
-  echo $@
-  result=`psql --tuples-only $DBNAME -c "$@"`
-
-  echo $result
-#date
+  echo $1
+  tuples="--tuples-only"
+  if [ "$2" == "--tuples" ]
+  then
+      tuples=""
+  fi
+  psql $tuples $DBNAME -c "$1"
 }
 
 function run_sql_script {
@@ -39,11 +40,11 @@ sql_cmd="SELECT whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES) FROM
 #exec_sql "$sql_cmd"
 
 # get a count of points that have made up the polygon
-sql_cmd="SELECT array_length(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),1) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
+sql_cmd="SELECT array_length(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),1) FROM user_polygons_not_in_neighborhoods up WHERE up.id = $TEST_UP_ID"
 #exec_sql "$sql_cmd"
 
 # get all the points as geojson
-sql_cmd="SELECT ST_AsGeoJSON(ST_Collect(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES))) FROM user_polygon up WHERE up.id = 178"
+sql_cmd="SELECT ST_AsGeoJSON(ST_Collect(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES))) FROM user_polygon up WHERE up.id = $TEST_UP_ID"
 #exec_sql "$sql_cmd"
 
 #
@@ -55,5 +56,12 @@ sql_cmd="SELECT whathood.polygon_counts( ST_SetSRID(ST_Point(-75.170623168945,39
 #
 #  get the user polygon count per test point
 #
-sql_cmd="SELECT (whathood.merge_user_polygons(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),$TEST_NEIGHBORHOOD_ID)).* FROM user_polygon up WHERE up.id = $TEST_UP_ID"
-exec_sql "$sql_cmd"
+sql_cmd="SELECT (whathood.gather_test_point_counts(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),$TEST_NEIGHBORHOOD_ID)).* FROM user_polygon up WHERE up.id = $TEST_UP_ID"
+exec_sql "$sql_cmd" --tuples
+
+sql_cmd="SELECT whathood.merge_user_polygons(
+            whathood.makegrid_2d(
+              ST_SetSRID(up.polygon,4326),$GRID_RES),
+              $TEST_NEIGHBORHOOD_ID
+         ) FROM user_polygon up WHERE up.id = $TEST_UP_ID"
+#exec_sql "$sql_cmd"
