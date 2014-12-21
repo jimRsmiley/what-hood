@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# change to app root
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd $DIR/..
+
+# --tuples-only doesn't print out extra info like totals or column names
+
+SCRIPT_DIR=app/scripts/sql
+
+function exec_sql {
+  echo $1
+  tuples="--tuples-only"
+  if [ "$2" == "--tuples" ]
+  then
+      tuples=""
+  fi
+  psql $tuples $DBNAME -c "$1"
+}
+
+function run_sql_script {
+  #echo 'running script ' $@
+  DBNAME=jim_whathood
+  psql --tuples-only --quiet $DBNAME -f "$@"
+}
+
+export -f run_sql_script
+
+find $SCRIPT_DIR -name 'whathood.view.*' -exec bash -c 'run_sql_script "$0"' {} \;
+find $SCRIPT_DIR -name 'whathood.function.*' -exec bash -c 'run_sql_script "$0"' {} \;
+
