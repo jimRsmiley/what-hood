@@ -30,7 +30,3 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql;
-
-SELECT whathood.create_contentious_points(1);
-
-SELECT * FROM contentious_point;
