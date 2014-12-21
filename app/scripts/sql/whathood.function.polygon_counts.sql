@@ -1,4 +1,5 @@
 --
+-- given a test point and the neighborhood id, return info about that point
 -- return type polygon_counts_result
 --
 DROP TYPE IF EXISTS polygon_counts_result CASCADE;
@@ -6,7 +7,8 @@ CREATE TYPE polygon_counts_result AS (
   point_as_text text,
   point geometry,
   num_in_neighborhood integer, 
-  total_user_polygons integer
+  total_user_polygons integer,
+  strength_of_identity double precision
 );
 
 --
@@ -25,7 +27,7 @@ DECLARE
   _num_in_neighborhood integer;
   _total_user_polygons integer;
 BEGIN
-  SELECT COUNT(*) INTO _num_in_neighborhood 
+  SELECT COUNT(*) INTO _num_in_neighborhood
   FROM user_polygon up
   WHERE 
     neighborhood_id = _neighborhood_id 
@@ -42,7 +44,8 @@ BEGIN
   _ret_val.point               := _test_point;
   _ret_val.num_in_neighborhood := _num_in_neighborhood;
   _ret_val.total_user_polygons := _total_user_polygons;
-  
+  _ret_val.strength_of_identity := _num_in_neighborhood/_total_user_polygons;
+
   RETURN _ret_val;
 END;
 $$
