@@ -5,11 +5,11 @@
 
 
 DROP FUNCTION whathood.makegrid_2d(
-  bound_polygon public.geometry,
+  bound_polygon geometry,
   grid_step numeric
 );
 CREATE OR REPLACE FUNCTION whathood.makegrid_2d (
-  bound_polygon public.geometry,
+  bound_polygon geometry,
   grid_step numeric
 )
 RETURNS geometry[] AS
@@ -21,7 +21,7 @@ DECLARE
   Ymax DOUBLE PRECISION;
   X DOUBLE PRECISION;
   Y DOUBLE PRECISION;
-  point public.geometry;
+  point geometry;
   points geometry[];
   i INTEGER;
   j INTEGER;
@@ -45,10 +45,10 @@ BEGIN
       IF (X > Xmax) THEN
           EXIT;
       END IF;
+      point := ST_SetSRID(ST_Point(X,Y), 4326);
 
       -- we only want points that are inside the bound_polygon
-      IF( SELECT ST_Contains( bound_polygon, ST_PointFromText('POINT('||X||' '||Y||')', 4326)) = true ) THEN
-        point := ST_PointFromText('POINT('||X||' '||Y||')', 4326);
+      IF( SELECT ST_Contains( bound_polygon,point) = true ) THEN
         points := array_append(points,point);
         count := count + 1;
       END IF;
