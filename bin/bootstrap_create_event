@@ -11,7 +11,7 @@ DBNAME=jim_whathood
 SCRIPT_DIR=app/scripts/sql
 
 # the test neighborhood_id
-TEST_NEIGHBORHOOD_ID=87
+TEST_NEIGHBORHOOD_ID=89
 
 # the test user polygon id
 TEST_UP_ID=174
@@ -33,40 +33,16 @@ function run_sql_script {
 
 ./bin/load_sql_functions
 
-#psql $DBNAME -c "SELECT ST_AsText((up.polygon,2251)) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
-#psql $DBNAME -c "SELECT ST_AsText(ST_Transform(up.polygon,4326)) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
-
-# get the point grid
-sql_cmd="SELECT whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES) FROM user_polygons_not_in_neighborhoods up WHERE up.id = 180"
-#exec_sql "$sql_cmd"
-
-# get a count of points that have made up the polygon
-sql_cmd="SELECT array_length(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),1) FROM user_polygons_not_in_neighborhoods up WHERE up.id = $TEST_UP_ID"
-#exec_sql "$sql_cmd"
-
-# get all the points as geojson
-sql_cmd="SELECT ST_AsGeoJSON(ST_Collect(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES))) FROM user_polygon up WHERE up.id = $TEST_UP_ID"
-#exec_sql "$sql_cmd"
-
-#
-# test polygon_counts
-#
-sql_cmd="SELECT whathood.polygon_counts( ST_SetSRID(ST_Point(-75.170623168945,39.93611498594),4326),178)"
-#exec_sql "$sql_cmd"
-
 #
 #  get the user polygon count per test point
 #
 echo ""
 echo ""
 echo "running sql command:"
-sql_cmd="SELECT (whathood.gather_test_point_counts(whathood.makegrid_2d(ST_SetSRID(up.polygon,4326),$GRID_RES),$TEST_NEIGHBORHOOD_ID)).* FROM user_polygon up WHERE up.id = $TEST_UP_ID"
+sql_cmd="SELECT (whathood.gather_test_point_counts(whathood.makegrid_2d(ST_Collect(up.polygon),$GRID_RES),$TEST_NEIGHBORHOOD_ID)).*
+  FROM user_polygon up
+  INNER JOIN neighborhood n ON n.id = up.neighborhood_id
+  WHERE n.id = $TEST_NEIGHBORHOOD_ID"
 echo ""
 echo ""
 exec_sql "$sql_cmd" --tuples
-
-sql_cmd="SELECT whathood.merge_user_polygons(
-            whathood.makegrid_2d(
-              ST_SetSRID(up.polygon,4326),$GRID_RES),
-              $TEST_NEIGHBORHOOD_ID
-         ) FROM user_polygon up WHERE up.id = $TEST_UP_ID"
