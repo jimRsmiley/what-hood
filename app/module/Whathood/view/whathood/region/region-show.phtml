@@ -7,29 +7,16 @@ $createEventId = $this->setNumber;
     <div id="map" class="map"></div>
 </div>
 
-<div id="dialog">
-    <form action="/whathood-search">
-	<input type="text" name="" placeholder="enter an address"/>
-	<div>-- OR --</div>
-	<div><button id="close_button" onclick="return false">Close to Explore Map</button>
-    </form>  
+<page-info
+  id="page-info"
+  data-create-event-id="<?=$createEventId?>"
+  data-region-name="<?=$regionName?>"
+>
+</page-info>
+
+<div id="landing_dialog">
+    <form id="landing_dialog_form" action="/whathood-search">
+	    <input type="text" name="search_address" id="search_address" placeholder="enter an address"/>
+	    <button id="landing_close_button">Close to Explore Map</button>
+    </form>
 </div>
-
-<script>
-    $('document').ready( function() {
-        
-        map = new RegionMap('map');
-        map.addStreetLayer();
-
-        map.addGeoJson('/whathood/neighborhood-polygon/show-region?region_name=<?=$regionName?>&create_event_id=<?=$createEventId?>&format=json', 
-            function() { 
-                map.addContentiousPoints( <?=$createEventId?> ); 
-            }
-        );
-
-    	$( "#dialog" ).dialog();
-	$("#close_button").click( function() {
-	    $("#dialog").close();
-	});
-    });
-</script>
