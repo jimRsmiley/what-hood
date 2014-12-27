@@ -1,3 +1,0 @@
-#!/bin/bash
-
-coffee --compile --output app/public/js coffee/whathood-coffee.coffee
