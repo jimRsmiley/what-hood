@@ -37,7 +37,10 @@ echo "running sql command:"
 #  FROM user_polygon up
 #  INNER JOIN neighborhood n ON n.id = up.neighborhood_id
 #  WHERE n.id = $TEST_NEIGHBORHOOD_ID"
-sql_cmd='SELECT (whathood.create_neighborhood_border('$TEST_NEIGHBORHOOD_ID",$GRID_RES)).*"
+sql_cmd="SELECT ST_AsGeoJSON(ST_ConcaveHull(ST_Collect(point),.99))
+FROM whathood.create_neighborhood_border($TEST_NEIGHBORHOOD_ID,$GRID_RES)
+WHERE
+  dominant_neighborhood_id = $TEST_NEIGHBORHOOD_ID"
 echo ""
 echo ""
 exec_sql "$sql_cmd" --tuples
