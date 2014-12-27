@@ -5,19 +5,19 @@ String.prototype.pluralize = function(count, plural)
   if (plural == null)
     plural = this + 's';
 
-  return (count == 1 ? this : plural) 
+  return (count == 1 ? this : plural)
 }
 
 L.TileLayer.HeatMap.prototype.getBounds = function() {
      var self = this;
      return self._bounds;
 }
- 
+
 L.GeoJSON.prototype.getCenter = function(){
     var pts = this._latlngs;
 
     console.log( pts );
-    
+
     var twicearea = 0;
     var p1, p2, f;
     var x = 0, y = 0;
@@ -61,7 +61,7 @@ functions:
 
 **/
 var NewWhathoodMap = L.Map.extend( {
-    
+
     _layerGroup: null,
     _geojsonTileLayer : null,
 
@@ -84,7 +84,7 @@ var NewWhathoodMap = L.Map.extend( {
             }
         });
     },
-    
+
     addStreetLayer : function() {
         streetLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
@@ -97,17 +97,17 @@ var NewWhathoodMap = L.Map.extend( {
         this.layerGroup().addLayer( streetLayer );
         this.centerOnRegion();
     },
-    
+
     addGeoJson: function ( url, callback ) {
-        
+
         var self = this;
-        
+
         console.log( 'RegionMap: adding json from \nhttp://' + window.location.hostname + url );
 
         $.ajax({
             url: url,
             success: function(geojson) {
-                
+
                 // control that shows state info on hover
                 var info = L.control();
 
@@ -118,7 +118,7 @@ var NewWhathoodMap = L.Map.extend( {
                 };
 
                 info.update = function (props) {
-                    
+
                     this._div.innerHTML = '<h4>What Hood Neighborhoods</h4>' +  (props ?
                         '<b>' + props.name + '</b><br />'
                                 +'<b>Number of users who contributed to these borders:</b>'+props.num_user_polygons+'<br/>'
@@ -128,7 +128,7 @@ var NewWhathoodMap = L.Map.extend( {
                 };
 
                 info.addTo(self);
-        
+
                 function style(feature) {
                     return {
                         weight: 3,
@@ -139,7 +139,7 @@ var NewWhathoodMap = L.Map.extend( {
                         fillColor: '#FEB24C'
                     };
                 };
-                
+
                 function highlightFeature(e) {
                     var layer = e.target;
 
@@ -154,7 +154,7 @@ var NewWhathoodMap = L.Map.extend( {
                         layer.bringToFront();
                     }
                 }
-                
+
                 function updateInfo(e) {
                     var layer = e.target;
                     info.update(layer.feature.properties);
@@ -205,7 +205,7 @@ var NewWhathoodMap = L.Map.extend( {
                 fillColor: '#FEB24C'
             };
         };
-        
+
         function highlightFeature(e) {
             var layer = e.target;
 
@@ -220,7 +220,7 @@ var NewWhathoodMap = L.Map.extend( {
                 layer.bringToFront();
             }
         }
-        
+
         function updateInfo(e) {
             var layer = e.target;
             info.update(layer.feature.properties);
@@ -253,27 +253,27 @@ var NewWhathoodMap = L.Map.extend( {
         return;
 
     },
-    
+
     centerOnRegion: function() {
         this.setView([39.9505, -75.148], 12);
     },
-            
+
     /*
     * add the ability to click on the map, and have a whathood popup telling what
     * neighborhoods it matches
     */
     whathoodClick : function( bool ) {
-        
+
         if( bool !== true )
             return;
-        
+
         self = this;
         self.locationMarker = null;
-        
+
         var getNeighborhoodBrowseUrl = function(lat,lng) {
             return '/n/page/1/center/'+lat+','+lng;
         };
-        
+
         var getPopup = function(json,regionName) {
 
             var neighborhoods = json.whathood_result.response.consensus.neighborhoods;
@@ -296,7 +296,7 @@ var NewWhathoodMap = L.Map.extend( {
             html += '<a href="'+url+'">Browse these neighborhoods</a>';
             return html;
         };
-        
+
         var mapClickEventHandler = function(e) {
             var lat = e.latlng.lat; var lng = e.latlng.lng;
 
@@ -314,14 +314,14 @@ var NewWhathoodMap = L.Map.extend( {
                 url: searchUrl,
                 context: document.body,
                 success: function(data) {
-                    
+
                     self.locationMarker.bindPopup(
                         getPopup(data,self.regionName)
                     ).openPopup();
                 }
             });
         } // end mapClickEventHandler
-        
+
         self.on('click', mapClickEventHandler );
     }
 } );
@@ -334,7 +334,7 @@ var WhathoodDrawMap = NewWhathoodMap.extend( {
     addLeafletDraw : function() {
         this.drawnItems = new L.FeatureGroup();
         this.addLayer(this.drawnItems);
-        
+
         this.addControl( this.getDrawControl() );
 
         this.on('draw:created', function (e) {
@@ -369,7 +369,7 @@ var WhathoodDrawMap = NewWhathoodMap.extend( {
         else {
             editableLayers = new L.FeatureGroup();
         }
-        
+
         var options = {
             draw: {
                 position: 'topleft',
@@ -402,16 +402,16 @@ var WhathoodDrawMap = NewWhathoodMap.extend( {
 
 
 var RegionMap = NewWhathoodMap.extend( {
-    
+
     _markerCluster : null,
 
     addContentiousPoints : function(createEventId, callback ) {
         self = this;
-        
+
         var url = '/whathood/contentious-point/by-create-event-id?format=heatmapJsData&create_event_id='+createEventId;
-        
+
         console.log( 'fetching contentious points \nhttp://' + window.location.hostname + url );
-        
+
         $.ajax({
             url: url,
             success: function(pointData) {
@@ -420,7 +420,7 @@ var RegionMap = NewWhathoodMap.extend( {
 
                 count = 0;
                 pointData.forEach( function( point, index, array ) {
-                    
+
                     if( ( index % 10 ) == 0 ) {
                         //console.log( "i: " + index + " lat " + point.lat + " lon " + point.lon );
                         self._markerCluster.addLayer( new L.Marker([point.lat, point.lon] ) );
@@ -433,7 +433,7 @@ var RegionMap = NewWhathoodMap.extend( {
 
                 if( ( typeof callback ) != 'undefined' ) {
                     callback();
-                } 
+                }
             },
             error: function() {
                 console.log('unable to retreive contentious points');
@@ -454,14 +454,14 @@ var NeighborhoodHeatMap = NewWhathoodMap.extend( {
     heatMapLayer: null,
     data: null,
     maxValue: 100,
-   
+
     addData: function( data ) {
         this.data = data;
         this.drawHeatmap(7);
         this.fitBounds( this.heatMapLayer );
         console.log( 'done loading heat map' );
     },
-            
+
     drawHeatmap: function(radius) {
         this.heatMapLayer = L.TileLayer.heatMap({
             radius: {value: 43, absolute:true},
