@@ -16,8 +16,6 @@ L.TileLayer.HeatMap.prototype.getBounds = function() {
 L.GeoJSON.prototype.getCenter = function(){
     var pts = this._latlngs;
 
-    console.log( pts );
-
     var twicearea = 0;
     var p1, p2, f;
     var x = 0, y = 0;
@@ -75,10 +73,6 @@ var NewWhathoodMap = L.Map.extend( {
     debugLayers : function() {
 
         this.layerGroup().eachLayer( function (layer) {
-            console.log( 'typeof layer: '  + ( layer.constructor.name ) );
-            console.log( 'layer id: '  + ( layer.options.id ) );
-            console.log( layer );
-
             if( layer.options.id == 'contentious' ) {
                 layer.bringToFront();
             }
@@ -101,8 +95,6 @@ var NewWhathoodMap = L.Map.extend( {
     addGeoJson: function ( url, callback ) {
 
         var self = this;
-
-        console.log( 'RegionMap: adding json from \nhttp://' + window.location.hostname + url );
 
         $.ajax({
             url: url,
@@ -178,7 +170,6 @@ var NewWhathoodMap = L.Map.extend( {
                 }).addTo(self);
                 self.layerGroup().addLayer( self.geojsonLayer );
                 self.fitBounds( self.geojsonLayer );
-                console.log( 'done loading neighborhoods' );
 
                 if( ( typeof callback ) != 'undefined' ) {
                     callback();
@@ -195,7 +186,6 @@ var NewWhathoodMap = L.Map.extend( {
     addGeoJsonAsTileLayer : function() {
 
         function style(feature) {
-            console.log( "styling!" );
             return {
                 weight: 3,
                 opacity: 1,
@@ -290,7 +280,6 @@ var NewWhathoodMap = L.Map.extend( {
             url = getNeighborhoodBrowseUrl(requestLat,requestLng);
 
             if( typeof regionName !== 'undefined' ) {
-                console.log('WH.getPopup(): regionName: ' + regionName );
                 url += '&region_name='+regionName;
             }
             html += '<a href="'+url+'">Browse these neighborhoods</a>';
@@ -309,7 +298,6 @@ var NewWhathoodMap = L.Map.extend( {
                     .openPopup();
 
             var searchUrl = "/whathood-search?"+'lat='+lat+'&lng='+lng+'&format=json';
-            console.log( 'mapClickEventHandler(): ' + 'http://whathood.in' + searchUrl );
             $.ajax({
                 url: searchUrl,
                 context: document.body,
@@ -356,7 +344,6 @@ var WhathoodDrawMap = NewWhathoodMap.extend( {
             layers.eachLayer(function(layer) {
                 countOfEditedLayers++;
             });
-            console.log("Edited " + countOfEditedLayers + " layers");
         });
 
     },
@@ -410,7 +397,6 @@ var RegionMap = NewWhathoodMap.extend( {
 
         var url = '/whathood/contentious-point/by-create-event-id?format=heatmapJsData&create_event_id='+createEventId;
 
-        console.log( 'fetching contentious points \nhttp://' + window.location.hostname + url );
 
         $.ajax({
             url: url,
@@ -428,7 +414,6 @@ var RegionMap = NewWhathoodMap.extend( {
                     }
                 });
 
-                console.log( 'added ' + count + ' contentious points' );
                 self.addLayer(self._markerCluster );
 
                 if( ( typeof callback ) != 'undefined' ) {
@@ -436,7 +421,6 @@ var RegionMap = NewWhathoodMap.extend( {
                 }
             },
             error: function() {
-                console.log('unable to retreive contentious points');
                 alert('unable to retreive contentious points');
             }
         });
