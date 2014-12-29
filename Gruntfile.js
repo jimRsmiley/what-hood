@@ -3,7 +3,10 @@ module.exports = function(grunt) {
         coffee: {
             compile: {
                 files: {
-                    'app/public/js/whathood-compiled.js': [ 'coffee/src/*.coffee' ]
+                    'app/public/js/whathood-compiled.js': [
+                      'coffee/src/whathood-coffee.coffee',
+                      'coffee/src/address-search.coffee'
+                    ]
                 }
             }
         },
