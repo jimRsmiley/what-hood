@@ -3,16 +3,16 @@ module.exports = function(grunt) {
         coffee: {
             compile: {
                 files: {
-                    'app/public/js/whathood-compiled.js': [
-                      'coffee/src/whathood-coffee.coffee',
-                      'coffee/src/address-search.coffee'
+                    'app/public/js/whathood/whathood-compiled.js': [
+                      'coffeescript/whathood.coffee',
+                      'coffeescript/address-search.coffee'
                     ]
                 }
             }
         },
         watch: {
             coffee: {
-                files: ['coffee/src/*.coffee'],
+                files: ['coffeescript/*.coffee'],
                 tasks: 'coffee:compile'
             }
         }
