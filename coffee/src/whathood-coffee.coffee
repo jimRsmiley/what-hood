@@ -1,2 +1,2 @@
-console.log "this is a test"
-
+root = exports ? this
+root.Whathood = {}
