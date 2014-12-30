@@ -145,6 +145,7 @@ var NewWhathoodMap = L.Map.extend( {
                     if (!L.Browser.ie && !L.Browser.opera) {
                         layer.bringToFront();
                     }
+                    updateInfo(e);
                 }
 
                 function updateInfo(e) {
@@ -158,7 +159,6 @@ var NewWhathoodMap = L.Map.extend( {
                 function onEachFeature(feature,layer) {
                     layer.on({
                         mouseover: highlightFeature,
-                        click: updateInfo,
                         mouseout: resetHighlight
                     });
                 };
