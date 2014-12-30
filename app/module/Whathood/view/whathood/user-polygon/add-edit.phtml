@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // from ViewModel
 $form = $this->form;
@@ -17,46 +17,46 @@ foreach( $currentNeighborhoods as $n ) {
 }
 
 $form->prepare();
-$partialElementPath 
+$partialElementPath
     = 'whathood/neighborhood/partial_neighborhood_form_element.phtml';
 ?>
 
     <?php echo $this->form()->openTag($form);?>
-        
+
         <?php foreach( $form->getMessages() as $message ) : ?>
             <div><?=\Zend\Debug\Debug::dump($message,null,false);?></div>
         <?php endforeach; ?>
-        
+
         <?php
         /*
          * Neighborhood Name
          */
-        echo $this->partial( $partialElementPath, 
+        echo $this->partial( $partialElementPath,
                     array( 'formElement'=> $neighborhoodPolygon
-                                        ->get('neighborhood')->get('name') ) ); 
+                                        ->get('neighborhood')->get('name') ) );
         ?>
-            
+
         <div id="no-match-neighborhood"></div>
-        
+
         <div class='row-fluid morepadding'>
             <?php echo $this->formElement($form->get('submit')->setAttribute('class','span6'))?>
         </div>
-        
-        <?php 
+
+        <?php
         /*
          * polygonGeoJson
          */
         echo $this->formRow( $form->get('polygonGeoJson') ) . "\n" ?>
-        
+
         <div><p>Begin drawing the neighborhood borders by clicking the <img src="/images/polygon-button.png" alt="Polygon"/> button</p></div>
-        
+
         <div class='row-fluid'>
             <div class="map map_add" id="map" style='padding: 0; margin: 0'></div>
         </div>
 
 
-        
-        
+
+
     <?php echo $this->form()->closeTag() . "\n"; ?>
 
     <?php if( $this->isNeighborhoodOwner($neighborhoodPolygon,$currentWhathoodUser) ) : ?>
@@ -64,21 +64,21 @@ $partialElementPath
                 put the neighborhood admin stuff here
             </div>
     <?php endif; ?>
-     
-        
+
+
 <script>
-    
+
 /**
  * figure out how to center the map, if lat,lng have been specified, use that,
  * else, try and get the position from the browser, then call setupMap to draw
  * the map
  */
 function init() {
-   
+
    var lat          = getURLParameter( 'centerLat');
    var lng          = getURLParameter( 'centerLng');
    var regionName   = getURLParameter( 'region_name' );
-   
+
    if( lat == 'null' || lng == 'null' ) {
         console.log("init(): lat or lng is null, let's geocode region");
         geocoder = new google.maps.Geocoder();
@@ -100,10 +100,10 @@ var map;
 
 
 function submitAddForm() {
-    
+
     if( $('input[name="neighborhoodPolygon\\[neighborhood\\]\\[name\\]"]').val()  == '' )
         alert( 'you must enter a neighborhood name' );
-    
+
     if( map.getDrawnGeoJson() == null ) {
         alert("you must draw a neighborhood to continue");
         return false;
@@ -124,9 +124,9 @@ function submitAddForm() {
 
 function loadNeighborhoodNames() {
   <?php if( !empty($neighborhoodNames) ) : ?>
-      
+
     var availableNeighborhoods = [<?=$this->arrayToDoubleQuoteElementedCSV($neighborhoodNames)?>];
-  
+
     $( "input[name=neighborhoodPolygon\\[neighborhood\\]\\[name\\]]" ).autocomplete({
       source: availableNeighborhoods,
       response: function(event, ui) {
@@ -138,13 +138,13 @@ function loadNeighborhoodNames() {
             }
         }
     });
-    
+
     <?php endif; ?>
 }
 
 $('document').ready( function() {
-    
-    var options = { 
+
+    var options = {
       center : [<?=$region->getCenterPoint()->getY()?>,<?=$region->getCenterPoint()->getX()?>]
     };
 
@@ -153,8 +153,8 @@ $('document').ready( function() {
     map.addLeafletDraw();
 
     loadNeighborhoodNames();
-    
+
 });
 
 </script>
-    
+
