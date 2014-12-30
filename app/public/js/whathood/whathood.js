@@ -327,45 +327,6 @@ var WhathoodDrawMap = NewWhathoodMap.extend( {
 }); // end constructor
 
 
-var RegionMap = NewWhathoodMap.extend( {
-
-    _markerCluster : null,
-
-    addContentiousPoints : function(createEventId, callback ) {
-        self = this;
-
-        var url = '/whathood/contentious-point/by-create-event-id?format=heatmapJsData&create_event_id='+createEventId;
-
-
-        $.ajax({
-            url: url,
-            success: function(pointData) {
-
-                self._markerCluster = new L.MarkerClusterGroup();
-
-                count = 0;
-                pointData.forEach( function( point, index, array ) {
-
-                    if( ( index % 10 ) == 0 ) {
-                        //console.log( "i: " + index + " lat " + point.lat + " lon " + point.lon );
-                        self._markerCluster.addLayer( new L.Marker([point.lat, point.lon] ) );
-                        count++;
-                    }
-                });
-
-                self.addLayer(self._markerCluster );
-
-                if( ( typeof callback ) != 'undefined' ) {
-                    callback();
-                }
-            },
-            error: function() {
-                alert('unable to retreive contentious points');
-            }
-        });
-    }
-
-} );
 
 /**
 *
