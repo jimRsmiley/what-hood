@@ -143,12 +143,14 @@ function loadNeighborhoodNames() {
 }
 
 $('document').ready( function() {
+    var window = (typeof exports !== "undefined" && exports !== null) ? exports : window;
+    Whathood = window.Whathood;
 
     var options = {
       center : [<?=$region->getCenterPoint()->getY()?>,<?=$region->getCenterPoint()->getX()?>]
     };
 
-    map = new WhathoodDrawMap( 'map' );
+    map = new Whathood.DrawMap( 'map' );
     map.addStreetLayer();
     map.addLeafletDraw();
 
