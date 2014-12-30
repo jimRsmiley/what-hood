@@ -1,4 +1,8 @@
-NeighborhoodHeatMap = NewWhathoodMap.extend
+root = exports ? this
+
+Whathood = root.Whathood
+
+NeighborhoodHeatMap = Whathood.Map.extend
     heatMapLayer: null
     data: null
     maxValue: 100

@@ -1,9 +1,8 @@
 root = exports ? this
 
-console.log root
 Whathood = root.Whathood
 
-Whathood.RegionMap = NewWhathoodMap.extend
+Whathood.RegionMap = Whathood.Map.extend
   _markerCluster : null,
   addContentiousPoints : (createEventId, callback ) =>
     self = this
