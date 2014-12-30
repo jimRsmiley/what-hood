@@ -1,8 +1,9 @@
+/view
 /js
-app/public/js/whathood/
-node_modules/
-W
-app/composer.phar
+/app/public/js/whathood/
+/node_modules/
+/W
+/app/composer.phar
 composer.phar
 app/draft/
 app/data/DoctrineORMModule
