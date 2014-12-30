@@ -183,67 +183,6 @@ var NewWhathoodMap = L.Map.extend( {
         });
     },
 
-    addGeoJsonAsTileLayer : function() {
-
-        function style(feature) {
-            return {
-                weight: 3,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.7,
-                fillColor: '#FEB24C'
-            };
-        };
-
-        function highlightFeature(e) {
-            var layer = e.target;
-
-            layer.setStyle({
-                weight: 5,
-                color: '#666',
-                dashArray: '',
-                fillOpacity: 0.7
-            });
-
-            if (!L.Browser.ie && !L.Browser.opera) {
-                layer.bringToFront();
-            }
-        }
-
-        function updateInfo(e) {
-            var layer = e.target;
-            info.update(layer.feature.properties);
-        }
-
-        function resetHighlight(e) {
-            self._geojsonTileLayer.resetStyle(e.target);
-        }
-        function onEachFeature(feature,layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                click: updateInfo,
-                mouseout: resetHighlight
-            });
-        };
-
-        self._geojsonTileLayer = new L.TileLayer.GeoJSON(url, {
-            //clipTiles: true,
-            unique: function( feature ) {
-                return feature.id;
-            }
-        },{
-            style: style,
-            id: 'geojsonTileLayer',
-            onEachFeature: onEachFeature
-        });
-
-        self.addLayer( self._geojsonTileLayer );
-        callback();
-        return;
-
-    },
-
     centerOnRegion: function() {
         this.setView([39.9505, -75.148], 12);
     },
