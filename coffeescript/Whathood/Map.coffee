@@ -1,5 +1,5 @@
-root = exports ? this
-Whathood = root.Whathood
+window = exports ? this
+Whathood = window.Whathood
 
 Whathood.Map = L.Map.extend
 
