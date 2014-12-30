@@ -6,6 +6,7 @@ Whathood.Map = L.Map.extend
   _layerGroup: null,
   _geojsonTileLayer : null
   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com">Mapbox</a> | Neighborhood borders provided by <a href="http://www.azavea.com/blogs/newsletter/v8i2/philly-neighborhoods-map/">Azavea</a>'
+  _neighborhood_color: '5487b8'
 
   layerGroup: ->
     if (@_layerGroup == null)
@@ -31,7 +32,7 @@ Whathood.Map = L.Map.extend
     self = this
     $.ajax
         url: url,
-        success: (geojson) ->
+        success: (geojson) =>
             # control that shows state info on hover
             info = L.control()
             info.onAdd = (map) ->
@@ -50,13 +51,13 @@ Whathood.Map = L.Map.extend
                   'Click a neighborhood'
             info.addTo(self)
 
-            style = (feature) ->
+            style = (feature) =>
               weight: 3,
               opacity: 1,
               color: 'white',
               dashArray: '3',
               fillOpacity: 0.7,
-              fillColor: '#FEB24C'
+              fillColor: @_neighborhood_color
 
             highlightFeature = (e) ->
               layer = e.target
