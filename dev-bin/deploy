@@ -1,0 +1,9 @@
+#!/bin/bash
+
+SRC_DIR=/home/whathood/what-hood
+DST_DIR=/var/www/whathood/public_html
+
+cd $SRC_DIR
+grunt coffee
+
+cp -r $SRC_DIR/app/* $DST_DIR/
