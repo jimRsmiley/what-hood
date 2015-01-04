@@ -23,7 +23,7 @@ class UserPolygon extends \ArrayObject {
     
     /**
      * @ORM\ManyToOne(targetEntity="Neighborhood",
-     *      inversedBy="neighborhoodPolygons")
+     *      inversedBy="userPolygons")
      * @ORM\JoinColumn(name="neighborhood_id", referencedColumnName="id",
      *      nullable=false)
      */

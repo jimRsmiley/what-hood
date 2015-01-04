@@ -22,6 +22,8 @@
         "beberlei/DoctrineExtensions": "*",
         "facebook/php-sdk": "*",
         "willdurand/geocoder": "*",
-        "kriswallsmith/buzz": "*"
+        "kriswallsmith/buzz": "*",
+	"zf-commons/zfc-user": "1.2.1",
+	"zf-commons/zfc-user-doctrine-orm": "1.0.0"
     }
 }

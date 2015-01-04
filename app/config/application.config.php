@@ -1,9 +1,13 @@
 <?php
 $modules = array(
+    'Whathood',
     'DoctrineModule',
     'DoctrineORMModule',
     'JsMappingUtils',
-    'Whathood',
+    'ZfcBase',
+    'ZfcUser',
+    'ZfcUserDoctrineORM',
+
 );
 
 if( getenv("APPLICATION_ENV") == 'development' ) {
@@ -37,9 +41,4 @@ return array(
         ),
     ),
     
-    // ZfcUser specific config
-    'zfcuser' => array(
-        'user_entity_class'       => 'Whathood\Entity\WhathoodUser',
-        'enable_default_entities' => false,
-    ),
 );
