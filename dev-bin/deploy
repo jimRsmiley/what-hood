@@ -1,9 +1,37 @@
 #!/bin/bash
 
-SRC_DIR=/home/whathood/what-hood
-DST_DIR=/var/www/whathood/public_html
+APP_DIR="/var/www/whathood"
+SHARE_DIR="/vagrant"
 
-cd $SRC_DIR
-grunt coffee
+echo ""
+echo "Building Whathood App"
+echo ""
+sudo mkdir -p $APP_DIR
+sudo chown -R vagrant.vagrant $APP_DIR
+echo "*     cloning data repository"
+sudo git clone https://github.com/jimRsmiley/whathood-data.git /tmp/whathood-data > /dev/null
+echo "*     importing database"
+sudo psql -U whathood -f /tmp/whathood-data/whathood_sql/whathood_bak.sql &> /dev/null
+echo "*     pulling code repository"
+git clone https://github.com/jimRsmiley/what-hood.git $APP_DIR &> /dev/null
 
-cp -r $SRC_DIR/app/* $DST_DIR/
+cd $APP_DIR/app
+echo "*     installing composer"
+curl -sS https://getcomposer.org/installer | php > /dev/null
+echo "*     installing vendor libraries"
+php composer.phar install > /dev/null
+echo "*     configuring Whathood Zend"
+cp $SHARE_DIR/provision/config/local.php $APP_DIR/app/config/autoload
+sudo chown -R vagrant.vagrant $APP_DIR
+
+echo "*      building Whathood's coffeescript(to do)"
+echo "*      building grunt"
+# DO NOT SUDO GRUNT
+cd $APP_DIR
+npm config set loglevel warn
+npm install --silent grunt --save-dev > /dev/null
+npm install --silent grunt-contrib-watch --save-dev > /dev/null
+npm install --silent grunt-contrib-coffee --save-dev > /dev/null
+
+echo "*      building coffeescript into whathood-compiled.js"
+grunt coffee > /dev/null
