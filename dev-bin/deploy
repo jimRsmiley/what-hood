@@ -21,7 +21,12 @@ curl -sS https://getcomposer.org/installer | php > /dev/null
 echo "*     installing vendor libraries"
 php composer.phar install > /dev/null
 echo "*     configuring Whathood Zend"
+
+echo "copying over local.php"
 cp $SHARE_DIR/provision/config/local.php $APP_DIR/app/config/autoload
+echo "copying over ZcfUser config files"
+cp $APP_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $APP_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f
+cp $APP_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $APP_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f
 sudo chown -R vagrant.vagrant $APP_DIR
 
 echo "*      building Whathood's coffeescript(to do)"
