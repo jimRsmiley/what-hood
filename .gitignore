@@ -20,4 +20,5 @@ composer.phar
 .project
 .settings
 .local.php
+*.symlink
 *.swp

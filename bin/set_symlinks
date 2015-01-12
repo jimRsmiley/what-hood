@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ln -s app/module/Whathood/src/Whathood/ W
+ln -s app/module/Whathood/config/module.config.php module.config.php.symlink
