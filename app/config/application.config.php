@@ -1,13 +1,13 @@
 <?php
 $modules = array(
+    'JsMappingUtils',
     'Whathood',
     'DoctrineModule',
     'DoctrineORMModule',
-    'JsMappingUtils',
     'ZfcBase',
     'ZfcUser',
     'ZfcUserDoctrineORM',
-
+    'BjyAuthorize',
 );
 
 if( getenv("APPLICATION_ENV") == 'development' ) {
@@ -33,12 +33,9 @@ return array(
         // modules are loaded. These effectively overide configuration
         // provided by modules themselves. Paths may use GLOB_BRACE notation.
         'config_glob_paths' => array(
-            //'config/autoload/{global,local}.php',
-            'config/autoload/{,*.}' . (getenv('APPLICATION_ENV') ?: 'development') . '.{global,local}.php',
-            'config/autoload/whathood.local.php',
-	    'config/autoload/local.php'
-            //'config/autoload/zdt.local.php',
+            'config/autoload/bjyauthorize.global.php',
+	    'config/autoload/local.php',
+	    'zfcuser.global.php',
         ),
     ),
-    
 );

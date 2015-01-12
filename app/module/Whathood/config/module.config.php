@@ -422,6 +422,9 @@ return array(
                 return new \Whathood\Mapper\CreateEventMapper($sm,$em);
             },
         ),
+	#'aliases' => array(
+	#    'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter'
+	#),
     ),
                 
     'controllers' => array(

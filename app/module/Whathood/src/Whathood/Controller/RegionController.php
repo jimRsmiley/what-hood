@@ -20,7 +20,10 @@ class RegionController extends BaseController {
     *   parameter set_number
     */    
     public function showAction() {
-
+#	print $this->zfcUserAuthentication();
+#	#if( !$this->isAllowed('guest')) {
+#		throw new \Exception('Grow a beard first!');
+#	}
         $regionName = $this->getUriParameter('region_name');
         $setNumber = $this->getUriParameter('set_number');
         
