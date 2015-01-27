@@ -1,1 +1,0 @@
-the draft folder holds all of the files that shouldn't be committed
