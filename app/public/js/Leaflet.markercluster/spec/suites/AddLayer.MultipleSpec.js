@@ -1,4 +1,4 @@
-﻿describe('addLayer adding multiple markers', function () {
+describe('addLayer adding multiple markers', function () {
 	var map, div, clock;
 	beforeEach(function () {
 		clock = sinon.useFakeTimers();

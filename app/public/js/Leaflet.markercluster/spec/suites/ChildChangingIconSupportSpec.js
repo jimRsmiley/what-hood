@@ -1,4 +1,4 @@
-﻿describe('support child markers changing icon', function () {
+describe('support child markers changing icon', function () {
 	var map, div, clock;
 	beforeEach(function () {
 		clock = sinon.useFakeTimers();

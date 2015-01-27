@@ -1,4 +1,4 @@
-﻿
+
 --
 -- find the points that are an area of contention
 --

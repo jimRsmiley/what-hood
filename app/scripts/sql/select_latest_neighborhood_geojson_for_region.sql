@@ -1,4 +1,4 @@
-﻿CREATE OR REPLACE FUNCTION select_latest_neighborhood_polygons( test_region_id integer )
+CREATE OR REPLACE FUNCTION select_latest_neighborhood_polygons( test_region_id integer )
 RETURNS SETOF neighborhood_polygon
 AS 
 $BODY$

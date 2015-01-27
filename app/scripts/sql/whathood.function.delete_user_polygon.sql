@@ -1,4 +1,4 @@
-﻿--
+--
 -- name: delete_user_polygon( up_id )
 --
 DROP FUNCTION IF EXISTS delete_user_polygon( _up_id integer );

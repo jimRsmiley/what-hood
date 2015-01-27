@@ -1,4 +1,4 @@
-﻿  CREATE TABLE my_temp_table (
+  CREATE TABLE my_temp_table (
     test_point_id integer,
     point geometry,
     point_text varchar,

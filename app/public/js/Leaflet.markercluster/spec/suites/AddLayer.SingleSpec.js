@@ -1,4 +1,4 @@
-﻿describe('addLayer adding a single marker', function () {
+describe('addLayer adding a single marker', function () {
 	var map, div;
 	beforeEach(function () {
 		div = document.createElement('div');

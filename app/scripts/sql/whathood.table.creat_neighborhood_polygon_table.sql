@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS neighborhood_polygon;
+DROP TABLE IF EXISTS neighborhood_polygon;
 
 CREATE TABLE neighborhood_polygon(
   id serial primary key,

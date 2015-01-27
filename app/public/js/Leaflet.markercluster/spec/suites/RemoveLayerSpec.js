@@ -1,4 +1,4 @@
-﻿describe('removeLayer', function () {
+describe('removeLayer', function () {
 	var map, div, clock;
 	beforeEach(function () {
 		clock = sinon.useFakeTimers();

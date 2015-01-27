@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS public.my_temp_table;
+DROP TABLE IF EXISTS public.my_temp_table;
 
 CREATE TABLE public.my_temp_table (
   id serial PRIMARY KEY,

@@ -1,4 +1,4 @@
-﻿describe('support for CircleMarker elements', function () {
+describe('support for CircleMarker elements', function () {
 	var map, div, clock;
 	beforeEach(function () {
 		clock = sinon.useFakeTimers();

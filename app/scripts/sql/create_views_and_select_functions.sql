@@ -1,4 +1,4 @@
-﻿--ALTER TABLE neighborhood_polygon DROP COLUMN num_user_polygons CASCADE;
+--ALTER TABLE neighborhood_polygon DROP COLUMN num_user_polygons CASCADE;
 
 --
 -- name: np_w_up_count
