@@ -2,3 +2,4 @@
 
 ln -s app/module/Whathood/src/Whathood/ W
 ln -s app/module/Whathood/config/module.config.php module.config.php.symlink
+ln -s app/config/autoload/user_security.global.php user_secuirity.global.php
