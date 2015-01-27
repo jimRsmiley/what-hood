@@ -30,9 +30,9 @@ print "*     installing composer\n";
 print "*     installing vendor libraries\n";
 `php composer.phar install > /dev/null`;
 
-print "*     copying over ZcfUser config files\b";
-`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
-`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
+#print "*     copying over ZcfUser config files\b";
+#`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
+#`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
 
 print "*     building Whathood's coffeescript(to do)\n";
 print "*     building grunt\n";
@@ -46,13 +46,20 @@ chdir $DEST_DIR;
 print "*     building coffeescript into whathood-compiled.js\n";
 `grunt coffee > /dev/null`;
 
-# now copy everything to the destination dir
+print "*     making source dir chmod 777\n";
+`chmod 777 $SRC_DIR -R`;
+
+print "*     setting doctrine proxy dir to all writeable\n";
+`mkdir -p $SRC_DIR/app/data/DoctrineORMModule`;
+`chmod 777 $SRC_DIR/app/data/DoctrineORMModule`;
+
+print "*     now copy everything to the destination dir\n";
 `sudo mkdir -p $DEST_DIR`;
 print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
 `cp -r $SRC_DIR/app $DEST_DIR`;
 
 print "*     copying over whathood.conf nginx file";
-`cp $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
+`cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
 
 print "*     restarting nginx\n";
 `service nginx restart`;
