@@ -1,37 +1,58 @@
-#!/bin/bash
+#!/usr/bin/env perl
 
+use strict;
+use warnings;
+use FindBin;
 
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-APP_DIR="/opt/whathood"
-SRC_DIR=$DIR/..
+my $user=`whoami`;
+chomp $user;
+unless ( $user eq "root" ) {
+   print "must be run as root. Not '$user'\n";
+   exit;
+}
 
-echo ""
-echo "Building Whathood App"
-echo ""
-sudo mkdir -p $APP_DIR
+# current directory
+my $DIR=$FindBin::Bin;
 
-cd $SRC_DIR/app
-echo "*     installing composer"
-curl -sS https://getcomposer.org/installer | php > /dev/null
-echo "*     installing vendor libraries"
-php composer.phar install > /dev/null
-echo "*     configuring Whathood Zend"
+# deploy to
+my $DEST_DIR="/opt/whathood";
+my $SRC_DIR="$DIR/..";
 
-echo "*     copying whathood zend files"
-cp -r $SRC_DIR/app $APP_DIR
+print "\n";
+print "Building Whathood App\n";
+print "\n";
+`sudo mkdir -p $DEST_DIR`;
 
-echo "*     copying over ZcfUser config files"
-cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $APP_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f
-cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $APP_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f
+chdir "$SRC_DIR/app";
+print "*     installing composer\n";
+`curl -sS https://getcomposer.org/installer | php > /dev/null`;
+print "*     installing vendor libraries\n";
+`php composer.phar install > /dev/null`;
+print "*     configuring Whathood Zend\n";
 
-echo "*     building Whathood's coffeescript(to do)"
-echo "*     building grunt"
+print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
+`cp -r $SRC_DIR/app $DEST_DIR`;
+
+print "*     copying over ZcfUser config files\b";
+`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $DEST_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
+`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $DEST_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
+
+print "*     building Whathood's coffeescript(to do)\n";
+print "*     building grunt\n";
 # DO NOT SUDO GRUNT
-cd $APP_DIR
-npm config set loglevel warn
-npm install --silent grunt --save-dev > /dev/null
-npm install --silent grunt-contrib-watch --save-dev > /dev/null
-npm install --silent grunt-contrib-coffee --save-dev > /dev/null
+chdir $DEST_DIR;
+`npm config set loglevel warn`;
+`npm install --silent grunt --save-dev > /dev/null`;
+`npm install --silent grunt-contrib-watch --save-dev > /dev/null`;
+`npm install --silent grunt-contrib-coffee --save-dev > /dev/null`;
 
-echo "*     building coffeescript into whathood-compiled.js"
-grunt coffee > /dev/null
+print "*     building coffeescript into whathood-compiled.js\n";
+`grunt coffee > /dev/null`;
+
+print "*     copying over whathood.conf nginx file";
+`cp $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
+
+print "*     restarting nginx\n";
+`service nginx restart`;
+
+print "done deploy\n";
