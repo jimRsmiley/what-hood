@@ -143,7 +143,25 @@ class BaseController extends AbstractActionController {
     public function getLoggedInWhathoodUser() {
         return $this->getAuthenticationService()->getWhathoodUser();
     }
-    
+
+    public function getUser() {
+	    if($this->zfcUserAuthentication()->hasIdentity()) {
+		    return $this->zfcUserAuthentication()->getIdentity();
+	    }
+	    return null;
+    }
+
+	public function getUserRoleNames() {
+		$user = $this->getUser();
+		$role_names = array();
+		if( $user) {
+			foreach($user->getRoles() as $role) {
+				array_push($role_names, $role->getRoleId());
+			}
+		}
+		return $role_names;
+	}
+
     public function getLogger() {
         return $this->getServiceLocator()->get('mylogger');
     }

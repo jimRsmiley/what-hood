@@ -392,13 +392,6 @@ return array(
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Upenn();
             },
                     
-            'Whathood\Model\AuthenticationService' => function($sm) {
-                $config = $sm->get('Config');
-                $whathoodConfig = $config['whathood'];
-                $auth = new \Whathood\Model\AuthenticationService($whathoodConfig['auth']);
-                return $auth;
-            },
-                    
             'Whathood\Model\Heatmap\HeatMapBuilder' => function($sm) {
                 $heatMapMapper = $sm->get('Whathood\Mapper\HeatMapMapper');
                 return new \Whathood\Model\HeatMap\HeatMapBuilder(

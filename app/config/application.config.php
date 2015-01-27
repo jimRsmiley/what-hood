@@ -8,6 +8,7 @@ $modules = array(
     'ZfcUser',
     'ZfcUserDoctrineORM',
     'BjyAuthorize',
+	'SamUser'
 );
 
 if( getenv("APPLICATION_ENV") == 'development' ) {

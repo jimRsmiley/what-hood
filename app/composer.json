@@ -20,11 +20,11 @@
         "doctrine/data-fixtures": "*",
         "creof/doctrine2-spatial": "*",
         "beberlei/DoctrineExtensions": "*",
-        "facebook/php-sdk": "*",
         "willdurand/geocoder": "*",
         "kriswallsmith/buzz": "*",
-	"zf-commons/zfc-user": "1.2.*",
-	"zf-commons/zfc-user-doctrine-orm": "1.0.*",
-	"bjyoungblood/bjy-authorize":"1.4.*"
+		"zf-commons/zfc-user": "1.2.*",
+		"zf-commons/zfc-user-doctrine-orm": "1.0.*",
+		"bjyoungblood/bjy-authorize":"1.4.*",
+		"manuakasam/sam-user": "dev-master"
     }
 }

@@ -36,7 +36,6 @@ class Module
     
     public function onBootstrap(MvcEvent $e)
     {
-//        $e->getApplication()->getServiceManager()->get('translator');
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -52,13 +51,6 @@ class Module
                 $service->logException($exception);
             }
         });*/
-        
-        $this->checkForAuthentication(
-                $eventManager,
-                $this->getAuthService($e),
-                self::$authenticateRoutes,
-                $this->adminRoutes,
-                $this->adminUserIds);
     }
     
     public function checkForAuthentication( 
