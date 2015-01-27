@@ -21,21 +21,18 @@ my $SRC_DIR="$DIR/..";
 print "\n";
 print "Building Whathood App\n";
 print "\n";
-`sudo mkdir -p $DEST_DIR`;
 
 chdir "$SRC_DIR/app";
+
 print "*     installing composer\n";
 `curl -sS https://getcomposer.org/installer | php > /dev/null`;
+
 print "*     installing vendor libraries\n";
 `php composer.phar install > /dev/null`;
-print "*     configuring Whathood Zend\n";
-
-print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
-`cp -r $SRC_DIR/app $DEST_DIR`;
 
 print "*     copying over ZcfUser config files\b";
-`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $DEST_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
-`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $DEST_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
+`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
+`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
 
 print "*     building Whathood's coffeescript(to do)\n";
 print "*     building grunt\n";
@@ -48,6 +45,11 @@ chdir $DEST_DIR;
 
 print "*     building coffeescript into whathood-compiled.js\n";
 `grunt coffee > /dev/null`;
+
+# now copy everything to the destination dir
+`sudo mkdir -p $DEST_DIR`;
+print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
+`cp -r $SRC_DIR/app $DEST_DIR`;
 
 print "*     copying over whathood.conf nginx file";
 `cp $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;

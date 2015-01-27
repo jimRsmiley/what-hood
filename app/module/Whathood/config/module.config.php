@@ -9,6 +9,9 @@ namespace Whathood;
  */
 return array(
     'router' => array(
+
+	/*  routes are processed in descending order, put the most important at the bottom! */
+
         'routes' => array(
             
             'region' => array(
@@ -261,6 +264,17 @@ return array(
                     ),
                 ),
             ),
+            'admin' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/admin',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Admin',
+                        'action'        => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'console' => array(
@@ -429,6 +443,7 @@ return array(
                 
     'controllers' => array(
         'invokables' => array(
+            'Whathood\Controller\Admin' => 'Whathood\Controller\AdminController',
             'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
