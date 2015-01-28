@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+
+`sudo su - postgres -c 'createuser --superuser whathood'`
+`sudo su - postgres -c 'createdb whathood'`
+`sudo su - postgres -c 'CREATE EXTENSION postgis'`
+`sudo git clone https://github.com/jimRsmiley/whathood-data.git /tmp/whathood-data > /dev/null`
+`sudo psql -U whathood < /tmp/whathood-data/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`
+
