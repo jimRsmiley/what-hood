@@ -1,8 +1,24 @@
 #!/usr/bin/env perl
 
-`sudo su - postgres -c 'createuser --superuser whathood'`
-`sudo su - postgres -c 'createdb whathood'`
-`sudo su - postgres -c 'CREATE EXTENSION postgis'`
-`sudo git clone https://github.com/jimRsmiley/whathood-data.git /tmp/whathood-data > /dev/null`
-`sudo psql -U whathood < /tmp/whathood-data/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`
+use strict;
+use warnings;
+
+my $DATA_DIR="data/whathood_db";
+
+print "warning: this will destroy the current db\n";
+<STDIN>;
+
+`su - postgres -c 'dropdb whathood'`;
+`sudo su - postgres -c 'createuser --superuser whathood'`;
+`sudo su - postgres -c 'createdb whathood'`;
+`sudo su - postgres -c 'psql -c "CREATE EXTENSION postgis" whathood'`;
+
+print "deleting previous data directory\n";
+`rm -rf $DATA_DIR`;
+print "cloning database data\n";
+`mkdir -p $DATA_DIR`;
+`sudo git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
+
+print "importing data into database\n";
+`sudo psql -U whathood < $DATA_DIR/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`;
 
