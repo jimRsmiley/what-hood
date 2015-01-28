@@ -47,18 +47,19 @@ print "*     building coffeescript into whathood-compiled.js\n";
 `grunt coffee > /dev/null`;
 
 print "*     making source dir chmod 777\n";
-`chmod 777 $SRC_DIR -R`;
+`chmod 755 $SRC_DIR -R`;
 
 print "*     setting doctrine proxy dir to all writeable\n";
 `mkdir -p $SRC_DIR/app/data/DoctrineORMModule`;
-`chmod 777 $SRC_DIR/app/data/DoctrineORMModule`;
+`chmod 755 $SRC_DIR/app/data/DoctrineORMModule`;
 
 print "*     now copy everything to the destination dir\n";
 `sudo mkdir -p $DEST_DIR`;
-print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
-`cp -r $SRC_DIR/app $DEST_DIR`;
 
-print "*     copying over whathood.conf nginx file";
+print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
+`cp -r $SRC_DIR/ $DEST_DIR`;
+
+print "*     copying over whathood.conf nginx file\n";
 `cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
 
 print "*     restarting nginx\n";
