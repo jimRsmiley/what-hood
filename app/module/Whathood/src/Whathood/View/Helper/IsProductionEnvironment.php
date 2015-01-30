@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceManager;
 class IsProductionEnvironment extends \Zend\View\Helper\AbstractHelper {
     
     public function __invoke() {
-        return ( getenv('APPLICATION_ENV') != 'development' );
+        return gethostname() == 'market.phl.io';
     }
     
 }
