@@ -14,6 +14,10 @@ class IndexController extends BaseController {
         $regions = $this->regionMapper()->fetchDistinctRegionNames();
        
         return new ViewModel( array( 'regionNames' => $regions ) );
+	}
+
+    public function navigationAction() {
+        return new ViewModel();
     }
     
     public function aboutAction() {
