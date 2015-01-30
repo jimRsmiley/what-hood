@@ -7,12 +7,10 @@ use Zend\ServiceManager\ServiceManager;
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class IsProductionEnvironment extends \Zend\View\Helper\AbstractHelper {
-    
+class IsAdministrator extends \Zend\View\Helper\AbstractHelper {
     public function __invoke() {
-        return gethostname() == 'market.phl.io';
+		return false;
     }
-    
 }
 
 ?>

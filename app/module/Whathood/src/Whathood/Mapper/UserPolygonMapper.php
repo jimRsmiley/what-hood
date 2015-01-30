@@ -197,16 +197,26 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getResult();
     }
     
-    public function getPaginationQuery($x,$y) {
+    public function getPaginationQuery(array $opts = null) {
+		if (empty($opts)) $opts = array();
         $qb = $this->sm->get('mydoctrineentitymanager')
             ->createQueryBuilder()->select( array( 'up' ) )
             ->from('Whathood\Entity\UserPolygon', 'up')
-            ->where('ST_Within(ST_SetSRID(ST_POINT(:x, :y),4326), up.polygon ) = true')
-            ->orderBy('up.id','ASC')
-            ->setParameter( 'x', $x )
-            ->setParameter('y', $y );
-        
-        return $qb->getQuery();
+            ->orderBy('up.id','ASC');
+
+		if( isset($opts['x']) && isset($opts['y']) ) {
+			die('in here though');
+            $qb->where('ST_Within(ST_SetSRID(ST_POINT(:x, :y),4326), up.polygon ) = true')
+				->setParameter( 'x', $opts['x'] )
+				->setParameter('y', $opts['y'] );
+		}
+
+		if (isset($opts['neighborhood_id'])) {
+			$qb->where('up.neighborhood = :neighborhood_id')
+				->setParameter('neighborhood_id',(int)$opts['neighborhood_id']);
+		}
+
+		return $qb->getQuery();
     }
     public function getQueryBuilder() {
         return new NeighborhoodPolygonQueryBuilder(

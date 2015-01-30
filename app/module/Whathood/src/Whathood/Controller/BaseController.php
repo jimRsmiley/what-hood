@@ -101,11 +101,6 @@ class BaseController extends AbstractActionController {
         return $this->contentiousPointMapper;
     }
     
-    public function getAuthenticationService() {
-        return $this->getServiceLocator()
-                    ->get( 'Whathood\Model\AuthenticationService' );
-    }
-    
     public function getUriParameter($key) {
         
         if( $this->params()->fromQuery($key) != null )
@@ -130,20 +125,12 @@ class BaseController extends AbstractActionController {
         $breadCrumbParams = array(
             'regionName'    => $this->getUriParameter('region_name'),
             'neighborhoodName' => $this->getUriParameter('neighborhood_name'),
-            'currentWhathoodUser'   => $this->getAuthenticationService()->getWhathoodUser()
         );
         
        $newParams = array_merge($breadCrumbParams,$params);
        return new ViewModel( $newParams );
     }
     
-    /**
-     * I want an easy way to make the logged in user available
-     */
-    public function getLoggedInWhathoodUser() {
-        return $this->getAuthenticationService()->getWhathoodUser();
-    }
-
     public function getUser() {
 	    if($this->zfcUserAuthentication()->hasIdentity()) {
 		    return $this->zfcUserAuthentication()->getIdentity();

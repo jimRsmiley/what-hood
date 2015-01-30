@@ -47,7 +47,7 @@
             
         <?php echo $this->inlineScript() ?>
 
-        <?php echo $this->partial('layout/partial-google-analytics.phtml');?>
+        <?php if ($this->isProductionEnvironment()) echo $this->partial('layout/partial-google-analytics.phtml') ;?>
             
     </body>
 </html>

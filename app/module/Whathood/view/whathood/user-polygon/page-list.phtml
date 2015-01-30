@@ -1,0 +1,29 @@
+<?php echo $this->paginationControl(
+					$this->paginator,
+					'Sliding',
+					'whathood/user-polygon/user_polygon_pagination_control.phtml', 
+					array(
+						'paginator' => $this->paginator,
+						'route' => 'user-polygon-page-list',
+					)
+				);
+?>
+
+<table>
+  <tr>
+    <th>Id</th>
+	<th>Neighborhood</th>
+	<th>Date Added</th>
+	<th>View</th>
+    <th>Delete?</th>
+  </tr>
+	<?php foreach( $this->paginator as $user_polygon ) : ?>
+		<tr>
+			<td><?=$user_polygon->getId()?></td>
+			<td><?=$user_polygon->getNeighborhood()->getName()?></td>
+			<td><?=$user_polygon->getDateTimeAdded()?></td>
+			<td><a href="/whathood/user-polygon/view/id/<?=$user_polygon->getId()?>">view</a></td>
+			<td><a href="/whathood/user-polygon/delete/id/<?=$user_polygon->getId()?>">delete</a></td>
+		</tr>
+	<?php endforeach; ?>
+</table>

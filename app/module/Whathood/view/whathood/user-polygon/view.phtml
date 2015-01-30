@@ -17,37 +17,22 @@ $saveMessage            = $this->saveMessage;
 $form->setAttribute('action', $this->serverUrl(true) );
 $form->setAttribute('class','form-horizontal');
 
-$neighborhoodPolygon    = $form->get('neighborhoodPolygon');
-$neighborhoodPolygonId = $neighborhoodPolygon->get('id')->getValue();
-$whathoodUser           = $neighborhoodPolygon->get('whathoodUser');
-$neighborhoodPolygon->get('neighborhood')->get('name')->setAttribute('readonly', 'true');
-$neighborhoodPolygon->get('neighborhood')->get('region')->get('name')->setAttribute('readonly', 'true');
-$whathoodUser->get('userName')->setAttribute('readonly','true');
-
+$userPolygon    = $form->get('neighborhoodPolygon');
+$userPolygonId = $userPolygon->get('id')->getValue();
+$userPolygon->get('neighborhood')->get('name')->setAttribute('readonly', 'true');
+$userPolygon->get('neighborhood')->get('region')->get('name')->setAttribute('readonly', 'true');
 $form->prepare();
 
 $partialElementPath = 'whathood/neighborhood/partial_neighborhood_form_element.phtml';
 
-$regionName = $neighborhoodPolygon->get('neighborhood')->get('region')->get('name')->getValue();
-$neighborhoodName = $neighborhoodPolygon->get('neighborhood')->get('name')->getValue();
-$userName = $neighborhoodPolygon->get('whathoodUser')->get('userName')->getValue();
+$regionName = $userPolygon->get('neighborhood')->get('region')->get('name')->getValue();
+$neighborhoodName = $userPolygon->get('neighborhood')->get('name')->getValue();
 ?>
-
-<?php
-/*
- * Breadcrumbs
- */
-
-echo $this->mybreadcrumbs( array(
-                            'regionName' => $regionName, 
-                            'neighborhoodName' => $neighborhoodName,
-                            'user'  => $userName
-));?>
 
 <?php if( !empty($saveMessage) ) : ?>
     <p class="centertext" style="font-size: 1.1em"><b><?=$saveMessage?></b></p>
 <?php endif; ?>
-    <?php echo "user_polygon_id " . $neighborhoodPolygonId; ?>
+    <?php echo "user_polygon_id " . $userPolygonId; ?>
         <?php echo $this->form()->openTag($form);?>
         
         <?php foreach( $form->getMessages() as $message ) : ?>
@@ -76,79 +61,17 @@ echo $this->mybreadcrumbs( array(
     /*
      * COMMENTS
      */
-    echo $this->neighborhoodPolygonDisqus($neighborhoodPolygonId);
+    echo $this->neighborhoodPolygonDisqus($userPolygonId);
     ?>
 <script>
     
-/**
- * figure out how to center the map, if lat,lng have been specified, use that,
- * else, try and get the position from the browser, then call setupMap to draw
- * the map
- */
-function init() {
-   
-   var lat          = getURLParameter( 'centerLat');
-   var lng          = getURLParameter( 'centerLng');
-   var regionName   = getURLParameter( 'region_name' );
-   
-   if( lat == 'null' || lng == 'null' ) {
-        console.log("init(): lat or lng is null, let's geocode region");
-        geocoder = new google.maps.Geocoder();
-        geocoder.geocode( { 'address': regionName + ", USA"}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                position = results[0].geometry.location;
-                setUpMap(position.lat(),position.lng());
-            } else {
-              console.log("Geocode was not successful for the following reason: " + status);
-            }
-        });
-   } else {
-       console.log( "init(); GET supplied lat=" + lat + " lng=" + lng );
-       setUpMap(lat,lng);
-   }
-}
-
 $('document').ready( function() {
-    var neighborhoodId = '<?php echo $neighborhoodPolygon->get('id')->getValue() ?>';
-    var centerStr = '<?=$centerStr?>';
-    
-    var options = {
-        cssId: 'map',
-        placeCenterMarker: true,
-        whathoodOnClick: true
-    };
-    
-    if( centerStr ) {
-        options.center = [<?=$centerStr?>];
-    }
-    
-    if( neighborhoodId )
-        options.geoJsonSrc = '<?=$this->url( 'user_polygon_id', array(
-                                    'user_polygon_id'   => $form->get('neighborhoodPolygon')->get('id')->getValue(),
-                                    'format'            => 'json'
-            ))?>';
-                        
-    map = new NewWhathoodMap( 'map' );
-    map.addGeoJson( options.geoJsonSrc );
+	var Whathood = window.Whathood;
+    var user_polygon_id = <?php echo $userPolygon->get('id')->getValue() ?>;
+    var geoJsonUrl = '/whathood/user-polygon/by-id/id/'+user_polygon_id+'/format/json';
+    map = new Whathood.UserPolygonMap('map');
+    map.addGeoJson( geoJsonUrl );
     map.addStreetLayer();
-    
-    <?php if( $this->neighborhoodNames != null ) : ?>
-      
-    var availableNeighborhoods = [<?=$this->arrayToDoubleQuoteElementedCSV($neighborhoodNames)?>];
-  
-    $( "input[name=neighborhood\\[name\\]]" ).autocomplete({
-      source: availableNeighborhoods,
-      response: function(event, ui) {
-            // ui.content is the array that's about to be sent to the response callback.
-            if (ui.content.length === 0) {
-                $("#no-match-neighborhood").html("You're about to add a brand new neighborhood name!  How exciting, just make sure no other name matches what you're trying to do");
-            } else {
-                $("#no-match-neighborhood").empty();
-            }
-        }
-    });
-    
-    <?php endif; ?>
 });
 
 </script>

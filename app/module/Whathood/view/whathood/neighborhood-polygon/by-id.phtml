@@ -4,11 +4,11 @@ $neighborhoodPolygonId = $this->neighborhoodPolygonId;
 <div id='map' class='map'></div>
 <script>
 $('document').ready( function() {
+	console.log("in neighborhood though");
     map = new NewWhathoodMap('map');
     map.addStreetLayer();
     map.addGeoJson(
         '/whathood/neighborhood-polygon/by-id?id=<?=$neighborhoodPolygonId?>&format=json'
     );
-        
 });
 </script>

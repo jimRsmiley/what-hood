@@ -51,7 +51,7 @@ print "*     making source dir chmod 777\n";
 
 print "*     setting doctrine proxy dir to all writeable\n";
 `mkdir -p $SRC_DIR/app/data/DoctrineORMModule`;
-`chmod 755 $SRC_DIR/app/data/DoctrineORMModule`;
+`chmod 777 $SRC_DIR/app/data/DoctrineORMModule`;
 
 print "*     now copy everything to the destination dir\n";
 `sudo mkdir -p $DEST_DIR`;
@@ -65,4 +65,7 @@ print "*     copying over whathood.conf nginx file\n";
 print "*     restarting nginx\n";
 `service nginx restart`;
 
+print "*     starting Grunt watch for coffeescript changes\n";
+system("killall grunt");
+system("grunt watch 2>&1 > /dev/null &");
 print "done deploy\n";

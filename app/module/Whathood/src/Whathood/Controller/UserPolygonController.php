@@ -30,10 +30,65 @@ class UserPolygonController extends BaseController
         
         $center  = $this->getUriParameter('center');        
         $pageNum = $this->getUriParameter('page');
+		$neighborhood_id = $this->getUriParameter('neighborhood_id');
+
+		$y = null; $x = null;
+
+		$uriParams = array();
+		if (!empty($center)) {
+			list($y,$x) = explode(',',$center);
+			$uriParams['center'] = $center;
+		}
+
+		if (!empty($neighborhood_id)) {
+			$uriParams['neighborhood_id'] = $neighborhood_id;
+		}
+
+		$query = $this->userPolygonMapper()->getPaginationQuery(
+			array(
+				'x' => $x, 
+				'y' => $y,
+				'neighborhood_id' => $neighborhood_id
+			)
+		);
+
+        if( empty($pageNum) )
+            $pageNum = 1;
+
+        $paginator = new \Whathood\Model\UserPolygonPaginator(
+                        new \Whathood\Model\UserPolygonPaginatorAdapter($query)
+                );
+        $paginator->setDefaultItemCountPerPage(1);
+		$paginator->setBaseUrl('/whathood/user-polygon');
+        $paginator->setCurrentPageNumber($pageNum);
+        $paginator->setUriParams($uriParams);
+        
+        $viewModel = $this->getViewModel( array(
+            'paginator' => $paginator,
+            'center' => $center
+        ));
+        $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
+        return $viewModel;
+    }
+	
+	/**
+     * we want to page through the neighborhoods
+     * @return \Zend\View\Model\ViewModel
+     * @throws \InvalidArgumentException
+     */
+    public function pageCenterAction() {
+        
+        $center  = $this->getUriParameter('center');        
+        $pageNum = $this->getUriParameter('page');
         
         list($lat,$lng) = explode(',',$center);
         
-        $query = $this->userPolygonMapper()->getPaginationQuery($x = $lng, $y = $lat);
+		$query = $this->userPolygonMapper()->getPaginationQuery(
+			array(
+				$x => $lng, 
+				$y => $lat
+			)
+		);
 
         $uriParams = array(
             'center' => $center
@@ -46,6 +101,7 @@ class UserPolygonController extends BaseController
                         new \Whathood\Model\UserPolygonPaginatorAdapter($query)
                 );
         $paginator->setDefaultItemCountPerPage(1);
+		$paginator->setBaseUrl('/n');
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
         
@@ -57,6 +113,34 @@ class UserPolygonController extends BaseController
         return $viewModel;
     }
     
+    /**
+     * we want to page through the neighborhoods
+     * @return \Zend\View\Model\ViewModel
+     * @throws \InvalidArgumentException
+     */
+    public function pageListAction() {
+		$itemCountPerPage = 10;
+	   	
+        $pageNum = $this->getUriParameter('page');
+        
+        $query = $this->userPolygonMapper()->getPaginationQuery();
+
+        if(empty($pageNum))
+            $pageNum = 1;
+
+        $paginator = new \Whathood\Model\UserPolygonPaginator(
+                        new \Whathood\Model\UserPolygonPaginatorAdapter($query)
+                );
+		$paginator->setBaseUrl('/whathood/user-polygon/page-list');
+        $paginator->setDefaultItemCountPerPage($itemCountPerPage);
+        $paginator->setCurrentPageNumber($pageNum);
+        
+        $viewModel = $this->getViewModel( array(
+			'paginator' => $paginator,
+        ));
+        return $viewModel;
+	}
+
     public function byNeighborhoodNameAction() {
         $regionName         = $this->getUriParameter('region');
         $neighborhoodName   = $this->getUriParameter('neighborhood');

@@ -38,13 +38,6 @@ class UserPolygon extends \ArrayObject {
     protected $region = null;
     
     /**
-     * @ORM\ManyToOne(targetEntity="WhathoodUser")
-     * @ORM\JoinColumn(name="whathood_user_id", referencedColumnName="id",
-     *      nullable=false)
-     */
-    protected $whathoodUser = null;
-    
-    /**
      * @ORM\Column(name="date_time_added")
      */
     protected $dateTimeAdded = null;
@@ -98,10 +91,8 @@ class UserPolygon extends \ArrayObject {
                                 'data must be array or Region object');
     }
     
-    
-    
     public function getWhathoodUser() {
-        return $this->whathoodUser;
+        return null; //$this->whathoodUser;
     }
     
     public function setWhathoodUser( $data ) {
@@ -224,7 +215,8 @@ class UserPolygon extends \ArrayObject {
             $neighborhoodPolygon->setNeighborhood( $neighborhood );
     }
 
-    public function toArray($opts=null) {
+    public function toArray(array $opts=null) {
+		if (empty($opts)) $opts = array();
         $config = new Config($opts); 
 
         if($config->get('strings-only')) {
@@ -235,6 +227,7 @@ class UserPolygon extends \ArrayObject {
             );
         }
         else {
+			$hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
             $array = $hydrator->extract($this);
             unset( $array['iterator_class'] );
             unset( $array['iterator']);
