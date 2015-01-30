@@ -5,11 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
- * @ORM\Table(name="whathood_user",
- * uniqueConstraints={
- *   @ORM\UniqueConstraint(name="whathood_user_idx",columns={"user_name"})
- * }
- * )
+ * @ORM\Table(name="whathood_user")
  */
 class WhathoodUser extends \ArrayObject {
    
@@ -27,32 +23,6 @@ class WhathoodUser extends \ArrayObject {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id = null;
-    
-    /**
-     * @ORM\Column(name="facebook_user_id",type="bigint",nullable=true)
-     */
-    protected $facebookUserId = null;
-    
-    public function setFacebookUserId( $facebookUserId ) {
-        $this->facebookUserId = $facebookUserId;
-    }
-    
-    public function getFacebookUserId() {
-        return $this->facebookUserId;
-    }
-    
-    /** 
-     * @ORM\Column(name="user_name",type="string") 
-     */
-    protected $userName = null;
-    
-    public function getUserName() {
-        return $this->userName;
-    }
-    
-    public function setUserName( $userName ) {
-        $this->userName = $userName;
-    }
     
     public function getId() {
         return $this->id;

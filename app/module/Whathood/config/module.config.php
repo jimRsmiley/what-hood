@@ -97,7 +97,7 @@ return array(
                 )
             ),
 
-            'regionrest' => array(
+            /*'regionrest' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/regionrest[/:id][/]',
@@ -109,7 +109,7 @@ return array(
                         'controller'    => 'RegionRest'
                     )
                 )
-            ),
+			),*/
             
             'address_search' => array(
                 'type'    => 'Segment',
@@ -171,10 +171,22 @@ return array(
                 ),
             ),
             
+            'user_polygon_page_list' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page-list/page/:page',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-list',
+                    ),
+                ),
+			),
+
             'user_polygon_page' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/n/page/:page[/center/:center]',
+                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller' => 'Whathood\Controller\UserPolygon',
@@ -183,47 +195,6 @@ return array(
                 ),
             ),
 
-            'auth' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/auth/:action',
-                    'constraints' => array(
-                        'whathood_user_id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Auth',
-                    ),
-                ),
-            ),
-            
-            'user_by_name' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/u/:whathood_user_name[/]',
-                    'constraints' => array(
-                        'whathood_user_id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'WhathoodUser',
-                        'action'        => 'by-user-name',
-                    ),
-                ),
-            ),
-            
-            'user' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/user/:action',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'UserPolygon',
-                        'action'        => 'by-user-id'
-                    ),
-                ),
-            ),
-            
             'region_default' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -264,6 +235,7 @@ return array(
                     ),
                 ),
             ),
+
             'admin' => array(
                 'type'    => 'Segment',
                 'options' => array(

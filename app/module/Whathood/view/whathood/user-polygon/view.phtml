@@ -33,17 +33,6 @@ $neighborhoodName = $neighborhoodPolygon->get('neighborhood')->get('name')->getV
 $userName = $neighborhoodPolygon->get('whathoodUser')->get('userName')->getValue();
 ?>
 
-<?php
-/*
- * Breadcrumbs
- */
-
-echo $this->mybreadcrumbs( array(
-                            'regionName' => $regionName, 
-                            'neighborhoodName' => $neighborhoodName,
-                            'user'  => $userName
-));?>
-
 <?php if( !empty($saveMessage) ) : ?>
     <p class="centertext" style="font-size: 1.1em"><b><?=$saveMessage?></b></p>
 <?php endif; ?>

@@ -76,7 +76,7 @@ class UserPolygonPaginatorAdapter implements \Zend\Paginator\Adapter\AdapterInte
 
         //add on limit and offset
         $cloneQuery->setMaxResults($itemCountPerPage);
-        $cloneQuery->setFirstResult($offset*$itemCountPerPage);
+        $cloneQuery->setFirstResult($offset);
 
         return $cloneQuery->getResult();
     }
