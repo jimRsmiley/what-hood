@@ -46,7 +46,12 @@ class UserPolygon extends \ArrayObject {
      * @ORM\Column(name="polygon",type="polygon",nullable=false)
      */
     protected $polygon = null;
-    
+
+    /**
+    *  @ORM\Column(name="is_deleted",type="boolean",nullable=true)
+    **/
+    protected $_is_deleted = null;
+
     public function __construct( $array = null ) {
         
         if( $array !== null ) {
@@ -54,7 +59,20 @@ class UserPolygon extends \ArrayObject {
             $hydrator->hydrate( $array, $this );
         }
     }
-    
+
+    public function getIsDeleted() {
+        return $this->_is_deleted;
+    }
+
+    public function setIsDeleted($is_deleted) {
+        $this->_is_deleted = $is_deleted;
+    }
+
+    // sugar
+    public function isDeleted() {
+        return $this->getIsDeleted();
+    }
+
     public function getId() {
         return $this->id;
     }
