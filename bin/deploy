@@ -30,21 +30,12 @@ print "*     installing composer\n";
 print "*     installing vendor libraries\n";
 `php composer.phar install > /dev/null`;
 
-#print "*     copying over ZcfUser config files\b";
-#`cp $SRC_DIR/dev-bin/provision/ZfcUserDoctrineORM.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuserdoctrineorm -f`;
-#`cp $SRC_DIR/dev-bin/provision/ZfcUser.Entity.User.dcm.xml $SRC_DIR/app/vendor/zf-commons/zfc-user-doctrine-orm/config/xml/zfcuser/ -f`;
-
-print "*     building Whathood's coffeescript(to do)\n";
+#
 print "*     building grunt\n";
-# DO NOT SUDO GRUNT
-chdir $DEST_DIR;
-`su - vagrant -c "npm config set loglevel warn"`;
-`su - vagrant -c "npm install --silent grunt --save-dev > /dev/null"`;
-`su - vagrant -c "npm install --silent grunt-contrib-watch --save-dev > /dev/null"`;
-`su - vagrant -c "npm install --silent grunt-contrib-coffee --save-dev > /dev/null"`;
-
-print "*     building coffeescript into whathood-compiled.js\n";
-`grunt coffee > /dev/null`;
+#
+## RUN grunt as user
+chdir($SRC_DIR);
+`sudo -u vagrant make grunt`;
 
 print "*     making source dir chmod 777\n";
 `chmod 755 $SRC_DIR -R`;
@@ -65,7 +56,16 @@ print "*     copying over whathood.conf nginx file\n";
 print "*     restarting nginx\n";
 `service nginx restart`;
 
-print "*     starting Grunt watch for coffeescript changes\n";
-system("killall grunt");
-system("grunt watch 2>&1 > /dev/null &");
+init_grunt_watch($SRC_DIR);
+init_grunt_watch($DEST_DIR);
+
 print "done deploy\n";
+
+sub init_grunt_watch {
+    my $dir = shift;
+
+    print "*     starting Grunt watch for coffeescript changes in $dir\n";
+    system("killall grunt");
+    chdir($dir);
+    system("sudo -u vagrant grunt watch &");
+}
