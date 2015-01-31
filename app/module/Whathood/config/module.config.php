@@ -429,8 +429,6 @@ return array(
             'Whathood\Controller\Region' => 'Whathood\Controller\RegionController',
             'Whathood\Controller\RegionRest' => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodUser' => 'Whathood\Controller\WhathoodUserController',
-            'Whathood\Controller\Whathood' => 'Whathood\Controller\WhathoodController',
-            'Whathood\Controller\Auth' => 'Whathood\Controller\AuthController',
             'Whathood\Controller\HeatMap' => 'Whathood\Controller\HeatMapController',
             'Whathood\Controller\Search' => 'Whathood\Controller\SearchController',
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
