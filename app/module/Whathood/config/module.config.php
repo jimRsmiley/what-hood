@@ -162,21 +162,19 @@ return array(
                         'action'     => 'page-list',
                     ),
                 ),
-<<<<<<< HEAD
             ),
             
             'user_polygon_page_list' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/whathood/user-polygon/page-list/page/:page',
-=======
-			),
+			    ),
+            ),
 
             'user_polygon_page' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
->>>>>>> mustsquash
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller' => 'Whathood\Controller\UserPolygon',
@@ -185,19 +183,6 @@ return array(
                 ),
 			),
 
-<<<<<<< HEAD
-            'user_polygon_page' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page',
-                    ),
-                ),
-            ),
-=======
 			/**
 			 *
 			 * Neighborhood
@@ -219,8 +204,6 @@ return array(
                 ),
             ),
             
->>>>>>> mustsquash
-
             'region_default' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -275,6 +258,8 @@ return array(
             ),
         ),
     ),
+    
+    
     'console' => array(
         'router' => array(
             'routes' => array(
@@ -290,6 +275,8 @@ return array(
             )
         )
     ),
+
+
     'service_manager' => array(
         'factories' => array(
             
