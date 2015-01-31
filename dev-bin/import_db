@@ -1,11 +1,14 @@
 #!/usr/bin/env perl
 
+use lib 'libs/perl';
 use strict;
 use warnings;
+use Whathood::Utils;
 
 my $DATA_DIR="data/whathood_db";
 
-print "warning: this will destroy the current db\n";
+Whathood::Utils->check_run_as_root();
+Whathood::Utils->prompt_user("warning: this will destroy the current db");
 <STDIN>;
 
 `su - postgres -c 'dropdb whathood'`;

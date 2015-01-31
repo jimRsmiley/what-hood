@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./dev-bin/set_symlinks
