@@ -67,10 +67,14 @@ print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
 
 print "*     copying over whathood.conf nginx file\n";
 `cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
+print "*     linking to sites-enabled\n";
 `ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
-
 print "*     restarting nginx\n";
 `service nginx restart`;
+
+print "*     copying whathood.ini into php5-fpm conf\n";
+`ln -s $SRC_DIR/etc/php5-fpm/20-whathood.ini /etc/php5/fpm/conf.d/20-whathood.ini`;
+`service php5-fpm restart`;
 
 init_grunt_watch($SRC_DIR);
 init_grunt_watch($DEST_DIR);
@@ -82,5 +86,5 @@ sub init_grunt_watch {
 
     print "*     starting Grunt watch for coffeescript changes in $dir\n";
     chdir($dir);
-    system("sudo -u vagrant grunt watch &");
+    system("(sudo -u vagrant grunt watch >> $dir/grunt_watch.log &)");
 }
