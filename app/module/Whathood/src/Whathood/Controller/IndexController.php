@@ -33,6 +33,11 @@ class IndexController extends BaseController {
         throw new \Exception(
                     'this is a test in IndexController\testExceptionLogging');
     }
+
+    public function phpinfoAction() {
+        phpinfo();
+        exit;
+    }
 }
 
 ?>

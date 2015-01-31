@@ -42,31 +42,19 @@ class SearchController extends BaseController {
 
     public function byPositionAction() {
 
-        $lat = $this->params()->fromQuery('lat');
-        $lng = $this->params()->fromQuery('lng');
+        $y = $this->params()->fromQuery('y');
+        $x = $this->params()->fromQuery('x');
 
         $format = $this->getUriParameter('format');
 
-        if( empty($lat) || empty($lng) )
-            throw new \InvalidArgumentException("you need to give me lat/lng");
+        if( empty($x) || empty($y) )
+            throw new \InvalidArgumentException("x and y are required");
 
+        $whathoodResult = $this->getWhathoodResult($x,$y);
 
-
-        $whathoodResult = $this->getPolygon( $lat, $lng );
-
-        $responseModel = null;
-        if( $format == 'json' ) {
-            return new JsonModel( array (
-                'whathood_result' => $whathoodResult->toArray()
-            ));
-        } else {
-            $viewModel = new ViewModel(
-                array( 'whathoodResult' => $whathoodResult,
-                    'regionName' => $whathoodResult->getRegionName(),
-                    'currentLocation' => true ) );
-            $viewModel->setTemplate('application/whathood/result.phtml');
-            return $viewModel;
-        }
+        return new JsonModel( array (
+            'whathood_result' => $whathoodResult->toArray()
+        ));
     }
 
     public function byAddressAction() {
@@ -109,13 +97,11 @@ class SearchController extends BaseController {
         }
     }
 
-    public function getPolygon( $lat, $lng ) {
-        $userPolygonMapper = $this->userPolygonMapper();
-        $neighborhoods = $userPolygonMapper->getNeighborhoodPolygonsByLatLng($lng,$lat);
-
+    public function getWhathoodResult($x,$y) {
+        $neighborhoods = $this->userPolygonMapper()->getByXY($x,$y);
         $whathoodResult = new WhathoodResult();
-        $whathoodResult->setLatLng( $lat, $lng );
-        $whathoodResult->setNeighborhoods( $neighborhoods );
+        $whathoodResult->setLatLng($x,$y);
+        $whathoodResult->setNeighborhoods($neighborhoods);
         return $whathoodResult;
     }
 }

@@ -55,8 +55,7 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getResult();
     }
 
-    public function getNeighborhoodPolygonsByLatLng( $x, $y ) {
-        //print $this->getCurrentDateTimeAsString() . " testing point\n";
+    public function getByXY($x,$y ) {
         $query = $this->em->createQuery( 'SELECT up'
             . ' FROM '. $this->getEntityName(). ' up'
                 . ' WHERE ST_Within(ST_SetSRID(ST_POINT(:x, :y),4326), up.polygon ) = true'
