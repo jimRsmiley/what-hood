@@ -6,6 +6,7 @@ module.exports = function(grunt) {
                   'app/public/js/whathood/whathood-compiled.js': [
                     // always first
                     'coffeescript/whathood.coffee',
+                    'coffeescript/Whathood/Page.coffee',
                     'coffeescript/Whathood/Map.coffee',
                     'coffeescript/Whathood/RegionMap.coffee',
                     'coffeescript/Whathood/UserPolygonMap.coffee',
