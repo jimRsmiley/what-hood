@@ -6,7 +6,7 @@ use warnings;
 sub prompt_user {
     my $class = shift;
     my $msg = shift;
-    print "$msg. Press CTRL-C to cancel, any key to continue\n";
+    print "$msg. Press CTRL-C to cancel, any key to continue";
     <STDIN>;
 }
 

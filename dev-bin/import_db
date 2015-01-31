@@ -3,25 +3,45 @@
 use lib 'libs/perl';
 use strict;
 use warnings;
+use File::Glob ':glob';
 use Whathood::Utils;
 
 my $DATA_DIR="data/whathood_db";
+my $SCHEMA_DIR="app/scripts/schema";
+my $DB_NAME="whathood";
 
 Whathood::Utils->check_run_as_root();
 Whathood::Utils->prompt_user("warning: this will destroy the current db");
-<STDIN>;
 
-`su - postgres -c 'dropdb whathood'`;
-`sudo su - postgres -c 'createuser --superuser whathood'`;
-`sudo su - postgres -c 'createdb whathood'`;
-`sudo su - postgres -c 'psql -c "CREATE EXTENSION postgis" whathood'`;
+init_db();
+update_schema();
 
-print "deleting previous data directory\n";
-`rm -rf $DATA_DIR`;
-print "cloning database data\n";
-`mkdir -p $DATA_DIR`;
-`sudo git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
+sub init_db {
+    print "dropping database $DB_NAME if it exists\n";
+    `su - postgres -c 'dropdb --if-exists $DB_NAME'`;
+    print "creating user\n";
+    `sudo su - postgres -c 'createuser --superuser $DB_NAME'`;
+    print "creating database\n";
+    `sudo su - postgres -c 'createdb $DB_NAME'`;
+    print "creating postgis extension\n";
+    `sudo su - postgres -c 'psql -c "CREATE EXTENSION postgis" $DB_NAME'`;
 
-print "importing data into database\n";
-`sudo psql -U whathood < $DATA_DIR/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`;
+    print "deleting previous data directory\n";
+    `rm -rf $DATA_DIR`;
 
+    print "cloning database data\n";
+    `mkdir -p $DATA_DIR`;
+    `sudo git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
+
+    print "importing data into database\n";
+    `sudo psql -U $DB_NAME < $DATA_DIR/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`;
+}
+
+sub update_schema {
+    my @files = bsd_glob('app/scripts/schema/whathood-*.sql', GLOB_NOCASE);
+
+    for my $file (@files) {
+        print "applying schema update file $file\n";
+        `sudo psql -U $DB_NAME < $file 2>&1`;
+    }
+}

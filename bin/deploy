@@ -38,10 +38,10 @@ print "*     building Whathood's coffeescript(to do)\n";
 print "*     building grunt\n";
 # DO NOT SUDO GRUNT
 chdir $DEST_DIR;
-`npm config set loglevel warn`;
-`npm install --silent grunt --save-dev > /dev/null`;
-`npm install --silent grunt-contrib-watch --save-dev > /dev/null`;
-`npm install --silent grunt-contrib-coffee --save-dev > /dev/null`;
+`su - vagrant -c "npm config set loglevel warn"`;
+`su - vagrant -c "npm install --silent grunt --save-dev > /dev/null"`;
+`su - vagrant -c "npm install --silent grunt-contrib-watch --save-dev > /dev/null"`;
+`su - vagrant -c "npm install --silent grunt-contrib-coffee --save-dev > /dev/null"`;
 
 print "*     building coffeescript into whathood-compiled.js\n";
 `grunt coffee > /dev/null`;
