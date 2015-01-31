@@ -1,3 +1,5 @@
+#!/bin/bash
+
 FILES_PATTERN='\.(js|coffee|phtml)(\..+)?$'
 FORBIDDEN='console.log'
 git diff --cached --name-only | \
