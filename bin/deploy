@@ -18,6 +18,8 @@ my $DIR=$FindBin::Bin;
 my $DEST_DIR="/opt/whathood";
 my $SRC_DIR="$DIR/..";
 
+system("killall grunt");
+
 print "\n";
 print "Building Whathood App\n";
 print "\n";
@@ -52,6 +54,7 @@ print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
 
 print "*     copying over whathood.conf nginx file\n";
 `cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
+`ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
 
 print "*     restarting nginx\n";
 `service nginx restart`;
@@ -65,7 +68,6 @@ sub init_grunt_watch {
     my $dir = shift;
 
     print "*     starting Grunt watch for coffeescript changes in $dir\n";
-    system("killall grunt");
     chdir($dir);
     system("sudo -u vagrant grunt watch &");
 }
