@@ -4,6 +4,7 @@ Whathood = root.Whathood
 Whathood.GeoSearch = L.Control.GeoSearch.extend({
     _processResults: (results) ->
       if (results.length > 0)
+        console.log "found locations"
         this._map.fireEvent('geosearch_foundlocations', {Locations: results})
         this._showLocation(results[0])
       else
