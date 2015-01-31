@@ -1,2 +1,2 @@
 #!/bin/bash
-app/vendor/bin/doctrine-module orm:schema-tool:update $@
+app/vendor/bin/doctrine-module orm:schema-tool:update --dump-sql
