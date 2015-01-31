@@ -8,6 +8,7 @@ module.exports = function(grunt) {
                     'coffeescript/whathood.coffee',
                     'coffeescript/Whathood/Map.coffee',
                     'coffeescript/Whathood/RegionMap.coffee',
+                    'coffeescript/Whathood/UserPolygonMap.coffee',
                     'coffeescript/Whathood/NeighborhoodHeatMap.coffee',
                     'coffeescript/Whathood/DrawMap.coffee',
                     'coffeescript/address-search.coffee',

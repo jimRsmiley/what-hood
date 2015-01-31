@@ -215,7 +215,8 @@ class UserPolygon extends \ArrayObject {
             $neighborhoodPolygon->setNeighborhood( $neighborhood );
     }
 
-    public function toArray($opts=null) {
+    public function toArray(array $opts=null) {
+		if (empty($opts)) $opts = array();
         $config = new Config($opts); 
 
         if($config->get('strings-only')) {
@@ -226,6 +227,7 @@ class UserPolygon extends \ArrayObject {
             );
         }
         else {
+			$hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
             $array = $hydrator->extract($this);
             unset( $array['iterator_class'] );
             unset( $array['iterator']);

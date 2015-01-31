@@ -1,6 +1,7 @@
 /user_secuirity.global.php
 /data
 /module.config.php
+nginx_access.log
 nginx_error.log
 /view
 /js

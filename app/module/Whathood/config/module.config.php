@@ -10,7 +10,13 @@ namespace Whathood;
 return array(
     'router' => array(
 
-	/*  routes are processed in descending order, put the most important at the bottom! */
+		/*  routes are processed in descending order, put the most important at the bottom! 
+
+		/whathood/admin
+		/whathood/user
+		/whathood/user-polygon/by-id/id/:id
+
+		*/
 
         'routes' => array(
             
@@ -97,20 +103,6 @@ return array(
                 )
             ),
 
-            /*'regionrest' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/regionrest[/:id][/]',
-                    'constraints' => array(
-                        'id' => '[0-9]*'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'RegionRest'
-                    )
-                )
-			),*/
-            
             'address_search' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -122,11 +114,16 @@ return array(
                     ),
                 ),
             ),
-            
+
+			/**
+			 *
+			 * User Polygon
+			 *
+			 **/	
             'user_polygon_id' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/n/id/:user_polygon_id[/format/:format]',
+                    'route'    => '/whathood/user-polygon/by-id/id/:user_polygon_id[/format/:format]',
                     'constraints' => array(
                         'region_name' => '[a-zA-Z][a-zA-Z0-9_-]+',
                         'user_polygon_id' => '[0-9]+'
@@ -154,7 +151,58 @@ return array(
                     ),
                 ),
             ),
+
+            'user_polygon_page_list' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page-list/page/:page',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-list',
+                    ),
+                ),
+<<<<<<< HEAD
+            ),
             
+            'user_polygon_page_list' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page-list/page/:page',
+=======
+			),
+
+            'user_polygon_page' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
+>>>>>>> mustsquash
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-list',
+                    ),
+                ),
+			),
+
+<<<<<<< HEAD
+            'user_polygon_page' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page',
+                    ),
+                ),
+            ),
+=======
+			/**
+			 *
+			 * Neighborhood
+			 *
+			 **/	
             'neighborhood_edit' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -171,29 +219,7 @@ return array(
                 ),
             ),
             
-            'user_polygon_page_list' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-list/page/:page',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-list',
-                    ),
-                ),
-			),
-
-            'user_polygon_page' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page',
-                    ),
-                ),
-            ),
+>>>>>>> mustsquash
 
             'region_default' => array(
                 'type'    => 'Segment',
