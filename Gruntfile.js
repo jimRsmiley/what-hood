@@ -7,6 +7,7 @@ module.exports = function(grunt) {
                     // always first
                     'coffeescript/whathood.coffee',
                     'coffeescript/Whathood/Page.coffee',
+                    'coffeescript/Whathood/LeafletControl.coffee',
                     'coffeescript/Whathood/Search.coffee',
                     'coffeescript/Whathood/Map.coffee',
                     'coffeescript/Whathood/RegionMap.coffee',
