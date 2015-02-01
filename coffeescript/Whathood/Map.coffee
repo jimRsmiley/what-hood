@@ -3,10 +3,12 @@ Whathood = window.Whathood
 
 Whathood.Map = L.Map.extend
 
+  constructor: () ->
+    #@addStreetLayer()
+
   _layerGroup: null,
   _geojsonTileLayer : null
   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com">Mapbox</a> '
-  _neighborhood_color: '5487b8'
 
   layerGroup: ->
     if (@_layerGroup == null)

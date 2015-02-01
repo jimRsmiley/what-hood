@@ -13,11 +13,20 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       y = result.Y
       this._showLocation result
       Whathood.Search.by_coordinates x, y, (data) =>
-        console.log this._positionMarker
-        console.log data
+        popup_html = @popup_html data
+        this._positionMarker.bindPopup(popup_html).openPopup()
     _geosearch: () ->
       queryBox = document.getElementById('leaflet-control-geosearch-qry')
       @geosearch(queryBox.value)
+    popup_html: (whathood_result) ->
+      console.log "in popup_html"
+      str = ""
+      console.log whathood_result.whathood_result
+      for neighborhood in whathood_result.whathood_result.response.consensus.neighborhoods
+        str = "#{str}#{neighborhood.name}: #{neighborhood.votes}<br/>"
+      console.log whathood_result
+      console.log str
+      return str
 })
 
 Whathood.Page.bind "/", () ->

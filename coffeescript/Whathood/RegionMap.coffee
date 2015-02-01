@@ -1,9 +1,9 @@
-root = exports ? this
-
-Whathood = root.Whathood
+window = exports ? this
+Whathood = window.Whathood
 
 Whathood.RegionMap = Whathood.Map.extend
   _markerCluster : null,
+  _neighborhood_color: '5487b8'
   addContentiousPoints : (createEventId, callback ) =>
     self = this
     url = '/whathood/contentious-point/by-create-event-id?format=heatmapJsData&create_event_id='+createEventId
