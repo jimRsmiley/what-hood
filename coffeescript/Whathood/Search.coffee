@@ -2,8 +2,7 @@ window = exports ? this
 Whathood = window.Whathood
 
 class Whathood.Search
-  constructor: () ->
-  by_coordinates: (x,y,callback) ->
+  @by_coordinates: (x,y,callback) ->
     url = "/whathood/search/by-position?x=#{x}&y=#{y}"
     console.log url
     $.ajax
