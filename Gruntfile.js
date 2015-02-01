@@ -18,19 +18,23 @@ module.exports = function(grunt) {
                 }
             }
         },
+        clean: [
+            'app/public/js/whathood/whathood-compiled.js'
+        ],
         watch: {
             coffee: {
                 files: [
                   'coffeescript/*.coffee',
                   'coffeescript/Whathood/*.coffee',
                 ],
-                tasks: 'coffee:compile'
+                tasks: ['clean','coffee:compile']
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('default',['coffee:compile', 'watch']);
 };
