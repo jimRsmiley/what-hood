@@ -27,8 +27,8 @@ class UserPolygonController extends BaseController
      * @throws \InvalidArgumentException
      */
     public function pageAction() {
-        
-        $center  = $this->getUriParameter('center');        
+
+        $center  = $this->getUriParameter('center');
         $pageNum = $this->getUriParameter('page');
 		$neighborhood_id = $this->getUriParameter('neighborhood_id');
 
@@ -46,7 +46,7 @@ class UserPolygonController extends BaseController
 
 		$query = $this->userPolygonMapper()->getPaginationQuery(
 			array(
-				'x' => $x, 
+				'x' => $x,
 				'y' => $y,
 				'neighborhood_id' => $neighborhood_id
 			)
@@ -62,7 +62,7 @@ class UserPolygonController extends BaseController
 		$paginator->setBaseUrl('/whathood/user-polygon');
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
-        
+
         $viewModel = $this->getViewModel( array(
             'paginator' => $paginator,
             'center' => $center
@@ -70,22 +70,22 @@ class UserPolygonController extends BaseController
         $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
         return $viewModel;
     }
-	
+
 	/**
      * we want to page through the neighborhoods
      * @return \Zend\View\Model\ViewModel
      * @throws \InvalidArgumentException
      */
     public function pageCenterAction() {
-        
-        $center  = $this->getUriParameter('center');        
+
+        $center  = $this->getUriParameter('center');
         $pageNum = $this->getUriParameter('page');
-        
+
         list($lat,$lng) = explode(',',$center);
-        
+
 		$query = $this->userPolygonMapper()->getPaginationQuery(
 			array(
-				$x => $lng, 
+				$x => $lng,
 				$y => $lat
 			)
 		);
@@ -93,7 +93,7 @@ class UserPolygonController extends BaseController
         $uriParams = array(
             'center' => $center
         );
-        
+
         if( empty($pageNum) )
             $pageNum = 1;
 
@@ -104,7 +104,7 @@ class UserPolygonController extends BaseController
 		$paginator->setBaseUrl('/n');
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
-        
+
         $viewModel = $this->getViewModel( array(
             'paginator' => $paginator,
             'center' => $center
@@ -112,7 +112,7 @@ class UserPolygonController extends BaseController
         $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
         return $viewModel;
     }
-    
+
     /**
      * we want to page through the neighborhoods
      * @return \Zend\View\Model\ViewModel
@@ -120,9 +120,9 @@ class UserPolygonController extends BaseController
      */
     public function pageListAction() {
 		$itemCountPerPage = 10;
-	   	
+
         $pageNum = $this->getUriParameter('page');
-        
+
         $query = $this->userPolygonMapper()->getPaginationQuery();
 
         if(empty($pageNum))
@@ -134,7 +134,7 @@ class UserPolygonController extends BaseController
 		$paginator->setBaseUrl('/whathood/user-polygon/page-list');
         $paginator->setDefaultItemCountPerPage($itemCountPerPage);
         $paginator->setCurrentPageNumber($pageNum);
-        
+
         $viewModel = $this->getViewModel( array(
 			'paginator' => $paginator,
         ));
@@ -147,31 +147,31 @@ class UserPolygonController extends BaseController
 
         if( empty( $regionName ) )
             return new ErrorViewModel( array( 'message' => 'region must be defined' ) );
-        
+
         if( empty( $neighborhoodName ) )
             return new ErrorViewModel( array( 'message' => 'neighborhood must be defined' ) );
-        
+
         $neighborhoods = $this->neighborhoodMapper()
                 ->getNeighborhoodByName( $neighborhoodName, $regionName );
-        
-        $viewModel = new ViewModel( array( 
+
+        $viewModel = new ViewModel( array(
             'neighborhoods' => $neighborhoods,
             'neighborhoodName' => $neighborhoodName,
             'regionName' => $regionName ) );
-        
+
         $viewModel->setTemplate('whathood/user-polygon/show-many.phtml');
-        
+
         return $viewModel;
     }
-    
+
     public function byUserIdAction() {
         $userId = $this->getUriParameter('i');
         $format = $this->getUriParameter('format');
-        
+
         if( empty($userId) ) {
             return new ErrorViewModel( "user_id must be defined" );
         }
-        
+
         if( 'json' === $format ) {
             $userPolygonJson = $this->userPolygonMapper()->userPolygonsByUserIdAsGeoJson( $userId );
         }
@@ -181,12 +181,12 @@ class UserPolygonController extends BaseController
     }
     public function addAction() {
         $regionName = $this->params()->fromQuery('region_name');
-        
+
         /*
          * we need a region name, NEED IT, redirect region-chose to get it
          */
         if( empty( $regionName ) ) {
-            $viewModel = new ViewModel( array( 
+            $viewModel = new ViewModel( array(
                     'regionNames' => $this->regionMapper()->fetchDistinctRegionNames(),
                     'uriString' => $this->url()->fromRoute('user_polygon_add')
                 ));
@@ -217,7 +217,7 @@ class UserPolygonController extends BaseController
                             ->byRegionName($regionName);
 
                 $viewModel = new ViewModel( array(
-                    'form'          => $form, 
+                    'form'          => $form,
                     'editable'      => true,
                     'currentNeighborhoods' => $neighborhoods,
                     'region'        => $region
@@ -235,19 +235,19 @@ class UserPolygonController extends BaseController
                 $form->setData( $this->getRequest()->getPost() );
 
                 if( $form->isValid() ) {
-                    $saveMessage = 'It takes a lot to regenerate the ' 
-                            . $userPolygon->getNeighborhood()->getName() 
+                    $saveMessage = 'It takes a lot to regenerate the '
+                            . $userPolygon->getNeighborhood()->getName()
                             . ' heatmap.  Your neighborhood should be added to it'
                             . ' within the hour';
 
                     $polygonGeoJsonString = $form->get('polygonGeoJson')
                                                                     ->getValue();
 
-                    if( empty( $polygonGeoJsonString ) ) 
-                        throw new \InvalidArgumentException( 
+                    if( empty( $polygonGeoJsonString ) )
+                        throw new \InvalidArgumentException(
                                                 "polygonGeoJson must be defined" );
 
-                    $this->createPolygon($userPolygon, 
+                    $this->createPolygon($userPolygon,
                                                             $polygonGeoJsonString );
 
                     $userPolygon->getNeighborhood()->setRegion( new Region(
@@ -261,21 +261,21 @@ class UserPolygonController extends BaseController
 
                     $userPolygon->setWhathoodUser( $whathoodUser );
 
-                    
+
                     $userPolygon->getPolygon()->setSRID(4326);
                     $this->userPolygonMapper()
                             ->save( $userPolygon );
-                    
-                    
-                    
-                    
+
+
+
+
                     $logger = $this->getServiceLocator()->get('logger');
-                    
+
                     $logger->info( "neighborhood has been added" );
 
                     $form->bind( $userPolygon );
-                    
-                    $viewModel = new ViewModel( array( 
+
+                    $viewModel = new ViewModel( array(
                         'form' => $form,
                         'saveMessage' =>  $saveMessage
                     ));
@@ -285,7 +285,7 @@ class UserPolygonController extends BaseController
                     return $viewModel;
 
                 } // end if the form is valid
-                
+
                 /*
                     nope the form wasn't valid
                 */
@@ -303,16 +303,16 @@ class UserPolygonController extends BaseController
             }
         } // end else we know what region we're using
     }
-    
+
     public function byIdAction() {
 
         $format = $this->getUriParameter('format');
         $id     = $this->getUriParameter('user_polygon_id');
-        
+
         if( empty($id) ) {
             throw new \InvalidArgumentException('id may not be empty');
         }
-        
+
         try {
             $userPolygon = $this->userPolygonMapper()->byId($id);
         } catch( \Doctrine\ORM\NoResultException $e ) {
@@ -322,14 +322,14 @@ class UserPolygonController extends BaseController
             $viewModel->setTemplate('whathood/neighborhood/error_no_neighborhood.phtml');
             return $viewModel;
         }
-        
+
         /*
          * return JSON format
          */
         if( $format === 'json' ) {
             return new JsonModel( $userPolygon->toArray() );
         }
-        
+
         /*
          * return HTML
          */
@@ -338,23 +338,23 @@ class UserPolygonController extends BaseController
             $form->bind($userPolygon);
             $viewModel = $this->getViewModel( array(
                         'form' => $form,
-                        'editable'  => false 
+                        'editable'  => false
                     ));
             $viewModel->setTemplate(
                     '/whathood/user-polygon/view.phtml');
             return $viewModel;
         }
     }
-    
+
     public function byUserNameAction() {
-        
+
         $userName = $this->getUriParameter('whathood_user_name');
-        
+
         if( empty( $userName ) )
             throw new \InvalidArgumentException('user id may not be null');
 
         $neighborhoods = $this->userPolygonMapper()->byUserName($userName);
-        
+
         if( empty( $neighborhoods ) )
             return new ErrorViewModel( array(
                 'message' => 'You do not have any neighborhoods'
@@ -362,28 +362,28 @@ class UserPolygonController extends BaseController
 
         $viewModel = new ViewModel( array('neighborhoods' => $neighborhoods ) );
         $viewModel->setTemplate('whathood/neighborhood/list.phtml');
-        
+
         return $viewModel;
     }
-    
+
     /*
     public function byRegionAction() {
-        
+
         $regionId = $this->params()->fromQuery('region_id');
         $format = $this->getUriParameter('format');
-        
+
         $mapper = $this->getServiceLocator()
                     ->get('Whathood\Mapper\Neighborhood');
-        
+
         if( !empty( $regionId ) ) {
             $neighborhoods = $mapper->getByRegionId( $regionId );
         }
-        
+
         $featureCollection = new FeatureCollection();
         foreach( $neighborhoods as $n ) {
             $featureCollection->addFeature( $n );
         }
-        
+
         if( $format == 'json' ) {
             return new JsonModel( $featureCollection->toArray() );
         }
@@ -391,8 +391,8 @@ class UserPolygonController extends BaseController
         $viewModel->setTemplate( 'whathood/neighborhood/show-many.phtml');
         return $viewModel;
     }*/
-    
-    
+
+
     /*
      * from the latLngJson, we need to create a polygon object
      */
@@ -405,7 +405,7 @@ class UserPolygonController extends BaseController
         //\Zend\Debug\Debug::dump( $lineStringArray );
         //exit;
         $ring = array();
-        
+
         foreach( $lineStringArray as $lineString ) {
             foreach( $lineString as $point ) {
                 $ring[] = new Point( $point[0], $point[1] );
@@ -414,16 +414,16 @@ class UserPolygonController extends BaseController
 //die( \Zend\Debug\Debug::dump( $ring ) );
         $myLineString = new LineString( $ring );
         $myLineString->close();
-        
+
         //\Zend\Debug\Debug::dump( $myLineString );
         //exit;
         $neighborhood->setPolygon(
                 new Polygon( $rings = array($myLineString))
         );
     }
-    
+
     public function deleteAction() {
-        
+
         $user = $this->getLoggedInWhathoodUser();
         $neighborhoodId = $this->getUriParameter('id');
         $confirmedDelete = $this->getUriParameter('confirmed');
@@ -431,7 +431,7 @@ class UserPolygonController extends BaseController
          * have user confirm delete
          */
         if( empty($confirmedDelete) || $confirmedDelete !== 'yes' ) {
-            $viewModel = new ViewModel( array( 
+            $viewModel = new ViewModel( array(
                     'neighborhoodId' => $neighborhoodId
                 ));
             $viewModel->setTemplate('whathood/neighborhood/neighborhood_confirm_delete.phtml');
