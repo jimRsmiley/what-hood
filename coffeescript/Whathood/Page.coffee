@@ -8,7 +8,7 @@ class Whathood.Page
       return instance
     else
       instance = this
-  bind : (url,callback) ->
+  @bind : (url,callback) ->
     $(document).ready ->
       if window.location.pathname == url
         callback()
