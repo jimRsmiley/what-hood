@@ -180,128 +180,98 @@ class UserPolygonController extends BaseController
         }
     }
     public function addAction() {
-        $regionName = $this->params()->fromQuery('region_name');
+        $userPolygon = new UserPolygon();
+        $form = new \Whathood\Form\NeighborhoodPolygonForm();
+        $form->bind($userPolygon);
+        $form->get('submit')->setAttribute('onclick', 'return submitAddForm();' );
 
         /*
-         * we need a region name, NEED IT, redirect region-chose to get it
+         * first time through the page, set up the initial form
          */
-        if( empty( $regionName ) ) {
+        if( !$this->getRequest()->isPost() ) {
             $viewModel = new ViewModel( array(
-                    'regionNames' => $this->regionMapper()->fetchDistinctRegionNames(),
-                    'uriString' => $this->url()->fromRoute('user_polygon_add')
-                ));
-            $viewModel->setTemplate('whathood/region/region_choose.phtml');
+                'form'          => $form,
+                'editable'      => true,
+            ));
+            $viewModel->setTemplate(
+                    'whathood/user-polygon/add-edit.phtml');
             return $viewModel;
         }
 
         /*
-         * we know the region name
+         * esle, we've been here before, so process the form data
          */
         else {
-            $region = $this->regionMapper()->getRegionByName( $regionName );
-            $userPolygon = new UserPolygon();
-            $userPolygon->setRegion( $region );
 
-            $form = new \Whathood\Form\NeighborhoodPolygonForm();
-            $form->bind($userPolygon);
-            $form->get('submit')->setAttribute('onclick', 'return submitAddForm();' );
+            $form->setData( $this->getRequest()->getPost() );
 
-            /*
-             * first time through the page, set up the initial form
-             */
-            if( !$this->getRequest()->isPost() ) {
+            if( $form->isValid() ) {
+                $saveMessage = 'It takes a lot to regenerate the '
+                        . $userPolygon->getNeighborhood()->getName()
+                        . ' heatmap.  Your neighborhood should be added to it'
+                        . ' within the hour';
+
+                $polygonGeoJsonString = $form->get('polygonGeoJson')
+                                                                ->getValue();
+
+                if( empty( $polygonGeoJsonString ) )
+                    throw new \InvalidArgumentException(
+                                            "polygonGeoJson must be defined" );
+
+                $this->createPolygon($userPolygon,
+                                                        $polygonGeoJsonString );
+
+                $userPolygon->getNeighborhood()->setRegion( new Region(
+                        array( 'name' => $regionName ) ) );
+
                 /*
-                 * get a list of unique neighborhood names for the region
+                 * save the user with the neighborhood
                  */
-                $neighborhoods = $this->neighborhoodMapper()
-                            ->byRegionName($regionName);
+                $whathoodUser = $this->getAuthenticationService()
+                                                    ->getWhathoodUser();
 
-                $viewModel = new ViewModel( array(
-                    'form'          => $form,
-                    'editable'      => true,
-                    'currentNeighborhoods' => $neighborhoods,
-                    'region'        => $region
-                ));
-                $viewModel->setTemplate(
-                        'whathood/user-polygon/add-edit.phtml');
-                return $viewModel;
-            }
-
-            /*
-             * esle, we've been here before, so process the form data
-             */
-            else {
-
-                $form->setData( $this->getRequest()->getPost() );
-
-                if( $form->isValid() ) {
-                    $saveMessage = 'It takes a lot to regenerate the '
-                            . $userPolygon->getNeighborhood()->getName()
-                            . ' heatmap.  Your neighborhood should be added to it'
-                            . ' within the hour';
-
-                    $polygonGeoJsonString = $form->get('polygonGeoJson')
-                                                                    ->getValue();
-
-                    if( empty( $polygonGeoJsonString ) )
-                        throw new \InvalidArgumentException(
-                                                "polygonGeoJson must be defined" );
-
-                    $this->createPolygon($userPolygon,
-                                                            $polygonGeoJsonString );
-
-                    $userPolygon->getNeighborhood()->setRegion( new Region(
-                            array( 'name' => $regionName ) ) );
-
-                    /*
-                     * save the user with the neighborhood
-                     */
-                    $whathoodUser = $this->getAuthenticationService()
-                                                        ->getWhathoodUser();
-
-                    $userPolygon->setWhathoodUser( $whathoodUser );
+                $userPolygon->setWhathoodUser( $whathoodUser );
 
 
-                    $userPolygon->getPolygon()->setSRID(4326);
-                    $this->userPolygonMapper()
-                            ->save( $userPolygon );
+                $userPolygon->getPolygon()->setSRID(4326);
+                $this->userPolygonMapper()
+                        ->save( $userPolygon );
 
 
 
 
-                    $logger = $this->getServiceLocator()->get('logger');
+                $logger = $this->getServiceLocator()->get('logger');
 
-                    $logger->info( "neighborhood has been added" );
+                $logger->info( "neighborhood has been added" );
 
-                    $form->bind( $userPolygon );
-
-                    $viewModel = new ViewModel( array(
-                        'form' => $form,
-                        'saveMessage' =>  $saveMessage
-                    ));
-
-                    $viewModel->setTemplate(
-                            '/whathood/user-polygon/view.phtml');
-                    return $viewModel;
-
-                } // end if the form is valid
-
-                /*
-                    nope the form wasn't valid
-                */
-                else {
-                    $neighborhoods = $this->neighborhoodMapper()
-                            ->byRegionName($regionName);
-                }
+                $form->bind( $userPolygon );
 
                 $viewModel = new ViewModel( array(
                     'form' => $form,
-                    'currentNeighborhoods' => $neighborhoods) );
+                    'saveMessage' =>  $saveMessage
+                ));
+
                 $viewModel->setTemplate(
-                        'whathood/user-polygon/add-edit.phtml');
+                        '/whathood/user-polygon/view.phtml');
                 return $viewModel;
+
+            } // end if the form is valid
+
+            /*
+                nope the form wasn't valid
+            */
+            else {
+                $neighborhoods = $this->neighborhoodMapper()
+                        ->byRegionName($regionName);
             }
-        } // end else we know what region we're using
+
+            $viewModel = new ViewModel( array(
+                'form' => $form,
+                'currentNeighborhoods' => $neighborhoods) );
+            $viewModel->setTemplate(
+                    'whathood/user-polygon/add-edit.phtml');
+            return $viewModel;
+        }
     }
 
     public function byIdAction() {

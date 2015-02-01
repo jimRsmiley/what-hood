@@ -15,6 +15,7 @@ module.exports = function(grunt) {
                     'coffeescript/Whathood/NeighborhoodHeatMap.coffee',
                     'coffeescript/Whathood/DrawMap.coffee',
                     'coffeescript/address-search.coffee',
+                    'coffeescript/user-polygon-add.coffee',
                   ]
                 }
             }

@@ -11,11 +11,6 @@ $whathoodUser           = $neighborhoodPolygon->get('whathoodUser');
 $currentWhathoodUser    = $this->currentWhathoodUser;
 $currentNeighborhoods = $this->currentNeighborhoods;
 
-$neighborhoodNames = array();
-foreach( $currentNeighborhoods as $n ) {
-    $neighborhoodNames[] = $n->getName();
-}
-
 $form->prepare();
 $partialElementPath
     = 'whathood/neighborhood/partial_neighborhood_form_element.phtml';
@@ -99,64 +94,5 @@ function init() {
 var map;
 
 
-function submitAddForm() {
-
-    if( $('input[name="neighborhoodPolygon\\[neighborhood\\]\\[name\\]"]').val()  == '' )
-        alert( 'you must enter a neighborhood name' );
-
-    if( map.getDrawnGeoJson() == null ) {
-        alert("you must draw a neighborhood to continue");
-        return false;
-    }
-    ;
-    var hiddenJsonCssSelector = 'input[name=polygonGeoJson]';
-    var neighborhoodJson = $(hiddenJsonCssSelector).val();
-
-    if( typeof neighborhoodJson == 'undefined' ) {
-      alert( 'we did not get the neighborhood json' );
-    }
-
-    $(hiddenJsonCssSelector).val( JSON.stringify(map.getDrawnGeoJson()) );
-    console.log( "drawn-polygon-geojson: " + $(hiddenJsonCssSelector).val() );
-    $('#AddNeighborhood').submit();
-    return true;
-}
-
-function loadNeighborhoodNames() {
-  <?php if( !empty($neighborhoodNames) ) : ?>
-
-    var availableNeighborhoods = [<?=$this->arrayToDoubleQuoteElementedCSV($neighborhoodNames)?>];
-
-    $( "input[name=neighborhoodPolygon\\[neighborhood\\]\\[name\\]]" ).autocomplete({
-      source: availableNeighborhoods,
-      response: function(event, ui) {
-            // ui.content is the array that's about to be sent to the response callback.
-            if (ui.content.length === 0) {
-                $("#no-match-neighborhood").html("You're about to add a brand new neighborhood name!  How exciting, just make sure no other name matches what you're trying to do");
-            } else {
-                $("#no-match-neighborhood").empty();
-            }
-        }
-    });
-
-    <?php endif; ?>
-}
-
-$('document').ready( function() {
-    var window = (typeof exports !== "undefined" && exports !== null) ? exports : window;
-    Whathood = window.Whathood;
-
-    var options = {
-      center : [<?=$region->getCenterPoint()->getY()?>,<?=$region->getCenterPoint()->getX()?>]
-    };
-
-    map = new Whathood.DrawMap( 'map' );
-    map.addStreetLayer();
-    map.addLeafletDraw();
-
-    loadNeighborhoodNames();
-
-});
 
 </script>
-
