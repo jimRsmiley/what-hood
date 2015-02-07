@@ -1,31 +1,38 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-# change to app root
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-cd $DIR/..
 
-# --tuples-only doesn't print out extra info like totals or column names
+db_name = 'whathood'
 
-SCRIPT_DIR=app/scripts/sql
+dir = Dir.pwd
 
-function exec_sql {
-  echo $1
-  tuples="--tuples-only"
-  if [ "$2" == "--tuples" ]
-  then
-      tuples=""
-  fi
-  psql $tuples $DBNAME -c "$1"
-}
+script_dir = "#{dir}/app/scripts/sql"
 
-function run_sql_script {
-  #echo 'running script ' $@
-  DBNAME=jim_whathood
-  psql --tuples-only --quiet $DBNAME -f "$@"
-}
+def run_sql_script(file,db_name)
+    `sudo -u postgres psql --tuples-only --quiet #{db_name} -f #{file}`
+end
 
-export -f run_sql_script
+def import_files(dir_str,db_name)
+    files = Dir.glob(dir_str)
+    files = files.sort
+    files.each do |f|
+        puts "processing #{f}"
+        run_sql_script(f,db_name)
+    end
+end
 
-find $SCRIPT_DIR -name 'whathood.view.*' -exec bash -c 'run_sql_script "$0"' {} \;
-find $SCRIPT_DIR -name 'whathood.function.*' -exec bash -c 'run_sql_script "$0"' {} \;
+
+import_files("#{script_dir}/whathood.function.*.sql",db_name)
+import_files("#{script_dir}/whathood.view.*.sql",db_name)
+
+puts "done"
+#function run_sql_script {
+#  echo 'running script ' $@
+#  DBNAME=whathood
+#  sudo -u postgres psql --tuples-only --quiet $DBNAME -f "$@"
+#}
+
+#export -f run_sql_script
+
+#find $SCRIPT_DIR -name 'whathood.view.*' -exec bash -c 'run_sql_script "$0"' {} \;
+#find $SCRIPT_DIR -name 'whathood.function.*' -exec bash -c 'run_sql_script "$0"' {} \;
 

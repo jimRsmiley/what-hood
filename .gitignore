@@ -2,7 +2,6 @@
 /test
 /whathood.js.symlink
 /grunt_watch.log
-/user_security.global.php
 /data
 /module.config.php
 nginx_access.log
@@ -14,7 +13,7 @@ nginx_error.log
 /W
 /app/public/test
 /app/draft
-/app/logs/
+/app/log/
 /app/vendor/
 /app/draft/
 /app/public/js/whathood/

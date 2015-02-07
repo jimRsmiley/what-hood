@@ -1,50 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-# change to app root
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-cd $DIR/..
+require_relative '../libs/ruby/Whathood/Util'
 
-# --tuples-only doesn't print out extra info like totals or column names
-
+db_name = 'whathood'
+#GRID_RES=0.00009
 # good for testing
-#GRID_RES=.003
-GRID_RES=0.00009
-DBNAME=jim_whathood
-SCRIPT_DIR=app/scripts/sql
+GRID_RES=0.003
+DBNAME='whathood'
 
 # the test neighborhood_id
 TEST_NEIGHBORHOOD_ID=89
 
-function exec_sql {
-  echo $1
-  tuples="--tuples-only"
-  if [ "$2" == "--tuples" ]
-  then
-      tuples=""
-  fi
-  psql $tuples $DBNAME -c "$1"
-}
-
-./bin/load_sql_functions
+`./bin/load_sql_functions`
 
 #
 #  get the user polygon count per test point
 #
-echo ""
-echo ""
-echo "running sql command:"
-#sql_cmd="SELECT ST_AsGeoJSON(ST_ConcaveHull(ST_Collect((whathood.gather_test_point_counts(whathood.makegrid_2d(ST_Collect(up.polygon),$GRID_RES),$TEST_NEIGHBORHOOD_ID).point)),0.99))
-#  FROM user_polygon up
-#  INNER JOIN neighborhood n ON n.id = up.neighborhood_id
-#  WHERE n.id = $TEST_NEIGHBORHOOD_ID"
 sql_cmd="SELECT ST_AsGeoJSON(ST_ConcaveHull(ST_Collect(point),.99))
-FROM whathood.create_neighborhood_border($TEST_NEIGHBORHOOD_ID,$GRID_RES)
+FROM whathood.create_neighborhood_border(#{TEST_NEIGHBORHOOD_ID},#{GRID_RES})
 WHERE
-  dominant_neighborhood_id = $TEST_NEIGHBORHOOD_ID"
-echo ""
-echo ""
-start_time=`date`
-exec_sql "$sql_cmd" --tuples
-end_time=`date`
-echo "start time $start_time"
-echo "end time $end_time"
+  dominant_neighborhood_id = #{TEST_NEIGHBORHOOD_ID}"
+
+Whathood::Util.exec_sql_stmt(sql_cmd,db_name)

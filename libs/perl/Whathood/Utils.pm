@@ -3,6 +3,10 @@ package Whathood::Utils;
 use strict;
 use warnings;
 
+require Exporter;
+
+@EXPORT_OK = qw(exec_sql_stmt);
+
 sub prompt_user {
     my $class = shift;
     my $msg = shift;
@@ -17,5 +21,11 @@ sub check_run_as_root {
        print "must be run as root. Not '$user'\n";
        exit;
     }
+}
+
+sub exec_sql_stmt {
+    my $db_name = shift;
+    my $sql_stmt = shift;
+    `sudo su - postgres -c 'psql -c "$sql_stmt" $db_name'`;
 }
 1;
