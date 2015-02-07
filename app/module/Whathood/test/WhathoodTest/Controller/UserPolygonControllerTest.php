@@ -23,7 +23,7 @@ class UserPolygonControllerTest extends BaseControllerTest {
      * @group add-neighborhood
      */
     public function testPostAction() {
-        $this->initDb();
+    #    $this->initDb();
 
         $this->getRequest()
             ->setMethod('POST')
