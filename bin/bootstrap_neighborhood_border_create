@@ -16,9 +16,18 @@ TEST_NEIGHBORHOOD_ID=89
 #
 #  get the user polygon count per test point
 #
-sql_cmd="SELECT ST_AsGeoJSON(ST_ConcaveHull(ST_Collect(point),.99))
-FROM whathood.create_neighborhood_border(#{TEST_NEIGHBORHOOD_ID},#{GRID_RES})
-WHERE
-  dominant_neighborhood_id = #{TEST_NEIGHBORHOOD_ID}"
+sql_cmd="INSERT INTO neighborhood_polygon (neighborhood_id,polygon,date_time_created)
+            VALUES (
+                #{TEST_NEIGHBORHOOD_ID},
+                ( 
+                SELECT 
+                    ST_ConcaveHull(ST_Collect(point),.99)
+                FROM 
+                    whathood.create_neighborhood_border(#{TEST_NEIGHBORHOOD_ID},#{GRID_RES})
+                WHERE
+                    dominant_neighborhood_id = #{TEST_NEIGHBORHOOD_ID}
+                ),
+                now()
+            )"
 
 Whathood::Util.exec_sql_stmt(sql_cmd,db_name)

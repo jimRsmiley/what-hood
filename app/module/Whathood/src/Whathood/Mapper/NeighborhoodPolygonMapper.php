@@ -16,54 +16,52 @@ use Doctrine\ORM\Query\ResultSetMapping;
  * @author Jim Smiley twitter:@jimRsmiley
  */
 class NeighborhoodPolygonMapper extends BaseMapper {
-    
+
     public function getNeighborhoodPolygonByNeighborhoodId($neighborhoodId) {
-        
+
         //print $this->getCurrentDateTimeAsString() . " testing point\n";
         $query = $this->em->createQuery( 'SELECT np'
             . ' FROM '. $this->getEntityName(). ' n'
-                . ' WHERE np.neighborhood = :neighborhoodId' 
+                . ' WHERE np.neighborhood = :neighborhoodId'
         );
         $query->setParameter( ':neighborhoodId', $neighborhoodId );
         $result = $query->getSingleResult();
-        
+
         return $result;
     }
-    
+
     public function getNpById($neighborhoodPolygonId) {
-        
+
         //print $this->getCurrentDateTimeAsString() . " testing point\n";
         $query = $this->em->createQuery( 'SELECT np'
             . ' FROM '. $this->getEntityName(). ' np'
-                . ' WHERE np.id = :id' 
+                . ' WHERE np.id = :id'
         );
         $query->setParameter( ':id', $neighborhoodPolygonId );
         $result = $query->getSingleResult();
-        
+
         return $result;
     }
-    
-    public function getNeighborhoodPolygonsAsGeoJsonByRegion( Region $region, $createEventId ) {
-        
+
+    public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
-        
-        $sql = "SELECT whathood.neighborhoods_geojson(:createEventId,:regionId) as geojson";
-        
+
+        $sql = "SELECT latest_neighborhoods_geojson(:regionId) as geojson";
+
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('geojson', 'geojson');
-        
+
         $query = $this->em->createNativeQuery($sql,$rsm);
-        $query->setParameter('createEventId',$createEventId);
         $query->setParameter('regionId', $region->getId() );
-        
+
         $result = $query->getSingleResult();
-        
+
         return $result['geojson'];
     }
-    
+
 public function getLocationCountsByNeighborhoodAsGeoJson() {
-        
+
         $sql = "SELECT row_to_json( fc ) as geojson
 FROM ( SELECT 'FeatureCollection' as type, array_to_json(array_agg(f)) as features
 FROM( SELECT 'Feature' as type
@@ -78,24 +76,24 @@ FROM neighborhood_location_count ) as f ) as fc
         $result = $query->getSingleResult();
         return $result['geojson'];
     }
-    
+
     public function save( NeighborhoodPolygon $neighborhoodPolygon ) {
         $this->em->persist( $neighborhoodPolygon );
         $this->em->flush( $neighborhoodPolygon );
     }
-    
+
     public function deleteNeighborhoodPolygonsBySetNumber( $setNumber ) {
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
                 ->from( $this->getEntityName(), 'np' )
                 ->where( 'np.setNumber = :setNumber')
                 ->setParameter( 'setNumber', $setNumber );
-        
+
         $qb->getQuery()->execute();
     }
-    
 
-    
+
+
     protected function getEntityName() {
         return 'Whathood\Entity\NeighborhoodPolygon';
     }

@@ -1,6 +1,5 @@
 <?php
 $modules = array(
-    'JsMappingUtils',
     'Whathood',
     'DoctrineModule',
     'DoctrineORMModule',

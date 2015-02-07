@@ -12,44 +12,33 @@ use Whathood\Spatial\PHP\Types\Geometry\Feature;
  * @author Jim Smiley twitter:@jimRsmiley
  */
 class RegionController extends BaseController {
-    
+
 
 
     /**
     *    will default to the last create event if one isn't supplied in the get
     *   parameter set_number
-    */    
+    */
     public function showAction() {
-#	print $this->zfcUserAuthentication();
-#	#if( !$this->isAllowed('guest')) {
-#		throw new \Exception('Grow a beard first!');
-#	}
         $regionName = $this->getUriParameter('region_name');
         $setNumber = $this->getUriParameter('set_number');
-        
+
         /**
         *   let's default to Philadelphia when not supplied
         */
         if( empty( $regionName ) ) {
             $regionName = 'Philadelphia';
         }
-        
-        if( empty( $setNumber ) ) {
-            $setNumber = $this->neighborhoodPolygonMapper ()->getLastCreateEventId();
 
-            // @TODO: remove this
-            $setNumber = 5;
-        }
-        
         try {
             $region = $this->regionMapper()->getRegionByName( $regionName );
         } catch( \Doctrine\ORM\NoResultException $e ) {
             $viewModel = new ViewModel( array( 'regionName' => $regionName ) );
             $viewModel->setTemplate('whathood/region/no-region-by-name.phtml');
             return $viewModel;
-        }   
-        
-        $viewModel = $this->getViewModel( array( 
+        }
+
+        $viewModel = $this->getViewModel( array(
             'region'    => $region,
             'setNumber' => $setNumber
             )
@@ -57,33 +46,33 @@ class RegionController extends BaseController {
         $viewModel->setTemplate('whathood/region/region-show.phtml');
         return $viewModel;
     }
-    
+
     public function listRegionsAction() {
-        
+
         $mapper = $this->getServiceLocator()
                 ->get('Whathood\Mapper\RegionMapper');
 
         $regions = $mapper->fetchAll();
-       
+
         return new ViewModel( array( 'regions' => $regions ) );
     }
-    
+
     public function editAction() {
         $regionName = $this->getEvent()->getRouteMatch()->getParam('region');
-        
+
         $neighborhoods = $this->neighborhoodMapper()
                                 ->getAuthoritativeNeghborhoodsByRegionName($regionName);
 
         \Zend\Debug\Debug::dump($neighborhoods);
         exit;
         $userName = $neighborhoods[0]->getUser()->getName();
-        
+
         $viewModel = new ViewModel(
-                array( 
+                array(
                     'neighborhoods' => $neighborhoods,
                     'regionName'    => $regionName,
                     'userName'      => $userName
-                ) 
+                )
             );
         $viewModel->setTemplate('whathood/region/region-show.phtml');
         return $viewModel;

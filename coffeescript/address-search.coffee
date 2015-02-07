@@ -37,7 +37,7 @@ Whathood.Page.bind "/", () ->
     page_info = document.querySelector('#page-info')
     return page_info.dataset.createEventId
   get_url = (region_name,create_event_id) ->
-    return  "/whathood/neighborhood-polygon/show-region?region_name=#{region_name}&create_event_id=#{create_event_id}&format=json"
+    return  "/whathood/neighborhood-polygon/show-region?region_name=#{region_name}&format=json"
 
   # create a new region map
   map = new Whathood.RegionMap('map')
