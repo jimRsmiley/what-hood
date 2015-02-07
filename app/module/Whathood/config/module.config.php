@@ -10,7 +10,7 @@ namespace Whathood;
 return array(
     'router' => array(
 
-		/*  routes are processed in descending order, put the most important at the bottom! 
+		/*  routes are processed in descending order, put the most important at the bottom!
 
 		/whathood/admin
 		/whathood/user
@@ -19,7 +19,7 @@ return array(
 		*/
 
         'routes' => array(
-            
+
             'region' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -32,7 +32,7 @@ return array(
                 ),
             ),
 
-            
+
             'neighborhood' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -119,7 +119,7 @@ return array(
 			 *
 			 * User Polygon
 			 *
-			 **/	
+			 **/
             'user_polygon_id' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -135,7 +135,7 @@ return array(
                     ),
                 ),
             ),
-            
+
             'user_polygon_add' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -163,7 +163,7 @@ return array(
                     ),
                 ),
             ),
-            
+
             'user_polygon_page_list' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -187,7 +187,7 @@ return array(
 			 *
 			 * Neighborhood
 			 *
-			 **/	
+			 **/
             'neighborhood_edit' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -203,7 +203,7 @@ return array(
                     ),
                 ),
             ),
-            
+
             'region_default' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -214,7 +214,7 @@ return array(
                     ),
                 ),
             ),
-            
+
             'whathood_search' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -229,7 +229,7 @@ return array(
                     ),
                 ),
             ),
-            
+
             'search' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -258,8 +258,8 @@ return array(
             ),
         ),
     ),
-    
-    
+
+
     'console' => array(
         'router' => array(
             'routes' => array(
@@ -279,16 +279,16 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            
+
             'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-            
+
             'mylogger' => function($sm) {
                 $mylogger = new \Whathood\MyLogger(
                         $sm->get('logger'),
                         $sm->get('emailer') );
                 return $mylogger;
             },
-                    
+
             'logger' => function($sm) {
                 $config = $sm->get('Config');
                 $file = $config['whathood']['log']['logfile'];
@@ -297,29 +297,29 @@ return array(
                 $logger->addWriter($outWriter);
                 return $logger;
             },
-                    
+
             'emailer' => function($sm) {
                 $config = $sm->get('Config');
-                $emailer = new \Whathood\Model\Email( 
-                                        $config['whathood']['log']['email'] );
+                $emailer = new \Whathood\Model\Email($config['whathood']['log']['email'] );
                 return $emailer;
             },
-                    
+
+
             'mydoctrineentitymanager'  => function($sm) {
                 $em = $sm->get('doctrine.entitymanager.orm_default');
                 return $em;
             },
-                    
+
             'Whathood\Service\ErrorHandling' => function($sm) {
                 $logger = $sm->get('mylogger');
                 $service = new \Whathood\Service\ErrorHandling($logger,$sm);
                 return $service;
             },
-                    
+
             'Whathood\SchemaTool'  => function($sm) {
                 return new \Whathood\SchemaTool($sm);
             },
-                    
+
             'Whathood\Mapper\CreateEventMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\CreateEventMapper( $sm, $em );
@@ -331,79 +331,79 @@ return array(
                 $mapper = new \Whathood\Mapper\NeighborhoodHeatMapMapper( $sm, $em );
                 return $mapper;
             },
-                    
+
             'Whathood\Mapper\NeighborhoodMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodMapper( $sm, $em );
                 return $mapper;
             },
-                    
-               
+
+
             'Whathood\Mapper\RegionMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\RegionMapper( $sm, $em );
                 return $mapper;
             },
-             
+
             'Whathood\Mapper\NeighborhoodPolygonVoteMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodPolygonVoteMapper($sm,$em);
                 return $mapper;
             },
-                    
+
             'Whathood\Mapper\UserPolygonMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 return new \Whathood\Mapper\UserPolygonMapper( $sm,$em );
             },
-                    
+
             'Whathood\Mapper\WhathoodUserMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
 
                 $mapper = new \Whathood\Mapper\WhathoodUserMapper( $sm,$em );
                 return $mapper;
             },
-                    
+
             'Whathood\Mapper\HeatMapTestPointMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
 
                 $mapper = new \Whathood\Mapper\HeatMapTestPointMapper( $sm,$em );
                 return $mapper;
             },
-                    
+
             'Whathood\Spatial\NeighborhoodJsonFile\Azavea' => function($sm) {
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Azavea();
             },
             'Whathood\Spatial\NeighborhoodJsonFile\Upenn' => function($sm) {
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Upenn();
             },
-                    
+
             'Whathood\Model\Heatmap\HeatMapBuilder' => function($sm) {
                 $heatMapMapper = $sm->get('Whathood\Mapper\HeatMapMapper');
                 return new \Whathood\Model\HeatMap\HeatMapBuilder(
                         $heatMapMapper);
             },
-            
+
             'Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper( $sm,$em );
                 return $mapper;
             },
-                    
+
             'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em );
                 return $mapper;
             },
-                    
+
             'Whathood\Mapper\TestPointMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 return new \Whathood\Mapper\TestPointMapper($sm,$em);
             },
-                    
+
             'Whathood\Model\NeighborhoodHeatMapPointBuilder' => function($sm) {
                 return new \Whathood\Model\NeighborhoodHeatMapPointBuilder();
             },
-                    
+
             'Whathood\Mapper\ContentiousPointMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 return new \Whathood\Mapper\ContentiousPointMapper($sm,$em);
@@ -418,7 +418,7 @@ return array(
 	#    'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter'
 	#),
     ),
-                
+
     'controllers' => array(
         'invokables' => array(
             'Whathood\Controller\Admin' => 'Whathood\Controller\AdminController',
@@ -435,7 +435,7 @@ return array(
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
         ),
     ),
-                
+
     'view_manager' => array(
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
@@ -455,7 +455,7 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
-    
+
     'view_helpers' => array(
         'invokables' => array(
             'leafletJSHelper'                   => 'Whathood\View\Helper\LeafletJSHelper',
@@ -470,7 +470,7 @@ return array(
             'neighborhoodPolygonDisqus'         => 'Whathood\View\Helper\NeighborhoodPolygonDisqus',
             'heatMapDisqus'         => 'Whathood\View\Helper\HeatMapDisqus'
         ),
-        
+
         'factories' => array(
             'auth'    => function( $helperPluginManager ) {
                 $serviceLocator = $helperPluginManager->getServiceLocator();
@@ -480,7 +480,7 @@ return array(
             },
         )
     ),
-    
+
     // Doctrine config
     'doctrine' => array(
         'driver' => array(
@@ -493,7 +493,7 @@ return array(
                 'drivers' => array(
                     'Whathood\Entity' => 'Whathood_driver'
                 ),
-                
+
             ),
         ),
         'configuration' => array(
@@ -512,7 +512,7 @@ return array(
         ),
         'connection' => array(
             'orm_default' => array(
-                'doctrine_type_mappings' => array(            
+                'doctrine_type_mappings' => array(
                     'geometry' => 'geometry',
                     'polygon'  => 'polygon',
                     'point'    => 'point'

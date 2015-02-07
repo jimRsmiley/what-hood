@@ -1,0 +1,13 @@
+<?php
+return array(
+    'whathood' => array(
+        'log' => array(
+            'email' => array(
+                'toAddress' => '',
+                'smtpUser'  => '',
+                'smtpPass'  => '',
+                'smtpHost'  => '',
+            )
+        ),
+    )
+);

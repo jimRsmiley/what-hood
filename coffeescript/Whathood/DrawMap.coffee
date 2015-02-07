@@ -6,6 +6,26 @@ Whathood.DrawMap = Whathood.Map.extend
     drawnItems : null,
     neighborhoodLayer : null,
 
+    init: ->
+      @addStreetLayer()
+      @addLeafletDraw()
+      @addInfoWindow()
+
+    addInfoWindow: ->
+      info = L.control
+        position:'topright'
+      info.onAdd = (map) ->
+        div = L.DomUtil.create 'div','command'
+
+        div.innerHTML = '
+          <div>Begin Drawing the neighborhood borders by clicking the pentagon button</div>
+          <form id="add-polygon-form">
+            <input id="neighborhood_name" type="text"/>
+            <button>Save Neighborhood</button>
+          </form>'
+        return div
+      info.addTo @
+
     addLeafletDraw : ->
         this.drawnItems = new L.FeatureGroup()
         this.addLayer this.drawnItems
@@ -31,8 +51,8 @@ Whathood.DrawMap = Whathood.Map.extend
     getDrawControl : ->
 
         editableLayers = null
-        if( this.neighborhoodLayer != null )
-          editableLayers = new L.FeatureGroup([this.neighborhoodLayer])
+        if( @neighborhoodLayer != null )
+          editableLayers = new L.FeatureGroup([@neighborhoodLayer])
         else
           editableLayers = new L.FeatureGroup()
 
@@ -61,4 +81,4 @@ Whathood.DrawMap = Whathood.Map.extend
         }
         return new L.Control.Draw(options)
     getDrawnGeoJson: ->
-        return this.neighborhoodLayer.toGeoJSON()
+        return @neighborhoodLayer?.toGeoJSON()

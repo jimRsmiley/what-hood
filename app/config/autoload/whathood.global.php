@@ -17,7 +17,7 @@ return array(
     ),
     'whathood' => array(
         'log' => array(
-            'logfile' => __DIR__ . '/../../logs/whathood-'.getenv('APPLICATION_ENV').'.log',
+            'logfile' => __DIR__ . '/../../log/whathood-'.getenv('APPLICATION_ENV').'.log',
             'email' => array(
                 'fromName'  => 'Whathood System',
                 'fromAddress'   => 'auto-sender@whathood.in'

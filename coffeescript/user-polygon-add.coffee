@@ -34,8 +34,33 @@ class Whathood.AddUserPolygonForm
 
 Whathood.Page.bind "/whathood/user-polygon/add", () ->
 
-  map = new Whathood.DrawMap 'map'
-  map.addStreetLayer()
-  map.addLeafletDraw()
+  map = new Whathood.DrawMap('map')
+  map.init()
 
-  loadNeighborhoodNames()
+  $('#add-polygon-form').on 'submit', (e) =>
+    e.preventDefault()
+    $form = $(e.target)
+
+    polygon_json = map.getDrawnGeoJson()
+    neighborhood_name =  $form.find("input[id='neighborhood_name']").val()
+
+    unless polygon_json
+      alert "polygon_json must be defined"
+    unless neighborhood_name
+      alert "neighborhood_name must be defined"
+    url = '/whathood/user-polygon/add'
+    data =
+      polygon_json: map.getDrawnGeoJson()
+      neighborhood_name: neighborhood_name
+      region_name: 'Philadelphia'
+    $.ajax
+      type: 'POST'
+      url: url
+      data: data
+      success: (data) ->
+        console.log "addition successful"
+        console.log data
+        #window.location.href = "/whathood/user-polygon/id/#{data.id}"
+      error: (xhr,textStatus,errorThrown) ->
+        alert "there was an error saving neighborhood: #{textStatus}"
+    return false

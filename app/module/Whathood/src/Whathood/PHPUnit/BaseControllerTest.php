@@ -1,7 +1,7 @@
 <?php
 namespace Whathood\PHPUnit;
 
-use ApplicationTest\Bootstrap;
+use WhathoodTest\Bootstrap;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 /**
  * Description of NeighborhoodControllerTest
@@ -11,29 +11,24 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 class BaseControllerTest extends AbstractHttpControllerTestCase {
 
     protected $sm;
-    
+
     public function setUp()
     {
         parent::setUp();
-        
+
         if( getenv('APPLICATION_ENV') !==  'test' )
             throw new \Exception("you must set APPLICATION_ENV to 'test'");
-        
+
         $this->sm = Bootstrap::getServiceManager();
-        
+
         $this->setApplicationConfig(
             include 'TestConfig.php'
         );
     }
-    
-    public function printResponse() {
-        print $this->getResponse()->getBody();
-        
-    }
-    
+
     public function initDb() {
-        
-        $DEBUG = false;
+
+        $DEBUG = true;
         // Retrieve the Doctrine 2 entity manager
         $em = $this->sm->get('doctrine.entitymanager.orm_default');
 
@@ -42,11 +37,11 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
 
         // Retrieve all of the mapping metadata
         $classes = $em->getMetadataFactory()->getAllMetadata();
-        
+
         if( $DEBUG ) print "dropping schema\n";
         // Delete the existing test database schema
         $tool->dropSchema($classes);
-        
+
         if( $DEBUG ) print "creating schema\n";
         // Create the test database schema
         $tool->createSchema($classes);
@@ -63,69 +58,34 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         return $this->whathoodUserMapper = $this->sm->get(
                                                     'Whathood\Mapper\WhathoodUserMapper');
     }
-    
+
     public function neighborhoodMapper() {
         if( $this->neighborhoodMapper == null )
             $this->neighborhoodMapper = $this->sm->get('Whathood\Mapper\NeighborhoodMapper');
-        
+
         return $this->neighborhoodMapper;
     }
-    
+
     public function userPolygonMapper() {
         if( $this->neighborhoodPolygonMapper == null )
             $this->neighborhoodPolygonMapper = $this->sm->get('Whathood\Mapper\UserPolygonMapper');
-        
+
         return $this->neighborhoodPolygonMapper;
     }
-    
+
     public function neighborhoodVoteMapper() {
         if( $this->neighborhoodVoteMapper == null )
-            $this->neighborhoodVoteMapper = 
+            $this->neighborhoodVoteMapper =
                 $this->sm->get('Whathood\Mapper\NeighborhoodPolygonVoteMapper');
-        
+
         return $this->neighborhoodVoteMapper;
     }
-    
+
     public function regionMapper() {
         if( $this->regionMapper == null )
             $this->regionMapper = $this->sm->get('Whathood\Mapper\Region');
-        
+
         return $this->regionMapper;
-    }
-    
-    public function getAuthenticationService() {
-        return $this->sm->get('Whathood\Model\AuthenticationService');
-    }
-    
-    public function getSavedAuthenticatedWhathoodUser($userName = null) {
-        
-        if( empty($userName) )
-            $userName = 'saved and authenticated userName';
-        
-        $whathoodUser = DummyEntityBuilder::whathoodUser();
-        $whathoodUser->setUserName($userName);
-        $this->whathoodUserMapper()->save( $whathoodUser );
-        $this->getAuthenticationService()->setWhathoodUser( $whathoodUser );
-        return $whathoodUser;
-    }
-    
-    public function getSavedUser($userName = null) {
-        
-        if( empty($userName) )
-            $userName = 'saved user';
-        
-        $whathoodUser = DummyEntityBuilder::whathoodUser();
-        $whathoodUser->setUserName($userName);
-        $this->whathoodUserMapper()->save( $whathoodUser );
-        $this->getAuthenticationService()->setWhathoodUser( $whathoodUser );
-        return $whathoodUser;
-    }
-    
-    public function getSavedNeighborhoodPolygon( $userName, $PolygonName ) {
-        $whathoodUser = $this->getSavedUser($userName);
-        $neighborhoodPolygon = DummyEntityBuilder::neighborhoodPolygon($whathoodUser);
-        $this->neighborhoodMapper->save( $neighborhoodPolygon );
-        return $neighborhoodPolygon;
     }
 }
 ?>

@@ -4,6 +4,7 @@ namespace Whathood\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Whathood\Entity\WhathoodUser;
 
 /**
  * Description of WhathoodController
@@ -101,6 +102,11 @@ class BaseController extends AbstractActionController {
         return $this->contentiousPointMapper;
     }
 
+    // a more accurate function description
+    public function getRequestParameter($key) {
+        return $this->getUriParameter($key);
+    }
+
     public function getUriParameter($key) {
 
         if( $this->params()->fromQuery($key) != null )
@@ -149,8 +155,24 @@ class BaseController extends AbstractActionController {
 		return $role_names;
 	}
 
+    public function getWhathoodUser() {
+        if ( 'test' == getenv('APPLICATION_ENV')) {
+            $ip_address = "127.0.0.1";
+        }
+        else {
+            $ip_address = $this->getRequest()->getServer()->get('REMOTE_ADDR');
+        }
+        return new WhathoodUser( array(
+            'ip_address' => $ip_address ));
+    }
+
     public function getLogger() {
         return $this->getServiceLocator()->get('mylogger');
+    }
+
+    // sugar
+    public function logger() {
+        return $this->getLogger();
     }
 }
 

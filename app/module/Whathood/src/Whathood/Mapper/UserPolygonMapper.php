@@ -3,12 +3,13 @@ namespace Whathood\Mapper;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Whathood\Entity\UserPolygon;
-use Whathood\Entity\Neighborhood;
 use Doctrine\ORM\Query\Expr\Join;
-use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Whathood\Entity\UserPolygon;
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\WhathoodUser;
+use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 /**
  * Description of NeighborhoodPolygonMapper
  *
@@ -103,11 +104,8 @@ class UserPolygonMapper extends BaseMapper {
     }
 
     public function save( UserPolygon $userPolygon ) {
-        $whathoodUserId = $userPolygon->getWhathoodUser()->getId();
 
-        if( empty( $whathoodUserId ) )
-            throw new \InvalidArgumentException("cannot save a NeighborhoodPolygon with an empty whathoodUser.id");
-
+        $this->logger()->info("entered save");
         /*
          * REGION
          *
@@ -129,6 +127,8 @@ class UserPolygonMapper extends BaseMapper {
             $userPolygon->getNeighborhood()->setRegion($region);
         }
 
+        $this->logger()->info("after region");
+
         /*
          * NEIGHBORHOOD
          *
@@ -149,17 +149,10 @@ class UserPolygonMapper extends BaseMapper {
                                     $userPolygon->getNeighborhood() );
         }
 
-        /**
-         * WhathoodUser
-         */
-        try {
-            $whathoodUser = $this->whathoodUserMapper()->byId($whathoodUserId);
-            $userPolygon->setWhathoodUser($whathoodUser);
-        } catch( \Doctrine\ORM\NoResultException $e ) {
-            /* this should be impossible because the user id is needed
-            * at the start of this function */
-            throw new \Exception( "whathood user was not found with id " . $whathoodUserId . ", this is seemingingly impossible");
-        }
+        $this->logger()->info('after neighborhood');
+
+        $whathoodUser = $this->getMaybeSaveByName($userPolygon->getWhathoodUser()->getIpAddress());
+        $userPolygon->setWhathoodUser($whathoodUser);
 
         if( $userPolygon->getDateTimeAdded() == null )
             $userPolygon->setDateTimeAdded( $this->getCurrentDateTimeAsString() );
@@ -168,9 +161,24 @@ class UserPolygonMapper extends BaseMapper {
             \Zend\Debug\Debug::dump( $userPolygon->getId(), 'in UserPolygonMapper' );
             exit;
         }
-        $userPolygon->setId(300);
+
+        $this->logger()->info("about to save");
         $this->em->persist( $userPolygon );
+        $this->logger()->info("about to flush");
         $this->em->flush( $userPolygon );
+        $this->logger()->info("saved");
+    }
+
+    public function getMaybeSaveByName($ip_address) {
+        if (empty($ip_address))
+            throw new \InvalidArgumentException("ip_address may not be null");
+        try {
+            $whathood_user = $this->whathoodUserMapper()->byIpAddress($ip_address);
+        } catch( \Doctrine\ORM\NoResultException $e ) {
+            $whathood_user = new WhathoodUser(array(
+                'ip_address' => $ip_address ));
+        }
+        return $whathood_user;
     }
 
     public function update( UserPolygon $neighborhoodPolygon ) {

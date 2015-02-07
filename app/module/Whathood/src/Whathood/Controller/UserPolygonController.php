@@ -3,15 +3,15 @@ namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Region;
 use Whathood\Entity\WhathoodUser;
 use Whathood\Model\EmailMessageBuilder;
 use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use Whathood\View\Model\ErrorViewModel;
 use Whathood\Collection;
 /**
@@ -179,99 +179,42 @@ class UserPolygonController extends BaseController
             return new ViewModel();
         }
     }
+
     public function addAction() {
-        $userPolygon = new UserPolygon();
-        $form = new \Whathood\Form\NeighborhoodPolygonForm();
-        $form->bind($userPolygon);
-        $form->get('submit')->setAttribute('onclick', 'return submitAddForm();' );
 
-        /*
-         * first time through the page, set up the initial form
-         */
-        if( !$this->getRequest()->isPost() ) {
-            $viewModel = new ViewModel( array(
-                'form'          => $form,
-                'editable'      => true,
-            ));
-            $viewModel->setTemplate(
-                    'whathood/user-polygon/add-edit.phtml');
-            return $viewModel;
-        }
+        if (!$this->getRequest()->isPost())
+            return new ViewModel();
 
-        /*
-         * esle, we've been here before, so process the form data
-         */
-        else {
+        $neighborhood_name  = $this->getRequest()->getPost('neighborhood_name');
+        $region_name        = $this->getRequest()->getPost('region_name');
+        $polygon_array       = $this->getRequest()->getPost('polygon_json');
 
-            $form->setData( $this->getRequest()->getPost() );
+        if (empty($polygon_array))
+            throw new \InvalidArgumentException("polygon_json may not be empty");
+        if (empty($neighborhood_name))
+            throw new \InvalidArgumentException("neighborhood_name may not be empty");
 
-            if( $form->isValid() ) {
-                $saveMessage = 'It takes a lot to regenerate the '
-                        . $userPolygon->getNeighborhood()->getName()
-                        . ' heatmap.  Your neighborhood should be added to it'
-                        . ' within the hour';
+        $neighborhood = new Neighborhood(array(
+            'name' => $neighborhood_name ));
+        $region = new Region( array(
+            'name' => $region_name ));
+        $polygon = \Whathood\Polygon::buildPolygonFromGeoJsonArray($polygon_array,$srid=4326);
 
-                $polygonGeoJsonString = $form->get('polygonGeoJson')
-                                                                ->getValue();
+        $whathoodUser = $this->getWhathoodUser();
 
-                if( empty( $polygonGeoJsonString ) )
-                    throw new \InvalidArgumentException(
-                                            "polygonGeoJson must be defined" );
+        $userPolygon = new UserPolygon( array(
+            'neighborhood' => $neighborhood,
+            'polygon' => $polygon,
+            'region' => $region,
+            'whathoodUser' => $whathoodUser  ));
 
-                $this->createPolygon($userPolygon,
-                                                        $polygonGeoJsonString );
+        $this->userPolygonMapper()->save( $userPolygon );
 
-                $userPolygon->getNeighborhood()->setRegion( new Region(
-                        array( 'name' => $regionName ) ) );
+        $this->logger()->info( "user polygon added id(".$userPolygon->getId().")" );
 
-                /*
-                 * save the user with the neighborhood
-                 */
-                $whathoodUser = $this->getAuthenticationService()
-                                                    ->getWhathoodUser();
-
-                $userPolygon->setWhathoodUser( $whathoodUser );
-
-
-                $userPolygon->getPolygon()->setSRID(4326);
-                $this->userPolygonMapper()
-                        ->save( $userPolygon );
-
-
-
-
-                $logger = $this->getServiceLocator()->get('logger');
-
-                $logger->info( "neighborhood has been added" );
-
-                $form->bind( $userPolygon );
-
-                $viewModel = new ViewModel( array(
-                    'form' => $form,
-                    'saveMessage' =>  $saveMessage
-                ));
-
-                $viewModel->setTemplate(
-                        '/whathood/user-polygon/view.phtml');
-                return $viewModel;
-
-            } // end if the form is valid
-
-            /*
-                nope the form wasn't valid
-            */
-            else {
-                $neighborhoods = $this->neighborhoodMapper()
-                        ->byRegionName($regionName);
-            }
-
-            $viewModel = new ViewModel( array(
-                'form' => $form,
-                'currentNeighborhoods' => $neighborhoods) );
-            $viewModel->setTemplate(
-                    'whathood/user-polygon/add-edit.phtml');
-            return $viewModel;
-        }
+        return new JsonModel( array(
+            'status' => 'success',
+            'user_polygon_id' => $userPolygon->getId() ));
     }
 
     public function byIdAction() {
@@ -334,62 +277,6 @@ class UserPolygonController extends BaseController
         $viewModel->setTemplate('whathood/neighborhood/list.phtml');
 
         return $viewModel;
-    }
-
-    /*
-    public function byRegionAction() {
-
-        $regionId = $this->params()->fromQuery('region_id');
-        $format = $this->getUriParameter('format');
-
-        $mapper = $this->getServiceLocator()
-                    ->get('Whathood\Mapper\Neighborhood');
-
-        if( !empty( $regionId ) ) {
-            $neighborhoods = $mapper->getByRegionId( $regionId );
-        }
-
-        $featureCollection = new FeatureCollection();
-        foreach( $neighborhoods as $n ) {
-            $featureCollection->addFeature( $n );
-        }
-
-        if( $format == 'json' ) {
-            return new JsonModel( $featureCollection->toArray() );
-        }
-        $viewModel = new ViewModel( array( 'neighborhoods' => $neighborhoods ) );
-        $viewModel->setTemplate( 'whathood/neighborhood/show-many.phtml');
-        return $viewModel;
-    }*/
-
-
-    /*
-     * from the latLngJson, we need to create a polygon object
-     */
-    public function createPolygon(UserPolygon $neighborhood, $polygonGeoJson) {
-
-        $polygonArray = \Zend\Json\Json::decode($polygonGeoJson,\Zend\Json\Json::TYPE_ARRAY);
-
-        //\Zend\Debug\Debug::dump( $polygonArray );
-        $lineStringArray = $polygonArray['geometry']['coordinates'];
-        //\Zend\Debug\Debug::dump( $lineStringArray );
-        //exit;
-        $ring = array();
-
-        foreach( $lineStringArray as $lineString ) {
-            foreach( $lineString as $point ) {
-                $ring[] = new Point( $point[0], $point[1] );
-            }
-        }
-//die( \Zend\Debug\Debug::dump( $ring ) );
-        $myLineString = new LineString( $ring );
-        $myLineString->close();
-
-        //\Zend\Debug\Debug::dump( $myLineString );
-        //exit;
-        $neighborhood->setPolygon(
-                new Polygon( $rings = array($myLineString))
-        );
     }
 
     public function deleteAction() {
