@@ -4,6 +4,7 @@ use lib 'libs/perl';
 use strict;
 use warnings;
 use File::Glob ':glob';
+use Cwd;
 use Whathood::Utils;
 
 my $DATA_DIR="data/whathood_db";
@@ -20,26 +21,43 @@ sub init_db {
     print "dropping database $DB_NAME if it exists\n";
     `su - postgres -c 'dropdb --if-exists $DB_NAME'`;
     print "creating user\n";
+    `sudo su - postgres -c 'dropuser --if-exists $DB_NAME'`;
     `sudo su - postgres -c 'createuser --superuser $DB_NAME'`;
     print "creating database\n";
     `sudo su - postgres -c 'createdb $DB_NAME'`;
     print "creating postgis extension\n";
     `sudo su - postgres -c 'psql -c "CREATE EXTENSION postgis" $DB_NAME'`;
 
-    print "deleting previous data directory\n";
-    `rm -rf $DATA_DIR`;
-
-    print "cloning database data\n";
-    `mkdir -p $DATA_DIR`;
-    `sudo git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
-
+    if (! -d $DATA_DIR) { # if the data dir doesn't exist
+        print "data dir $DATA_DIR doesn't exist, must clone repo\n";
+        clone_data_repo();
+    }
+    else {
+        my $_old_dir = cwd();
+        chdir($DATA_DIR);
+        my $local_sha = system('git rev-parse HEAD');
+        my $remote_sha = system('git rev-parse origin/master');
+        if ($local_sha ne $remote_sha) {
+            print "git data repos are different; cloning database data\n";
+        }
+        else {
+            print "git db repos are equal, no need to clone\n";
+        }
+        chdir($_old_dir);
+    }
     print "importing data into database\n";
     `sudo psql -U $DB_NAME < $DATA_DIR/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`;
 }
 
+sub clone_data_repo {
+    print "deleting previous data directory\n";
+    `rm -rf $DATA_DIR`;
+    `mkdir -p $DATA_DIR`;
+    `sudo git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
+}
+
 sub update_schema {
     my @files = bsd_glob('app/scripts/schema/whathood-*.sql', GLOB_NOCASE);
-
     for my $file (@files) {
         print "applying schema update file $file\n";
         `sudo psql -U $DB_NAME < $file 2>&1`;
