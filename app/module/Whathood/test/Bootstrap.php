@@ -59,11 +59,11 @@ class Bootstrap
 
         static::$serviceManager = $serviceManager;
         static::$config = $config;
-        
+
         /*
          * SERVER_NAME
          */
-        $_SERVER['SERVER_NAME'] = 'whathood.in';
+        $_SERVER['SERVER_NAME'] = 'localhost';
     }
 
     public static function getServiceManager()
@@ -118,4 +118,3 @@ class Bootstrap
 
 
 Bootstrap::init();
-
