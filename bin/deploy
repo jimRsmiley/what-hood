@@ -6,8 +6,8 @@ use FindBin;
 
 my $user=`whoami`;
 chomp $user;
-unless ( $user eq "root" ) {
-   print "must be run as root. Not '$user'\n";
+unless ( $user eq "vagrant" ) {
+   print "must be run as vagrant. Not '$user'\n";
    exit;
 }
 
@@ -18,7 +18,7 @@ my $DIR=$FindBin::Bin;
 my $DEST_DIR="/opt/whathood";
 my $SRC_DIR="$DIR/..";
 
-print "*      killing any grun processes\n";
+print "*      killing any grunt processes\n";
 system("killall grunt > /dev/null 2>&1");
 
 print "\n";
