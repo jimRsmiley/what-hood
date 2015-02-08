@@ -11,6 +11,7 @@ DBNAME='whathood'
 # the test neighborhood_id
 TEST_NEIGHBORHOOD_ID=89
 
+# update all of the sql function and views
 `./bin/load_sql_functions`
 
 #
@@ -19,10 +20,10 @@ TEST_NEIGHBORHOOD_ID=89
 sql_cmd="INSERT INTO neighborhood_polygon (neighborhood_id,polygon,date_time_created)
             VALUES (
                 #{TEST_NEIGHBORHOOD_ID},
-                ( 
-                SELECT 
+                (
+                SELECT
                     ST_ConcaveHull(ST_Collect(point),.99)
-                FROM 
+                FROM
                     whathood.create_neighborhood_border(#{TEST_NEIGHBORHOOD_ID},#{GRID_RES})
                 WHERE
                     dominant_neighborhood_id = #{TEST_NEIGHBORHOOD_ID}
