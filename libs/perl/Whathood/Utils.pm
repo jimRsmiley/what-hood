@@ -5,7 +5,7 @@ use warnings;
 
 require Exporter;
 
-@EXPORT_OK = qw(exec_sql_stmt);
+my @EXPORT_OK = qw(exec_sql_stmt);
 
 sub prompt_user {
     my $class = shift;

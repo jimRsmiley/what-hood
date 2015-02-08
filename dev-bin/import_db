@@ -17,6 +17,9 @@ Whathood::Utils->prompt_user("warning: this will destroy the current db");
 init_db();
 update_schema();
 
+print "loading functions\n";
+`./bin/load_sql_functions`;
+
 sub init_db {
     print "dropping database $DB_NAME if it exists\n";
     `su - postgres -c 'dropdb --if-exists $DB_NAME'`;

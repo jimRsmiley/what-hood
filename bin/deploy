@@ -37,12 +37,12 @@ print "*     building grunt\n";
 #
 ## RUN grunt as user
 chdir($SRC_DIR);
-`sudo -u vagrant make grunt`;
+`sudo -u vagrant make grunt & > /dev/null`;
 
 #
 print "*     building coffeescript files\n";
 #
-`sudo -u vagrant grunt coffee`;
+`sudo -u vagrant grunt coffee & > /dev/null`;
 
 #
 print "*     making source dir chmod 777\n";
