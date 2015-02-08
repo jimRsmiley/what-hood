@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use FindBin;
+use Cwd;
 
 my $user=`whoami`;
 chomp $user;
@@ -18,7 +19,9 @@ my $DIR=$FindBin::Bin;
 my $DEST_DIR="/opt/whathood";
 my $SRC_DIR="$DIR/..";
 
-print "*      killing any grunt processes\n";
+print "*     WARNING: $DEST_DIR should already be owned by vagrant.vagrant\n";
+
+print "*     killing any grunt processes\n";
 system("killall grunt > /dev/null 2>&1");
 
 print "\n";
@@ -38,12 +41,15 @@ print "*     building grunt\n";
 #
 ## RUN grunt as user
 chdir($SRC_DIR);
-`sudo -u vagrant make grunt > /dev/null 2>&1`;
+print "*********\n\n\nwhoami is:\n";
+print `whoami`;
+print "my working dir is".getcwd."\n";
+`sudo su vagrant -c "make grunt"`;
 
 #
 print "*     building coffeescript files\n";
 #
-`sudo -u vagrant grunt coffee > /dev/null 2>&1`;
+`grunt coffee > /dev/null 2>&1`;
 
 #
 print "*     making source dir chmod 777\n";
@@ -59,25 +65,24 @@ print "*     setting doctrine proxy dir to all writeable\n";
 #
 print "*     now copy everything to the destination dir\n";
 #
-`sudo mkdir -p $DEST_DIR`;
-
 #
 print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
 #
 `cp -r $SRC_DIR/ $DEST_DIR`;
 
 print "*     copying over whathood.conf nginx file\n";
-`cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
+`sudo cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
 print "*     linking to sites-enabled\n";
-`rm -f /etc/nginx/sites-enabled/whathood.conf`;
-`ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
+`sudo rm -f /etc/nginx/sites-enabled/whathood.conf`;
+`sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
 print "*     restarting nginx\n";
-`service nginx restart`;
+`sudo service nginx restart`;
 
 print "*     copying whathood.ini into php5-fpm conf\n";
-`rm -f /etc/php5/fpm/conf.d/20-whathood.ini`;
-`ln -s $SRC_DIR/etc/php5-fpm/20-whathood.ini /etc/php5/fpm/conf.d/20-whathood.ini`;
-`service php5-fpm restart`;
+`sudo rm -f /etc/php5/fpm/conf.d/20-whathood.ini`;
+print "*     restarting php-fpm\n";
+`sudo ln -s $SRC_DIR/etc/php5-fpm/20-whathood.ini /etc/php5/fpm/conf.d/20-whathood.ini`;
+`sudo service php5-fpm restart`;
 
 init_grunt_watch($SRC_DIR);
 init_grunt_watch($DEST_DIR);
