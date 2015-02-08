@@ -1,10 +1,10 @@
 all: grunt
 
 grunt:
-	npm install grunt --save-dev --loglevel verbose
-	npm install grunt-contrib-watch --save-dev --loglevel verbose
-	npm install grunt-contrib-coffee --save-dev --loglevel verbose
-	npm install grunt-contrib-clean --save-dev --loglevel verbose
+	npm install grunt --save-dev
+	npm install grunt-contrib-watch --save-dev
+	npm install grunt-contrib-coffee --save-dev
+	npm install grunt-contrib-clean --save-dev
 	grunt coffee
 
 clean-grunt:
