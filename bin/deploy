@@ -18,7 +18,8 @@ my $DIR=$FindBin::Bin;
 my $DEST_DIR="/opt/whathood";
 my $SRC_DIR="$DIR/..";
 
-system("killall grunt");
+print "*      killing any grun processes\n";
+system("killall grunt & > /dev/null");
 
 print "\n";
 print "Building Whathood App\n";
@@ -30,7 +31,7 @@ print "*     installing composer\n";
 `curl -sS https://getcomposer.org/installer | php > /dev/null`;
 
 print "*     installing vendor libraries\n";
-`php composer.phar install > /dev/null`;
+`php composer.phar install & > /dev/null`;
 
 #
 print "*     building grunt\n";
@@ -68,11 +69,13 @@ print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
 print "*     copying over whathood.conf nginx file\n";
 `cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
 print "*     linking to sites-enabled\n";
+`rm -f /etc/nginx/sites-enabled/whathood.conf`;
 `ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
 print "*     restarting nginx\n";
 `service nginx restart`;
 
 print "*     copying whathood.ini into php5-fpm conf\n";
+`rm -f /etc/php5/fpm/conf.d/20-whathood.ini`;
 `ln -s $SRC_DIR/etc/php5-fpm/20-whathood.ini /etc/php5/fpm/conf.d/20-whathood.ini`;
 `service php5-fpm restart`;
 
