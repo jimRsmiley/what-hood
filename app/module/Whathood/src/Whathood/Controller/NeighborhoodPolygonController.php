@@ -3,16 +3,18 @@ namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Region;
 use Whathood\Entity\WhathoodUser;
+use Whathood\Entity\NeighborhoodPolygon;
 use Whathood\Model\EmailMessageBuilder;
 use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Spatial\PHP\Types\Geometry\LineString;
-use CrEOF\Spatial\PHP\Types\Geometry\Polygon;
 use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
+
 /**
  * Description of NeighborhoodController
  *
@@ -176,7 +178,6 @@ class NeighborhoodPolygonController extends BaseController
     }
 
     public function deleteAction() {
-
         $user = $this->getLoggedInWhathoodUser();
         $neighborhoodId = $this->getUriParameter('id');
         $confirmedDelete = $this->getUriParameter('confirmed');

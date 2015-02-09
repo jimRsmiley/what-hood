@@ -30,6 +30,12 @@ class WhathoodUser extends \ArrayObject {
      */
     protected $ip_address = null;
 
+    /**
+     * @ORM\OneToMany(targetEntity="UserPolygon",
+     *                              mappedBy="whathood_user",cascade="persist")
+     */
+    protected $user_polygons;
+
     public function getIpAddress() {
         return $this->ip_address;
     }

@@ -24,7 +24,7 @@ init_db();
 update_schema();
 
 print "loading functions\n";
-`./bin/load_sql_functions`;
+`./dev-bin/load_sql_functions`;
 
 sub init_db {
     print "dropping database $DB_NAME if it exists\n";
@@ -69,6 +69,6 @@ sub update_schema {
     my @files = bsd_glob('app/scripts/schema/whathood-*.sql', GLOB_NOCASE);
     for my $file (@files) {
         print "applying schema update file $file\n";
-        `sudo -u postgres psql -U $DB_NAME < $file 2>&1`;
+        `sudo -u postgres psql -f $file $DB_NAME`;
     }
 }

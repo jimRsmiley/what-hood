@@ -54,11 +54,17 @@ class UserPolygon extends \ArrayObject {
 
     /**
      * @ORM\ManyToOne(targetEntity="WhathoodUser",
-     *      inversedBy="userPolygons",cascade="persist")
+     *      inversedBy="user_polygons",cascade="persist")
      * @ORM\JoinColumn(name="whathood_user_id", referencedColumnName="id",
      *      nullable=false)
-     */
-    protected $_whathood_user = null;
+     **/
+    protected $whathood_user = null;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="NeighborhoodPolygon",inversedBy="user_polygons")
+     * @ORM\JoinTable(name="up_np")
+     **/
+    protected $neighborhood_polygons;
 
     public function getIsDeleted() {
         return $this->_is_deleted;
@@ -109,15 +115,23 @@ class UserPolygon extends \ArrayObject {
                                 'data must be array or Region object');
     }
 
+    public function getNeighborhoodPolygons() {
+        return $this->neighborhood_polygons;
+    }
+
+    public function setNeighborhoodPolygons($neighborhood_polygons) {
+        $this->neighborhood_polygons = $neighborhood_polygons;
+    }
+
     public function getWhathoodUser() {
-        return $this->_whathood_user;
+        return $this->whathood_user;
     }
 
     public function setWhathoodUser( $data ) {
         if( is_array( $data ) )
-            $this->_whathood_user = new WhathoodUser( $data );
+            $this->whathood_user = new WhathoodUser( $data );
         else if( $data instanceof \Whathood\Entity\WhathoodUser )
-            $this->_whathood_user = $data;
+            $this->whathood_user = $data;
         else
             throw new \InvalidArgumentException('data must be array or User object');
     }

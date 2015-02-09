@@ -11,11 +11,28 @@ class Polygon {
     /**
      * expects an array that conforms to a geojson object
      **/
+    public static function buildPolygonFromGeoJsonString($json_str,$srid) {
+        if (empty($json_str))
+            throw new \InvalidArgumentException("json_str may not be empty");
+
+        $polygon_array = \Zend\Json\Json::decode($json_str,\Zend\Json\Json::TYPE_ARRAY);
+
+        return static::buildPolygonFromGeoJsonArray($polygon_array,$srid);
+    }
+
+    /**
+     * expects an array that conforms to a geojson object
+     **/
     public static function buildPolygonFromGeoJsonArray(array $polygon_array,$srid) {
         if (empty($polygon_array))
             throw new \InvalidArgumentException("polygon_array may not be empty");
 
-        $lineStringArray = $polygon_array['geometry']['coordinates'];
+        if (isset($polygon_array['geometry']['coordinates'])) {
+            $lineStringArray = $polygon_array['geometry']['coordinates'];
+        }
+        else if(isset($polygon_array['coordinates'])) {
+            $lineStringArray = $polygon_array['coordinates'];
+        }
         $ring = array();
 
         foreach( $lineStringArray as $lineString ) {

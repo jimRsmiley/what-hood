@@ -50,7 +50,13 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function getNeighborhoodByName( $neighborhoodName, $regionName ) {
+    public function getByNeighborhoodByName( $neighborhoodName, $regionName ) {
+        $qb = $this->getQueryBuilder();
+        $qb->setNeighborhoodName($neighborhoodName)->setRegionName($regionName);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getByNeighborhood( $neighborhoodName, $regionName ) {
         $qb = $this->getQueryBuilder();
         $qb->setNeighborhoodName($neighborhoodName)->setRegionName($regionName);
         return $qb->getQuery()->getResult();
@@ -67,6 +73,21 @@ class UserPolygonMapper extends BaseMapper {
         $result = $query->getResult();
 
         return $result;
+    }
+
+    public function getUserPolygonsNotAssociatedWithNeighborhoodPolygons() {
+        $sql = "SELECT id FROM user_polygon WHERE id NOT IN ( SELECT up_id FROM up_np )";
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id','id');
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $result = $query->getResult();
+
+        $user_polygons = array();
+        foreach($result as $row) {
+            $up = $this->byId($row['id']);
+            array_push($user_polygons,$up);
+        }
+        return $user_polygons;
     }
 
     public function getNeighborhoodPolygonsByPoint( Point $point ) {

@@ -60,39 +60,45 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         return $result['geojson'];
     }
 
-public function getLocationCountsByNeighborhoodAsGeoJson() {
+    public function generateBorder(
+        \Doctrine\ORM\PersistentCollection $user_polygons,
+        $neighborhood_id,
+        $grid_resolution
+    ) {
+        $up_ids = array();
+        foreach($user_polygons as $up) $up_ids[] = $up->getId();
+        $up_id_str = join(',',$up_ids);
 
-        $sql = "SELECT row_to_json( fc ) as geojson
-FROM ( SELECT 'FeatureCollection' as type, array_to_json(array_agg(f)) as features
-FROM( SELECT 'Feature' as type
-    , ST_AsGeoJSON( neighborhood_location_count.neighborhood_polygon)::json AS geometry
-    , row_to_json( (SELECT l FROM ( SELECT neighborhood_name,y2007,y2008,y2009,y2010,y2011,y2012,y2013, (cast(y2007 as float)+y2008+y2009+y2010+y2011)/5 as avg_2007_to_2011, (cast(y2012 as float)+y2013)/2 as avg_2012_and_2013, ( ( (cast(y2012 as float)+y2013)/2) - ( ( (cast(y2007 as float)+y2008+y2009+y2010+y2011)/5) ) ) / ( ( cast(y2007 as float)+y2008+y2009+y2010+y2011)/5 )*100 as gentrifyer  ) AS l
-    )) AS properties
-FROM neighborhood_location_count ) as f ) as fc
-";
-        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
-        $rsm->addScalarResult('geojson', 'geojson');
-        $query = $this->em->createNativeQuery( $sql, $rsm );
+        $sql = "SELECT
+            ST_AsGeoJSON(
+                ST_ConcaveHull(
+                    whathood.neighborhood_point_geometry(:neighborhood_id,ST_Collect(up.polygon),:grid_resolution),
+                    0.99
+                )
+            ) as geojson
+            FROM user_polygon up
+            WHERE up.id IN ( $up_id_str )";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('geojson','geojson');
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $query->setParameter('neighborhood_id',$neighborhood_id);
+        $query->setParameter('grid_resolution',$grid_resolution);
+
         $result = $query->getSingleResult();
         return $result['geojson'];
     }
 
-    public function save( NeighborhoodPolygon $neighborhoodPolygon ) {
-        $this->em->persist( $neighborhoodPolygon );
-        $this->em->flush( $neighborhoodPolygon );
+    public function save( NeighborhoodPolygon $np ) {
+        $this->em->persist( $np );
+
+        $np_id = $np->getId();
+        foreach($np->getUserPolygons() as $up) {
+            $sql = "INSERT INTO up_np(up_id,np_id) VALUES (?,?)";
+            $this->em->getConnection()->prepare($sql)->execute(array($up->getId(),$np_id));
+        }
+        $this->em->flush( $np );
     }
-
-    public function deleteNeighborhoodPolygonsBySetNumber( $setNumber ) {
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-                ->from( $this->getEntityName(), 'np' )
-                ->where( 'np.setNumber = :setNumber')
-                ->setParameter( 'setNumber', $setNumber );
-
-        $qb->getQuery()->execute();
-    }
-
-
 
     protected function getEntityName() {
         return 'Whathood\Entity\NeighborhoodPolygon';

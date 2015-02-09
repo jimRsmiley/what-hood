@@ -271,6 +271,16 @@ return array(
                             'action' => 'consoledefault'
                         )
                     )
+                ),
+                'watcher-router' => array(
+                 //   'type' => 'simple',
+                    'options' => array(
+                        'route' => 'watcher',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\Watcher',
+                            'action' => 'watch'
+                        )
+                    )
                 )
             )
         )
@@ -292,9 +302,11 @@ return array(
             'logger' => function($sm) {
                 $config = $sm->get('Config');
                 $file = $config['whathood']['log']['logfile'];
-                $outWriter = new \Zend\Log\Writer\Stream($file);
+                $file_writer = new \Zend\Log\Writer\Stream($file);
+                $console_writer = new \Zend\Log\Writer\Stream('php://output');
                 $logger = new \Zend\Log\Logger;
-                $logger->addWriter($outWriter);
+                $logger->addWriter($file_writer);
+                $logger->addWriter($console_writer);
                 return $logger;
             },
 
@@ -320,18 +332,6 @@ return array(
                 return new \Whathood\SchemaTool($sm);
             },
 
-            'Whathood\Mapper\CreateEventMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\CreateEventMapper( $sm, $em );
-                return $mapper;
-            },
-
-            'Whathood\Mapper\HeatMapMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\NeighborhoodHeatMapMapper( $sm, $em );
-                return $mapper;
-            },
-
             'Whathood\Mapper\NeighborhoodMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodMapper( $sm, $em );
@@ -342,12 +342,6 @@ return array(
             'Whathood\Mapper\RegionMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\RegionMapper( $sm, $em );
-                return $mapper;
-            },
-
-            'Whathood\Mapper\NeighborhoodPolygonVoteMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\NeighborhoodPolygonVoteMapper($sm,$em);
                 return $mapper;
             },
 
@@ -363,13 +357,6 @@ return array(
                 return $mapper;
             },
 
-            'Whathood\Mapper\HeatMapTestPointMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-
-                $mapper = new \Whathood\Mapper\HeatMapTestPointMapper( $sm,$em );
-                return $mapper;
-            },
-
             'Whathood\Spatial\NeighborhoodJsonFile\Azavea' => function($sm) {
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Azavea();
             },
@@ -377,50 +364,17 @@ return array(
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Upenn();
             },
 
-            'Whathood\Model\Heatmap\HeatMapBuilder' => function($sm) {
-                $heatMapMapper = $sm->get('Whathood\Mapper\HeatMapMapper');
-                return new \Whathood\Model\HeatMap\HeatMapBuilder(
-                        $heatMapMapper);
-            },
-
-            'Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper( $sm,$em );
-                return $mapper;
-            },
-
             'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em );
                 return $mapper;
             },
-
-            'Whathood\Mapper\TestPointMapper' => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                return new \Whathood\Mapper\TestPointMapper($sm,$em);
-            },
-
-            'Whathood\Model\NeighborhoodHeatMapPointBuilder' => function($sm) {
-                return new \Whathood\Model\NeighborhoodHeatMapPointBuilder();
-            },
-
-            'Whathood\Mapper\ContentiousPointMapper' => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                return new \Whathood\Mapper\ContentiousPointMapper($sm,$em);
-            },
-
-            'Whathood\Mapper\CreateEventMapper' => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                return new \Whathood\Mapper\CreateEventMapper($sm,$em);
-            },
         ),
-	#'aliases' => array(
-	#    'bjyauthorize_zend_db_adapter' => 'Zend\Db\Adapter\Adapter'
-	#),
     ),
 
     'controllers' => array(
         'invokables' => array(
+            'Whathood\Controller\Watcher' => 'Whathood\Controller\WatcherController',
             'Whathood\Controller\Admin' => 'Whathood\Controller\AdminController',
             'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
