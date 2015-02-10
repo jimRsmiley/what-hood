@@ -10,9 +10,9 @@ BEGIN
   SELECT row_to_json( fc ) INTO geojson
     FROM ( SELECT 'FeatureCollection' as type, array_to_json(array_agg(f)) as features
     FROM( SELECT 'Feature' as type
-      , ST_AsGeoJSON( slnp.polygon)::json AS geometry
+      , ST_AsGeoJSON( slnp.geom)::json AS geometry
       , row_to_json(
-        (SELECT l FROM ( SELECT name,slnp.id,slnp.num_user_polygons) AS l)
+        (SELECT l FROM ( SELECT name,slnp.id) AS l)
       ) AS properties
   FROM latest_neighborhoods slnp
     INNER JOIN neighborhood

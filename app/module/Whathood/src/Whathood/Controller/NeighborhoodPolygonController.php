@@ -25,16 +25,11 @@ class NeighborhoodPolygonController extends BaseController
     public function showRegionAction() {
 
         $regionName = $this->getUriParameter('region_name');
-        $createEventId  = $this->getUriParameter('create_event_id');
         $format     = $this->getUriParameter('format');
-
-        if( empty( $createEventId ) ) {
-            $createEventId = $this->neighborhoodPolygonMapper()->getLastCreateEventId();
-        }
 
         $region = $this->regionMapper()->getRegionByName( $regionName );
         $json = $this->neighborhoodPolygonMapper()
-                ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region, $createEventId );
+                ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
 
         if( $format == 'json' ) {
             $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
