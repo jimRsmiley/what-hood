@@ -1,9 +1,12 @@
 #!/bin/bash
 
+#
+# to ease development, create some symlinks to directories
+#
+
 ln -s app/module/Whathood/src/Whathood/ W
 ln -s app/module/Whathood/config/module.config.php module.config.php
 ln -s app/module/Whathood/test test
 ln -s app/module/Whathood/view view
-ln -s app/config/autoload/user_security.global.php user_security.global.php
 ln -s app/public/js/whathood/whathood.js whathood.js.symlink
 ln -s app/public/css/style.css whathood.css.symlink

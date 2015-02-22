@@ -37,7 +37,7 @@ class Polygon {
 
         foreach( $lineStringArray as $lineString ) {
             foreach( $lineString as $point ) {
-                $ring[] = new Point( $point[1], $point[0] );
+                $ring[] = new Point( $point[0], $point[1] );
             }
         }
         $myLineString = new LineString( $ring );

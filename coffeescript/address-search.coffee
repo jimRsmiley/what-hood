@@ -44,6 +44,7 @@ Whathood.Page.bind "/", () ->
   map.addStreetLayer()
   region_name = get_region_name()
   create_event = get_create_event()
+  console.log get_url(region_name)
   map.addGeoJson(get_url(region_name,create_event))
 
   geosearch = new Whathood.GeoSearch {

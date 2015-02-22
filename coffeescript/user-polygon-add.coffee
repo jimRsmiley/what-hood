@@ -9,6 +9,9 @@ class Whathood.AddUserPolygonForm
     if( map.getDrawnGeoJson() == null )
         alert("you must draw a neighborhood to continue")
         return false
+
+    console.log map.getDrawnGeoJson()
+    return false
     hiddenJsonCssSelector = 'input[name=polygonGeoJson]'
     neighborhoodJson = $(hiddenJsonCssSelector).val()
     if( typeof neighborhoodJson == 'undefined' ) 

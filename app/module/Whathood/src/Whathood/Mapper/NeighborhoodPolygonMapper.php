@@ -57,7 +57,11 @@ class NeighborhoodPolygonMapper extends BaseMapper {
 
         $result = $query->getSingleResult();
 
-        return $result['geojson'];
+        $geojson = $result['geojson'];
+        if (preg_match('/"features":null/',$geojson))
+            throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
+        else
+            return $geojson;
     }
 
     public function generateBorder(

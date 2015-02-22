@@ -12,7 +12,7 @@ DBNAME='whathood'
 TEST_NEIGHBORHOOD_ID=89
 
 # update all of the sql function and views
-`./bin/load_sql_functions`
+`./dev-bin/load_sql_functions`
 
 #
 #  get the user polygon count per test point
