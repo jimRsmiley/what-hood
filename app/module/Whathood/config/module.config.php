@@ -292,25 +292,24 @@ return array(
 
             'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
 
-            'mylogger' => function($sm) {
-                $mylogger = new \Whathood\MyLogger(
-                        $sm->get('logger'),
+            'Whathood\MyLogger' => function($sm) {
+                return new \Whathood\MyLogger(
+                        $sm->get('Whathood\Logger'),
                         $sm->get('emailer') );
-                return $mylogger;
             },
 
-            'logger' => function($sm) {
+            'Whathood\Logger' => function($sm) {
                 $config = $sm->get('Config');
                 $file = $config['whathood']['log']['logfile'];
                 $file_writer = new \Zend\Log\Writer\Stream($file);
                 $console_writer = new \Zend\Log\Writer\Stream('php://output');
                 $logger = new \Zend\Log\Logger;
                 $logger->addWriter($file_writer);
-                $logger->addWriter($console_writer);
+                //$logger->addWriter($console_writer);
                 return $logger;
             },
 
-            'emailer' => function($sm) {
+            'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Config');
                 $emailer = new \Whathood\Model\Email($config['whathood']['log']['email'] );
                 return $emailer;
@@ -320,12 +319,6 @@ return array(
             'mydoctrineentitymanager'  => function($sm) {
                 $em = $sm->get('doctrine.entitymanager.orm_default');
                 return $em;
-            },
-
-            'Whathood\Service\ErrorHandling' => function($sm) {
-                $logger = $sm->get('mylogger');
-                $service = new \Whathood\Service\ErrorHandling($logger,$sm);
-                return $service;
             },
 
             'Whathood\SchemaTool'  => function($sm) {

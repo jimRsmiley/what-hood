@@ -167,7 +167,7 @@ class BaseController extends AbstractActionController {
     }
 
     public function getLogger() {
-        return $this->getServiceLocator()->get('mylogger');
+        return $this->getServiceLocator()->get('Whathood\Logger');
     }
 
     // sugar

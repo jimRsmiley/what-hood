@@ -83,7 +83,7 @@ abstract class BaseMapper {
     }
 
     public function logger() {
-        return $this->sm->get('mylogger');
+        return $this->sm->get('Whathood\Logger');
     }
 }
 ?>
