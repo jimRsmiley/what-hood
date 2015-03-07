@@ -32,10 +32,6 @@ echo $this->mybreadcrumbs( array(
     <div id="map" class="map"></div>
 </div>
 
-<?php
-echo $this->heatMapDisqus( $this->regionName,$this->neighborhoodName );
-?>
-
 <script>
     $('document').ready( function() {
         map = new NeighborhoodHeatMap('map');

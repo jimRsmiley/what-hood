@@ -1,4 +1,4 @@
-<?php 
+<?php
 $styles = '
 #no-match-neighborhood {
     color: red;
@@ -33,7 +33,7 @@ exit;
  */
 
 echo $this->mybreadcrumbs( array(
-                            'regionName' => $regionName, 
+                            'regionName' => $regionName,
                             'neighborhoodName' => $neighborhoodName,
                             'user'  => $userName
 ));?>
@@ -41,14 +41,14 @@ echo $this->mybreadcrumbs( array(
 <div>We update the heatmap for <?=$regionName?> every hour.  We'll be including
     your neighborhood then.</div>
         <?php echo $this->form()->openTag($form);?>
-        
-        
-        <?php 
+
+
+        <?php
         /*
          * polygonGeoJson
          */
         echo $this->formRow( $form->get('polygonGeoJson') ) . "\n" ?>
-            
+
         <div class='row-fluid'>
             <?=$this->partial('whathood/snippets/partial_whathood_click_notification.phtml');?>
             <div class="span12 mapheight" id="map" style='padding: 0; margin: 0'></div>
@@ -56,8 +56,8 @@ echo $this->mybreadcrumbs( array(
 
     <?php echo $this->form()->closeTag() . "\n"; ?>
 
-    <?php 
-    
+    <?php
+
     /*
      * Owner of this NeighborhoodPolygon
      */
@@ -68,27 +68,20 @@ echo $this->mybreadcrumbs( array(
                 </a>
             </div>
     <?php endif; ?>
-            
-    <?php   
-        
-    /*
-     * COMMENTS
-     */
-    echo $this->neighborhoodPolygonDisqus($neighborhoodPolygonId);
-    ?>
+
 <script>
-    
+
 /**
  * figure out how to center the map, if lat,lng have been specified, use that,
  * else, try and get the position from the browser, then call setupMap to draw
  * the map
  */
 function init() {
-   
+
    var lat          = getURLParameter( 'centerLat');
    var lng          = getURLParameter( 'centerLng');
    var regionName   = getURLParameter( 'region_name' );
-   
+
    if( lat == 'null' || lng == 'null' ) {
         console.log("init(): lat or lng is null, let's geocode region");
         geocoder = new google.maps.Geocoder();
@@ -109,29 +102,29 @@ function init() {
 $('document').ready( function() {
     var neighborhoodId = '<?php echo $neighborhoodPolygon->get('id')->getValue() ?>';
     var centerStr = '<?=$centerStr?>';
-    
+
     var options = {
         cssId: 'map',
         placeCenterMarker: true,
         whathoodOnClick: true
     };
-    
+
     if( centerStr ) {
         options.center = [<?=$centerStr?>];
     }
-    
+
     if( neighborhoodId )
         options.geoJsonSrc = '<?=$this->url( 'neighborhood_id', array(
                                     'neighborhood_id'   => $form->get('neighborhoodPolygon')->get('id')->getValue(),
                                     'format'            => 'json'
             ))?>';
-                        
+
     new NewWhathoodMap( options );
 
     <?php if( $this->neighborhoodNames != null ) : ?>
-      
+
     var availableNeighborhoods = [<?=$this->arrayToDoubleQuoteElementedCSV($neighborhoodNames)?>];
-  
+
     $( "input[name=neighborhood\\[name\\]]" ).autocomplete({
       source: availableNeighborhoods,
       response: function(event, ui) {
@@ -143,9 +136,9 @@ $('document').ready( function() {
             }
         }
     });
-    
+
     <?php endif; ?>
 });
 
 </script>
-    
+

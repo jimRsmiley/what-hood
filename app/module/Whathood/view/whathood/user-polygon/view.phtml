@@ -1,4 +1,4 @@
-<?php 
+<?php
 $styles = '
 #no-match-neighborhood {
     color: red;
@@ -34,37 +34,30 @@ $neighborhoodName = $userPolygon->get('neighborhood')->get('name')->getValue();
 <?php endif; ?>
     <?php echo "user_polygon_id " . $userPolygonId; ?>
         <?php echo $this->form()->openTag($form);?>
-        
+
         <?php foreach( $form->getMessages() as $message ) : ?>
-        
+
         <div><?=\Zend\Debug\Debug::dump($message,null,false);?></div>
         <?php endforeach; ?>
-        
-        <?php 
+
+        <?php
         /*
          * polygonGeoJson
          */
         echo $this->formRow( $form->get('polygonGeoJson') ) . "\n" ?>
-            
+
         <div class='row-fluid'>
-            
+
             <?=$this->partial('whathood/snippets/partial_whathood_click_notification.phtml');?>
-            
+
             <div id="map" class="map user_polygon_page_map"></div>
-            
+
         </div>
 
     <?php echo $this->form()->closeTag() . "\n"; ?>
-            
-    <?php
-        
-    /*
-     * COMMENTS
-     */
-    echo $this->neighborhoodPolygonDisqus($userPolygonId);
-    ?>
+
 <script>
-    
+
 $('document').ready( function() {
 	var Whathood = window.Whathood;
     var user_polygon_id = <?php echo $userPolygon->get('id')->getValue() ?>;
@@ -75,4 +68,4 @@ $('document').ready( function() {
 });
 
 </script>
-    
+

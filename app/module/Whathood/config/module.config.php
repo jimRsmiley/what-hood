@@ -425,8 +425,6 @@ return array(
             'showAddressSearchInLayout'         => 'Whathood\View\Helper\ShowAddressSearchInLayoutHelper',
             'whathoodResultSummary'             => 'Whathood\View\Helper\WhathoodResultSummaryHelper',
             'isNeighborhoodOwner'               => 'Whathood\View\Helper\IsNeighborhoodOwnerHelper',
-            'neighborhoodPolygonDisqus'         => 'Whathood\View\Helper\NeighborhoodPolygonDisqus',
-            'heatMapDisqus'         => 'Whathood\View\Helper\HeatMapDisqus'
         ),
 
         'factories' => array(
