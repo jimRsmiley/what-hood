@@ -68,7 +68,7 @@ $neighborhoodName = $userPolygon->get('neighborhood')->get('name')->getValue();
 $('document').ready( function() {
 	var Whathood = window.Whathood;
     var user_polygon_id = <?php echo $userPolygon->get('id')->getValue() ?>;
-    var geoJsonUrl = '/whathood/user-polygon/by-id/id/'+user_polygon_id+'/format/json';
+    var geoJsonUrl = '/whathood/user-polygon/by-id/'+user_polygon_id+'/format/json';
     map = new Whathood.UserPolygonMap('map');
     map.addGeoJson( geoJsonUrl );
     map.addStreetLayer();
