@@ -8,11 +8,20 @@ class WatcherController extends BaseController
 {
     public function watchAction() {
 
-        $GRID_RESOLUTION = 0.002;
+        $force = $this->getRequest()->getParam('force',false);
+        $forever   = $this->getRequest()->getParam('forever',false);
 
-        while(true) {
-            $user_polygons = $this->userPolygonMapper()
-                ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
+        $GRID_RESOLUTION = 0.0005;
+
+        do {
+
+            if ($force) {
+                $user_polygons = $this->userPolygonMapper()->fetchAll();
+            }
+            else {
+                $user_polygons = $this->userPolygonMapper()
+                    ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
+            }
 
             if (empty($user_polygons)) {
                 $this->logger()->info("no user polygons were found without neighborhood polygons associated");
@@ -49,8 +58,11 @@ class WatcherController extends BaseController
                     }
                 }
             }
-            sleep(5);
+
+            if ($forever)
+                sleep(5);
         }
+        while ($forever);
     }
 
     /**

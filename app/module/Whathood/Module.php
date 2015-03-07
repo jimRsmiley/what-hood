@@ -30,7 +30,7 @@ class Module implements ConsoleUsageProviderInterface
     public function getConsoleUsage(Console $console)
     {
         return array(
-            'watcher' => 'watch for changes in user polygons',
+            'watcher [--force]' => 'watch for changes in user polygons',
         );
     }
 
