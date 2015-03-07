@@ -123,7 +123,7 @@ return array(
             'user_polygon_id' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/whathood/user-polygon/by-id/id/:user_polygon_id[/format/:format]',
+                    'route'    => '/whathood/user-polygon/by-id/:user_polygon_id[/format/:format]',
                     'constraints' => array(
                         'region_name' => '[a-zA-Z][a-zA-Z0-9_-]+',
                         'user_polygon_id' => '[0-9]+'

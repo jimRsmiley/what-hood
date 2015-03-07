@@ -10,8 +10,6 @@ class Whathood.AddUserPolygonForm
         alert("you must draw a neighborhood to continue")
         return false
 
-    console.log map.getDrawnGeoJson()
-    return false
     hiddenJsonCssSelector = 'input[name=polygonGeoJson]'
     neighborhoodJson = $(hiddenJsonCssSelector).val()
     if( typeof neighborhoodJson == 'undefined' ) 
@@ -63,7 +61,7 @@ Whathood.Page.bind "/whathood/user-polygon/add", () ->
       success: (data) ->
         console.log "addition successful"
         console.log data
-        #window.location.href = "/whathood/user-polygon/id/#{data.id}"
+        window.location.href = "/whathood/user-polygon/id/#{data.user_polygon_id}"
       error: (xhr,textStatus,errorThrown) ->
         alert "there was an error saving neighborhood: #{textStatus}"
     return false
