@@ -23,21 +23,26 @@ use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 class NeighborhoodPolygonController extends BaseController
 {
     public function showRegionAction() {
-
-        $regionName = $this->getUriParameter('region_name');
         $format     = $this->getUriParameter('format');
-
-        $region = $this->regionMapper()->getRegionByName( $regionName );
-        $json = $this->neighborhoodPolygonMapper()
-                ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
+        $regionName = $this->getUriParameter('region_name');
 
         if( $format == 'json' ) {
-            $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
+            try {
+
+                $region = $this->regionMapper()->getRegionByName( $regionName );
+                $json = $this->neighborhoodPolygonMapper()
+                        ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
+
+                $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
+            }
+            catch(\Exception $e) {
+                $this->getResponse()->setStatusCode(400);
+                $response_data = array( 'msg' => 'an error occurred executing the request' );
+            }
             return new JsonModel( $array );
         }
         else {
             $viewModel = new ViewModel( array(
-                'json' => $json,
                 'region' => $region
             ));
 

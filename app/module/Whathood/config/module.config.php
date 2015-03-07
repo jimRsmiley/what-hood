@@ -309,6 +309,17 @@ return array(
                 return $logger;
             },
 
+            /*
+             * get the regular file logger and add the console writer
+             * to it
+             */
+            'Whathood\ConsoleLogger' => function($sm) {
+                $logger = $sm->get('Whathood\Logger');
+                $console_writer = new \Zend\Log\Writer\Stream('php://output');
+                $logger->addWriter($console_writer);
+                return $logger;
+            },
+
             'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Config');
                 $emailer = new \Whathood\Model\Email($config['whathood']['log']['email'] );

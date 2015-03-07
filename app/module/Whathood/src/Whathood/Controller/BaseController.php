@@ -170,9 +170,18 @@ class BaseController extends AbstractActionController {
         return $this->getServiceLocator()->get('Whathood\Logger');
     }
 
+    public function getConsoleLogger() {
+        return $this->getServiceLocator()->get('Whathood\ConsoleLogger');
+    }
+
     // sugar
     public function logger() {
-        return $this->getLogger();
+        if ( $this->getRequest() instanceof \Zend\Console\Request) {
+            return $this->getConsoleLogger();
+        }
+        else {
+            return $this->getLogger();
+        }
     }
 }
 
