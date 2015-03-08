@@ -9,7 +9,7 @@
 				);
 ?>
 
-<table>
+<table class="page-table">
   <tr>
     <th>Id</th>
 	<th>Neighborhood</th>
@@ -22,7 +22,7 @@
 			<td><?=$user_polygon->getId()?></td>
 			<td><?=$user_polygon->getNeighborhood()->getName()?></td>
 			<td><?=$user_polygon->getDateTimeAdded()?></td>
-			<td><a href="/whathood/user-polygon/view/id/<?=$user_polygon->getId()?>">view</a></td>
+			<td><a href="/whathood/user-polygon/by-id/<?=$user_polygon->getId()?>">view</a></td>
 			<td><a href="/whathood/user-polygon/delete/id/<?=$user_polygon->getId()?>">delete</a></td>
 		</tr>
 	<?php endforeach; ?>

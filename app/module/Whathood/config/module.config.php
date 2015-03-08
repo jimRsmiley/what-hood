@@ -103,7 +103,7 @@ return array(
                 )
             ),
 
-            'address_search' => array(
+            /**'address_search' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/a[/:region_name][/:address][/]',
@@ -113,7 +113,7 @@ return array(
                         'action'        => 'by-address',
                     ),
                 ),
-            ),
+            ),**/
 
 			/**
 			 *
@@ -136,7 +136,7 @@ return array(
                 ),
             ),
 
-            'user_polygon_add' => array(
+            /**'user_polygon_add' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/n/add[/]',
@@ -150,8 +150,14 @@ return array(
                         'action'        => 'add',
                     ),
                 ),
-            ),
+            ),*/
 
+            /**
+             * User Polygon lists page
+             *
+             * /whathood/user-polygon/page-list/page/:page
+             *
+             **/
             'user_polygon_page_list' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -162,13 +168,6 @@ return array(
                         'action'     => 'page-list',
                     ),
                 ),
-            ),
-
-            'user_polygon_page_list' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-list/page/:page',
-			    ),
             ),
 
             'user_polygon_page' => array(
@@ -182,27 +181,6 @@ return array(
                     ),
                 ),
 			),
-
-			/**
-			 *
-			 * Neighborhood
-			 *
-			 **/
-            'neighborhood_edit' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/n/edit[/]',
-                    'constraints' => array(
-                        'region_name' => '[a-zA-Z][a-zA-Z0-9_-]+',
-                        'neighborhood_id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'NeighborhoodPolygon',
-                        'action'        => 'edit',
-                    ),
-                ),
-            ),
 
             'region_default' => array(
                 'type'    => 'Segment',
@@ -245,6 +223,9 @@ return array(
                 ),
             ),
 
+            /*
+             *  /admin
+             */
             'admin' => array(
                 'type'    => 'Segment',
                 'options' => array(

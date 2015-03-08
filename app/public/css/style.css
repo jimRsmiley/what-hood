@@ -200,3 +200,8 @@ div#vote_section {
 .create_event {
     padding: 20px 0;
 }
+
+.page-table {
+    margin: 0 auto;
+    margin-top: 30px;
+}
