@@ -30,7 +30,11 @@ class Module implements ConsoleUsageProviderInterface
     public function getConsoleUsage(Console $console)
     {
         return array(
-            'watcher [--force]' => 'watch for changes in user polygons',
+            'Build new neighborhood polygons',
+            'watcher [--force] [--neighborhood=] [--region=]' => 'watch for changes in user polygons',
+            array('--force','force a rebuild of whole system'),
+            array('--neighbrohood=','specify the neighborhood name to use'),
+            array('--region=','specify the region to use')
         );
     }
 

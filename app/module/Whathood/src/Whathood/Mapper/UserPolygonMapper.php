@@ -50,16 +50,16 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function getByNeighborhoodByName( $neighborhoodName, $regionName ) {
-        $qb = $this->getQueryBuilder();
-        $qb->setNeighborhoodName($neighborhoodName)->setRegionName($regionName);
-        return $qb->getQuery()->getResult();
-    }
-
     public function getByNeighborhood( $neighborhoodName, $regionName ) {
-        $qb = $this->getQueryBuilder();
-        $qb->setNeighborhoodName($neighborhoodName)->setRegionName($regionName);
-        return $qb->getQuery()->getResult();
+        $dql = "SELECT up FROM Whathood\Entity\UserPolygon up
+            JOIN up.neighborhood n
+            JOIN n.region r
+            WHERE n.name = :neighborhood
+            AND r.name = :region";
+        $query = $this->em->createQuery($dql)
+            ->setParameter(':neighborhood',$neighborhoodName)
+            ->setParameter(':region',$regionName);
+        return $query->getResult();
     }
 
     public function getByXY($x,$y ) {
