@@ -80,6 +80,11 @@ class NeighborhoodMapper extends BaseMapper {
 
    public function getNeighborhoodByName( $neighborhoodName, $regionName ) {
 
+       if (empty($neighborhoodName))
+           throw new \InvalidArgumentException("neighborhoodName may not be empty");
+       if (empty($regionName))
+           throw new \InvalidArgumentException("regionName may not be empty");
+
         $dql = "SELECT "
                 . " FROM Whathood\Entity\Neighborhood n"
                 . " JOIN n.region r"
