@@ -6,7 +6,7 @@
 --
 
 -- drop the function if it exists
-DROP FUNCTION IF EXISTS whathood.gather_test_point_counts(test_points point[],neighborhood_id integer);
+DROP FUNCTION IF EXISTS whathood.gather_test_point_counts(test_points geometry[],neighborhood_id integer);
 
 --
 -- function definition

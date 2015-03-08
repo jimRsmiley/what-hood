@@ -20,19 +20,13 @@ def import_files(dir_str,db_name)
     end
 end
 
+puts "dropping all functions"
+drop_sql=`./bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
+`sudo -u postgres psql --tuples-only --quiet -c "$drop_sql"`
+
 
 import_files("#{script_dir}/whathood.function.*.sql",db_name)
 import_files("#{script_dir}/whathood.view.*.sql",db_name)
 
 puts "done"
-#function run_sql_script {
-#  echo 'running script ' $@
-#  DBNAME=whathood
-#  sudo -u postgres psql --tuples-only --quiet $DBNAME -f "$@"
-#}
-
-#export -f run_sql_script
-
-#find $SCRIPT_DIR -name 'whathood.view.*' -exec bash -c 'run_sql_script "$0"' {} \;
-#find $SCRIPT_DIR -name 'whathood.function.*' -exec bash -c 'run_sql_script "$0"' {} \;
 

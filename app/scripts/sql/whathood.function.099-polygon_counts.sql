@@ -75,11 +75,16 @@ BEGIN
   SELECT whathood.get_dominant_neighborhood(_test_point)
   INTO _dominant_neighborhood_id;
 
+  IF _total_user_polygons = 0 THEN
+    _ret_val.strength_of_identity := 0;
+  ELSE
+    _ret_val.strength_of_identity := cast(_num_in_neighborhood as double precision)/cast(_total_user_polygons as double precision);
+  END IF;
+
   _ret_val.point_as_text        := _point_as_text;
   _ret_val.point                := _test_point;
   _ret_val.num_in_neighborhood  := _num_in_neighborhood;
   _ret_val.total_user_polygons  := _total_user_polygons;
-  _ret_val.strength_of_identity := cast(_num_in_neighborhood as double precision)/cast(_total_user_polygons as double precision);
   _ret_val.neighborhood_names   := array_to_string(_neighborhood_name_arr,';');
   _ret_val.dominant_neighborhood_id := _dominant_neighborhood_id;
 
