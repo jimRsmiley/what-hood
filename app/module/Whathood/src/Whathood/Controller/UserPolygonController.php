@@ -81,12 +81,15 @@ class UserPolygonController extends BaseController
         $center  = $this->getUriParameter('center');
         $pageNum = $this->getUriParameter('page');
 
+        if (empty($center))
+            throw new \InvalidArgumentException("must specify center");
+
         list($lat,$lng) = explode(',',$center);
 
 		$query = $this->userPolygonMapper()->getPaginationQuery(
 			array(
-				$x => $lng,
-				$y => $lat
+				'x' => $lng,
+				'y' => $lat
 			)
 		);
 

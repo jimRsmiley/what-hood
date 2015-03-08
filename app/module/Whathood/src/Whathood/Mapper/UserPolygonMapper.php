@@ -233,7 +233,6 @@ class UserPolygonMapper extends BaseMapper {
             ->orderBy('up.id','ASC');
 
 		if( isset($opts['x']) && isset($opts['y']) ) {
-			die('in here though');
             $qb->where('ST_Within(ST_SetSRID(ST_POINT(:x, :y),4326), up.polygon ) = true')
 				->setParameter( 'x', $opts['x'] )
 				->setParameter('y', $opts['y'] );
