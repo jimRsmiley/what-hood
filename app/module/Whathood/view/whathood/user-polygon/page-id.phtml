@@ -8,6 +8,6 @@
                 );
 ?>
 
-<?php foreach( $this->paginator as $item ) : ?>
-    <input data-user_polygon_id="<?=$user_polygon->getId()?>">
+<?php foreach( $this->paginator as $user_polygon ) : ?>
+    <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>">
 <?php endforeach; ?>

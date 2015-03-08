@@ -283,7 +283,7 @@ class UserPolygon extends \ArrayObject {
             }
 
             if( $this->getWhathoodUser() != null ) {
-                $array['user'] = $this->getWhathoodUser()->toArray();
+                #               $array['user'] = $this->getWhathoodUser()->toArray();
             }
         }
         return $array;

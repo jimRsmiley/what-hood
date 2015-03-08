@@ -112,7 +112,7 @@ class UserPolygonController extends BaseController
             'paginator' => $paginator,
             'center' => $center
         ));
-        $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
+        $viewModel->setTemplate('/whathood/user-polygon/page-id.phtml');
         return $viewModel;
     }
 
