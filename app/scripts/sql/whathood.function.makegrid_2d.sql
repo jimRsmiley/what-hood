@@ -52,10 +52,10 @@ BEGIN
       point := ST_SetSRID(ST_Point(X,Y), 4326);
 
       -- we only want points that are inside the bound_polygon
-      IF( SELECT ST_Contains( bound_polygon,point) = true ) THEN
+      --IF( SELECT ST_Contains( bound_polygon,point) = true ) THEN
         points := array_append(points,point);
         count := count + 1;
-      END IF;
+      --END IF;
       X := X + grid_step;
     END LOOP xloop;
     Y := Y + grid_step;
