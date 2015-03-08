@@ -10,7 +10,7 @@ class WatcherController extends BaseController
     #protected $_grid_resolution = 0.001;
 
     # Fishtown from 504 seconds to 115
-    protected $_grid_resolution = 0.0005;
+    protected $_grid_resolution = 0.001;
 
     public function watchAction() {
 
