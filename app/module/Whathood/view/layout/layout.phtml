@@ -2,24 +2,22 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?php 
-        
+        <?php
+
         /**
          * Title
         *************************************************/
-        
-        $this->headTitle()->setSeparator(' / ');
-        if( !$this->isProductionEnvironment() ) 
-            $this->headTitle()->prepend("[DEVELOPMENT]"); 
-        
-        echo $this->headTitle("What Hood Is This?"); ?>
 
-        <?php 
+        $this->headTitle()->setSeparator(' / ');
+
+        echo $this->headTitle('What hood is this?'); ?>
+
+        <?php
         /**
          * ViewPort Meta
          */
         echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0') . "\n"; ?>
-        
+
 <script type="text/javascript">
     if (window.location.hash == '#_=_'){
         window.location.hash = '';
@@ -27,27 +25,27 @@
 </script>
 
     <?php echo $this->partial( 'layout/header-includes.phtml' ); ?>
-    
+
     </head>
     <body>
-        
+
     <?php echo $this->partial( 'layout/navbar.phtml' ); ?>
-        
+
     <?php if( true && !$this->isProductionEnvironment() ) :?>
         <div style='height: 30px; position:absolute; top: 0; left: 0; z-index:1031;background:red; color: white; text-align: center; vertical-align: middle'>
             <p style='vertical-align: middle'>DEVELOPMENT</p>
         </div>
     <?php endif; ?>
-    
+
         <!-- Body
         ================================================== -->
         <div class="container main-container">
             <?php echo $this->content; ?>
-        </div><!-- main-container -->   
-            
+        </div><!-- main-container -->
+
         <?php echo $this->inlineScript() ?>
 
         <?php if ($this->isProductionEnvironment()) echo $this->partial('layout/partial-google-analytics.phtml') ;?>
-            
+
     </body>
 </html>

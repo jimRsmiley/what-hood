@@ -1,4 +1,8 @@
-<?php echo $this->paginationControl(
+<?php
+
+$this->headTitle()->prepend("User Polygons List");
+
+echo $this->paginationControl(
 					$this->paginator,
 					'Sliding',
 					'whathood/user-polygon/user_polygon_pagination_control.phtml', 
