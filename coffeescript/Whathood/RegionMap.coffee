@@ -125,7 +125,7 @@ Whathood.RegionMap = Whathood.Map.extend
         ).openPopup()
 
   getNeighborhoodBrowseUrl: (lat,lng) ->
-    return '/whathood/user-polygon/page/1/center/'+lat+','+lng
+    "/whathood/user-polygon/page-center/page/1/x/#{lat}/y/#{lng}"
 
   #
   #/*

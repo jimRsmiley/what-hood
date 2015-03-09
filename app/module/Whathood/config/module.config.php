@@ -136,22 +136,6 @@ return array(
                 ),
             ),
 
-            /**'user_polygon_add' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/n/add[/]',
-                    'constraints' => array(
-                        'region_name' => '[a-zA-Z][a-zA-Z0-9_-]+',
-                        'neighborhood_id' => '[0-9]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'UserPolygon',
-                        'action'        => 'add',
-                    ),
-                ),
-            ),*/
-
             /**
              * User Polygon lists page
              *
@@ -170,10 +154,10 @@ return array(
                 ),
             ),
 
-            'user_polygon_page' => array(
+            'user_polygon_page_center' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/whathood/user-polygon/page-center/page/:page/center/:center',
+                    'route'    => '/whathood/user-polygon/page-center/page/:page/x/:x/y/:y',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller' => 'Whathood\Controller\UserPolygon',
@@ -182,7 +166,7 @@ return array(
                 ),
 			),
 
-            'region_default' => array(
+            'region' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/r/:action',

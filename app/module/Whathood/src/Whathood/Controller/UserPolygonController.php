@@ -21,56 +21,6 @@ use Whathood\Collection;
  */
 class UserPolygonController extends BaseController
 {
-    /**
-     * we want to page through the neighborhoods
-     * @return \Zend\View\Model\ViewModel
-     * @throws \InvalidArgumentException
-     */
-    /*public function pageAction() {
-
-        $center  = $this->getUriParameter('center');
-        $pageNum = $this->getUriParameter('page');
-		$neighborhood_id = $this->getUriParameter('neighborhood_id');
-
-		$y = null; $x = null;
-
-		$uriParams = array();
-		if (!empty($center)) {
-			list($y,$x) = explode(',',$center);
-			$uriParams['center'] = $center;
-		}
-
-		if (!empty($neighborhood_id)) {
-			$uriParams['neighborhood_id'] = $neighborhood_id;
-		}
-
-		$query = $this->userPolygonMapper()->getPaginationQuery(
-			array(
-				'x' => $x,
-				'y' => $y,
-				'neighborhood_id' => $neighborhood_id
-			)
-		);
-
-        if( empty($pageNum) )
-            $pageNum = 1;
-
-        $paginator = new \Whathood\Model\UserPolygonPaginator(
-                        new \Whathood\Model\UserPolygonPaginatorAdapter($query)
-                );
-        $paginator->setDefaultItemCountPerPage(1);
-		$paginator->setBaseUrl('/whathood/user-polygon');
-        $paginator->setCurrentPageNumber($pageNum);
-        $paginator->setUriParams($uriParams);
-
-        $viewModel = $this->getViewModel( array(
-            'paginator' => $paginator,
-            'center' => $center
-        ));
-        $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
-        return $viewModel;
-    }*/
-
 	/**
      * we want to page through the user polygons based on a center point
      *
@@ -81,23 +31,24 @@ class UserPolygonController extends BaseController
         $base_url = '/whathood/user-polygon/page-center';
         $item_count_per_page = 1;
 
-        $center  = $this->getUriParameter('center');
+        $x  = $this->getUriParameter('x');
+        $y  = $this->getUriParameter('y');
         $pageNum = $this->getUriParameter('page');
 
-        if (empty($center))
-            throw new \InvalidArgumentException("must specify center");
+        if (empty($x) or empty($y))
+            throw new \InvalidArgumentException("must specify x and y");
 
-        list($lat,$lng) = explode(',',$center);
 
 		$query = $this->userPolygonMapper()->getPaginationQuery(
 			array(
-				'x' => $lng,
-				'y' => $lat
+				'x' => $x,
+				'y' => $y
 			)
 		);
 
         $uriParams = array(
-            'center' => $center
+            'x' => $x,
+            'y' => $y
         );
 
         if( empty($pageNum) )
@@ -111,10 +62,7 @@ class UserPolygonController extends BaseController
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
 
-        $viewModel = $this->getViewModel( array(
-            'paginator' => $paginator,
-            'center' => $center
-        ));
+        $viewModel = $this->getViewModel( array('paginator' => $paginator));
         $viewModel->setTemplate('/whathood/user-polygon/page-id.phtml');
         return $viewModel;
     }
