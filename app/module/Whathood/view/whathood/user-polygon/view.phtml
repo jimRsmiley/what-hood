@@ -1,71 +1,10 @@
-<?php
-$styles = '
-#no-match-neighborhood {
-    color: red;
-    height: 25px;
-    vertical-align: center
-}
-';
-$this->headStyle()->appendStyle( $styles );
-
-// from ViewModel
-$form                   = $this->form;
-$currentWhathoodUser    = $this->currentWhathoodUser;
-$centerStr              = $this->center;
-$saveMessage            = $this->saveMessage;
-
-$form->setAttribute('action', $this->serverUrl(true) );
-$form->setAttribute('class','form-horizontal');
-
-$userPolygon    = $form->get('neighborhoodPolygon');
-$userPolygonId = $userPolygon->get('id')->getValue();
-$userPolygon->get('neighborhood')->get('name')->setAttribute('readonly', 'true');
-$userPolygon->get('neighborhood')->get('region')->get('name')->setAttribute('readonly', 'true');
-$form->prepare();
-
-$partialElementPath = 'whathood/neighborhood/partial_neighborhood_form_element.phtml';
-
-$regionName = $userPolygon->get('neighborhood')->get('region')->get('name')->getValue();
-$neighborhoodName = $userPolygon->get('neighborhood')->get('name')->getValue();
-?>
-
-<?php if( !empty($saveMessage) ) : ?>
-    <p class="centertext" style="font-size: 1.1em"><b><?=$saveMessage?></b></p>
-<?php endif; ?>
-    <?php echo "user_polygon_id " . $userPolygonId; ?>
-        <?php echo $this->form()->openTag($form);?>
-
-        <?php foreach( $form->getMessages() as $message ) : ?>
-
-        <div><?=\Zend\Debug\Debug::dump($message,null,false);?></div>
-        <?php endforeach; ?>
-
-        <?php
-        /*
-         * polygonGeoJson
-         */
-        echo $this->formRow( $form->get('polygonGeoJson') ) . "\n" ?>
-
-        <div class='row-fluid'>
-
-            <?=$this->partial('whathood/snippets/partial_whathood_click_notification.phtml');?>
-
-            <div id="map" class="map user_polygon_page_map"></div>
-
-        </div>
-
-    <?php echo $this->form()->closeTag() . "\n"; ?>
+<div id="map" class="map"></div>
+<div style="hidden" id='user_polygon' data-id="<?=$this->user_polygon_id?>">
 
 <script>
-
 $('document').ready( function() {
-	var Whathood = window.Whathood;
-    var user_polygon_id = <?php echo $userPolygon->get('id')->getValue() ?>;
-    var geoJsonUrl = '/whathood/user-polygon/by-id/'+user_polygon_id+'/format/json';
-    map = new Whathood.UserPolygonMap('map');
-    map.addGeoJson( geoJsonUrl );
-    map.addStreetLayer();
-});
+    Whathood.user_polygon_view();
 
+});
 </script>
 

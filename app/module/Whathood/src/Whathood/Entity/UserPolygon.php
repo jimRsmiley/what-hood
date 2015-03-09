@@ -2,7 +2,6 @@
 
 namespace Whathood\Entity;
 
-// need this even though Netbeans says you don't
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodHydrator;
 use Zend\Config\Config;
@@ -274,6 +273,7 @@ class UserPolygon extends \ArrayObject {
             unset( $array['flags']);
             unset( $array['array_copy']);
             unset( $array['polygon']);
+            unset( $array['whathood_user'] );
 
             // for geojson, we want to merge the polygon
             $array = array_merge( $array, $this->polygonToGeoJsonArray( $this->polygon ) );
@@ -283,7 +283,7 @@ class UserPolygon extends \ArrayObject {
             }
 
             if( $this->getWhathoodUser() != null ) {
-                #               $array['user'] = $this->getWhathoodUser()->toArray();
+                $array['user'] = $this->getWhathoodUser()->toArray();
             }
         }
         return $array;

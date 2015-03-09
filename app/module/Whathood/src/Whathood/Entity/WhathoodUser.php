@@ -31,7 +31,7 @@ class WhathoodUser extends \ArrayObject {
     protected $ip_address = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserPolygon",
+     * @ORM\OneToMany(targetEntity="Whathood\Entity\UserPolygon",
      *                              mappedBy="whathood_user",cascade="persist")
      */
     protected $user_polygons;

@@ -232,38 +232,11 @@ class UserPolygonController extends BaseController
         if( empty($id) ) {
             throw new \InvalidArgumentException('id may not be empty');
         }
-
-        try {
-            $userPolygon = $this->userPolygonMapper()->byId($id);
-        } catch( \Doctrine\ORM\NoResultException $e ) {
-            $viewModel = new ViewModel( array(
-                'message'   => 'No Neighborhood exists with id ' . $id
-            ));
-            $viewModel->setTemplate('whathood/neighborhood/error_no_neighborhood.phtml');
-            return $viewModel;
-        }
-
-        /*
-         * return JSON format
-         */
-        if( $format === 'json' ) {
-            return new JsonModel( $userPolygon->toArray() );
-        }
-
-        /*
-         * return HTML
-         */
-        else {
-            $form = new \Whathood\Form\UserPolygonForm($noedit = true);
-            $form->bind($userPolygon);
-            $viewModel = $this->getViewModel( array(
-                        'form' => $form,
-                        'editable'  => false
-                    ));
-            $viewModel->setTemplate(
-                    '/whathood/user-polygon/view.phtml');
-            return $viewModel;
-        }
+        $viewModel = $this->getViewModel( array(
+                'user_polygon_id' => $id ));
+        $viewModel->setTemplate(
+                '/whathood/user-polygon/view.phtml');
+        return $viewModel;
     }
 
     public function byUserNameAction() {
