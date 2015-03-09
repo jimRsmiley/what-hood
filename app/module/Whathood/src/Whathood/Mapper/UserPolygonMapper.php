@@ -10,6 +10,7 @@ use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\WhathoodUser;
 use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
+use Whathood\Model\Whathood\WhathoodResult;
 /**
  * Description of NeighborhoodPolygonMapper
  *
@@ -252,6 +253,14 @@ class UserPolygonMapper extends BaseMapper {
 
     protected function getEntityName() {
         return 'Whathood\Entity\UserPolygon';
+    }
+
+    public function getWhathoodResult($x,$y) {
+        $neighborhoods = $this->getByXY($x,$y);
+        $whathoodResult = new WhathoodResult();
+        $whathoodResult->setLatLng($x,$y);
+        $whathoodResult->setNeighborhoods($neighborhoods);
+        return $whathoodResult;
     }
 }
 ?>

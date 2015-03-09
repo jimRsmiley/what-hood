@@ -8,4 +8,5 @@ A simple task tracking file so I can keep track of what I'm working on.
 * jim.r.smiley@gmail.com should be entered when starting up
 * export the current test database to the github db backup, be able to import it to a new vagrant setup
 * ~~whathood-user-polygon-page list page 2 doesn't work~~
+* in the bubble on the marker popup, add browse "neighborhood borders" link
 * re-set up a 'whathood' click'

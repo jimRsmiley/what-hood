@@ -2,27 +2,9 @@ window = exports ? this
 Whathood = window.Whathood
 
 Whathood.RegionMap = Whathood.Map.extend
-  _markerCluster : null,
+
   _neighborhood_color: '5487b8'
-  addContentiousPoints : (createEventId, callback ) =>
-    self = this
-    url = '/whathood/contentious-point/by-create-event-id?format=heatmapJsData&create_event_id='+createEventId
-    $.ajax
-      url: url,
-      success: (pointData) ->
-        self._markerCluster = new L.MarkerClusterGroup()
-        count = 0
-        pointData.forEach ( point, index, array ) ->
-          if( ( index % 10 ) == 0 )
-            self._markerCluster.addLayer( new L.Marker([point.lat, point.lon] ) )
-            count++
-
-            self.addLayer(self._markerCluster )
-
-            if( ( typeof callback ) != 'undefined' )
-              callback()
-            error: () ->
-              alert('unable to retreive contentious points')
+  locationMarker: null
 
   addGeoJson: ( url, callback ) ->
     self = this
@@ -73,12 +55,12 @@ Whathood.RegionMap = Whathood.Map.extend
             resetHighlight = (e) ->
                 self.geojsonLayer.resetStyle(e.target)
 
-            onEachFeature = (feature,layer) ->
-                layer.on({
-                    mouseover: highlightFeature,
-                    click: updateInfo,
-                    mouseout: resetHighlight
-                })
+            onEachFeature = (feature,layer) =>
+                layer.on
+                  mouseover: highlightFeature
+                  click: (e) =>
+                    @mapClickEventHandler e
+                  mouseout: resetHighlight
 
             self.geojsonLayer = new L.geoJson(geojson, {
                 style: style,
@@ -91,63 +73,66 @@ Whathood.RegionMap = Whathood.Map.extend
             if( ( typeof callback ) != 'undefined' )
                 callback()
         failure: () ->
-            console.log( "WH.init(): something went wrong loading json source" )
+            throw new Error "WH.init(): something went wrong loading json source"
     .done () ->
       self.spin(false)
 
+  getPopup: (whathood_result,regionName) ->
 
-    #/*
-    #* add the ability to click on the map, and have a whathood popup telling what
-    #* neighborhoods it matches
-    #*/
-    whathoodClick : ( bool ) ->
+    neighborhoods = whathood_result.response.consensus.neighborhoods
+    requestLat = whathood_result.request.lat
+    requestLng = whathood_result.request.lng
 
-        if( bool != true )
-            return
+    html = ''
+    unless neighborhoods.length
+      html = 'no neighborhoods found for this point'
 
-        self = this
-        self.locationMarker = null
+    else
+      console.log neighborhoods
+      for n in neighborhoods
+        name  = n.name
+        votes = n.votes
+        html += votes + ' ' + "vote".pluralize(votes) + ' for ' + name + '<br/>'
 
-        getNeighborhoodBrowseUrl = (lat,lng) ->
-            return '/n/page/1/center/'+lat+','+lng
+        console.log @
+        url = @getNeighborhoodBrowseUrl requestLat, requestLng
 
-        getPopup = (json,regionName) ->
+        if( typeof regionName != 'undefined' )
+            url += '&region_name='+regionName
+        html += '<a href="'+url+'">Browse these neighborhoods</a>'
+    return html
 
-            neighborhoods = json.whathood_result.response.consensus.neighborhoods
-            requestLat = json.whathood_result.request.lat
-            requestLng = json.whathood_result.request.lng
+  mapClickEventHandler: (e) ->
+    lat = e.latlng.lat
+    lng = e.latlng.lng
 
-            html = ''
-            for n in neighborhoods
-              name = neighborhoods[n].name
-              votes = neighborhoods[n].votes
-              html += votes + ' ' + "vote".pluralize(votes) + ' for ' + name + '<br/>'
+    if( @locationMarker != null )
+      @removeLayer @locationMarker
 
-            url = getNeighborhoodBrowseUrl requestLat, requestLng
+    @locationMarker = L.marker([lat, lng])
+      .addTo @
+    @locationMarker.bindPopup('<div id="map_popup" style="overflow:auto; width: 40px; height: 40px"><img src="/images/spiffygif_30x30.gif" alt="loading..."/></div>')
+      .openPopup()
 
-            if( typeof regionName != 'undefined' )
-                url += '&region_name='+regionName
-            html += '<a href="'+url+'">Browse these neighborhoods</a>'
-            return html
+    searchUrl = Whathood.Util.whathood_url lng,lat
+    __self = @
+    $.ajax
+      url: searchUrl,
+      context: document.body,
+      success: (data) ->
+        __self.locationMarker.bindPopup(
+          __self.getPopup(data,__self.regionName)
+        ).openPopup()
 
-        mapClickEventHandler = (e) ->
-            lat = e.latlng.lat
-            lng = e.latlng.lng
+  getNeighborhoodBrowseUrl: (lat,lng) ->
+    return '/whathood/user-polygon/page/1/center/'+lat+','+lng
 
-            if( self.locationMarker != null )
-                self.removeLayer(self.locationMarker)
-            self.locationMarker = L.marker([lat, lng])
-                    .addTo(self)
-            self.locationMarker.bindPopup('<div id="map_popup" style="overflow:auto; width: 40px; height: 40px"><img src="/images/spiffygif_30x30.gif" alt="loading..."/></div>')
-                    .openPopup()
-
-            searchUrl = "/whathood-search?"+'lat='+lat+'&lng='+lng+'&format=json'
-            $.ajax
-                url: searchUrl,
-                context: document.body,
-                success: (data) ->
-                    self.locationMarker.bindPopup(
-                        getPopup(data,self.regionName)
-                    ).openPopup()
-
-        self.on('click', mapClickEventHandler )
+  #
+  #/*
+  #* add the ability to click on the map, and have a whathood popup telling what
+  #* neighborhoods it matches
+  #*/
+  whathoodClick: ( bool ) ->
+    if( bool != true )
+      return
+    @on 'click', @mapClickEventHandler

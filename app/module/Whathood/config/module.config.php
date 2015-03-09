@@ -253,13 +253,27 @@ return array(
                 ),
             ),
 
-            /** REST API ROUTES **/
+            /**
+             *
+             * REST APIs
+             *
+             **/
             'rest-user-polygon' => array(
                 'type' => 'Segment',
                 'options' => array(
                     'route' => '/api/v1/user-polygon[/:id]',
                     'defaults' => array(
                         'controller' => 'Whathood\Controller\UserPolygonRestful'
+                    )
+                )
+            ),
+
+            'rest-whathood' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/v1/whathood[/x/:x][/y/:y]',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\WhathoodRestful'
                     )
                 )
             ),
@@ -392,13 +406,15 @@ return array(
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
             'Whathood\Controller\NeighborhoodPolygon' => 'Whathood\Controller\NeighborhoodPolygonController',
             'Whathood\Controller\Region' => 'Whathood\Controller\RegionController',
-            'Whathood\Controller\RegionRestful' => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodUser' => 'Whathood\Controller\WhathoodUserController',
             'Whathood\Controller\HeatMap' => 'Whathood\Controller\HeatMapController',
             'Whathood\Controller\Search' => 'Whathood\Controller\SearchController',
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
-            'Whathood\Controller\UserPolygonRestful' => 'Whathood\Controller\UserPolygonRestfulController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
+
+            'Whathood\Controller\UserPolygonRestful' => 'Whathood\Controller\UserPolygonRestfulController',
+            'Whathood\Controller\RegionRestful'      => 'Whathood\Controller\RegionRestController',
+            'Whathood\Controller\WhathoodRestful'    => 'Whathood\Controller\WhathoodRestfulController',
         ),
     ),
 

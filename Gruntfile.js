@@ -6,6 +6,8 @@ module.exports = function(grunt) {
                   'app/public/js/whathood/whathood-compiled.js': [
                     // always first
                     'coffeescript/whathood.coffee',
+                    // classes
+                    'coffeescript/Whathood/Util.coffee',
                     'coffeescript/Whathood/Page.coffee',
                     'coffeescript/Whathood/LeafletControl.coffee',
                     'coffeescript/Whathood/Search.coffee',

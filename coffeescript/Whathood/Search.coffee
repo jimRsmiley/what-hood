@@ -3,11 +3,11 @@ Whathood = window.Whathood
 
 class Whathood.Search
   @by_coordinates: (x,y,callback) ->
-    url = "/whathood/search/by-position?x=#{x}&y=#{y}"
+    url = "/api/v1/whathood/x/#{x}/y/#{y}"
     console.log url
     $.ajax
       url: url
       success: (data) ->
         callback data
       error: (err) ->
-        alert "lookup failed"
+        throw new Error "lookup failed with url #{url}"
