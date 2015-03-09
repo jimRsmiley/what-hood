@@ -3,7 +3,21 @@ Whathood = root.Whathood
 
 Whathood.UserPolygonMap = Whathood.Map.extend
 
-  addGeoJson: (url) ->
+  _add_geojson: (geojson) ->
+    console.log "geojson: ",geojson
+    @geojsonLayer = new L.geoJson(geojson)
+
+    console.log @
+    @geojsonLayer.addTo(@)
+    @fitBounds(@geojsonLayer)
+
+  addGeoJson: (args) ->
+
+    if args.geojson
+      @_add_geojson args.geojson
+      return
+
+    url = args
     self = this
     $.ajax
       url: url,

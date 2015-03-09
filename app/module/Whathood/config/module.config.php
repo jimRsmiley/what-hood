@@ -173,11 +173,11 @@ return array(
             'user_polygon_page' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/whathood/user-polygon/page/:page[/center/:center][/neighborhood_id/:neighborhood_id]',
+                    'route'    => '/whathood/user-polygon/page-center/page/:page/center/:center',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-list',
+                        'action'     => 'page-center',
                     ),
                 ),
 			),
@@ -238,6 +238,20 @@ return array(
                 ),
             ),
 
+            /*
+             *  /sitemap
+             */
+            'admin' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/sitemap',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Index',
+                        'action'        => 'navigation',
+                    ),
+                ),
+            ),
 
             /** REST API ROUTES **/
             'rest-user-polygon' => array(

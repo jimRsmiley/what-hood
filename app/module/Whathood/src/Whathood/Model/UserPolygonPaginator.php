@@ -7,7 +7,7 @@ namespace Whathood\Model;
  */
 class UserPolygonPaginator extends \Zend\Paginator\Paginator {
 
-	protected $_base_url;	
+	protected $_base_url;
     protected $uriParams;
 
 	public function getBaseUrl() {
@@ -26,21 +26,21 @@ class UserPolygonPaginator extends \Zend\Paginator\Paginator {
         $this->uriParams['page'] = $pageNum;
         return $this->getPageUrl();
     }
-    
+
     public function getPageUrl() {
         $url = $this->getBaseUrl();
-        
+
         $params = $this->uriParams;
         if( isset( $params['page'] ) )
             $url .= '/page/'.$this->uriParams['page'];
         else
             $url .= '/page/1';
-        
+
         unset( $params['page'] );
-        
+
         foreach( $params as $key => $value )
             $url .= '/'.$key.'/'.$value;
-        
+
         return $url;
     }
 }

@@ -9,14 +9,14 @@ use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 use Whathood\Entity\UserPolygon;
 
 class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProviderInterface {
-    
+
     public function __construct()
     {
         parent::__construct('neighborhoodPolygon');
-        
+
         $this->setObject( new UserPolygon() );
         $this->setHydrator(new ClassMethodsHydrator(false));
-        
+
         $this->add(array(
             'name' => 'id',
             'id'       => 'neighborhood_id',
@@ -39,7 +39,7 @@ class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProvide
                 'use_as_base_fieldset' => false
             )
         ));
-        
+
         $this->add(array(
             'name' => 'whathoodUser',
             'type' => 'Whathood\Form\WhathoodUserFieldset',
@@ -52,7 +52,7 @@ class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProvide
         ));
 
     }
-    
+
     public function getInputFilterSpecification()
     {
         return array(

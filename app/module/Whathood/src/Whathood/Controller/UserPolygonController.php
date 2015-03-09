@@ -26,7 +26,7 @@ class UserPolygonController extends BaseController
      * @return \Zend\View\Model\ViewModel
      * @throws \InvalidArgumentException
      */
-    public function pageAction() {
+    /*public function pageAction() {
 
         $center  = $this->getUriParameter('center');
         $pageNum = $this->getUriParameter('page');
@@ -69,14 +69,17 @@ class UserPolygonController extends BaseController
         ));
         $viewModel->setTemplate('/whathood/user-polygon/user_polygon_page.phtml');
         return $viewModel;
-    }
+    }*/
 
 	/**
-     * we want to page through the neighborhoods
+     * we want to page through the user polygons based on a center point
+     *
      * @return \Zend\View\Model\ViewModel
      * @throws \InvalidArgumentException
      */
     public function pageCenterAction() {
+        $base_url = '/whathood/user-polygon/page-center';
+        $item_count_per_page = 1;
 
         $center  = $this->getUriParameter('center');
         $pageNum = $this->getUriParameter('page');
@@ -103,8 +106,8 @@ class UserPolygonController extends BaseController
         $paginator = new \Whathood\Model\UserPolygonPaginator(
                         new \Whathood\Model\UserPolygonPaginatorAdapter($query)
                 );
-        $paginator->setDefaultItemCountPerPage(1);
-		$paginator->setBaseUrl('/n');
+        $paginator->setDefaultItemCountPerPage($item_count_per_page);
+		$paginator->setBaseUrl($base_url);
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
 
@@ -117,7 +120,8 @@ class UserPolygonController extends BaseController
     }
 
     /**
-     * we want to page through the neighborhoods
+     * we want to page through all user polygons 10 at a time
+     *
      * @return \Zend\View\Model\ViewModel
      * @throws \InvalidArgumentException
      */
@@ -250,7 +254,7 @@ class UserPolygonController extends BaseController
          * return HTML
          */
         else {
-            $form = new \Whathood\Form\NeighborhoodPolygonForm($noedit = true);
+            $form = new \Whathood\Form\UserPolygonForm($noedit = true);
             $form->bind($userPolygon);
             $viewModel = $this->getViewModel( array(
                         'form' => $form,

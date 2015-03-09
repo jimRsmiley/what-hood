@@ -28,7 +28,8 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       return str
 })
 
-Whathood.Page.bind "/", () ->
+# on '/'
+Whathood.root_load = () ->
 
   get_region_name = () ->
     page_info = document.querySelector('#page-info')
@@ -41,6 +42,7 @@ Whathood.Page.bind "/", () ->
 
   # create a new region map
   map = new Whathood.RegionMap('map')
+  console.log map
   map.addStreetLayer()
   region_name = get_region_name()
   create_event = get_create_event()

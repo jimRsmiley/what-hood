@@ -1,4 +1,9 @@
-<?php echo $this->paginationControl($this->paginator,
+<?php
+
+$this->headTitle()->prepend("User Polygon");
+
+
+echo $this->paginationControl($this->paginator,
                                     'Sliding',
                                     'whathood/user-polygon/user_polygon_pagination_control.phtml',
                                     array(
@@ -9,5 +14,16 @@
 ?>
 
 <?php foreach( $this->paginator as $user_polygon ) : ?>
-    <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>">
+    <div class="row">
+        <input name="neighborhood_name">
+        <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>">
+    </div>
+
+    <div class="row">
+        <div id="map" class="map user_polygon_page_map"></div>
+    </div>
 <?php endforeach; ?>
+
+<script>
+    Whathood.load_user_polygon_page_center()
+</script>

@@ -9,9 +9,9 @@ use Zend\Form\Form;
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class NeighborhoodPolygonForm extends Form {
-    
-    
+class UserPolygonForm extends Form {
+
+
     public function __construct( $edit = true ) {
         parent::__construct('AddNeighborhood');
 
@@ -22,7 +22,7 @@ class NeighborhoodPolygonForm extends Form {
                 'value' => 'Save Neighborhood',
             )
         ));
-        
+
         /*
          * add the neighborhood
          */
@@ -33,7 +33,7 @@ class NeighborhoodPolygonForm extends Form {
                 'use_as_base_fieldset' => true
             )
         ));
-        
+
         $this->add(array(
             'name' => 'polygonGeoJson',
             'type'  => 'hidden',
@@ -41,7 +41,7 @@ class NeighborhoodPolygonForm extends Form {
                 'required' => 'false'
             )
         ));
-                
+
         /*
          * InputFilter
          */
