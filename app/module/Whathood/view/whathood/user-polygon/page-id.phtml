@@ -1,29 +1,33 @@
-<?php
+<?php $this->headTitle()->prepend("User Polygon"); ?>
 
-$this->headTitle()->prepend("User Polygon");
+<?php if (!$this->paginator->count()) :
+    throw new \Exception("no polygons found for this center");
 
+else :
+echo $this->paginationControl(
+    $this->paginator,
+    'Sliding',
+    'whathood/user-polygon/user_polygon_pagination_control.phtml',
+    array(
+        'paginator' => $this->paginator,
+        'route' => 'user-polygon-page-list',
+    )
+);
+    foreach( $this->paginator as $user_polygon ) : ?>
+        <div class="row">
+            <input name="neighborhood_name">
+            <input name="id">
+            <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
+                data-x="<?=$this->x?>"
+                data-y="<?=$this->y?>"
+            >
+        </div>
 
-echo $this->paginationControl($this->paginator,
-                                    'Sliding',
-                                    'whathood/user-polygon/user_polygon_pagination_control.phtml',
-                                    array(
-                                        'paginator' => $this->paginator,
-                                        'route' => 'user-polygon-page-list',
-                                    )
-                );
-?>
-
-<?php foreach( $this->paginator as $user_polygon ) : ?>
-    <div class="row">
-        <input name="neighborhood_name">
-        <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>">
-    </div>
-
-    <div class="row">
-        <div id="map" class="map user_polygon_page_map"></div>
-    </div>
-<?php endforeach; ?>
-
+        <div class="row">
+            <div id="map" class="map user_polygon_page_map"></div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
 <script>
     Whathood.load_user_polygon_page_center()
 </script>

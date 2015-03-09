@@ -62,7 +62,7 @@ class UserPolygonController extends BaseController
         $paginator->setCurrentPageNumber($pageNum);
         $paginator->setUriParams($uriParams);
 
-        $viewModel = $this->getViewModel( array('paginator' => $paginator));
+        $viewModel = $this->getViewModel( array('paginator' => $paginator,'x'=>$x,'y'=>$y));
         $viewModel->setTemplate('/whathood/user-polygon/page-id.phtml');
         return $viewModel;
     }
