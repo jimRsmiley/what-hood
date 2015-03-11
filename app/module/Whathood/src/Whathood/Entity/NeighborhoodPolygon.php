@@ -130,29 +130,23 @@ class NeighborhoodPolygon extends \ArrayObject {
         return $ids;
     }
 
-    public function toArray() {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-
-        $array = $hydrator->extract($this);
-
-        unset( $array['iterator_class'] );
-        unset( $array['iterator']);
-        unset( $array['flags']);
-        unset( $array['array_copy']);
-        unset( $array['polygon']);
+    public function toArray(array $opts = null) {
+        if ($opts == null)
+            $opts = array();
 
         // for geojson, we want to merge the polygon
-        $array = array_merge( $array, $this->polygonToGeoJsonArray( $this->polygon ) );
+        $np_arr = $this->polygonToGeoJsonArray( $this->geometry );
 
-        if( $this->getNeighborhood() != null ) {
-            $array['neighborhood'] = $this->getNeighborhood()->toArray();
-        }
+        if( $this->getNeighborhood() != null )
+            $np_arr['neighborhood'] = $this->getNeighborhood()->toArray();
 
-        return $array;
+        return $np_arr;
     }
 
     public static function polygonToGeoJsonArray( $polygon ) {
 
+        if (empty($polygon))
+            throw new \InvalidArgumentException("polygon may not be empty");
         $coordinates = array();
 
         foreach( $polygon->getRings() as $ring ) {

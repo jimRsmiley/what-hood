@@ -6,11 +6,11 @@ use Whathood\Entity\NeighborhoodPolygon;
 
 class WatcherController extends BaseController
 {
-    # Fishtown in 88 seconds
-    #protected $_grid_resolution = 0.001;
+    protected $_grid_resolution = 0.00008;
+    #protected $_grid_resolution = 0.0008;
 
-    # Fishtown from 504 seconds to 115
-    protected $_grid_resolution = 0.001;
+    protected $_concave_hull_target_precentage = 0.8;
+
 
     public function watchAction() {
 
@@ -19,6 +19,7 @@ class WatcherController extends BaseController
         $neighborhood_name  = $this->getRequest()->getParam('neighborhood',null);
         $region_name        = $this->getRequest()->getParam('region',null);
 
+        $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             $start_time = microtime(true);
             if ($neighborhood_name and $region_name ) {
@@ -55,7 +56,9 @@ class WatcherController extends BaseController
                         $geojson = $this->neighborhoodPolygonMapper()->generateBorder(
                             $ups,
                             $n->getId(),
-                            $this->getGridResolution());
+                            $this->getGridResolution(),
+                            $this->getConcaveHullTargetPercentage()
+                        );
                         $elapsed_time = $timer->elapsed_seconds();
 
                         # end build
@@ -88,6 +91,10 @@ class WatcherController extends BaseController
 
     public function getGridResolution() {
         return $this->_grid_resolution;
+    }
+
+    public function getConcaveHullTargetPercentage() {
+        return $this->_concave_hull_target_precentage;
     }
 
     /**

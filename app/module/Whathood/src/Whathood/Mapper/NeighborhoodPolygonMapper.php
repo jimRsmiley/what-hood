@@ -22,12 +22,24 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         //print $this->getCurrentDateTimeAsString() . " testing point\n";
         $query = $this->em->createQuery( 'SELECT np'
             . ' FROM '. $this->getEntityName(). ' n'
-                . ' WHERE np.neighborhood = :neighborhoodId'
+            . ' WHERE np.neighborhood = :neighborhoodId'
         );
         $query->setParameter( ':neighborhoodId', $neighborhoodId );
         $result = $query->getSingleResult();
 
         return $result;
+    }
+
+    public function latestByNeighborhoodId($n_id) {
+        $query = $this->em->createQuery( 'SELECT np'
+                . ' FROM '. $this->getEntityName(). ' np'
+                . ' JOIN Whathood\Entity\Neighborhood n'
+                . ' WHERE n.id = :id'
+                . ' ORDER BY np.id DESC'
+            );
+        $query->setMaxResults(1);
+        $query->setParameter( ':id', $n_id );
+        return $query->getSingleResult();
     }
 
     public function getNpById($neighborhoodPolygonId) {
@@ -64,10 +76,16 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             return $geojson;
     }
 
+    /**
+     *  return a geosjon representation of a neighborhood border given user polygons
+     *  
+     *  @return string geojson of a neighborhood border
+     **/
     public function generateBorder(
         \Doctrine\ORM\PersistentCollection $user_polygons,
         $neighborhood_id,
-        $grid_resolution
+        $grid_resolution,
+        $target_percentage
     ) {
         $up_ids = array();
         foreach($user_polygons as $up) $up_ids[] = $up->getId();
@@ -77,7 +95,7 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             ST_AsGeoJSON(
                 ST_ConcaveHull(
                     whathood.neighborhood_point_geometry(:neighborhood_id,ST_Collect(up.polygon),:grid_resolution),
-                    0.99
+                    $target_percentage
                 )
             ) as geojson
             FROM user_polygon up

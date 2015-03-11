@@ -1,26 +1,21 @@
-#!/bin/bash
-
-DIR=$HOME/jim_whathood_bak/whathood_sql
-BACKUP_FILE=$DIR/whathood_bak.sql
-
-mkdir -p $DIR
-
-echo "dumping database to $BACKUP_FILR"
-pg_dump \
-    --no-owner \
-    --exclude-table whathood_user \
-    --exclude-table facebook_user \
-    jim_whathood \
-    > $BACKUP_FILE
-
-#pg_dump --table whathood_user \
-#    --table facebook_user \
-#    jim_whathood \
-#    > $HOME/jim_whathood_bak.sql
+#!/usr/bin/env ruby
 
 
-cd $DIR
+backup_dir=File.new(Dir.new(".").path).expand+"/data/whathood_db"
 
-git add . -A
-git commit -m 're-exported whathood sql'
-git push
+BACKUP_FILE="whathood_bak.sql"
+
+puts "dumping database to #{BACKUP_FILE}"
+cmd="pg_dump --no-owner whathood > #{backup_dir}/#{BACKUP_FILE}"
+
+puts cmd
+
+system cmd
+
+puts backup_dir
+Dir.chdir backup_dir
+
+time = Time.new
+`git add #{BACKUP_FILE}`
+`git commit -m "re-exported whathood sql created at #{time}"`
+`git push`

@@ -20,6 +20,33 @@ return array(
 
         'routes' => array(
 
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/',
+                    'constraints' => array(
+                        'regionName'    => 'Philadelphia'
+                    ),
+                    'defaults' => array(
+                        'controller'    => 'Whathood\Controller\Region',
+                        'action'        => 'show',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'about' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => 'about',
+                            'defaults' => array(
+                                'controller'    => 'Whathood\Controller\Index',
+                                'action' => 'about'
+                            )
+                        ),
+                    )
+                )
+            ),
+
             'region' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -36,10 +63,10 @@ return array(
             'neighborhood' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/:region_name/:neighborhood_name[/]',
+                    'route'    => '/:region/:neighborhood[/]',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'HeatMap',
+                        'controller'    => 'Neighborhood',
                         'action'        => 'show',
                     ),
                 ),
@@ -76,44 +103,6 @@ return array(
                 ),
             ),
 
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'constraints' => array(
-                        'regionName'    => 'Philadelphia'
-                    ),
-                    'defaults' => array(
-                        'controller'    => 'Whathood\Controller\Region',
-                        'action'        => 'show',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'about' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => 'about',
-                            'defaults' => array(
-                                'controller'    => 'Whathood\Controller\Index',
-                                'action' => 'about'
-                            )
-                        ),
-                    )
-                )
-            ),
-
-            /**'address_search' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/a[/:region_name][/:address][/]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood',
-                        'action'        => 'by-address',
-                    ),
-                ),
-            ),**/
 
 			/**
 			 *
@@ -135,36 +124,6 @@ return array(
                     ),
                 ),
             ),
-
-            /**
-             * User Polygon lists page
-             *
-             * /whathood/user-polygon/page-list/page/:page
-             *
-             **/
-            'user_polygon_page_list' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-list/page/:page',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-list',
-                    ),
-                ),
-            ),
-
-            'user_polygon_page_center' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-center/page/:page/x/:x/y/:y',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-center',
-                    ),
-                ),
-			),
 
             'region' => array(
                 'type'    => 'Segment',
@@ -207,6 +166,36 @@ return array(
                 ),
             ),
 
+            /**
+             * User Polygon lists page
+             *
+             * /whathood/user-polygon/page-list/page/:page
+             *
+             **/
+            'user_polygon_page_list' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page-list/page/:page',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-list',
+                    ),
+                ),
+            ),
+
+            'user_polygon_page_center' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page-center/page/:page/x/:x/y/:y',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-center',
+                    ),
+                ),
+			),
+
             /*
              *  /admin
              */
@@ -242,6 +231,16 @@ return array(
              * REST APIs
              *
              **/
+            'rest-neighborhood-polygon' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/v1/neighborhood-polygon[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful'
+                    )
+                )
+            ),
+
             'rest-user-polygon' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -388,6 +387,7 @@ return array(
             'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
+            'Whathood\Controller\Neighborhood' => 'Whathood\Controller\NeighborhoodController',
             'Whathood\Controller\NeighborhoodPolygon' => 'Whathood\Controller\NeighborhoodPolygonController',
             'Whathood\Controller\Region' => 'Whathood\Controller\RegionController',
             'Whathood\Controller\WhathoodUser' => 'Whathood\Controller\WhathoodUserController',
@@ -396,6 +396,7 @@ return array(
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
 
+            'Whathood\Controller\NeighborhoodPolygonRestful' => 'Whathood\Controller\NeighborhoodPolygonRestfulController',
             'Whathood\Controller\UserPolygonRestful' => 'Whathood\Controller\UserPolygonRestfulController',
             'Whathood\Controller\RegionRestful'      => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodRestful'    => 'Whathood\Controller\WhathoodRestfulController',

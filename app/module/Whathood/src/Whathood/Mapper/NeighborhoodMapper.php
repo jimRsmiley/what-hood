@@ -78,6 +78,10 @@ class NeighborhoodMapper extends BaseMapper {
         }
     }
 
+    public function byName($n,$r) {
+        return $this->getNeighborhoodByName($n,$r);
+    }
+
    public function getNeighborhoodByName( $neighborhoodName, $regionName ) {
 
        if (empty($neighborhoodName))
@@ -85,17 +89,15 @@ class NeighborhoodMapper extends BaseMapper {
        if (empty($regionName))
            throw new \InvalidArgumentException("regionName may not be empty");
 
-        $dql = "SELECT "
+        $dql = "SELECT n"
                 . " FROM Whathood\Entity\Neighborhood n"
                 . " JOIN n.region r"
-                . " WHERE n.name = ?"
-                . ' AND r.name = ?';
+                . " WHERE n.name = :n_name"
+                . ' AND r.name = :r_name';
 
         $query = $this->em->createQuery($dql)
-                ->setParameter( 1, $neighborhoodName );
-
-        if( !empty($regionName) )
-            $query->setParameter(2, $regionName );
+                ->setParameter( ':n_name', $neighborhoodName );
+        $query->setParameter(':r_name', $regionName );
 
         return $query->getSingleResult();
     }

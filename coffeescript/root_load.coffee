@@ -37,6 +37,15 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       return str
 })
 
+Whathood.neighborhood_show = () ->
+  $map = $('#map')
+  neighborhood_id = $map.data('neighborhood-id')
+  throw new Error 'neighborhood_id may not be empty' unless neighborhood_id
+  console.log "neighborhood_id is #{neighborhood_id}"
+  map = new Whathood.Map 'map'
+  map.addStreetLayer()
+  map.addGeoJson Whathood.Util.np_api_latest(neighborhood_id)
+
 # on '/'
 Whathood.root_load = () ->
 

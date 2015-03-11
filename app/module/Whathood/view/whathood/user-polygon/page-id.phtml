@@ -14,15 +14,22 @@ echo $this->paginationControl(
     )
 );
     foreach( $this->paginator as $user_polygon ) : ?>
-        <div class="row">
-            <input name="neighborhood_name">
-            <input name="id">
-            <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
-                data-x="<?=$this->x?>"
-                data-y="<?=$this->y?>"
-            >
-        </div>
-
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for "input_id" class="col-sm-3 control-label">Id</label>
+                <p id="input_id" class="col-sm-9 form-control-static"><?=$user_polygon->getId()?></p>
+            </div>
+            <div class="form-group">
+                <label for="input_name" class="col-sm-3 control-label">Neighborhood Name</label>
+                <div class="col-sm-9">
+                    <p id="input_name" class="form-control-static"><?=$user_polygon->getNeighborhood()->getName()?></p>
+                </div>
+            </div>
+                <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
+                    data-x="<?=$this->x?>"
+                    data-y="<?=$this->y?>"
+                >
+        </form>
         <div class="row">
             <div id="map" class="map user_polygon_page_map"></div>
         </div>

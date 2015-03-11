@@ -103,22 +103,20 @@ class Neighborhood extends \ArrayObject {
         return $this->userPolygons;
     }
 
-    public function toArray() {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-
-        $array = $hydrator->extract($this);
-
-        unset( $array['iterator_class'] );
-        unset( $array['iterator']);
-        unset( $array['flags']);
-        unset( $array['array_copy']);
-        unset( $array['polygon']);
+    public function toArray(array $opts = null) {
+        if ($opts == null)
+            $opts = array();
+        $n_arr = array(
+            'id' => $this->getId(),
+            'date_time_added' => $this->getDateTimeAdded(),
+            'region_id' => $this->getRegion()->getId()
+        );
 
         if( $this->getRegion() != null ) {
-            $array['region'] = $this->getRegion()->toArray();
+            $n_arr['region'] = $this->getRegion()->toArray();
         }
 
-        return $array;
+        return $n_arr;
     }
 
     /*

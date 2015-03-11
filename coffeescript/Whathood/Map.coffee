@@ -4,7 +4,7 @@ Whathood = window.Whathood
 Whathood.Map = L.Map.extend
 
   constructor: () ->
-    #@addStreetLayer()
+    console.log "constructor is loading... but it's not"
 
   _layerGroup: null,
   _geojsonTileLayer : null
@@ -28,3 +28,21 @@ Whathood.Map = L.Map.extend
     @layerGroup().addLayer streetLayer
     @centerOnRegion()
     return
+
+  addGeoJson: ( url, callback ) ->
+    $.ajax
+      url: url
+      context: this
+      success: (geojson) ->
+        console.log @
+        @geojsonLayer = new L.geoJson geojson
+        .addTo(@)
+        @layerGroup().addLayer( @geojsonLayer )
+        @fitBounds( @geojsonLayer )
+
+        if( ( typeof callback ) != 'undefined' )
+          callback()
+      failure: () ->
+        throw new Error "WH.init(): something went wrong loading json source"
+    .done () ->
+      @spin(false)
