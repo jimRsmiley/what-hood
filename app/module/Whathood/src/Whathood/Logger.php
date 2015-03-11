@@ -6,22 +6,10 @@ namespace Whathood;
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class MyLogger {
+class Logger extends \Zend\Log\Logger {
 
     protected $logger;
     protected $emailer;
-
-    public function __construct($logger,$emailer) {
-        $this->logger = $logger;
-        $this->emailer = $emailer;
-    }
-
-    public function info( $subject, $message = null ) {
-
-        $this->logger->info( $this->getLogString($subject, $message) );
-
-        $this->sendMail( $subject, $message );
-    }
 
     public function err( $subject, $message = null ) {
         $this->error( $subject, $message );
@@ -45,7 +33,7 @@ class MyLogger {
     public function log_search( $queryString ) {
 
         $subject = $queryString." searched";
-        $this->logger->info( $this->getLogString( $subject ) );
+        $this->info( $this->getLogString( $subject ) );
 
         //$message = Model\EmailMessageBuilder::search( $queryString );
         //$this->sendMail($subject, $message);

@@ -307,7 +307,7 @@ return array(
                 $file = $config['whathood']['log']['logfile'];
                 $file_writer = new \Zend\Log\Writer\Stream($file);
                 $console_writer = new \Zend\Log\Writer\Stream('php://output');
-                $logger = new \Zend\Log\Logger;
+                $logger = new \Whathood\Logger;
                 $logger->addWriter($file_writer);
                 //$logger->addWriter($console_writer);
                 return $logger;

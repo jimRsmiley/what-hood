@@ -6,7 +6,7 @@ $queryString = $this->queryString;
 ?>
 <div class="search_results morepadding">
     <h4>Search Results for <span class="query"><?=$queryString?></span></h4>
-    
+
     <h5>Neighborhood Matches</h5>
     <?php if( count( $neighborhoods ) == 0 ) : ?>
         <div>No Neighborhood Matches</div>
@@ -14,8 +14,8 @@ $queryString = $this->queryString;
         <?php foreach( $neighborhoods as $neighborhood ) :?>
         <div class="neighborhood"><a href="<?=$this->url('neighborhood', 
                     array(
-                        'region_name' => $neighborhood->getRegion()->getName(), 
-                        'neighborhood_name' => $neighborhood->getName() 
+                        'region' => $neighborhood->getRegion()->getName(), 
+                        'neighborhood' => $neighborhood->getName() 
                     ))?>">
                 <?=$neighborhood->getRegion()->getName()?> \ <?=$neighborhood->getName();?>
             </a>
