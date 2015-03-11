@@ -1,4 +1,4 @@
-<?php $this->headTitle()->prepend("User Polygon"); ?>
+<?php $this->headTitle()->prepend("Browse user polygons at point y ".$this->y." x ".$this->x); ?>
 
 <?php if (!$this->paginator->count()) :
     throw new \Exception("no polygons found for this center");
@@ -36,5 +36,7 @@ echo $this->paginationControl(
     <?php endforeach; ?>
 <?php endif; ?>
 <script>
-    Whathood.load_user_polygon_page_center()
+$('document').ready( function() {
+    Whathood.user_polygon_page_center();
+});
 </script>

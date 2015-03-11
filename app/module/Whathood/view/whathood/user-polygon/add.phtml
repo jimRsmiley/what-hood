@@ -1,3 +1,12 @@
+<?php $this->headTitle()->prepend("Add a border"); ?>
+
 <div class='row-fluid'>
     <div class="map" id="map" style='padding: 0; margin: 0'></div>
 </div>
+
+
+<script>
+$('document').ready( function() {
+    Whathood.user_polygon_add();
+});
+</script>
