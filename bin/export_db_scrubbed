@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
+bin_dir = File.dirname(__FILE__)
+cwd = Dir.pwd
 
-backup_dir=File.new(Dir.new(".").path).expand+"/data/whathood_db"
+abs_path = "#{cwd}/#{bin_dir}"
+backup_dir="#{abs_path}/../data/whathood_db"
 
 BACKUP_FILE="whathood_bak.sql"
 
