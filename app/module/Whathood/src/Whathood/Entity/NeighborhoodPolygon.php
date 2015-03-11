@@ -117,6 +117,10 @@ class NeighborhoodPolygon extends \ArrayObject {
             $this->setCreatedAt(new \DateTime());
     }
 
+    public function userPolygonCount() {
+        return count($this->getUserPolygons());
+    }
+
     public function setGeoJson($geojson) {
         $polygon = \Whathood\Polygon::buildPolygonFromGeoJsonString($geojson,4326);
         $this->setGeometry($polygon);

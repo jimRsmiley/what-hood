@@ -61,7 +61,10 @@ class UserPolygon extends \ArrayObject {
 
     /**
      * @ORM\ManyToMany(targetEntity="NeighborhoodPolygon",inversedBy="user_polygons")
-     * @ORM\JoinTable(name="up_np")
+     * @ORM\JoinTable(name="up_np",
+     *   joinColumns={@ORM\JoinColumn(name="up_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="np_id", referencedColumnName="id")}
+     * )
      **/
     protected $neighborhood_polygons;
 

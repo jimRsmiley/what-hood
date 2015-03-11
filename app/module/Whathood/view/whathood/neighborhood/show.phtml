@@ -1,0 +1,16 @@
+<?php
+$neighborhood = $this->neighborhood;
+$this->headTitle()->prepend($this->neighborhood->getName() . ' / ' . $this->neighborhood->getRegion()->getName() );
+?>
+
+<h3><?=$neighborhood->getRegion()->getName()?> \ <?=$neighborhood->getName()?></h3>
+<p>Based on <?=$this->user_polygon_count?> user drawn borders</p>
+<div id="map" data-neighborhood-id="<?=$neighborhood->getId()?>" class="automargin mapheight" style="height: 400px;"></div>
+
+<script>
+    Whathood = window.Whathood;
+
+    $('document').ready( function() {
+        Whathood.neighborhood_show();
+    });
+</script>
