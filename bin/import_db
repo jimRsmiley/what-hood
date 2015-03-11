@@ -10,6 +10,7 @@ use Whathood::Utils;
 my $DATA_DIR="data/whathood_db";
 my $SCHEMA_DIR="app/scripts/schema";
 my $DB_NAME="whathood";
+my $DB_BAK_FILE="$DATA_DIR/whathood_bak.sql";
 
 my $user=`whoami`;
 chomp $user;
@@ -21,7 +22,7 @@ unless ( $user eq "vagrant" ) {
 Whathood::Utils->prompt_user("warning: this will destroy the current db");
 
 init_db();
-update_schema();
+#update_schema();
 
 print "loading functions\n";
 `./dev-bin/load_sql_functions`;
@@ -55,7 +56,11 @@ sub init_db {
         chdir($_old_dir);
     }
     print "importing data into database\n";
-    `sudo -u postgres psql -U $DB_NAME < $DATA_DIR/whathood_sql/whathood_bak.sql 2>&1 > /dev/null`;
+
+    if(! -e $DB_BAK_FILE) {
+        die("FATAL: file $DB_BAK_FILE does not exist");
+    }
+    `sudo -u postgres psql -U $DB_NAME < $DB_BAK_FILE 2>&1 > /dev/null`;
 }
 
 sub clone_data_repo {
