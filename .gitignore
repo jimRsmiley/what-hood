@@ -1,3 +1,4 @@
+.package.json
 /app/log/*.log
 /test
 /whathood.js.symlink
