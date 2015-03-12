@@ -1,16 +1,26 @@
 #!/usr/bin/env perl
 
+# this script
+#
+#	* runs composer on the zend framework
+#	* builds the coffeescript
+#	* copies all of the source code into /opt/whathood
+#	* kills any watchers and then restarts them
+#
+
+use lib 'libs/perl';
 use strict;
 use warnings;
 use FindBin;
 use Cwd;
 
-my $user=`whoami`;
-chomp $user;
-unless ( $user eq "vagrant" ) {
-   print "must be run as vagrant. Not '$user'\n";
-   exit;
-}
+use Whathood::Utils;
+
+Whathood::Utils->check_run_as_root();
+
+
+Whathood::Utils->prompt_user('are you sure you want to deploy?');
+
 
 # current directory
 my $DIR=$FindBin::Bin;
@@ -19,80 +29,46 @@ my $DIR=$FindBin::Bin;
 my $DEST_DIR="/opt/whathood";
 my $SRC_DIR="$DIR/..";
 
-print "*     WARNING: $DEST_DIR should already be owned by vagrant.vagrant\n";
-
-print "*     killing any grunt processes\n";
-system("killall grunt > /dev/null 2>&1");
-
-print "\n";
 print "Building Whathood App\n";
-print "\n";
+run_composer();
+run_grunt_coffee();
+copy_to_opt();
 
-chdir "$SRC_DIR/app";
 
-print "*     installing composer\n";
-`curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1`;
+sub run_composer {
 
-print "*     installing vendor libraries\n";
-`php composer.phar install > /dev/null 2>&1`;
+	chdir "$SRC_DIR/app";
 
-#
-print "*     building grunt\n";
-#
-## RUN grunt as user
-chdir($SRC_DIR);
-print "*********\n\n\nwhoami is:\n";
-print `whoami`;
-print "my working dir is".getcwd."\n";
-`sudo su vagrant -c "make grunt"`;
+	print "*     installing composer\n";
+	`curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1`;
 
-#
-print "*     building coffeescript files\n";
-#
-`grunt coffee > /dev/null 2>&1`;
+	print "*     installing vendor libraries\n";
+	`php composer.phar install > /dev/null 2>&1`;
+}
 
-#
-print "*     making source dir chmod 777\n";
-#
-`chmod 755 $SRC_DIR -R`;
+sub run_grunt_coffee {
 
-#
-print "*     setting doctrine proxy dir to all writeable\n";
-#
-`mkdir -p $SRC_DIR/app/data/DoctrineORMModule`;
-`chmod 777 $SRC_DIR/app/data/DoctrineORMModule`;
+	# make sure we have all the grunt tasks
+	print "*     run_grunt_coffee....\n";
+	chdir $SRC_DIR;
+	system('make grunt --save-deps') or die("unable to make grunt: $?");
 
-#
-print "*     now copy everything to the destination dir\n";
-#
-#
-print "*     copying whathood zend files from $SRC_DIR/app to $DEST_DIR\n";
-#
-`cp -r $SRC_DIR/ $DEST_DIR`;
+	# now build our coffeescript files
+	print "*     building coffeescript files\n";
+	my $result = system('grunt coffee');
+	die("unable to run grunt coffee: $?") if $result;
+}
 
-print "*     copying over whathood.conf nginx file\n";
-`sudo cp -f $SRC_DIR/etc/nginx/whathood.conf /etc/nginx/sites-available/whathood.conf`;
-print "*     linking to sites-enabled\n";
-`sudo rm -f /etc/nginx/sites-enabled/whathood.conf`;
-`sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`;
-print "*     restarting nginx\n";
-`sudo service nginx restart`;
+sub copy_to_opt {
+	print "*     copying files from $SRC_DIR to $DEST_DIR\n";
+	my $cmd = "rsync -av $SRC_DIR/app/ $DEST_DIR/app";
+	system($cmd);
+	print "*     setting doctrine proxy dest dir to all writeable\n";
+	`mkdir -p $DEST_DIR/app/data/DoctrineORMModule`;
+	`chmod 777 $DEST_DIR/app/data/DoctrineORMModule -R`;
+}
 
-print "*     copying whathood.ini into php5-fpm conf\n";
-`sudo rm -f /etc/php5/fpm/conf.d/20-whathood.ini`;
-print "*     restarting php-fpm\n";
-`sudo ln -s $SRC_DIR/etc/php5-fpm/20-whathood.ini /etc/php5/fpm/conf.d/20-whathood.ini`;
-`sudo service php5-fpm restart`;
-
-init_grunt_watch($SRC_DIR);
-init_grunt_watch($DEST_DIR);
-
-print "done deploy\n";
-
-sub init_grunt_watch {
-    my $dir = shift;
-
-    print "*     starting Grunt watch for coffeescript changes in $dir\n";
-    chdir($dir);
-    system("(sudo -u vagrant grunt watch >> $dir/grunt_watch.log &)");
+sub init_whathood_watch {
+	print "*     starting whathood watch process\n";
+    system("/opt/whathood/run-app watch");
 }
