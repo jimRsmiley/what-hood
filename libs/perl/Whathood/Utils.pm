@@ -17,7 +17,7 @@ sub prompt_user {
 sub check_run_as_root {
     my $user=`whoami`;
     chomp $user;
-    unless ( $user eq "root" ) {
+    unless ($user eq 'root' or $user eq 'vagrant') {
        print "must be run as root. Not '$user'\n";
        exit;
     }

@@ -51,11 +51,12 @@ sub run_grunt_coffee {
 	# make sure we have all the grunt tasks
 	print "*     run_grunt_coffee....\n";
 	chdir $SRC_DIR;
-	system('make grunt --save-deps') or die("unable to make grunt: $?");
+	my $result = system('make grunt');
+    print "make grunt result: $result\n";
 
 	# now build our coffeescript files
 	print "*     building coffeescript files\n";
-	my $result = system('grunt coffee');
+	$result = system('grunt coffee');
 	die("unable to run grunt coffee: $?") if $result;
 }
 
