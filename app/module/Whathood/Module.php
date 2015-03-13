@@ -53,17 +53,4 @@ class Module implements ConsoleUsageProviderInterface
             ),
         );
     }
-
-    /*
-     * decide whether the current user is an admin
-     */
-    protected static function isAdminUser() {
-        throw new \Excpetion('yet to implement');
-    }
-
-    public function getAuthService($e) {
-        return $e->getApplication()->getServiceManager()
-                    ->get('Whathood\Model\AuthenticationService');
-    }
-
 }
