@@ -25,12 +25,13 @@ class Module implements ConsoleUsageProviderInterface
 
         $sharedManager = $eventManager->getSharedManager();
         // controller can't dispatch request action that passed to the url
-        $sharedManager->attach(
-            'Zend\Mvc\Controller\AbstractActionController',
+        $sharedManager->attach('Zend\Mvc\Controller\AbstractActionController',
             'dispatch',
-            array($this, 'handleControllerCannotDispatchRequest' ),
-            101
-        );
+            array($this, 'handleControllerCannotDispatchRequest' ), 101);
+        //controller not found, invalid, or route is not matched anymore
+        $eventManager->attach('dispatch.error',
+               array($this,
+              'handleControllerNotFoundAndControllerInvalidAndRouteNotFound' ), 100);
     }
 
     public function handleControllerCannotDispatchRequest(MvcEvent $e)
@@ -43,6 +44,32 @@ class Module implements ConsoleUsageProviderInterface
             $logText = 'The requested controller '.
                         $controller.' was unable to dispatch the request : '.$action.'Action';
             //you can do logging, redirect, etc here..
+            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+        }
+    }
+
+    public function handleControllerNotFoundAndControllerInvalidAndRouteNotFound(MvcEvent $e)
+    {
+        $error  = $e->getError();
+        if ($error == Application::ERROR_CONTROLLER_NOT_FOUND) {
+            //there is no controller named $e->getRouteMatch()->getParam('controller')
+            $logText =  'The requested controller '
+                        .$e->getRouteMatch()->getParam('controller'). '  could not be mapped to an existing controller class.';
+
+            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+        }
+
+        if ($error == Application::ERROR_CONTROLLER_INVALID) {
+            //the controller doesn't extends AbstractActionController
+            $logText =  'The requested controller '
+                        .$e->getRouteMatch()->getParam('controller'). ' is not dispatchable';
+
+            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+        }
+
+        if ($error == Application::ERROR_ROUTER_NO_MATCH) {
+            // the url doesn't match route, for example, there is no /foo literal of route
+            $logText =  'The requested URL could not be matched by routing.';
             $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
         }
     }
