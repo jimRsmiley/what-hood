@@ -9,7 +9,7 @@ class WatcherController extends BaseController
     protected $_grid_resolution = 0.00008;
     #protected $_grid_resolution = 0.0008;
 
-    protected $_concave_hull_target_precentage = 0.8;
+    protected $_concave_hull_target_precentage = 0.9;
 
 
     public function watchAction() {
