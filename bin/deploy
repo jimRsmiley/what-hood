@@ -9,8 +9,11 @@
 #
 
 require 'optparse'
-load 'libs/ruby/Whathood/Util.rb'
+require_relative '../libs/ruby/Whathood/Util.rb'
 
+Whathood::Util.check_for_root_user()
+
+Whathood::Util.prompt_user "Are you sure you want to deploy? Enter to continue [CTRL-C] to abort"
 options = {}
 
 OptionParser.new do |opts|
@@ -40,6 +43,7 @@ BEGIN {
         puts "*     Building Whathood App\n";
         run_composer()
         run_grunt_coffee()
+		delete_opt_code()
         copy_to_opt()
         init_watcher()
     end
@@ -70,9 +74,16 @@ BEGIN {
         end
     end
 
+	def delete_opt_code
+		puts "*     * cleaning out #{DEST_DIR}"	
+		cmd = "rm -rf #{DEST_DIR}/app"
+		`#{cmd}`
+		cmd = "rm -f #{DEST_DIR}/*"
+		`#{cmd}`
+	end
     def copy_to_opt
         puts "*     copying files from #{SRC_DIR} to #{DEST_DIR}"
-        cmd = "rsync -av #{SRC_DIR}/app/ #{DEST_DIR}/app"
+        cmd = "rsync -av --quiet #{SRC_DIR}/app/ #{DEST_DIR}/app"
         system(cmd)
         `cp #{SRC_DIR}/run-app #{DEST_DIR}`
 		puts "*     setting doctrine proxy dest dir to all writeable"
