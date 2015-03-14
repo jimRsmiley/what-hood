@@ -1,5 +1,4 @@
 .package.json
-/app/log/*.log
 /test
 /whathood.js.symlink
 /grunt_watch.log
@@ -14,7 +13,6 @@ nginx_error.log
 /W
 /app/public/test
 /app/draft
-/app/log/
 /app/vendor/
 /app/draft/
 /app/public/js/whathood/
