@@ -163,6 +163,15 @@ class UserPolygonController extends BaseController
             'region' => $region,
             'whathoodUser' => $whathoodUser  ));
 
+        $this->logger()->info(
+            sprintf("saving user-polygon id=%s neighborhood=%s region=%s ip-address=%s",
+                $userPolygon->getId(),
+                $neighborhood->getName(),
+                $region->getName(),
+                $whathoodUser->getIpAddress()
+            )
+        );
+
         $this->userPolygonMapper()->save( $userPolygon );
 
         $this->logger()->info( "user polygon added id(".$userPolygon->getId().")" );

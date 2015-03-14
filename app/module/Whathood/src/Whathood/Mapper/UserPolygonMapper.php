@@ -51,7 +51,7 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getSingleResult();
     }
 
-    function byNeighborhood(Neighborhood $neighborhood) {
+    public function byNeighborhood(Neighborhood $neighborhood) {
         $dql = "SELECT up FROM Whathood\Entity\UserPolygon up
             WHERE up.neighborhood = :neighborhood";
         $query = $this->em->createQuery($dql)
@@ -135,7 +135,6 @@ class UserPolygonMapper extends BaseMapper {
 
     public function save( UserPolygon $userPolygon ) {
 
-        $this->logger()->info("entered save");
         /*
          * REGION
          *

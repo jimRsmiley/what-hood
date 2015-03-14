@@ -175,23 +175,28 @@ class BaseController extends AbstractActionController {
             'ip_address' => $ip_address ));
     }
 
-    public function getLogger() {
+    protected function _getLogger() {
         return $this->getServiceLocator()->get('Whathood\Logger');
     }
 
-    public function getConsoleLogger() {
+    protected function _getConsoleLogger() {
         return $this->getServiceLocator()->get('Whathood\ConsoleLogger');
     }
 
     // sugar
     public function logger() {
         if ( $this->getRequest() instanceof \Zend\Console\Request) {
-            return $this->getConsoleLogger();
+            return $this->_getConsoleLogger();
         }
         else {
-            return $this->getLogger();
+            return $this->_getLogger();
         }
     }
+
+    public static function prompt_user($msg) {
+        \Whathood\Util::prompt_user("$msg; Enter to continue; CTRL-C to cancel");
+    }
+
 }
 
 ?>

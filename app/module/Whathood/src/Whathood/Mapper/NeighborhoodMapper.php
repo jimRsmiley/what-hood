@@ -58,6 +58,10 @@ class NeighborhoodMapper extends BaseMapper {
         return $qb->getQuery()->getResult();
     }
 
+    public function byId($id) {
+        return $this->getNeighborhoodById($id);
+    }
+
     public function getNeighborhoodById( $id ) {
 
         if( empty( $id ) )
@@ -143,6 +147,40 @@ class NeighborhoodMapper extends BaseMapper {
     public function getQueryBuilder() {
         return new \Whathood\Doctrine\ORM\Query\NeighborhoodQueryBuilder(
                 $this->em->createQueryBuilder() );
+    }
+
+
+    /**
+     *
+     * when deleting, must delete associated UserPolygons
+     *
+     **/
+    public function delete($neighborhood,$userPolygonMapper,$neighborhoodPolygonMapper) {
+        $this->begin_trans();
+
+        try {
+            $user_polygons = $userPolygonMapper->byNeighborhood($neighborhood);
+
+            foreach($user_polygons as $up) {
+                $this->remove($up);
+            }
+
+            $neighborhood_polygons = $neighborhoodPolygonMapper->byNeighborhood($neighborhood);
+
+            foreach($neighborhood_polygons as $np) {
+                $this->remove($np);
+            }
+
+            // and finally remove the neighborhood
+            $this->remove($neighborhood);
+
+            $this->flush();
+            $this->commit();
+        }
+        catch( \Exception $e) {
+            $this->logger()->warn($e);
+            $this->rollback();
+        }
     }
 }
 ?>

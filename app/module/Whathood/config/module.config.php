@@ -293,7 +293,16 @@ return array(
                             'action' => 'show'
                         )
                     )
-                )
+                ),
+                'neighborhood-delete' => array(
+                    'options' => array(
+                        'route' => 'neighborhood delete [--id=] [--neighborhood=] [--region=]',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\Neighborhood',
+                            'action' => 'delete'
+                        )
+                    )
+                ),
             )
         )
     ),

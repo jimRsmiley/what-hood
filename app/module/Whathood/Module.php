@@ -36,6 +36,11 @@ class Module implements ConsoleUsageProviderInterface
             array('--force','force a rebuild of whole system'),
             array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),
             array('--region=','specify the region to use'),
+            'neighborhood delete [--id=] [--neighborhood=] [--region=]',
+            array('--id=','specify the neighborhood id to delete'),
+            array('--neighbrohood=',"specify the neighborhood name to delete, replace white spaces with '+'"),
+            array('--region=','specify the region to delete'),
+
         );
     }
 

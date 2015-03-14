@@ -42,6 +42,14 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         return $query->getSingleResult();
     }
 
+    public function byNeighborhood(Neighborhood $neighborhood) {
+        $dql = "SELECT np FROM Whathood\Entity\NeighborhoodPolygon np
+            WHERE np.neighborhood = :neighborhood";
+        $query = $this->em->createQuery($dql)
+            ->setParameter(':neighborhood',$neighborhood->getId());
+        return $query->getResult();
+    }
+
     public function getNpById($neighborhoodPolygonId) {
 
         //print $this->getCurrentDateTimeAsString() . " testing point\n";
