@@ -22,6 +22,29 @@ class Module implements ConsoleUsageProviderInterface
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $sharedManager = $eventManager->getSharedManager();
+        // controller can't dispatch request action that passed to the url
+        $sharedManager->attach(
+            'Zend\Mvc\Controller\AbstractActionController',
+            'dispatch',
+            array($this, 'handleControllerCannotDispatchRequest' ),
+            101
+        );
+    }
+
+    public function handleControllerCannotDispatchRequest(MvcEvent $e)
+    {
+        $action = $e->getRouteMatch()->getParam('action');
+        $controller = get_class($e->getTarget());
+
+        // error-controller-cannot-dispatch
+        if (! method_exists($e->getTarget(), $action.'Action')) {
+            $logText = 'The requested controller '.
+                        $controller.' was unable to dispatch the request : '.$action.'Action';
+            //you can do logging, redirect, etc here..
+            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+        }
     }
 
     /**
