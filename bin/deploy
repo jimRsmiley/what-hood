@@ -71,16 +71,17 @@ BEGIN {
     end
 
     def copy_to_opt
-        print "*     copying files from #{SRC_DIR} to #{DEST_DIR}\n"
+        puts "*     copying files from #{SRC_DIR} to #{DEST_DIR}"
         cmd = "rsync -av #{SRC_DIR}/app/ #{DEST_DIR}/app"
-        system(cmd);
-        print "*     setting doctrine proxy dest dir to all writeable\n"
+        system(cmd)
+        `cp #{SRC_DIR}/run-app #{DEST_DIR}`
+		puts "*     setting doctrine proxy dest dir to all writeable"
         `mkdir -p #{DEST_DIR}/app/data/DoctrineORMModule`
         `chmod 777 #{DEST_DIR}/app/data/DoctrineORMModule -R`
     end
 
     def init_watcher
-        print "*     starting whathood watch process\n"
+        puts "*     starting whathood watch process"
         `cp -f #{SRC_DIR}/etc/upstart/whwatcher.conf /etc/init`
         `service whwatcher restart`
     end
