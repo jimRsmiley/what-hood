@@ -91,29 +91,39 @@ W.region_show = () ->
   map.addGeoJson get_url(region_name,create_event)
   map.whathoodClick true
 
-  geosearch = new W.GeoSearch
+  l_geosearch = new W.GeoSearch
     provider: new L.GeoSearch.Provider.OpenStreetMap()
   .addTo(map)
 
   # we want its functionality, but not to see it
+  $address_input = $('#leaflet-control-geosearch-qry')
+
   $leaflet_top_center = $('#map > div.leaflet-control-container > div.leaflet-top.leaflet-center')
   $leaflet_top_center.hide()
 
   # if address is in the query string, fill in the address search bar
   if QueryString.address
-    $geo_search.val replace_plus(QueryString.address)
+    $address_input.val replace_plus(QueryString.address)
     # fire off the geocoding
-    geosearch._geosearch()
+    l_geosearch._geosearch()
   else
     $("#address-modal").dialog
+      title: "Find your neighborhood"
       draggable: false
       modal: true
       resizable: false
+      buttons: [
+        {
+          text: "Close to Browse Map"
+          click: () ->
+            $(this).dialog 'close'
+        }
+      ]
 
   $btn = $('#current-location-btn')
   $btn.on 'click', (evt) ->
     W.Geo.browser_location (location) =>
-      geosearch._my_showLocation
+      l_geosearch._my_showLocation
         X: location.coords.longitude
         Y: location.coords.latitude
       $('#address-modal').dialog 'close'

@@ -20,8 +20,8 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
         this._positionMarker.bindPopup(popup_html).openPopup()
 
     _geosearch: () ->
-      queryBox = document.getElementById('leaflet-control-geosearch-qry')
-      @geosearch(queryBox.value)
+      queryBox = document.getElementById 'leaflet-control-geosearch-qry'
+      @geosearch queryBox.value
 
     popup_html: (whathood_result) ->
       str = ""
