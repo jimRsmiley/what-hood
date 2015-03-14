@@ -107,6 +107,15 @@ class BaseController extends AbstractActionController {
         return $this->getUriParameter($key);
     }
 
+    /**
+     *  return the route parameter replacing any pluses,
+     *  useful for console route params which can't have white space values
+     */
+    public function paramFromRoute($key) {
+        $val = $this->params()->fromRoute($key);
+        return str_replace('+',' ',$val);
+    }
+
     public function getUriParameter($key) {
 
         if( $this->params()->fromQuery($key) != null )
