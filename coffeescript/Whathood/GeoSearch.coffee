@@ -10,6 +10,7 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
         this._my_showLocation results[0]
       else
         this._printError(this._config.notFoundMessage)
+        throw new Error "did not find any results for address"
 
     _my_showLocation: (result) ->
       x = result.X
