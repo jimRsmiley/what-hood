@@ -87,6 +87,8 @@ Whathood.region_show = () ->
   region_name = get_region_name()
   create_event = get_create_event()
 
+  $geo_search = $('#leaflet-control-geosearch-qry')
+
   # create a new region map
   map = new Whathood.RegionMap('map')
   map.addStreetLayer()
@@ -94,12 +96,28 @@ Whathood.region_show = () ->
   map.addGeoJson get_url(region_name,create_event)
   map.whathoodClick true
 
-  geosearch = new Whathood.GeoSearch
+  $geosearch = new Whathood.GeoSearch
     provider: new L.GeoSearch.Provider.OpenStreetMap()
   .addTo(map)
 
   # if address is in the query string, fill in the address search bar
   if QueryString.address
-    $('#leaflet-control-geosearch-qry').val replace_plus(QueryString.address)
+    $geo_search.val replace_plus(QueryString.address)
     # fire off the geocoding
     geosearch._geosearch()
+  else
+    $("#address-modal").dialog
+      draggable: false
+      modal: true
+      resizable: false
+
+  $btn = $('#current-location-btn')
+  $btn.on 'click', (evt) ->
+    console.log $geosearch
+    Whathood.Geo.browser_location (location) =>
+      console.log "with location,",location
+      $geosearch._my_showLocation
+        X: location.coords.longitude
+        Y: location.coords.latitude
+      console.log $geosearch
+      $('#address-modal').dialog 'close'
