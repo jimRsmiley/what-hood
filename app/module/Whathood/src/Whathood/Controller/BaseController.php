@@ -192,6 +192,11 @@ class BaseController extends AbstractActionController {
             return $this->_getLogger();
         }
     }
+
+    public static function prompt_user($msg) {
+        \Whathood\Util::prompt_user("$msg; Enter to continue; CTRL-C to cancel");
+    }
+
 }
 
 ?>

@@ -25,12 +25,28 @@ abstract class BaseMapper {
         $this->em = $doctrineEntityManager;
     }
 
+    public function begin_trans() {
+        $this->em->getConnection()->beginTransaction();
+    }
+
+    public function rollback() {
+        $this->em->getConnection()->rollback();
+    }
+
+    public function commit() {
+        $this->em->getConnection()->commit();
+    }
+
     public function flush() {
         $this->em->flush();
     }
 
     public function clear() {
         $this->em->clear();
+    }
+
+    public function remove($entity) {
+        $this->em->remove($entity);
     }
 
     public function neighborhoodPolygonMapper() {

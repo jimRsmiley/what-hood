@@ -24,4 +24,32 @@ class NeighborhoodController extends BaseController {
             'user_polygon_count' => $user_polygon_count
         ));
     }
+
+    public function deleteAction() {
+        $neighborhood_id = $this->params()->fromRoute('id');
+        $neighborhood_name = $this->paramFromRoute('neighborhood');
+        $region_name = $this->paramFromRoute('region');
+
+        $this->logger()->info("deleting neighborhood with id ".$neighborhood_id);
+
+        if ($neighborhood_id) {
+            $neighborhood = $this->neighborhoodMapper()->byId($neighborhood_id);
+
+            $this->prompt_user(
+                sprintf("are you sure you want to delete neighborhood?\n\tid=%s\n\tname=%s\n\tregion=%s\n",
+                    $neighborhood->getId(),
+                    $neighborhood->getName(),
+                    $neighborhood->getRegion()->getName()
+                )
+            );
+
+
+            $this->neighborhoodMapper()->delete(
+                $neighborhood,$this->userPolygonMapper(),$this->neighborhoodPolygonMapper());
+            $this->logger()->info("neighborhood deleted");
+        }
+        else {
+            throw new \Exception('not yet implemented');
+        }
+    }
 }
