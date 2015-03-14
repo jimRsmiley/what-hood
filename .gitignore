@@ -30,3 +30,4 @@ composer.phar
 .local.php
 *.symlink
 *.swp
+Module.php
