@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/env ruby
 
 # this script
 #
@@ -8,68 +8,80 @@
 #	* kills any watchers and then restarts them
 #
 
-use lib 'libs/perl';
-use strict;
-use warnings;
-use FindBin;
-use Cwd;
+require 'optparse'
+load 'libs/ruby/Whathood/Util.rb'
 
-use Whathood::Utils;
+options = {}
 
-Whathood::Utils->check_run_as_root();
+OptionParser.new do |opts|
+    opts.banner = "Usage: bin/deploy [options]"
 
+    opts.on("--watcher","Deploy watcher upstart script and start it") do |watcher|
+        options[:watcher] = watcher
+    end
+end.parse!
 
-Whathood::Utils->prompt_user('are you sure you want to deploy?');
-
-
-# current directory
-my $DIR=$FindBin::Bin;
-
+# where's our source code
+SRC_DIR = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+APP_DIR = "#{SRC_DIR}/app"
 # deploy to
-my $DEST_DIR="/opt/whathood";
-my $SRC_DIR="$DIR/..";
+DEST_DIR="/opt/whathood";
 
-print "Building Whathood App\n";
-run_composer();
-run_grunt_coffee();
-copy_to_opt();
+if options[:watcher]
+  init_watcher()
+else
+  deploy_new_code()
+end
 
+exit
 
-sub run_composer {
+BEGIN {
+    def deploy_new_code
+        puts "*     Building Whathood App\n";
+        run_composer()
+        run_grunt_coffee()
+        copy_to_opt()
+        init_watcher()
+    end
 
-	chdir "$SRC_DIR/app";
+    def run_composer
+        Dir.chdir APP_DIR
+        if File.exists? "#{APP_DIR}/composer.phar"
+            p "*     composer already exists; no need to install"
+        else
+            p "*     installing composer"
+            `curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1`
+        end
+        p "*     installing vendor libraries"
+        `php composer.phar install > /dev/null 2>&1`
+    end
 
-	print "*     installing composer\n";
-	`curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1`;
+    def run_grunt_coffee
 
-	print "*     installing vendor libraries\n";
-	`php composer.phar install > /dev/null 2>&1`;
-}
+        # make sure we have all the grunt tasks
+        p "*     run_grunt_coffee...."
+        Dir.chdir SRC_DIR
+        system('make grunt')
 
-sub run_grunt_coffee {
+        # now build our coffeescript files
+        p "*     building coffeescript files"
+        if !system('grunt coffee')
+            abort("unable to run `grunt coffee`")
+        end
+    end
 
-	# make sure we have all the grunt tasks
-	print "*     run_grunt_coffee....\n";
-	chdir $SRC_DIR;
-	my $result = system('make grunt');
-    print "make grunt result: $result\n";
+    def copy_to_opt
+        print "*     copying files from #{SRC_DIR} to #{DEST_DIR}\n"
+        cmd = "rsync -av #{SRC_DIR}/app/ #{DEST_DIR}/app"
+        system(cmd);
+        print "*     setting doctrine proxy dest dir to all writeable\n"
+        `mkdir -p #{DEST_DIR}/app/data/DoctrineORMModule`
+        `chmod 777 #{DEST_DIR}/app/data/DoctrineORMModule -R`
+    end
 
-	# now build our coffeescript files
-	print "*     building coffeescript files\n";
-	$result = system('grunt coffee');
-	die("unable to run grunt coffee: $?") if $result;
-}
-
-sub copy_to_opt {
-	print "*     copying files from $SRC_DIR to $DEST_DIR\n";
-	my $cmd = "rsync -av $SRC_DIR/app/ $DEST_DIR/app";
-	system($cmd);
-	print "*     setting doctrine proxy dest dir to all writeable\n";
-	`mkdir -p $DEST_DIR/app/data/DoctrineORMModule`;
-	`chmod 777 $DEST_DIR/app/data/DoctrineORMModule -R`;
-}
-
-sub init_whathood_watch {
-	print "*     starting whathood watch process\n";
-    system("/opt/whathood/run-app watch");
+    def init_watcher
+        print "*     starting whathood watch process\n"
+        `cp -f #{SRC_DIR}/etc/upstart/whwatcher.conf /etc/init`
+        `service whwatcher restart`
+    end
 }
