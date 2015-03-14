@@ -276,13 +276,21 @@ return array(
                         )
                     )
                 ),
-                'watcher-router' => array(
-                 //   'type' => 'simple',
+                'watcher-route' => array(
                     'options' => array(
                         'route' => 'watcher [--force] [--neighborhood=] [--region=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\Watcher',
                             'action' => 'watch'
+                        )
+                    )
+                ),
+                'test-point-route' => array(
+                    'options' => array(
+                        'route' => 'test-point [--neighborhood=] [--region=] [--grid-resolution=]',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\TestPoint',
+                            'action' => 'show'
                         )
                     )
                 )
@@ -375,6 +383,12 @@ return array(
             'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em );
+                return $mapper;
+            },
+
+            'Whathood\Mapper\TestPointMapper' => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\TestPointMapper( $sm, $em );
                 return $mapper;
             },
         ),
