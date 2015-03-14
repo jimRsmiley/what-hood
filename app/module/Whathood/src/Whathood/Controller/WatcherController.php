@@ -19,6 +19,8 @@ class WatcherController extends BaseController
         $neighborhood_name  = $this->getRequest()->getParam('neighborhood',null);
         $region_name        = $this->getRequest()->getParam('region',null);
 
+        $this->logger()->info("Whathood watcher has started");
+
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             $start_time = microtime(true);
@@ -33,10 +35,7 @@ class WatcherController extends BaseController
                     ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
             }
 
-            if (empty($user_polygons)) {
-                $this->logger()->info("no user polygons were found without neighborhood polygons associated");
-            }
-            else {
+            if (!empty($user_polygons)) {
                 foreach($user_polygons as $up) {
                     $this->logger()->info(sprintf("processing new user generated polygon(%s) for neighborhood %s",
                         $up->getId(),$up->getNeighborhood()->getName() ));
