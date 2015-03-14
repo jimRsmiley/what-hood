@@ -18,6 +18,10 @@ class Timer {
         return round(microtime(true) - $this->_start_time,1);
     }
 
+    public function elapsed_minutes() {
+        return round($this->elapsed_seconds()/60,2);
+    }
+
     public static function init() {
         $t = new static();
         $t->start();

@@ -31,10 +31,11 @@ class Module implements ConsoleUsageProviderInterface
     {
         return array(
             'Build new neighborhood polygons',
-            'watcher [--force] [--neighborhood=] [--region=]' => 'watch for changes in user polygons',
+            'watcher [--forever] [--force] [--neighborhood=] [--region=]' => 'watch for changes in user polygons',
+            array('--forever','run watcher in a loop forever'),
             array('--force','force a rebuild of whole system'),
-            array('--neighbrohood=','specify the neighborhood name to use'),
-            array('--region=','specify the region to use')
+            array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),
+            array('--region=','specify the region to use'),
         );
     }
 

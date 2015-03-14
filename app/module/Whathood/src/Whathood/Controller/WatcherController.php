@@ -59,7 +59,7 @@ class WatcherController extends BaseController
                             $this->getGridResolution(),
                             $this->getConcaveHullTargetPercentage()
                         );
-                        $elapsed_time = $timer->elapsed_seconds();
+                        $elapsed_seconds = $timer->elapsed_seconds();
 
                         # end build
                         $neighborhoodPolygon = new NeighborhoodPolygon( array(
@@ -67,8 +67,8 @@ class WatcherController extends BaseController
                             'neighborhood' => $n,
                             'user_polygons' => $ups
                         ));
-                        array_push($elapsed_time_array,$elapsed_time);
-                        $this->logger()->info(sprintf("id=%s name=%s build_secs=%s", $n->getId(), $n->getName(), $elapsed_time ));
+                        array_push($elapsed_time_array,$elapsed_seconds);
+                        $this->logger()->info(sprintf("id=%s name=%s num_user_polygons=%s build_time=%s mins", $n->getId(), $n->getName(), $timer->elapsed_minutes() ));
                         $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
                     }
                     catch(\Exception $e) {

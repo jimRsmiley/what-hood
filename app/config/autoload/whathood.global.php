@@ -17,13 +17,12 @@ return array(
     ),
     'whathood' => array(
         'log' => array(
-            'logfile' => __DIR__ . '/../../log/whathood-'.getenv('APPLICATION_ENV').'.log',
+            'logfile' => __DIR__ . '/../../log/whathood.log',
             'email' => array(
                 'fromName'  => 'Whathood System',
                 'fromAddress'   => 'auto-sender@whathood.in'
             )
         ),
         'concave_hull_strec' => .9,
-        'production_set_number' => 7
     )
 );
