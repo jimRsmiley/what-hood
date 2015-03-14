@@ -4,10 +4,8 @@ Whathood = root.Whathood
 Whathood.UserPolygonMap = Whathood.Map.extend
 
   _add_geojson: (geojson) ->
-    console.log "geojson: ",geojson
     @geojsonLayer = new L.geoJson(geojson)
 
-    console.log @
     @geojsonLayer.addTo(@)
     @fitBounds(@geojsonLayer)
 

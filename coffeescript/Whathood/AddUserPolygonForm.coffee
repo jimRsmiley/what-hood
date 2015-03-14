@@ -12,7 +12,6 @@ class Whathood.AddUserPolygonForm
     if( typeof neighborhoodJson == 'undefined' ) 
       alert( 'we did not get the neighborhood json' )
     $(hiddenJsonCssSelector).val( JSON.stringify(map.getDrawnGeoJson()) )
-    console.log( "drawn-polygon-geojson: " + $(hiddenJsonCssSelector).val() )
     $('#AddNeighborhood').submit()
     return true
 

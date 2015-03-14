@@ -88,13 +88,11 @@ Whathood.RegionMap = Whathood.Map.extend
       html = 'no neighborhoods found for this point'
 
     else
-      console.log neighborhoods
       for n in neighborhoods
         name  = n.name
         votes = n.votes
         html += votes + ' ' + "vote".pluralize(votes) + ' for ' + name + '<br/>'
 
-        console.log @
         url = @getNeighborhoodBrowseUrl requestLat, requestLng
 
         if( typeof regionName != 'undefined' )

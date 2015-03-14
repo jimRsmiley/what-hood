@@ -3,9 +3,6 @@ Whathood = window.Whathood
 
 Whathood.Map = L.Map.extend
 
-  constructor: () ->
-    console.log "constructor is loading... but it's not"
-
   _layerGroup: null,
   _geojsonTileLayer : null
   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors | <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | Imagery © <a href="http://mapbox.com">Mapbox</a> '
@@ -34,7 +31,6 @@ Whathood.Map = L.Map.extend
       url: url
       context: this
       success: (geojson) ->
-        console.log @
         @geojsonLayer = new L.geoJson geojson
         .addTo(@)
         @layerGroup().addLayer( @geojsonLayer )

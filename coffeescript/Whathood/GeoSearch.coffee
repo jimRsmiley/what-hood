@@ -25,10 +25,8 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
 
     popup_html: (whathood_result) ->
       str = ""
-      console.log whathood_result.whathood_result
       for neighborhood in whathood_result.response.consensus.neighborhoods
         str = "#{str}#{neighborhood.name}: #{neighborhood.votes}<br/>"
-      console.log str
       str = "#{str}Disagree? <a href='/whathood/user-polygon/add'>Draw your own neighborhood</a> and we'll include merge it into the borders"
       return str
 })
