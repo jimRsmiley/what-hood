@@ -31,7 +31,7 @@ class SearchController extends BaseController {
             $neighborhoods = array();
         }
 
-        $this->getLogger()->log_search( $queryString );
+       $this->logger()->log_search( $queryString );
 
         return new ViewModel( array(
             'queryString' => $queryString,

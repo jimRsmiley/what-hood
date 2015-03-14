@@ -46,8 +46,13 @@ class WatcherController extends BaseController
                 $neighborhoods = $this->collate_neighborhoods($user_polygons);
                 foreach($neighborhoods as $n) {
                     $ups = $n->getUserPolygons();
-                    $this->logger()->info(sprintf("rebuilding neighborhood(%s) %s with %s polygons",
-                        $n->getId(),$n->getName(),count($ups)) );
+                    $this->logger()->info(
+                        sprintf("rebuilding neighborhood %s(%s) with %s user polygons",
+                            $n->getName(),
+                            $n->getId(),
+                            count($ups)
+                        )
+                    );
 
                     try {
                         # start build
