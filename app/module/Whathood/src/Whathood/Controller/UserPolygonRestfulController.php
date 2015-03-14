@@ -12,11 +12,13 @@ class UserPolygonRestfulController extends BaseRestfulController {
     public function get($id) {
 
         try {
-           $up = $this->userPolygonMapper()->byId($id);
+            $up = $this->userPolygonMapper()->byId($id);
 
-           if (!$up)
-               return $this->badRequestJson("no user-polygon found with id $id");
-           return new JsonModel( $up->toArray() );
+            $this->logger()->info("user-polygon REST served GET user-polygon $id");
+
+            if (!$up)
+                return $this->badRequestJson("no user-polygon found with id $id");
+            return new JsonModel( $up->toArray() );
         }
         catch(\Exception $e) {
             return $this->badRequestJson("server-error:".$e->getMessage()."\n\n\n\n\n".$e->getTraceAsString());

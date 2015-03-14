@@ -311,22 +311,15 @@ return array(
     'service_manager' => array(
         'factories' => array(
 
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-
-            'Whathood\MyLogger' => function($sm) {
-                return new \Whathood\MyLogger(
-                        $sm->get('Whathood\Logger'),
-                        $sm->get('emailer') );
-            },
-
             'Whathood\Logger' => function($sm) {
                 $config = $sm->get('Config');
+
                 $file = $config['whathood']['log']['logfile'];
                 $file_writer = new \Zend\Log\Writer\Stream($file);
-                $console_writer = new \Zend\Log\Writer\Stream('php://output');
+
                 $logger = new \Whathood\Logger;
                 $logger->addWriter($file_writer);
-                //$logger->addWriter($console_writer);
+
                 return $logger;
             },
 
