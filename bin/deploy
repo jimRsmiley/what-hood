@@ -66,12 +66,6 @@ BEGIN {
         p "*     run_grunt_coffee...."
         Dir.chdir SRC_DIR
         system('make grunt')
-
-        # now build our coffeescript files
-        p "*     building coffeescript files"
-        if !system('grunt coffee')
-            abort("unable to run `grunt coffee`")
-        end
     end
 
 	def delete_opt_code
