@@ -135,7 +135,6 @@ class UserPolygonMapper extends BaseMapper {
 
     public function save( UserPolygon $userPolygon ) {
 
-        $this->logger()->info("entered save");
         /*
          * REGION
          *
