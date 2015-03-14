@@ -17,7 +17,7 @@ return array(
     ),
     'whathood' => array(
         'log' => array(
-            'logfile' => __DIR__ . '/../../log/whathood.log',
+            'logfile' => __DIR__ . '/var/log/whathood.log',
             'email' => array(
                 'fromName'  => 'Whathood System',
                 'fromAddress'   => 'auto-sender@whathood.in'
