@@ -1,0 +1,9 @@
+
+description "start and stop Whathood's user polygon watcher routine"
+
+env APP_HOME = /opt/whathood
+
+script
+  chdir $APP_HOME
+  exec run-app watcher --forever
+end script
