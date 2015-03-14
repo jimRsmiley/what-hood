@@ -14,6 +14,10 @@ class Timer {
         $this->_start_time = microtime(true);
     }
 
+    public function elapsed_milliseconds() {
+        return round((microtime(true) - $this->_start_time)*1000,0);
+    }
+
     public function elapsed_seconds() {
         return round(microtime(true) - $this->_start_time,1);
     }

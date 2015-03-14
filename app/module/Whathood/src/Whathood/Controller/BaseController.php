@@ -22,6 +22,12 @@ class BaseController extends AbstractActionController {
     private $testPointMapper;
     private $contentiousPointMapper;
 
+    public function onDispatch(\Zend\Mvc\MvcEvent $event) {
+        $this->timer = \Whathood\Timer::init();
+
+        return parent::onDispatch($event);
+    }
+
     public function neighborhoodMapper() {
 
         if( $this->neighborhoodMapper == null ) {
