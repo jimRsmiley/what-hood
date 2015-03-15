@@ -10,6 +10,9 @@ CREATE INDEX region_polygon_idx ON region USING GIST(polygon);
 DROP INDEX IF EXISTS user_polygon_neighborhood_id_idx;
 CREATE INDEX user_polygon_neighborhood_id_idx ON user_polygon(neighborhood_id);
 
+-- user polygon
+CREATE INDEX user_polygon_polygon_idx ON user_polygon USING GIST(polygon);
+
 CREATE INDEX test_point_id_idx ON my_temp_table(test_point_id);
 CREATE INDEX neighborhood_name_idx ON my_temp_table(neighborhood_id);
 CREATE UNIQUE INDEX neighborhood_name_test_point_id_idx ON my_temp_table(test_point_id,neighborhood_id);
