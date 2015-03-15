@@ -72,7 +72,14 @@ class WatcherController extends BaseController
                             'user_polygons' => $ups
                         ));
                         array_push($elapsed_time_array,$elapsed_seconds);
-                        $this->logger()->info(sprintf("id=%s name=%s num_user_polygons=%s build_time=%s mins", $n->getId(), $n->getName(), $timer->elapsed_minutes() ));
+                        $this->logger()->info(
+                            sprintf("id=%s name=%s num_user_polygons=%s build_time=%s mins",
+                                $n->getId(),
+                                $n->getName(),
+                                count($ups),
+                                $timer->elapsed_minutes()
+                            )
+                    );
                         $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
                     }
                     catch(\Exception $e) {

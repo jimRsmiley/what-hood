@@ -5,8 +5,9 @@
         <?php //echo $n->getUser()->getName(); ?>
         <a href="<?=$this->url('neighborhood_id', array(
                 'neighborhood_id'   => $neighborhood->getId()
-                ));?>">
-            <?php echo $neighborhood->getId()
+            ));?>"
+        >
+        ( <?=$neighborhood->getId()?> ) <?php echo $neighborhood->getId()
                     ." "
                     .$neighborhood->getNeighborhood()->getRegion()->getName()
                     ." \ "
