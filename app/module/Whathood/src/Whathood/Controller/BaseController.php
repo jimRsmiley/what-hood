@@ -121,7 +121,8 @@ class BaseController extends AbstractActionController {
 
     // a more accurate function description
     public function getRequestParameter($key) {
-        return $this->getUriParameter($key);
+        $val = $this->getUriParameter($key);
+        return str_replace('+',' ',$val);
     }
 
     /**
@@ -133,15 +134,16 @@ class BaseController extends AbstractActionController {
         return str_replace('+',' ',$val);
     }
 
+    /**
+     * in order of trying:
+     *      query
+     *      route
+     */
     public function getUriParameter($key) {
-
         if( $this->params()->fromQuery($key) != null )
             return $this->params()->fromQuery($key);
-
-        if( $this->getEvent()->getRouteMatch()->getParam($key) != null ) {
+        if( $this->getEvent()->getRouteMatch()->getParam($key) != null )
             return $this->getEvent()->getRouteMatch()->getParam($key);
-        }
-
         return false;
     }
 

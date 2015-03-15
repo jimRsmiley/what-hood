@@ -8,8 +8,17 @@ use Whathood\Spatial\PHP\Types\Geometry\Point;
 class TestPointMapper extends BaseMapper {
 
 
+    /**
+     * return an array of points in a grid with resolution that covers all user_polygons
+     *
+     * @param array user_polygons an array of UserPolygons
+     * @param string grid_resolution
+     *
+     */
     public function createByUserPolygons($user_polygons,$grid_resolution) {
 
+        if (empty($grid_resolution))
+            throw new \InvalidArgumentException('grid_resolution may not be empty');
         $ids = array();
         foreach( $user_polygons as $up) {
             array_push($ids,$up->getId());
@@ -23,9 +32,9 @@ class TestPointMapper extends BaseMapper {
         $query->setParameter(':grid_resolution',$grid_resolution);
         $result = $query->getResult();
 
-        print count($result)." rows returned\n";
-        $points = $this->_doctrineResultToPoints($result,'test_point');
-        return $points;
+        if (empty($result))
+            return null;
+        return $this->_doctrineResultToPoints($result,'test_point');
     }
 
     /**

@@ -5,7 +5,7 @@ use Whathood\Spatial\PHP\Types\Geometry\Polygon as WhathoodPolygon;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use CrEOF\Spatial\DBAL\Types\BinaryParser;
 /**
- * Description of PolygonType
+ * Need to override CrEOF type to insert a Whathood polygon
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */

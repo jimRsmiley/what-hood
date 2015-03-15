@@ -231,6 +231,16 @@ return array(
              * REST APIs
              *
              **/
+            'rest-test-point' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/v1/test-point[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\TestPointRestful'
+                    )
+                )
+            ),
+
             'rest-neighborhood-polygon' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -394,6 +404,12 @@ return array(
                 return $mapper;
             },
 
+            'Whathood\Mapper\Builder' => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\Builder( $sm, $em );
+                return $mapper;
+            },
+
             'Whathood\Mapper\TestPointMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\TestPointMapper( $sm, $em );
@@ -418,10 +434,11 @@ return array(
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
 
-            'Whathood\Controller\NeighborhoodPolygonRestful' => 'Whathood\Controller\NeighborhoodPolygonRestfulController',
-            'Whathood\Controller\UserPolygonRestful' => 'Whathood\Controller\UserPolygonRestfulController',
-            'Whathood\Controller\RegionRestful'      => 'Whathood\Controller\RegionRestController',
-            'Whathood\Controller\WhathoodRestful'    => 'Whathood\Controller\WhathoodRestfulController',
+            'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\NeighborhoodPolygonRestfulController',
+            'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\UserPolygonRestfulController',
+            'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
+            'Whathood\Controller\WhathoodRestful'               => 'Whathood\Controller\WhathoodRestfulController',
+            'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
         ),
     ),
 

@@ -3,8 +3,7 @@
 namespace Whathood\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\View\Model\ViewModel;
-use Zend\View\MOdel\JsonModel;
+use Zend\View\Model\JsonModel;
 
 /**
  * Description of WhathoodController
@@ -13,133 +12,46 @@ use Zend\View\MOdel\JsonModel;
  */
 class BaseRestfulController extends AbstractRestfulController {
 
-    private $neighborhoodMapper;
-    private $userPolygonMapper;
-    private $neighborhoodPolygonMapper;
-    private $whathoodUserMapper;
-    private $regionMapper;
-    private $neighborhoodStrengthOfIdentityMapper;
-    private $testPointMapper;
-    private $contentiousPointMapper;
+    private $_mapper_builder;
+
+    public function m() {
+        if ($this->_mapper_builder == null)
+            $this->_mapper_builder = $this->getServiceLocator()
+                ->get('Whathood\Mapper\Builder');
+        return $this->_mapper_builder;
+    }
 
     public function badRequestJson($msg) {
         $this->getResponse()->setStatusCode(400);
         return new JsonModel(array('msg'=>$msg));
     }
 
-    public function neighborhoodMapper() {
-
-        if( $this->neighborhoodMapper == null ) {
-            $this->neighborhoodMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\NeighborhoodMapper' );
-        }
-        return $this->neighborhoodMapper;
-    }
-
-    public function userPolygonMapper() {
-
-        if( $this->userPolygonMapper == null ) {
-            $this->userPolygonMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\UserPolygonMapper' );
-        }
-        return $this->userPolygonMapper;
-    }
-
-    public function testPointMapper() {
-
-        if( $this->testPointMapper == null ) {
-            $this->testPointMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\TestPointMapper' );
-        }
-        return $this->testPointMapper;
-    }
-
-    public function neighborhoodPolygonMapper() {
-
-        if( $this->neighborhoodPolygonMapper == null ) {
-            $this->neighborhoodPolygonMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\NeighborhoodPolygonMapper' );
-        }
-        return $this->neighborhoodPolygonMapper;
-    }
-
-    public function regionMapper() {
-
-        if( $this->regionMapper == null ) {
-            $this->regionMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\RegionMapper' );
-        }
-        return $this->regionMapper;
-    }
-
-    public function whathoodUserMapper() {
-
-        if( $this->whathoodUserMapper == null ) {
-            $this->whathoodUserMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\WhathoodUserMapper');
-        }
-        return $this->whathoodUserMapper;
-    }
-
-    public function neighborhoodStrengthOfIdentityMapper() {
-        if( $this->neighborhoodStrengthOfIdentityMapper == null ) {
-            $this->neighborhoodStrengthOfIdentityMapper = $this->getServiceLocator()
-                                    ->get('Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper');
-        }
-        return $this->neighborhoodStrengthOfIdentityMapper;
-    }
-
-    public function contentiousPointMapper() {
-
-        if( $this->contentiousPointMapper == null ) {
-            $this->contentiousPointMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\ContentiousPointMapper');
-        }
-        return $this->contentiousPointMapper;
-    }
-
-    public function createEventMapper() {
-
-        if( $this->contentiousPointMapper == null ) {
-            $this->contentiousPointMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\CreateEventMapper');
-        }
-        return $this->contentiousPointMapper;
-    }
-
     // a more accurate function description
     public function getRequestParameter($key) {
-        return $this->getUriParameter($key);
-    }
-
-    public function getUriParameter($key) {
-
-        if( $this->params()->fromQuery($key) != null )
-            return $this->params()->fromQuery($key);
-
-        if( $this->getEvent()->getRouteMatch()->getParam($key) != null ) {
-            return $this->getEvent()->getRouteMatch()->getParam($key);
-        }
-
-        return false;
+        $val = $this->getUriParameter($key);
+        if ($val != null) return str_replace('+',' ',$val);
     }
 
     /**
-     * our view scripts need breadcrumbs quite regularly so let's use this model
-     * to create our view model with the selected params and add on region, user
-     * and neighborhood names so we don't have to keep doing it.
-     *
-     * @param type $params
+     *  return the route parameter replacing any pluses,
+     *  useful for console route params which can't have white space values
      */
-    public function getViewModel( $params ) {
+    public function paramFromRoute($key) {
+        $val = $this->params()->fromRoute($key);
+        if ($val != null) return str_replace('+',' ',$val);
+    }
 
-        $breadCrumbParams = array(
-            'regionName'    => $this->getUriParameter('region_name'),
-            'neighborhoodName' => $this->getUriParameter('neighborhood_name'),
-        );
-
-       $newParams = array_merge($breadCrumbParams,$params);
-       return new ViewModel( $newParams );
+    /**
+     * in order of trying:
+     *      query
+     *      route
+     */
+    public function getUriParameter($key) {
+        if( $this->params()->fromQuery($key) != null)
+            return $this->params()->fromQuery($key);
+        if( $this->getEvent()->getRouteMatch()->getParam($key) != null )
+            return $this->getEvent()->getRouteMatch()->getParam($key);
+        return false;
     }
 
     public function getUser() {
