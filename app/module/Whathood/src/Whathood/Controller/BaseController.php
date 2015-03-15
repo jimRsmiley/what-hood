@@ -21,12 +21,23 @@ class BaseController extends AbstractActionController {
     private $neighborhoodStrengthOfIdentityMapper;
     private $testPointMapper;
     private $contentiousPointMapper;
+    private $_concaveHullMapper;
 
     public function onDispatch(\Zend\Mvc\MvcEvent $event) {
         $this->timer = \Whathood\Timer::init();
 
         return parent::onDispatch($event);
     }
+
+    public function concaveHullMapper() {
+
+        if( $this->_concaveHullMapper == null ) {
+            $this->_concaveHullMapper = $this->getServiceLocator()
+                    ->get( 'Whathood\Mapper\ConcaveHullMapper' );
+        }
+        return $this->_concaveHullMapper;
+    }
+
 
     public function neighborhoodMapper() {
 

@@ -82,16 +82,25 @@ class Module implements ConsoleUsageProviderInterface
     {
         return array(
             'Build new neighborhood polygons',
+
+            // watcher-route
             'watcher [--forever] [--force] [--neighborhood=] [--region=]' => 'watch for changes in user polygons',
             array('--forever','run watcher in a loop forever'),
             array('--force','force a rebuild of whole system'),
             array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),
             array('--region=','specify the region to use'),
+
+            // neighborhood-delete
             'neighborhood delete [--id=] [--neighborhood=] [--region=]',
             array('--id=','specify the neighborhood id to delete'),
             array('--neighbrohood=',"specify the neighborhood name to delete, replace white spaces with '+'"),
             array('--region=','specify the region to delete'),
 
+            // test-point-route
+            'test-point show [--neighborhood=] [--region=] [--grid-resolution=]',
+            array('--neighborhood','specify the neighborhood name'),
+            array('--region','the region name'),
+            array('--grid-resolution','the grid resolution'),
         );
     }
 

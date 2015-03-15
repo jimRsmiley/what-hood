@@ -3,7 +3,8 @@
 namespace Whathood\Mapper;
 
 use Doctrine\ORM\Query\ResultSetMapping;
-use 
+use Whathood\Spatial\PHP\Types\Geometry\Point;
+
 class TestPointMapper extends BaseMapper {
 
 
@@ -21,15 +22,26 @@ class TestPointMapper extends BaseMapper {
         $query = $this->em->createNativeQuery($sql,$rsm);
         $query->setParameter(':grid_resolution',$grid_resolution);
         $result = $query->getResult();
-        return $this->_resultToTestPoints($result);
+
+        print count($result)." rows returned\n";
+        $points = $this->_doctrineResultToPoints($result,'test_point');
+        return $points;
     }
 
-    public static function _resultToTestPoints($result) {
+    /**
+     *
+     * take an array of doctrine result rows and turn them into points
+     *
+     * @param $result - a doctrine result array
+     * @param $key_str - the column header string for the point text
+     *
+     */
+    public static function _doctrineResultToPoints($result,$key_str) {
+        $points = array();
         foreach($result as $row) {
-            \Zend\Debug\Debug::dump($row);
-            die("dying now");
+            $p = Point::buildFromText($row[$key_str]);
+            array_push($points, $p);
         }
+        return $points;
     }
-
-
 }

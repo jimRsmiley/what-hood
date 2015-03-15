@@ -14,6 +14,7 @@ abstract class BaseMapper {
     protected $neighborhoodMapper;
     protected $regionMapper;
     protected $whathoodUserMapper;
+    protected $_spatial_platform;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
 
@@ -47,6 +48,12 @@ abstract class BaseMapper {
 
     public function remove($entity) {
         $this->em->remove($entity);
+    }
+
+    public function spatialPlatform() {
+        if($this->_spatial_platform == null)
+            $this->_spatial_platform = new \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\PostGreSQL();
+        return $this->_spatial_platform;
     }
 
     public function neighborhoodPolygonMapper() {

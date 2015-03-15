@@ -287,7 +287,7 @@ return array(
                 ),
                 'test-point-route' => array(
                     'options' => array(
-                        'route' => 'test-point [--neighborhood=] [--region=] [--grid-resolution=]',
+                        'route' => 'test-point show [--neighborhood=] [--region=] [--grid-resolution=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\TestPoint',
                             'action' => 'show'
@@ -348,6 +348,12 @@ return array(
 
             'Whathood\SchemaTool'  => function($sm) {
                 return new \Whathood\SchemaTool($sm);
+            },
+
+            'Whathood\Mapper\ConcaveHullMapper'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\ConcaveHullMapper( $sm, $em );
+                return $mapper;
             },
 
             'Whathood\Mapper\NeighborhoodMapper'  => function($sm) {
