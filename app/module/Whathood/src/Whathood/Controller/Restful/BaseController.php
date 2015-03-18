@@ -1,16 +1,14 @@
 <?php
 
-namespace Whathood\Controller;
+namespace Whathood\Controller\Restful;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
- * Description of WhathoodController
- *
- * @author Jim Smiley twitter:@jimRsmiley
+ *  the base class for restful controllers
  */
-class BaseRestfulController extends AbstractRestfulController {
+class BaseController extends AbstractRestfulController {
 
     private $_mapper_builder;
 

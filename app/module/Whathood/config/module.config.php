@@ -439,7 +439,7 @@ return array(
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
 
-            'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\NeighborhoodPolygonRestfulController',
+            'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
             'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\UserPolygonRestfulController',
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodRestful'               => 'Whathood\Controller\WhathoodRestfulController',

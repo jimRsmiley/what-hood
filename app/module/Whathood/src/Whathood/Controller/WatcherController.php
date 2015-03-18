@@ -6,21 +6,24 @@ use Whathood\Entity\NeighborhoodPolygon;
 
 class WatcherController extends BaseController
 {
-    protected $_grid_resolution = 0.0009;
+    protected $_DEFAULT_GRID_RESOLUTION = 0.0009;
+
+    protected $_grid_resolution;
 
     protected $_concave_hull_target_precentage = 0.9;
 
 
     public function watchAction() {
 
-        $force              = $this->getRequest()->getParam('force',false);
-        $forever            = $this->getRequest()->getParam('forever',false);
-        $neighborhood_name  = $this->getRequest()->getParam('neighborhood',null);
-        $region_name        = $this->getRequest()->getParam('region',null);
+        $force                  = $this->getRequest()->getParam('force',false);
+        $forever                = $this->getRequest()->getParam('forever',false);
+        $neighborhood_name      = $this->getRequest()->getParam('neighborhood',null);
+        $region_name            = $this->getRequest()->getParam('region',null);
+        $this->_grid_resolution = $this->getRequest()->getParam('grid-res',$this->_DEFAULT_GRID_RESOLUTION);
 
         $this->logger()->info("Whathood watcher has started");
         $this->logger()->info(
-            sprintf("\tgrid-resolution=%f target-precision=%s",
+            sprintf("\tgrid-resolution=%g target-precision=%s",
                 $this->getGridResolution(),
                 $this->getTargetPercentage()
             )
@@ -42,8 +45,12 @@ class WatcherController extends BaseController
 
             if (!empty($user_polygons)) {
                 foreach($user_polygons as $up) {
-                    $this->logger()->info(sprintf("\tprocessing new user generated polygon(%s) for neighborhood %s",
-                        $up->getId(),$up->getNeighborhood()->getName() ));
+                    $this->logger()->info(
+                        sprintf("\tprocessing new user generated polygon(%s) for neighborhood %s",
+                            $up->getId(),
+                            $up->getNeighborhood()->getName()
+                        )
+                    );
                 }
 
                 $elapsed_time_array = array();

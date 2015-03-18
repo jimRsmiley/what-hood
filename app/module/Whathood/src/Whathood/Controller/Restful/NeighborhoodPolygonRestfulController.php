@@ -1,6 +1,6 @@
 <?php
 
-namespace Whathood\Controller;
+namespace Whathood\Controller\Restful;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
@@ -10,12 +10,11 @@ use Zend\View\Model\JsonModel;
  * serve neighborhood polygon REST data
  *
  */
-class NeighborhoodPolygonRestfulController extends BaseRestfulController {
+class NeighborhoodPolygonRestfulController extends BaseController {
 
     public function get($id) {
         die("not yet implemented");
     }
-
 
     /**
      *
@@ -23,10 +22,13 @@ class NeighborhoodPolygonRestfulController extends BaseRestfulController {
      *
      */
     public function getList() {
-        $neighborhood_latest_polygon_id = $this->params()->fromQuery('neighborhood_latest_polygon_id');
+        $neighborhood_latest_polygon_id = $this->params()
+                                    ->fromQuery('neighborhood_latest_polygon_id');
 
         if (!empty($neighborhood_latest_polygon_id)) {
-            $n = $this->neighborhoodPolygonMapper()->latestByNeighborhoodId($neighborhood_latest_polygon_id);
+            $n = $this->m()
+                ->neighborhoodPolygonMapper()
+                    ->latestByNeighborhoodId($neighborhood_latest_polygon_id);
             return new JsonModel( $n->toArray() );
         }
         return new JsonModel( array(
