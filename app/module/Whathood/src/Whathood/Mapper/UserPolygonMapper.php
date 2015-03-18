@@ -4,13 +4,14 @@ namespace Whathood\Mapper;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\Query\Expr\Join;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Doctrine\ORM\Query\ResultSetMapping;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\WhathoodUser;
-use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
-use Whathood\Model\Whathood\WhathoodResult;
+use Whathood\ElectionPoint;
+
 /**
  * Description of NeighborhoodPolygonMapper
  *
@@ -18,12 +19,6 @@ use Whathood\Model\Whathood\WhathoodResult;
  */
 class UserPolygonMapper extends BaseMapper {
 
-    public function fetchAll() {
-        $qb = $this->em->createQueryBuilder()->select( array( 'up' ) )
-            ->from('Whathood\Entity\UserPolygon', 'up')
-            ->orderBy('up.id','ASC');
-        return $qb->getQuery()->getResult();
-    }
 
     public function byId( $id ) {
 
@@ -224,7 +219,6 @@ class UserPolygonMapper extends BaseMapper {
     }
 
     public function getPolygon( $query ) {
-
         $qb = $this->em->createQueryBuilder();
         $qb->select( array('n','r','u') )
                 ->from($this->getEntityName(), 'n')
@@ -270,12 +264,23 @@ class UserPolygonMapper extends BaseMapper {
         return 'Whathood\Entity\UserPolygon';
     }
 
-    public function getWhathoodResult($x,$y) {
-        $neighborhoods = $this->getByXY($x,$y);
-        $whathoodResult = new WhathoodResult();
-        $whathoodResult->setLatLng($x,$y);
-        $whathoodResult->setNeighborhoods($neighborhoods);
-        return $whathoodResult;
+    /**
+     * get all UserPolygons that intersect 'point' and return an ElectionPoint
+     *
+     * @param mixed a Point
+     * @return mixed an ElectionPoint
+     */
+    public function getElectionPoint(Point $point) {
+        $user_polygons = $this->byPoint($point);
+        $election_point = ElectionPoint::build($point,$user_polygons);
+        return $election_point;
+    }
+
+    public function fetchAll() {
+        $qb = $this->em->createQueryBuilder()->select( array( 'up' ) )
+            ->from('Whathood\Entity\UserPolygon', 'up')
+            ->orderBy('up.id','ASC');
+        return $qb->getQuery()->getResult();
     }
 }
 ?>

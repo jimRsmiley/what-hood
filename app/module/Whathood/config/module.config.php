@@ -266,7 +266,7 @@ return array(
                 'options' => array(
                     'route' => '/api/v1/whathood[/x/:x][/y/:y]',
                     'defaults' => array(
-                        'controller' => 'Whathood\Controller\WhathoodRestful'
+                        'controller' => 'Whathood\Controller\ElectionPointRestful'
                     )
                 )
             ),
@@ -425,7 +425,8 @@ return array(
 
     'controllers' => array(
         'invokables' => array(
-            'Whathood\Controller\Watcher' => 'Whathood\Controller\WatcherController',
+
+            /* mvc controllers */
             'Whathood\Controller\Admin' => 'Whathood\Controller\AdminController',
             'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
@@ -439,12 +440,15 @@ return array(
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
 
+            /* restful controllers */
             'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
             'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\UserPolygonRestfulController',
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
-            'Whathood\Controller\WhathoodRestful'               => 'Whathood\Controller\WhathoodRestfulController',
+            'Whathood\Controller\ElectionPointRestful'          => 'Whathood\Controller\Restful\ElectionPointController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
 
+            /* console controllers */
+            'Whathood\Controller\Watcher' => 'Whathood\Controller\WatcherController',
             'Whathood\Controller\TestPointConsole' => 'Whathood\Controller\Console\TestPointController',
         ),
     ),

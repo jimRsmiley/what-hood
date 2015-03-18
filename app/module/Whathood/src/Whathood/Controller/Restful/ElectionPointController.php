@@ -1,25 +1,35 @@
 <?php
-namespace Whathood\Controller;
+namespace Whathood\Controller\Restful;
 
-use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
-use Whathood\Model\Whathood\WhathoodConsensus as Consensus;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
-class WhathoodRestfulController extends BaseRestfulController {
-
+/**
+ * serve restful requests for election points
+ */
+class ElectionPointController extends BaseController {
 
     public function get($id) {
         die("not yet implemented");
     }
 
+    /**
+     * can handle queries of:
+     *  - x and y
+     */
     public function getList() {
         $x = $this->params()->fromRoute('x');
         $y = $this->params()->fromRoute('y');
 
         $this->logger()->info("whathood REST get xy=$x,$y");
-        $whathood_result = $this->userPolygonMapper()->getWhathoodResult($x,$y);
+        $point = new Point($x,$y);
+        $electionPoint = $this->m()->userPolygonMapper()->getElectionPoint($point);
 
-        return new JsonModel($whathood_result->toArray());
+        if (null == $electionPoint)
+            return $this->badRequestJson("no user polygons found with point");
+
+        print get_class($electionPoint);
+        return new JsonModel($electionPoint->toArray());
     }
 
 }

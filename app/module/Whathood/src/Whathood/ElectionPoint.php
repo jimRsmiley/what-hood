@@ -4,11 +4,13 @@ namespace Whathood;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 /**
- * store a point and all the user_polygons that contain it. Provide accessor methods for counting them
+ * store a point and all the user_polygons that contain it.
+ * Provide accessor methods for counting them
  */
 class ElectionPoint extends \ArrayObject {
 
     protected $_point;
+
     protected $_user_polygons;
 
     protected $_winning_neighborhood_arr;
@@ -143,8 +145,8 @@ class ElectionPoint extends \ArrayObject {
             array_push( $array, $unit->toArray() );
         }
         return array(
-                'neighborhoods' => $array,
-                'total_votes'   => $this->totalVotes
+            'neighborhoods' => $array,
+            'total_votes'   => $this->totalVotes
         );
     }
 
