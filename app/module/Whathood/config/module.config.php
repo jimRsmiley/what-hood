@@ -297,9 +297,9 @@ return array(
                 ),
                 'test-point-route' => array(
                     'options' => array(
-                        'route' => 'test-point show [--neighborhood=] [--region=] [--grid-resolution=]',
+                        'route' => 'test-point show [--neighborhood_name=] [--region_name=] [--grid_res=]',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\TestPoint',
+                            'controller' => 'Whathood\Controller\TestPointConsole',
                             'action' => 'show'
                         )
                     )
@@ -379,9 +379,14 @@ return array(
                 return $mapper;
             },
 
+            'Whathood\Mapper\Election'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                return new \Whathood\Mapper\Election($sm,$em);
+            },
+
             'Whathood\Mapper\UserPolygonMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
-                return new \Whathood\Mapper\UserPolygonMapper( $sm,$em );
+                return new \Whathood\Mapper\UserPolygonMapper($sm,$em);
             },
 
             'Whathood\Mapper\WhathoodUserMapper'  => function($sm) {
@@ -439,6 +444,8 @@ return array(
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\WhathoodRestful'               => 'Whathood\Controller\WhathoodRestfulController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
+
+            'Whathood\Controller\TestPointConsole' => 'Whathood\Controller\Console\TestPointController',
         ),
     ),
 

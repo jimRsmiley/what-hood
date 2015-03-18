@@ -23,6 +23,15 @@ class BaseController extends AbstractActionController {
     private $contentiousPointMapper;
     private $_concaveHullMapper;
 
+    private $_mapper_builder;
+
+    public function m() {
+        if ($this->_mapper_builder == null)
+            $this->_mapper_builder = $this->getServiceLocator()
+                ->get('Whathood\Mapper\Builder');
+        return $this->_mapper_builder;
+    }
+
     public function onDispatch(\Zend\Mvc\MvcEvent $event) {
         $this->timer = \Whathood\Timer::init();
 
@@ -140,7 +149,9 @@ class BaseController extends AbstractActionController {
      *      route
      */
     public function getUriParameter($key) {
-        if( $this->params()->fromQuery($key) != null )
+        $on_console = $this->getRequest() instanceof \Zend\Console\Request;
+
+        if( !$on_console and $this->params()->fromQuery($key) != null )
             return $this->params()->fromQuery($key);
         if( $this->getEvent()->getRouteMatch()->getParam($key) != null )
             return $this->getEvent()->getRouteMatch()->getParam($key);

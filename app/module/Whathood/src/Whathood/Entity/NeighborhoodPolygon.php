@@ -75,6 +75,15 @@ class NeighborhoodPolygon extends \ArrayObject {
         $this->user_polygons = $user_polygons;
     }
 
+    public function getGeometry() {
+        return $this->geometry;
+    }
+    //
+    // sugar
+    public function setGeom($geom) {
+        $this->setGeometry($geom);
+    }
+
     public function setGeometry(  $data ) {
         if( $data instanceof Polygon )
             $this->geometry = $data;
@@ -93,10 +102,6 @@ class NeighborhoodPolygon extends \ArrayObject {
         }
     }
 
-    public function getGeometry() {
-        return $this->geometry;
-    }
-
     public function getCreatedAt() {
         return $this->created_at;
     }
@@ -105,16 +110,18 @@ class NeighborhoodPolygon extends \ArrayObject {
         $this->created_at = $created_at;
     }
 
-    public function __construct( $array = null ) {
-        $this->user_polygons = new \Doctrine\Common\Collections\ArrayCollection();
-
+    public function __construct(array $array = null ) {
         if( $array !== null ) {
             $hydrator = new ClassMethodHydrator();
             $hydrator->hydrate( $array, $this );
         }
+    }
 
-        if (empty($this->getCreatedAt()))
-            $this->setCreatedAt(new \DateTime());
+    public static function build(array $data) {
+        $neighborhood_polygon = new static($data);
+        if (null == $neighborhood_polygon->getCreatedAt())
+            $neighborhood_polygon->setCreatedAt(new \DateTime());
+        return $neighborhood_polygon;
     }
 
     public function userPolygonCount() {

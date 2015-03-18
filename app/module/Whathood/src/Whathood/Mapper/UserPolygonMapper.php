@@ -71,6 +71,14 @@ class UserPolygonMapper extends BaseMapper {
         return $query->getResult();
     }
 
+    public function byPoint(Point $point) {
+        return $this->byXY($point->getX(),$point->getY());
+    }
+
+    public function byXY($x,$y) {
+        return $this->getByXY($x,$y);
+    }
+
     public function getByXY($x,$y ) {
         $query = $this->em->createQuery( 'SELECT up'
             . ' FROM '. $this->getEntityName(). ' up'

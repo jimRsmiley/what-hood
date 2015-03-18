@@ -16,12 +16,13 @@ abstract class BaseMapper {
     protected $whathoodUserMapper;
     protected $_spatial_platform;
     protected $_concave_hull_mapper;
+    protected $_mapper_builder;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
 
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
             throw new \InvalidArgumentException(
-                                    "serviceManager must be of type dfafdaf");
+                                    "serviceManager must be of type \Zend\ServiceManager\ServiceManager");
 
         $this->sm = $serviceManager;
         $this->em = $doctrineEntityManager;
@@ -51,6 +52,10 @@ abstract class BaseMapper {
         $this->em->remove($entity);
     }
 
+    public function m() {
+        return $this->sm->get('Whathood\Mapper\Builder');
+    }
+
     public function spatialPlatform() {
        if($this->_spatial_platform == null)
             $this->_spatial_platform = new \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\PostGreSQL();
@@ -64,7 +69,12 @@ abstract class BaseMapper {
         return $this->_concave_hull_mapper;
     }
 
+    public function userPolygonMapper() {
+        return $this->sm->get('Whathood\Mapper\UserPolygonMapper');
+    }
+
     public function neighborhoodPolygonMapper() {
+        die('this is trouble right here');
         if( $this->neighborhoodPolygonMapper == null )
             $this->neighborhoodPolygonMapper =
                 $this->sm->get('Whathood\Mapper\UserPolygonMapper');

@@ -6,8 +6,7 @@ use Whathood\Entity\NeighborhoodPolygon;
 
 class WatcherController extends BaseController
 {
-    protected $_grid_resolution = 0.00008;
-    #protected $_grid_resolution = 0.0008;
+    protected $_grid_resolution = 0.0009;
 
     protected $_concave_hull_target_precentage = 0.9;
 
@@ -20,6 +19,12 @@ class WatcherController extends BaseController
         $region_name        = $this->getRequest()->getParam('region',null);
 
         $this->logger()->info("Whathood watcher has started");
+        $this->logger()->info(
+            sprintf("\tgrid-resolution=%f target-precision=%s",
+                $this->getGridResolution(),
+                $this->getTargetPercentage()
+            )
+        );
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
@@ -37,7 +42,7 @@ class WatcherController extends BaseController
 
             if (!empty($user_polygons)) {
                 foreach($user_polygons as $up) {
-                    $this->logger()->info(sprintf("processing new user generated polygon(%s) for neighborhood %s",
+                    $this->logger()->info(sprintf("\tprocessing new user generated polygon(%s) for neighborhood %s",
                         $up->getId(),$up->getNeighborhood()->getName() ));
                 }
 
@@ -47,7 +52,7 @@ class WatcherController extends BaseController
                 foreach($neighborhoods as $n) {
                     $ups = $n->getUserPolygons();
                     $this->logger()->info(
-                        sprintf("rebuilding neighborhood %s(%s) with %s user polygons",
+                        sprintf("\trebuilding neighborhood %s(%s) with %s user polygons",
                             $n->getName(),
                             $n->getId(),
                             count($ups)
@@ -57,23 +62,24 @@ class WatcherController extends BaseController
                     try {
                         # start build
                         $timer = \Whathood\Timer::init();
-                        $geojson = $this->neighborhoodPolygonMapper()->generateBorder(
+                        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
                             $ups,
                             $n->getId(),
                             $this->getGridResolution(),
                             $this->getConcaveHullTargetPercentage()
                         );
+
                         $elapsed_seconds = $timer->elapsed_seconds();
 
                         # end build
-                        $neighborhoodPolygon = new NeighborhoodPolygon( array(
-                            'geojson' => $geojson,
+                        $neighborhoodPolygon = NeighborhoodPolygon::build( array(
+                            'geom' => $polygon,
                             'neighborhood' => $n,
                             'user_polygons' => $ups
                         ));
                         array_push($elapsed_time_array,$elapsed_seconds);
                         $this->logger()->info(
-                            sprintf("id=%s name=%s num_user_polygons=%s build_time=%s mins",
+                            sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",
                                 $n->getId(),
                                 $n->getName(),
                                 count($ups),
@@ -84,14 +90,15 @@ class WatcherController extends BaseController
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());
+                        $this->logger()->err($e->getTraceAsString());
                         $err_msg = "FATAL: the watcher script died because of an error";
                         $this->logger()->err($err_msg);
                         die($err_msg);
                     }
                 }
-                $this->logger()->info(sprintf("average neighborhood build: %s",array_sum($elapsed_time_array)/count($elapsed_time_array)));
+                $this->logger()->info(sprintf("\taverage neighborhood build: %s",array_sum($elapsed_time_array)/count($elapsed_time_array)));
                 $elapsed_seconds = microtime(true) - $start_time;
-                $this->logger()->info(sprintf("total run seconds %s", $elapsed_seconds));
+                $this->logger()->info(sprintf("\ttotal run seconds %s", $elapsed_seconds));
             }
 
             if ($forever)
@@ -102,6 +109,10 @@ class WatcherController extends BaseController
 
     public function getGridResolution() {
         return $this->_grid_resolution;
+    }
+
+    public function getTargetPercentage() {
+        return $this->getConcaveHullTargetPercentage();
     }
 
     public function getConcaveHullTargetPercentage() {

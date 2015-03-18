@@ -1,0 +1,25 @@
+<?php
+
+
+?>
+
+    <div id="map" class="map"></div>
+
+    <script>
+
+        var map = new Whathood.Map('map');
+        map.addStreetLayer();
+
+        <?php if ($this->geojson_url != null) : ?>
+            url = '<?=$this->geojson_url?>';
+            console.log('fetching json from '+ url );
+            $.getJSON('<?=$this->geojson_url?>', function(data) {
+                var geojson = L.geoJson(data).addTo(map);
+            })
+            .fail( function() {
+                throw new Error("fetch of json failed");
+            });
+        <?php endif; ?>
+
+    </script>
+

@@ -10,125 +10,16 @@ namespace Whathood\Model\Whathood;
 
 class WhathoodConsensus {
 
-    protected $units = null;
-    protected $totalVotes = null;
 
-    public function __construct( $neighborhoods = null ) {
+    public function __construct( $user_polygons = null ) {
         $this->units = array();
         $this->totalVotes = 0;
 
-        if( $neighborhoods != null ) {
-            $this->addNeighborhoods( $neighborhoods );
+        if( $user_polygons != null ) {
+            $this->addNeighborhoods( $user_polygons );
         }
     }
 
-    public function getTotalVotes() {
-        return $this->totalVotes;
-    }
-
-    public function addNeighborhoods( $userPolygons ) {
-        foreach( $userPolygons as $userPolygon ) {
-            $nName = $userPolygon->getNeighborhood()->getName();
-
-            if( $this->hasUnit($nName) )
-                $this->getUnitByName( $nName )->addVote();
-            else
-                $this->addUnit( $userPolygon );
-
-            $this->totalVotes++;
-        }
-
-        /*
-         * now set the total votes for the units
-         */
-        foreach( $this->units as $unit )
-            $unit->setTotalVotes( $this->totalVotes );
-    }
-
-    public function getUnits() {
-        return $this->units;
-    }
-
-    public function getUnitByName( $neighborhoodName ) {
-        foreach( $this->units as $unit ) {
-            if( $unit->getName() == $neighborhoodName ) {
-                return $unit;
-            }
-        }
-        return null;
-    }
-
-    public function getVoteNum( $neighborhoodName ) {
-
-
-        foreach( $this->getUnits() as $unit ) {
-            if( $unit->getName() == $neighborhoodName ) {
-                return $unit->getVotes();
-            }
-        }
-
-        return 0;
-    }
-
-    /*
-     * return the winning unit or units with the most number of votes, return
-     * all of the tieing units if they exist
-     */
-    public function getWinnerUnits() {
-
-        $mostVoteUnits = array();
-
-        $mostVotes = 0;
-        foreach( $this->getUnits() as $unit ) {
-            $votes = $unit->getVotes();
-
-            // if it's the sole winner, blow out the array and make it the only
-            // unit
-            if( $votes > $mostVotes ) {
-                $mostVoteUnits = array();
-                $mostVoteUnits[] = $unit;
-                $mostVotes = $votes;
-            }
-            // if it only ties, add it to the mostVoteUnits total
-            else if( $votes == $mostVotes ) {
-                $mostVoteUnits[] = $unit;
-            }
-        }
-
-        return $mostVoteUnits;
-    }
-
-    public function hasUnit( $neighborhoodName ) {
-
-        foreach( $this->units as $unit ) {
-            if( $unit->getName() == $neighborhoodName ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function addUnit( $userPolygon ) {
-        $this->units[] = new WhathoodConsensusUnit( array(
-            'neighborhood' => $userPolygon,
-            'name'  => $userPolygon->getNeighborhood()->getName(),
-            'votes' => 1
-        ));
-
-    }
-
-    public function toArray() {
-
-        $array = array();
-
-        foreach( $this->units as $unit ) {
-            array_push( $array, $unit->toArray() );
-        }
-        return array(
-                'neighborhoods' => $array,
-                'total_votes'   => $this->totalVotes
-        );
-    }
 }
 
 
