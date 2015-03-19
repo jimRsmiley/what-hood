@@ -288,7 +288,7 @@ return array(
                 ),
                 'watcher-route' => array(
                     'options' => array(
-                        'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=]',
+                        'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\Watcher',
                             'action' => 'watch'
