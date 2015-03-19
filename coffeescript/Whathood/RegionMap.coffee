@@ -77,11 +77,10 @@ Whathood.RegionMap = Whathood.Map.extend
     .done () ->
       self.spin(false)
 
-  getPopup: (whathood_result,regionName) ->
-
-    neighborhoods = whathood_result.response.consensus.neighborhoods
-    requestLat = whathood_result.request.lat
-    requestLng = whathood_result.request.lng
+  getPopup: (electionPoint,regionName) ->
+    neighborhoods = electionPoint.neighborhoods
+    requestLat = electionPoint.point.y
+    requestLng = electionPoint.point.x
 
     html = ''
     unless neighborhoods.length
@@ -90,16 +89,18 @@ Whathood.RegionMap = Whathood.Map.extend
     else
       for n in neighborhoods
         name  = n.name
-        votes = n.votes
+        votes = n.num_votes
         html += votes + ' ' + "vote".pluralize(votes) + ' for ' + name + '<br/>'
 
-        url = @getNeighborhoodBrowseUrl requestLat, requestLng
+        url = @getNeighborhoodBrowseUrl electionPoint.point.x, electionPoint.point.y
 
         if( typeof regionName != 'undefined' )
             url += '&region_name='+regionName
         html += '<a href="'+url+'">Browse these neighborhoods</a>'
     return html
 
+  # when a user clicks on the map, get the lat,lng and send a request for a
+  # point election, then display it
   mapClickEventHandler: (e) ->
     lat = e.latlng.lat
     lng = e.latlng.lng
@@ -112,15 +113,13 @@ Whathood.RegionMap = Whathood.Map.extend
     @locationMarker.bindPopup('<div id="map_popup" style="overflow:auto; width: 40px; height: 40px"><img src="/images/spiffygif_30x30.gif" alt="loading..."/></div>')
       .openPopup()
 
-    searchUrl = Whathood.Util.whathood_url lng,lat
-    __self = @
-    $.ajax
-      url: searchUrl,
-      context: document.body,
-      success: (data) ->
-        __self.locationMarker.bindPopup(
-          __self.getPopup(data,__self.regionName)
-        ).openPopup()
+    # send a point election api request and popup the marker with it's result
+    __self = this
+    cb = (pointElection) ->
+      __self.locationMarker.bindPopup(
+        __self.getPopup pointElection, __self.regionName
+      ).openPopup()
+    pointElection = Whathood.PointElection.build lng, lat, cb
 
   getNeighborhoodBrowseUrl: (lat,lng) ->
     "/whathood/user-polygon/page-center/page/1/x/#{lat}/y/#{lng}"

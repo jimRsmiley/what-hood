@@ -28,7 +28,6 @@ class ElectionPointController extends BaseController {
         if (null == $electionPoint)
             return $this->badRequestJson("no user polygons found with point");
 
-        print get_class($electionPoint);
         return new JsonModel($electionPoint->toArray());
     }
 

@@ -84,6 +84,8 @@ class WatcherController extends BaseController
                             'neighborhood' => $n,
                             'user_polygons' => $ups
                         ));
+                        \Zend\Debug\Debug::dump($polygon);
+                        exit;
                         array_push($elapsed_time_array,$elapsed_seconds);
                         $this->logger()->info(
                             sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",

@@ -106,10 +106,12 @@ class Neighborhood extends \ArrayObject {
     public function toArray(array $opts = null) {
         if ($opts == null)
             $opts = array();
+
         $n_arr = array(
-            'id' => $this->getId(),
-            'date_time_added' => $this->getDateTimeAdded(),
-            'region_id' => $this->getRegion()->getId()
+            'id'                => $this->getId(),
+            'name'              => $this->getName(),
+            'date_time_added'   => $this->getDateTimeAdded(),
+            'region_id'         => $this->getRegion()->getId()
         );
 
         if( $this->getRegion() != null ) {

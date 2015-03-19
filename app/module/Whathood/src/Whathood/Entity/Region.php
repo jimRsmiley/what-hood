@@ -61,16 +61,10 @@ class Region extends \ArrayObject {
     }
 
     public function toArray() {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-
-        $array = $hydrator->extract($this);
-
-        unset( $array['iterator_class'] );
-        unset( $array['iterator']);
-        unset( $array['flags']);
-        unset( $array['array_copy']);
-
-        return $array;
+        return array(
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        );
     }
 }
 ?>

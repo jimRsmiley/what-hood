@@ -15,14 +15,19 @@ class ElectionPoint extends \ArrayObject {
 
     protected $_winning_neighborhood_arr;
 
-    protected $units = null;
+    // an array of CandidateNeighborhoods
+    protected $_candidate_neighborhoods = null;
+
+    public function getUserPolygons() {
+        return $this->_user_polygons;
+    }
 
     public function getPoint() {
         return $this->_point;
     }
 
-    public function getUnits() {
-        return $this->units;
+    public function getCandidateNeighborhoods() {
+        return $this->_candidate_neighborhoods;
     }
 
     public function __construct(Point $point, $user_polygons) {
@@ -35,7 +40,7 @@ class ElectionPoint extends \ArrayObject {
      */
     public static function build(Point $point, $user_polygons) {
         $election_point = new static($point,$user_polygons);
-        $election_point->countUserPolygons();
+        $election_point->runElection();
         return $election_point;
     }
 
@@ -44,7 +49,7 @@ class ElectionPoint extends \ArrayObject {
      * @return bool
      */
     public function isTie() {
-        return count($this->getWinnerIds()) > 1;
+        return count($this->getWinningCandidates()) > 1;
     }
 
     /*
@@ -53,8 +58,8 @@ class ElectionPoint extends \ArrayObject {
      * @return boolean
      */
     public function isWinner($neighborhood_id) {
-        foreach($this->getWinnerIds() as $test_id) {
-            if ($test_id == $neighborhood_id)
+        foreach($this->getWinningCandidates() as $cn) {
+            if ($neighborhood_id == $cn->getNeighborhood()->getId())
                 return true;
         }
         return false;
@@ -76,20 +81,29 @@ class ElectionPoint extends \ArrayObject {
     /**
      * count the user polygons, point the neighborhood_ids in an associative
      * array with the values being the counts of user polygons
+     *
+     * @return null
      */
-    public function countUserPolygons() {
+    public function runElection() {
         $arr = array();
 
         foreach($this->_user_polygons as $up) {
             $n = $up->getNeighborhood();
 
             if (array_key_exists($n->getId(),$this->_user_polygons)) {
-                $this->units[$n->getId()]++;
+                $this->_candidate_neighborhoods[$n->getId()]->increment_vote();
             }
             else
-                $this->units[$n->getId()]= 1;
+                $cn = 
+                 CandidateNeighborhood::build(
+                                                                array(
+                                                                    'point' => $this->getPoint(),
+                                                                    'num_votes'=> 1,
+                                                                    'neighborhood'=> $n
+                                                                )
+                                                            );
+                $this->_candidate_neighborhoods[$n->getId()]=$cn;
         }
-        asort($this->units);
     }
 
     public function totalVotes() {
@@ -97,64 +111,94 @@ class ElectionPoint extends \ArrayObject {
     }
 
     public function getTotalVotes() {
-        return count($this->user_polygons);
+        return count($this->getUserPolygons());
     }
 
     /*
-     * return the winning unit or units with the most number of votes, return
+     * return the winning CandidateNeighborhood or units with the most number of votes, return
      * all of the tieing units if they exist
+     *
+     * @return array - an array of CandidateNeighborhoods
      */
-    public function getWinnerIds() {
+    public function getWinningCandidates() {
 
-        $mostVoteIds = array();
+        $mostVoteCNs = array();
 
         $mostVotes = 0;
-        foreach( $this->getUnits() as $n_id => $votes ) {
-
+        foreach( $this->getCandidateNeighborhoods() as $cn ) {
+            $test_num_votes = $cn->getNumVotes();
             // if it's the sole winner, blow out the array and make it the only
             // unit
-            if( $votes > $mostVotes ) {
+            if( $test_num_votes > $mostVotes ) {
                 $mostVoteIds = array();
-                $mostVoteIds[] = $n_id;
-                $mostVotes = $votes;
+                $mostVoteCNs[] = $cn;
+                $mostVotes = $test_num_votes;
             }
             // if it only ties, add it to the mostVoteIds total
-            else if( $votes == $mostVotes ) {
-                $mostVoteIds[] = $n_id;
+            else if( $test_num_votes == $mostVotes ) {
+                $mostVoteCNs[] = $cn;
             }
         }
 
-        return $mostVoteIds;
+        return $mostVoteCNs;
     }
 
-    public function hasUnit( $neighborhoodName ) {
-
-        foreach( $this->units as $unit ) {
-            if( $unit->getName() == $neighborhoodName ) {
-                return true;
-            }
+    /**
+     * given a neighborhood id, get the neighborhood object by running through the user polygons
+     *
+     * @return mixed CandidateNeighborhood object
+     */
+    public function getCandidateNeighborhoodById($neighborhood_id) {
+        if (array_key_exists($neighborhood_id,$this->getCandidateNeighborhoods())) {
+            return $this->getCandidateNeighborhoods()[$neighborhood_id];
         }
-        return false;
+        else {
+            throw new \InvalidArgumentException(
+                "candidate neighborhood with neighborhood id $neighborhood_id is not present in user polygons");
+        }
+    }
+
+    /**
+     * return the region for this election
+     * do it by grabbing the first CandidateNeighborhood and returning it's region
+     * @return mixed Region object
+     */
+    public function getRegion() {
+        if (0 < count($this->getCandidateNeighborhoods())) {
+            $n_ids = array_keys($this->getCandidateNeighborhoods());
+            return $this->getCandidateNeighborhoods()[$n_ids[0]]->getNeighborhood()->getRegion();
+        }
+        throw new \Exception("no CandidateNeighborhoods, so cannot get Region");
     }
 
     public function toArray() {
 
-        $array = array();
+        $neighborhoods_array = array();
 
-        foreach( $this->units as $unit ) {
-            array_push( $array, $unit->toArray() );
+        foreach( $this->getCandidateNeighborhoods()
+                            as $neighborhood_id => $votes) {
+
+            array_push(
+                $neighborhoods_array,
+                $this->getCandidateNeighborhoodById($neighborhood_id)->toArray()
+            );
         }
+
+        $winner_cns = $this->getWinningCandidates();
+        $winners = array();
+        foreach ($winner_cns as $wcn) {
+            array_push($winners,$wcn->toArray());
+        }
+
         return array(
-            'neighborhoods' => $array,
-            'total_votes'   => $this->totalVotes
+            'region'        => $this->getRegion()->toArray(),
+            'winners'       => $winners,
+            'neighborhoods' => $neighborhoods_array,
+            'total_votes'   => $this->getTotalVotes(),
+            'point' => array(
+                'x' => $this->getPoint()->getX(),
+                'y' => $this->getPoint()->getY()
+            )
         );
-    }
-
-    public function getVotes() {
-        return $this->votes;
-    }
-
-    public function setVotes($votes) {
-        $this->votes = $votes;
     }
 }

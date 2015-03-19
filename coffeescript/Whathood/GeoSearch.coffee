@@ -24,9 +24,9 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       queryBox = document.getElementById 'leaflet-control-geosearch-qry'
       @geosearch queryBox.value
 
-    popup_html: (whathood_result) ->
+    popup_html: (pointElection) ->
       str = ""
-      for neighborhood in whathood_result.response.consensus.neighborhoods
+      for neighborhood in pointElection.neighborhoods
         str = "#{str}#{neighborhood.name}: #{neighborhood.votes}<br/>"
       str = "#{str}Disagree? <a href='/whathood/user-polygon/add'>Draw your own neighborhood</a> and we'll include merge it into the borders"
       return str
