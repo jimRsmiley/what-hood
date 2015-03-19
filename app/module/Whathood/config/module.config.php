@@ -442,14 +442,14 @@ return array(
 
             /* restful controllers */
             'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
-            'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\UserPolygonRestfulController',
+            'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\Restful\UserPolygonController',
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\ElectionPointRestful'          => 'Whathood\Controller\Restful\ElectionPointController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
 
             /* console controllers */
-            'Whathood\Controller\Watcher' => 'Whathood\Controller\WatcherController',
-            'Whathood\Controller\TestPointConsole' => 'Whathood\Controller\Console\TestPointController',
+            'Whathood\Controller\Watcher'                       => 'Whathood\Controller\WatcherController',
+            'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
         ),
     ),
 

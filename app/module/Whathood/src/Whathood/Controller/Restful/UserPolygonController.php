@@ -1,10 +1,10 @@
 <?php
-namespace Whathood\Controller;
+namespace Whathood\Controller\Restful;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
-class UserPolygonRestfulController extends BaseRestfulController {
+class UserPolygonController extends BaseController {
 
     protected $collectionOptions = array('GET','POST');
     protected $resourceOptions = array('GET','PUT','DELETE');
@@ -12,7 +12,7 @@ class UserPolygonRestfulController extends BaseRestfulController {
     public function get($id) {
 
         try {
-            $up = $this->userPolygonMapper()->byId($id);
+            $up = $this->m()->userPolygonMapper()->byId($id);
 
             $this->logger()->info("user-polygon REST served GET user-polygon $id");
 

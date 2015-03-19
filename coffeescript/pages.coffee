@@ -18,6 +18,7 @@ W.user_polygon_page_center = () ->
     $.ajax
       url: "/api/v1/user-polygon/#{up_id}"
       success: (user_polygon) ->
+        console.log user_polygon
         $form = $('.user_polygon_form')
         $name = $('input[name="neighborhood_name"]')
         $name.val user_polygon.neighborhood.name
