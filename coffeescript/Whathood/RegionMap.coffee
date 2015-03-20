@@ -79,8 +79,7 @@ Whathood.RegionMap = Whathood.Map.extend
 
   getPopup: (electionPoint,regionName) ->
     neighborhoods = electionPoint.neighborhoods
-    requestLat = electionPoint.point.y
-    requestLng = electionPoint.point.x
+    region_name   = electionPoint.region.name
 
     html = ''
     unless neighborhoods.length
@@ -90,7 +89,7 @@ Whathood.RegionMap = Whathood.Map.extend
       for n in neighborhoods
         name  = n.name
         votes = n.num_votes
-        html += votes + ' ' + "vote".pluralize(votes) + ' for ' + name + '<br/>'
+        html += votes + ' ' + "vote".pluralize(votes) + " for <a href='/#{region_name}/#{name}'>#{name}</a><br/>"
 
         url = @getNeighborhoodBrowseUrl electionPoint.point.x, electionPoint.point.y
 
