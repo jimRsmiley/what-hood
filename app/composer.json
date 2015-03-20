@@ -8,11 +8,11 @@
     "homepage": "http://whathood.in",
     "require": {
         "php": ">=5.3.3",
-         
-        "zendframework/zendframework": "*",
+
+        "zendframework/zendframework": "2.3.*",
         "zendframework/zend-developer-tools": "*",
         "zendframework/zendoauth": "2.*",
-        
+
         "doctrine/doctrine-module": "*",
         "doctrine/orm": "*",
         "doctrine/doctrine-orm-module": "*",
