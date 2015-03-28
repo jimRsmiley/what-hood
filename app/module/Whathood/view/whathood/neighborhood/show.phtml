@@ -4,7 +4,10 @@ $this->headTitle()->prepend($this->neighborhood->getName() . ' / ' . $this->neig
 ?>
 
 <h3><?=$neighborhood->getRegion()->getName()?> \ <?=$neighborhood->getName()?></h3>
-<p>Based on <?=$this->user_polygon_count?> user drawn borders</p>
+<p>Based one<a href="/whathood/user-polygon/page/region/<?=$this->neighborhood->getRegion()->getName()?>/neighborhood/<?=$this->neighborhood->getName()?>/0/">
+        <?=$this->user_polygon_count?> user drawn borders
+    </a>
+</p>
 <div id="map" data-neighborhood-id="<?=$neighborhood->getId()?>" class="automargin mapheight" style="height: 400px;"></div>
 
 <script>
