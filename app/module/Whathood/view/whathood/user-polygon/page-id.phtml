@@ -1,19 +1,24 @@
-<?php $this->headTitle()->prepend("Browse user polygons at point y ".$this->y." x ".$this->x); ?>
+<?php
 
-<?php if (!$this->paginator->count()) :
+$this->headTitle()->prepend("Browse user polygons at point y ".$this->y." x ".$this->x);
+
+if (!$this->paginator->count()) :
     throw new \Exception("no polygons found for this center");
 
 else :
-echo $this->paginationControl(
-    $this->paginator,
-    'Sliding',
-    'whathood/user-polygon/user_polygon_pagination_control.phtml',
-    array(
-        'paginator' => $this->paginator,
-        'route' => 'user-polygon-page-list',
-    )
-);
-    foreach( $this->paginator as $user_polygon ) : ?>
+    echo $this->paginationControl(
+        $this->paginator,
+        'Sliding',
+        'whathood/user-polygon/user_polygon_pagination_control.phtml',
+        array(
+            'paginator' => $this->paginator,
+            'route' => 'user-polygon-page-list',
+        )
+    );
+?>
+
+<?php    foreach ($this->paginator as $user_polygon) : ?>
+
         <form class="form-horizontal">
             <div class="form-group">
                 <label for "input_id" class="col-sm-3 control-label">Id</label>
@@ -28,15 +33,21 @@ echo $this->paginationControl(
                 <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
                     data-x="<?=$this->x?>"
                     data-y="<?=$this->y?>"
+                    data-neighborhood_name="<?=$user_polygon->getNeighborhood()->getName()"
                 >
         </form>
+
         <div class="row">
             <div id="map" class="map user_polygon_page_map"></div>
         </div>
+
     <?php endforeach; ?>
+
 <?php endif; ?>
+
+
 <script>
-$('document').ready( function() {
-    Whathood.user_polygon_page_center();
-});
+    $('document').ready( function() {
+        Whathood.user_polygon_page_id();
+    });
 </script>

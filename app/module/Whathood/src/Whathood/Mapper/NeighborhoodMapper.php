@@ -99,11 +99,10 @@ class NeighborhoodMapper extends BaseMapper {
                 . " WHERE n.name = :n_name"
                 . ' AND r.name = :r_name';
 
-        $query = $this->em->createQuery($dql)
-                ->setParameter( ':n_name', $neighborhoodName );
-        $query->setParameter(':r_name', $regionName );
-
-        return $query->getSingleResult();
+        return $this->em->createQuery($dql)
+                ->setParameter(':n_name',$neighborhoodName)
+                ->setParameter(':r_name',$regionName)
+                ->getSingleResult();
     }
 
     public function save( NeighborhoodEntity $neighborhood ) {

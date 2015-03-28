@@ -9,7 +9,20 @@ W.user_polygon_view = () ->
   map.addGeoJson( geoJsonUrl )
   map.addStreetLayer()
 
-W.Page.user_polygon_id = () ->
+W.user_polygon_page_id = () ->
+    $node = $('input[name="user_polygon_id"]')
+    up_id = $node.data('user_polygon_id')
+
+    url = "/api/v1/user-polygon/#{up_id}"
+    console.log url
+    $.ajax
+      url: url
+      success: (user_polygon) ->
+        map = new W.UserPolygonMap 'map'
+        map.addStreetLayer()
+        map._add_geojson user_polygon
+      error: (xhr,textStatus) ->
+        alert xhr.response.msg
 
 W.user_polygon_page_center = () ->
     $node = $('input[name="user_polygon_id"]')

@@ -184,6 +184,18 @@ return array(
                 ),
             ),
 
+            'user_polygon_page_neighborhood' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/whathood/user-polygon/page/region/:region/neighborhood/:neighborhood/:page[/]',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'page-neighborhood',
+                    ),
+                ),
+			),
+
             'user_polygon_page_center' => array(
                 'type'    => 'Segment',
                 'options' => array(

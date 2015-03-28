@@ -10,7 +10,8 @@ class UserPolygonController extends BaseController {
     protected $resourceOptions = array('GET','PUT','DELETE');
 
     public function get($id) {
-
+        if (empty($id) or $id=='null')
+            return $this->badRequestJson("id may not be empty");
         try {
             $up = $this->m()->userPolygonMapper()->byId($id);
 

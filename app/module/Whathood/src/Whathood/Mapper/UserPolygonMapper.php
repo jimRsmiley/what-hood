@@ -54,18 +54,6 @@ class UserPolygonMapper extends BaseMapper {
         return $query->getResult();
     }
 
-    public function getByNeighborhood( $neighborhoodName, $regionName ) {
-        $dql = "SELECT up FROM Whathood\Entity\UserPolygon up
-            JOIN up.neighborhood n
-            JOIN n.region r
-            WHERE n.name = :neighborhood
-            AND r.name = :region";
-        $query = $this->em->createQuery($dql)
-            ->setParameter(':neighborhood',$neighborhoodName)
-            ->setParameter(':region',$regionName);
-        return $query->getResult();
-    }
-
     public function byPoint(Point $point) {
         return $this->byXY($point->getX(),$point->getY());
     }
@@ -233,6 +221,13 @@ class UserPolygonMapper extends BaseMapper {
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function createByNeighborhoodQuery(Neighborhood $neighborhood) {
+        $dql = "SELECT up FROM Whathood\Entity\UserPolygon up
+            WHERE up.neighborhood = :neighborhood ORDER BY up.id ASC";
+        return $this->em->createQuery($dql)
+            ->setParameter(':neighborhood',$neighborhood->getId());
     }
 
     public function getPaginationQuery(array $opts = null) {

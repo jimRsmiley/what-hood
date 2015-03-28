@@ -67,6 +67,61 @@ class UserPolygonController extends BaseController
         return $viewModel;
     }
 
+	/**
+     * we want to page through the user polygons based on a center point
+     *
+     * @return \Zend\View\Model\ViewModel
+     * @throws \InvalidArgumentException
+     */
+    public function pageNeighborhoodAction() {
+        $base_url = '/whathood/user-polygon/page';
+        $item_count_per_page = 1;
+
+        $neighborhood_name  = $this->getUriParameter('neighborhood');
+        $region_name        = $this->getUriParameter('region');
+
+        $this->logger()->info(
+            sprintf("Controller/UserPolygon/page-neighborhood neighborhood_name=%s region_name=%s",
+                $neighborhood_name,$region_name ));
+        if (empty($neighborhood_name) or empty($region_name))
+            throw new \InvalidArgumentException("must specify x and y");
+
+
+        try {
+            $neighborhood = $this->m()->neighborhoodMapper()->byName($neighborhood_name,$region_name);
+        }
+        catch(\Doctrine\ORM\NoResultException $e) {
+            throw new \Exception("no neighborhood found with name $neighborhood_name, region $region_name");
+        }
+
+        $query = $this->m()->userPolygonMapper()->createByNeighborhoodQuery($neighborhood);
+
+        $uriParams = array(
+            'neighborhood' => $neighborhood_name,
+            'region' => $region_name
+        );
+
+        if( empty($pageNum) )
+            $pageNum = 1;
+
+        // prep the paginator
+        $paginator = new \Whathood\Model\UserPolygonPaginator(
+                new \Whathood\Model\UserPolygonPaginatorAdapter($query)
+        );
+        $paginator->setDefaultItemCountPerPage($item_count_per_page);
+		$paginator->setBaseUrl($base_url);
+        $paginator->setCurrentPageNumber($pageNum);
+        $paginator->setUriParams($uriParams);
+
+        if (0 == $paginator->getTotalItemCount())
+            throw new \Exception("no user polygons returned by paginator query");
+
+        $viewModel = $this->getViewModel(
+            array('paginator' => $paginator)
+        );
+        $viewModel->setTemplate('/whathood/user-polygon/page-id.phtml');
+        return $viewModel;
+    }
     /**
      * we want to page through all user polygons 10 at a time
      *
