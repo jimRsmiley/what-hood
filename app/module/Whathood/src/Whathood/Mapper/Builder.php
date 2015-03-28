@@ -23,6 +23,10 @@ class Builder extends BaseMapper {
         $this->em = $doctrineEntityManager;
     }
 
+    public function doctrineEntityManager() {
+        return $this->sm->get('mydoctrineentitymanager');
+    }
+
     public function electionMapper() {
         return $this->sm->get('Whathood\Mapper\Election');
     }
