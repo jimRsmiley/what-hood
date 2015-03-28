@@ -10,47 +10,10 @@ use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Region;
 use Doctrine\ORM\Query\ResultSetMapping;
-/**
- * Description of NeighborhoodPolygonMapper
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
+
 class NeighborhoodPolygonMapper extends BaseMapper {
 
-    public function getNeighborhoodPolygonByNeighborhoodId($neighborhoodId) {
-
-        //print $this->getCurrentDateTimeAsString() . " testing point\n";
-        $query = $this->em->createQuery( 'SELECT np'
-            . ' FROM '. $this->getEntityName(). ' n'
-            . ' WHERE np.neighborhood = :neighborhoodId'
-        );
-        $query->setParameter( ':neighborhoodId', $neighborhoodId );
-        $result = $query->getSingleResult();
-
-        return $result;
-    }
-
-    public function latestByNeighborhoodId($n_id) {
-        $query = $this->em->createQuery( 'SELECT np'
-                . ' FROM '. $this->getEntityName(). ' np'
-                . ' JOIN Whathood\Entity\Neighborhood n'
-                . ' WHERE n.id = :id'
-                . ' ORDER BY np.id DESC'
-            );
-        $query->setMaxResults(1);
-        $query->setParameter( ':id', $n_id );
-        return $query->getSingleResult();
-    }
-
-    public function byNeighborhood(Neighborhood $neighborhood) {
-        $dql = "SELECT np FROM Whathood\Entity\NeighborhoodPolygon np
-            WHERE np.neighborhood = :neighborhood";
-        $query = $this->em->createQuery($dql)
-            ->setParameter(':neighborhood',$neighborhood->getId());
-        return $query->getResult();
-    }
-
-    public function getNpById($neighborhoodPolygonId) {
+    public function byId($neighborhoodPolygonId) {
 
         //print $this->getCurrentDateTimeAsString() . " testing point\n";
         $query = $this->em->createQuery( 'SELECT np'
@@ -61,6 +24,35 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         $result = $query->getSingleResult();
 
         return $result;
+    }
+
+    /**
+     * return the latest neighborhood polygon by neighborhood id
+     *
+     * @return mixed - a NeighborhoodPolygon entity
+     */
+    public function latestByNeighborhood(Neighborhood $neighborhood) {
+        $query = $this->em->createQuery( 'SELECT np'
+                . ' FROM '. $this->getEntityName(). ' np'
+                . ' WHERE np.neighborhood = :neighborhood_id'
+                . ' ORDER BY np.id DESC'
+            );
+        $query->setMaxResults(1);
+        $query->setParameter( ':neighborhood_id', $neighborhood->getId() );
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @description returns all the NeighborhoodPolygon objects associated with the given neighborhood
+     *
+     * @return array - an array of NeighborhoodPolygon entities
+     */
+    public function byNeighborhood(Neighborhood $neighborhood) {
+        $dql = "SELECT np FROM Whathood\Entity\NeighborhoodPolygon np
+            WHERE np.neighborhood = :neighborhood";
+        $query = $this->em->createQuery($dql)
+            ->setParameter(':neighborhood',$neighborhood->getId());
+        return $query->getResult();
     }
 
     public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {

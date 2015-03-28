@@ -22,6 +22,10 @@ use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
  */
 class NeighborhoodPolygonController extends BaseController
 {
+    /**
+     * show neighborhood polygons by region
+     *
+     */
     public function showRegionAction() {
         $format     = $this->getUriParameter('format');
         $regionName = $this->getUriParameter('region_name');
@@ -47,33 +51,6 @@ class NeighborhoodPolygonController extends BaseController
             ));
 
             return $viewModel;
-        }
-    }
-
-    public function byCreateEventAction() {
-
-        $createEventId = $this->getUriParameter('create_event_id');
-
-        if( empty($neighborhoodPolygonId) )
-            return new ErrorViewModel('id may not be empty');
-
-        if( $format === 'json' ) {
-
-            try {
-                $neighborhoodPolygons = $this->neighborhoodPolygonMapper()->getNpByCreateEventId($createEventId);
-            } catch( \Doctrine\ORM\NoResultException $e ) {
-                return new ErrorViewModel( array(
-                    'message'   => 'No Neighborhood exists with id ' . $neighborhoodPolygonId
-                ));
-            }
-            return new JsonModel( $neighborhoodPolygon->toArray() );
-        }
-
-        /*
-         * return HTML
-         */
-        else {
-            return new ViewModel(array('neighborhoodPolygonId' => $neighborhoodPolygonId ) );
         }
     }
 
@@ -124,32 +101,6 @@ class NeighborhoodPolygonController extends BaseController
 
         return $viewModel;
     }
-
-    public function byRegionAction() {
-
-        $regionId = $this->params()->fromQuery('region_id');
-        $format = $this->getUriParameter('format');
-
-        $mapper = $this->getServiceLocator()
-                    ->get('Whathood\Mapper\Neighborhood');
-
-        if( !empty( $regionId ) ) {
-            $neighborhoods = $mapper->getByRegionId( $regionId );
-        }
-
-        $featureCollection = new FeatureCollection();
-        foreach( $neighborhoods as $n ) {
-            $featureCollection->addFeature( $n );
-        }
-
-        if( $format == 'json' ) {
-            return new JsonModel( $featureCollection->toArray() );
-        }
-        $viewModel = new ViewModel( array( 'neighborhoods' => $neighborhoods ) );
-        $viewModel->setTemplate( 'whathood/neighborhood/show-many.phtml');
-        return $viewModel;
-    }
-
 
     /*
      * from the latLngJson, we need to create a polygon object

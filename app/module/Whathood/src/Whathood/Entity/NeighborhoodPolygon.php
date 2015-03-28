@@ -151,6 +151,7 @@ class NeighborhoodPolygon extends \ArrayObject {
         if( $this->getNeighborhood() != null )
             $np_arr['neighborhood'] = $this->getNeighborhood()->toArray();
 
+        $np_arr['id'] = $this->getId();
         return $np_arr;
     }
 

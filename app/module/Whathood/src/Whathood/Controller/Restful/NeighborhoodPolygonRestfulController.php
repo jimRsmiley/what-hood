@@ -22,14 +22,22 @@ class NeighborhoodPolygonRestfulController extends BaseController {
      *
      */
     public function getList() {
+        $query_type = $this->params()->fromQuery('query_type');
+
         $neighborhood_latest_polygon_id = $this->params()
                                     ->fromQuery('neighborhood_latest_polygon_id');
 
-        if (!empty($neighborhood_latest_polygon_id)) {
-            $n = $this->m()
-                ->neighborhoodPolygonMapper()
-                    ->latestByNeighborhoodId($neighborhood_latest_polygon_id);
-            return new JsonModel( $n->toArray() );
+        if ('latest'==$query_type) {
+            $neighborhood_id = $this->params()->fromQuery('neighborhood_id');
+
+            // get the neighborhood
+            $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
+
+            // get the latest NeighborhoodPolygon
+            $neighborhood_polygon = $this->m()->neighborhoodPolygonMapper()
+                ->latestByNeighborhood($neighborhood);
+
+            return new JsonModel( $neighborhood_polygon->toArray() );
         }
         return new JsonModel( array(
             'msg' => 'not yet implemented' ));
