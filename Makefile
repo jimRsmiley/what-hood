@@ -1,10 +1,10 @@
 all: grunt
 
 grunt:
-	npm update grunt --save-dev
-	npm update grunt-contrib-watch --save-dev
-	npm update grunt-contrib-coffee --save-dev
-	npm update grunt-contrib-clean --save-dev
+	npm install grunt --save-dev
+	npm install grunt-contrib-watch --save-dev
+	npm install grunt-contrib-coffee --save-dev
+	npm install grunt-contrib-clean --save-dev
 	grunt coffee
 
 clean-grunt:

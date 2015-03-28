@@ -9,6 +9,7 @@
 #
 
 require 'optparse'
+require 'pp'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
 Whathood::Util.check_for_root_user()
@@ -33,6 +34,7 @@ DEST_DIR="/opt/whathood";
 if options[:watcher]
   init_watcher()
 else
+  update_nginx()
   deploy_new_code()
 end
 
@@ -46,6 +48,19 @@ BEGIN {
 		delete_opt_code()
         copy_to_opt()
         init_watcher()
+    end
+
+    def update_nginx
+        etc='/etc/nginx/sites-available/whathood.conf'
+        source="#{APP_DIR}/../etc/nginx/whathood.conf"
+        result=system("diff #{etc} #{source}")
+
+        puts "*     updating nginx whathood.conf"
+        `sudo cp -f #{source} /etc/nginx/sites-available`
+        `sudo cp -f #{APP_DIR}/../etc/php5-fpm/poold-whathood.conf /etc/php5/fpm/pool.d/whathood.conf`
+        `sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`
+        `sudo service nginx reload && sudo service php5-fpm restart`
+        exit
     end
 
     def run_composer
@@ -69,10 +84,11 @@ BEGIN {
     end
 
 	def delete_opt_code
-		puts "*     * cleaning out #{DEST_DIR}"	
+		puts "*     * cleaning out #{DEST_DIR}"
 		cmd = "rm -rf #{DEST_DIR}/app"
 		`#{cmd}`
-		cmd = "rm -f #{DEST_DIR}/*"
+
+        cmd = "rm -f #{DEST_DIR}/*"
 		`#{cmd}`
 	end
     def copy_to_opt
@@ -87,7 +103,7 @@ BEGIN {
 
     def init_watcher
         puts "*     starting whathood watch process"
-        `cp -f #{SRC_DIR}/etc/upstart/whwatcher.conf /etc/init`
-        `service whwatcher restart`
+        `sudo cp -f #{SRC_DIR}/etc/upstart/whwatcher.conf /etc/init`
+        `sudo service whwatcher restart`
     end
 }
