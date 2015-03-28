@@ -3,6 +3,7 @@
 namespace Whathood\Controller;
 
 use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Timer;
 
 class WatcherController extends BaseController
 {
@@ -10,7 +11,7 @@ class WatcherController extends BaseController
 
     protected $_grid_resolution;
 
-    protected $_concave_hull_target_precentage = 0.9;
+    protected $_concave_hull_target_precentage = 0.99;
 
 
     public function watchAction() {
@@ -31,6 +32,7 @@ class WatcherController extends BaseController
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
+            $run_timer = Timer::init();
             $start_time = microtime(true);
             if ($neighborhood_name and $region_name ) {
                 $user_polygons = $this->userPolygonMapper()->getByNeighborhood($neighborhood_name,$region_name);
@@ -105,7 +107,7 @@ class WatcherController extends BaseController
                 }
                 $this->logger()->info(sprintf("\taverage neighborhood build: %s",array_sum($elapsed_time_array)/count($elapsed_time_array)));
                 $elapsed_seconds = microtime(true) - $start_time;
-                $this->logger()->info(sprintf("\ttotal run seconds %s", $elapsed_seconds));
+                $this->logger()->info(sprintf("\ttotal run time %s", $run_timer->elapsed_string()));
             }
 
             if ($forever)
