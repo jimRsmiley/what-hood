@@ -1,7 +1,8 @@
 <?php
 
-namespace Whathood\Controller;
+namespace Whathood\Controller\Console;
 
+use Whathood\Controller\BaseController;
 use Whathood\Entity\NeighborhoodPolygon;
 use Whathood\Timer;
 

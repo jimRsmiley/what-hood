@@ -302,7 +302,7 @@ return array(
                     'options' => array(
                         'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=]',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\Watcher',
+                            'controller' => 'Whathood\Controller\WatcherConsole',
                             'action' => 'watch'
                         )
                     )
@@ -460,7 +460,7 @@ return array(
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
 
             /* console controllers */
-            'Whathood\Controller\Watcher'                       => 'Whathood\Controller\WatcherController',
+            'Whathood\Controller\WatcherConsole'                => 'Whathood\Controller\Console\WatcherController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
         ),
     ),
