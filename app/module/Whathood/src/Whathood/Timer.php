@@ -26,6 +26,15 @@ class Timer {
         return round($this->elapsed_seconds()/60,2);
     }
 
+    public function elapsed_string() {
+        if ($this->elapsed_milliseconds() < 1000)
+            return sprintf("%sms",$this->elapsed_milliseconds());
+        else if ($this->elapsed_seconds() < 180)
+            return sprintf("%ssecs",$this->elapsed_seconds());
+        else
+            return sprintf("%smins",$this->elapsed_minutes());
+    }
+
     public static function init() {
         $t = new static();
         $t->start();
