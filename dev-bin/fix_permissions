@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+USER_GROUP='vagrant.vagrant'
+HOME='/var/www/whathood'
+APP_DIR='/var/www/whathood/app'
+DIR_PERMS='755'
+FILE_PERMS='644'
+
+cmd="chown -R #{USER_GROUP} #{HOME}"
+puts cmd
+`#{cmd}`
+
+cmd="find #{HOME} -type f -print0 | xargs -0 sudo chmod #{FILE_PERMS}"
+puts cmd
+`#{cmd}`
+
+cmd="find #{HOME} -type d -print0 | xargs -0 sudo chmod #{DIR_PERMS}"
+puts cmd
+`#{cmd}`
+
+`find #{APP_DIR}/data/DoctrineORMModule -type d -exec chmod #{DIR_PERMS} {} \\;`
+
+cmd="find #{HOME}/bin -type f -print0 | xargs -0 sudo chmod +x"
+`#{cmd}`
+
+cmd="find #{HOME}/dev-bin -type f -print0 | xargs -0 sudo chmod +x"
+`#{cmd}`
