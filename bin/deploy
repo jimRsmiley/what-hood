@@ -10,6 +10,8 @@
 
 require 'optparse'
 require 'pp'
+require 'yaml'
+require 'erb'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
 Whathood::Util.check_for_root_user()
@@ -29,7 +31,9 @@ end.parse!
 SRC_DIR = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 APP_DIR = "#{SRC_DIR}/app"
 # deploy to
-DEST_DIR="/opt/whathood";
+
+whathood_config = YAML.load(File.new('whathood.yaml').read)
+DEST_DIR=whathood_config['application_dir']
 
 if options[:watcher]
   init_watcher()
@@ -41,24 +45,48 @@ end
 exit
 
 BEGIN {
+    require 'ostruct'
+
+    class ErbalT < OpenStruct
+        def self.render_from_hash(t, h)
+            ErbalT.new(h).render(t)
+        end
+
+        def render(template)
+            ERB.new(template).result(binding)
+        end
+    end
+
     def deploy_new_code
         puts "*     Building Whathood App\n";
         run_composer()
         run_grunt_coffee()
-		delete_opt_code()
+        puts "yo this will delete the code in the dest dir"	
+        abort
+        delete_opt_code()
         copy_to_opt()
         init_watcher()
     end
 
     def update_nginx
-        etc='/etc/nginx/sites-available/whathood.conf'
-        source="#{APP_DIR}/../etc/nginx/whathood.conf"
-        result=system("diff #{etc} #{source}")
-
         puts "*     updating nginx whathood.conf"
-        `sudo cp -f #{source} /etc/nginx/sites-available`
+
+        nginx_template='etc/nginx/whathood.conf.erb'
+        nginx_site_avail='/etc/nginx/sites-available/whathood.conf'
+        nginx_site_enabled='/etc/nginx/sites-enabled/whathood.conf'
+
+        text = ErbalT.render_from_hash(File.read(nginx_template), {'application_dir' => DEST_DIR})
+
+        fh = File.open(nginx_site_avail,'w+')
+        fh << text
+        fh.close
+
+        if !File.exists?(nginx_site_enabled)
+            `sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`
+        end
+
         `sudo cp -f #{APP_DIR}/../etc/php5-fpm/poold-whathood.conf /etc/php5/fpm/pool.d/whathood.conf`
-        `sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`
+        puts "*     restarting nginx, php5-fpm"
         `sudo service nginx reload && sudo service php5-fpm restart`
         exit
     end
