@@ -33,8 +33,6 @@ class BaseController extends AbstractActionController {
     }
 
     public function onDispatch(\Zend\Mvc\MvcEvent $event) {
-        $this->timer = \Whathood\Timer::init();
-
         return parent::onDispatch($event);
     }
 
