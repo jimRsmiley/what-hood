@@ -8,18 +8,19 @@ use Whathood\Spatial\PHP\Types\Geometry\Polygon;
 
 class ConcaveHullMapper extends BaseMapper {
 
-    public function toPolygon(MultiPoint $multi_point,$grid_resolution) {
+    public function toPolygon(MultiPoint $multi_point,$concave_hull_target_precision) {
 
         $db_val = $this->spatialPlatform()->convertToDatabaseValue($multi_point);
 
         $alias = 'as_text';
-        $sql = "SELECT ST_AsEWKB(ST_ConcaveHull( ST_GeomFromText(:multi_point_as_text),:grid_resolution)) as $alias";
+        $sql = "SELECT ST_AsEWKB(ST_ConcaveHull( ST_GeomFromText(:multi_point_as_text),:concave_hull_target_precision)) as $alias";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult($alias,$alias);
         $query = $this->em->createNativeQuery($sql,$rsm);
+
         $query->setParameter(':multi_point_as_text',$db_val);
-        $query->setParameter(':grid_resolution',$grid_resolution);
+        $query->setParameter(':concave_hull_target_precision',$concave_hull_target_precision);
         $result = $query->getSingleResult();
         $sqlExpr = $result[$alias];
 

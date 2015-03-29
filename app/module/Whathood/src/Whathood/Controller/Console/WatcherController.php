@@ -8,7 +8,7 @@ use Whathood\Timer;
 
 class WatcherController extends BaseController
 {
-    protected $_DEFAULT_GRID_RESOLUTION = 0.0009;
+    protected $_DEFAULT_GRID_RESOLUTION = 0.0005;
 
     protected $_grid_resolution;
 
