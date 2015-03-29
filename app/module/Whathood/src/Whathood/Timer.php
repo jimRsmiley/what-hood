@@ -2,16 +2,36 @@
 
 namespace Whathood;
 
+use Zend\Session\Storage\ArrayStorage;
+use Zend\Session\SessionManager;
+use Zend\Session\Container;
+
 class Timer {
+
+    protected $_description;
 
     protected $_start_time;
 
-    protected $_end_time;
+    private function __construct(array $data) {
+        $this->_description = $data['description']; 
+    }
 
-    public function __construct() {}
+    protected function setStartTime($start_time) {
+        $this->_start_time = $start_time;
+    }
 
-    public function start() {
-        $this->_start_time = microtime(true);
+    public static function start($timer_str) {
+        if (!$timer_str)
+            throw new \InvalidArgumentException("timer_str must be defined");
+        $t = new static(array('description'=>$timer_str));
+        $t->setStartTime(microtime(true));
+        return $t;
+    }
+
+    public function stop() {
+        $sessionTimers = new Container('timers');
+        $description = $this->_description;
+        $sessionTimers->$description = microtime(true) - $this->_start_time;
     }
 
     public function elapsed_milliseconds() {
@@ -35,9 +55,16 @@ class Timer {
             return sprintf("%smins",$this->elapsed_minutes());
     }
 
-    public static function init() {
-        $t = new static();
-        $t->start();
-        return $t;
+    /**
+     * return a string for all timers in the session store
+     *
+     * @return string
+     */
+    public static function report_str() {
+        $sessionTimers = new Container('timers');
+
+        \Zend\Debug\Debug::dump($sessionTimers);
+        exit;
     }
+
 }

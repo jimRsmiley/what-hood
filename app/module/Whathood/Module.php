@@ -15,6 +15,9 @@ use Zend\Mvc\Application;
 use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Console\Adapter\AdapterInterface as Console;
+use Zend\Session\Config\SessionConfig;
+use Zend\Session\Container;
+use Zend\Session\SessionManager;
 
 class Module implements ConsoleUsageProviderInterface
 {
@@ -33,6 +36,10 @@ class Module implements ConsoleUsageProviderInterface
         $eventManager->attach('dispatch.error',
                array($this,
               'handleControllerNotFoundAndControllerInvalidAndRouteNotFound' ), 100);
+
+        $this->initSession(array(
+            'use_cookies' => false,
+        ));
     }
 
     public function handleControllerCannotDispatchRequest(MvcEvent $e)
@@ -118,5 +125,13 @@ class Module implements ConsoleUsageProviderInterface
                 ),
             ),
         );
+    }
+
+    public function initSession($config) {
+        $sessionConfig = new SessionConfig();
+        $sessionConfig->setOptions($config);
+        $sessionManager = new SessionManager($sessionConfig);
+        $sessionManager->start();
+        Container::setDefaultManager($sessionManager);
     }
 }

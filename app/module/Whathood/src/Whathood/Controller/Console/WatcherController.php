@@ -16,6 +16,7 @@ class WatcherController extends BaseController
 
 
     public function watchAction() {
+        $api_timer = Timer::start('api');
 
         $force                  = $this->getRequest()->getParam('force',false);
         $forever                = $this->getRequest()->getParam('forever',false);
@@ -33,17 +34,20 @@ class WatcherController extends BaseController
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
-            $run_timer = Timer::init();
-            $start_time = microtime(true);
             if ($neighborhood_name and $region_name ) {
-                $user_polygons = $this->userPolygonMapper()->getByNeighborhood($neighborhood_name,$region_name);
+                $neighborhood = $this->m()->neighborhoodMapper()
+                    ->byName($neighborhood_name,$region_name);
+                $user_polygons = $this->userPolygonMapper()
+                    ->byNeighborhood($neighborhood);
             }
             else if ($force) {
                 $user_polygons = $this->userPolygonMapper()->fetchAll();
             }
             else {
+                $up_t = Timer::start('gather_user_polygons');
                 $user_polygons = $this->userPolygonMapper()
                     ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
+                $up_t->stop();
             }
 
             if (!empty($user_polygons)) {
@@ -55,8 +59,6 @@ class WatcherController extends BaseController
                         )
                     );
                 }
-
-                $elapsed_time_array = array();
 
                 $neighborhoods = $this->collate_neighborhoods($user_polygons);
                 foreach($neighborhoods as $n) {
@@ -70,16 +72,15 @@ class WatcherController extends BaseController
                     );
 
                     try {
-                        # start build
-                        $timer = \Whathood\Timer::init();
+                        /* build the border */ 
+                        $timer = Timer::start('generate_border');
                         $polygon = $this->m()->electionMapper()->generateBorderPolygon(
                             $ups,
                             $n->getId(),
                             $this->getGridResolution(),
                             $this->getConcaveHullTargetPercentage()
                         );
-
-                        $elapsed_seconds = $timer->elapsed_seconds();
+                        $timer->stop();
 
                         # end build
                         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
@@ -87,7 +88,6 @@ class WatcherController extends BaseController
                             'neighborhood' => $n,
                             'user_polygons' => $ups
                         ));
-                        array_push($elapsed_time_array,$elapsed_seconds);
                         $this->logger()->info(
                             sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",
                                 $n->getId(),
@@ -105,16 +105,16 @@ class WatcherController extends BaseController
                         $this->logger()->err($err_msg);
                         die($err_msg);
                     }
-                }
-                $this->logger()->info(sprintf("\taverage neighborhood build: %s",array_sum($elapsed_time_array)/count($elapsed_time_array)));
-                $elapsed_seconds = microtime(true) - $start_time;
-                $this->logger()->info(sprintf("\ttotal run time %s", $run_timer->elapsed_string()));
-            }
+
+                } // foreach neighborhood
+            } // if there are user polygons
 
             if ($forever)
                 sleep(5);
         }
         while ($forever);
+
+        #$this->logger()->info(Timer::report_str());
     }
 
     public function getGridResolution() {
