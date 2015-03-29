@@ -3,8 +3,10 @@
 USER_GROUP='vagrant.vagrant'
 HOME='/var/www/whathood'
 APP_DIR='/var/www/whathood/app'
+
 DIR_PERMS='755'
 FILE_PERMS='644'
+BIN_PERMS='744'
 
 cmd="chown -R #{USER_GROUP} #{HOME}"
 puts cmd
@@ -20,8 +22,10 @@ puts cmd
 
 `find #{APP_DIR}/data/DoctrineORMModule -type d -exec chmod #{DIR_PERMS} {} \\;`
 
-cmd="find #{HOME}/bin -type f -print0 | xargs -0 sudo chmod +x"
+cmd="find #{HOME}/bin -type f -print0 | xargs -0 sudo chmod #{BIN_PERMS}"
 `#{cmd}`
 
-cmd="find #{HOME}/dev-bin -type f -print0 | xargs -0 sudo chmod +x"
+cmd="find #{HOME}/dev-bin -type f -print0 | xargs -0 sudo chmod #{BIN_PERMS}"
 `#{cmd}`
+
+`chmod #{BIN_PERMS} #{HOME}/run-app`
