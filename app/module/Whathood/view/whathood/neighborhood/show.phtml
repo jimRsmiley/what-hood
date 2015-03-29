@@ -1,9 +1,13 @@
 <?php
 $neighborhood = $this->neighborhood;
+$region_name = $neighborhood->getRegion()->getName();
+
 $this->headTitle()->prepend($this->neighborhood->getName() . ' / ' . $this->neighborhood->getRegion()->getName() );
 ?>
 
-<h3><?=$neighborhood->getRegion()->getName()?> \ <?=$neighborhood->getName()?></h3>
+<h3>
+  <a href="/<?=$region_name?>"><?=$region_name?></a> \ <?=$neighborhood->getName()?>
+</h3>
 <p>Based one<a href="/whathood/user-polygon/page/region/<?=$this->neighborhood->getRegion()->getName()?>/neighborhood/<?=$this->neighborhood->getName()?>/0/">
         <?=$this->user_polygon_count?> user drawn borders
     </a>
