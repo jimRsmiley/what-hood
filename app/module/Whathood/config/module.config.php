@@ -309,7 +309,7 @@ return array(
                 ),
                 'test-point-route' => array(
                     'options' => array(
-                        'route' => 'test-point show [--neighborhood_name=] [--region_name=] [--grid_res=]',
+                        'route' => 'test-point show [--neighborhood=] [--region=] [--grid-res=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\TestPointConsole',
                             'action' => 'show'
