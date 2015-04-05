@@ -8,10 +8,10 @@ use Whathood\Timer;
 
 class WatcherController extends BaseController
 {
-    protected $_DEFAULT_GRID_RESOLUTION = 0.0002;
 
-    protected $_concave_hull_target_precentage = 0.9;
+    protected $_target_precision;
 
+    protected $_grid_resolution;
 
     public function watchAction() {
         $api_timer = Timer::start('api');
@@ -20,7 +20,14 @@ class WatcherController extends BaseController
         $forever                = $this->getRequest()->getParam('forever',false);
         $neighborhood_name      = $this->getRequest()->getParam('neighborhood',null);
         $region_name            = $this->getRequest()->getParam('region',null);
-        $this->_grid_resolution = $this->getRequest()->getParam('grid-res',$this->_DEFAULT_GRID_RESOLUTION);
+        $this->setGridResolution(
+            $this->getRequest()->getParam(
+                'grid-res',$this->getDefaultGridResolution()
+            ));
+        $this->setTargetPrecision(
+            $this->getRequest()->getParam(
+                'target-precision',$this->getDefaultTargetPrecision()
+            ));
 
         $this->logger()->info("Whathood watcher has started");
         $this->logger()->info(
@@ -69,7 +76,7 @@ class WatcherController extends BaseController
                             $ups,
                             $n->getId(),
                             $this->getGridResolution(),
-                            $this->getConcaveHullTargetPercentage()
+                            $this->getTargetPrecision()
                         );
                         $timer->stop();
 
@@ -116,12 +123,38 @@ class WatcherController extends BaseController
         return $this->_grid_resolution;
     }
 
-    public function getTargetPercentage() {
-        return $this->getConcaveHullTargetPercentage();
+    public function setGridResolution($grid_resolution) {
+        $this->_grid_resolution = $grid_resolution;
     }
 
-    public function getConcaveHullTargetPercentage() {
-        return $this->_concave_hull_target_precentage;
+    public function getTargetPercentage() {
+        return $this->_target_precision;
+    }
+
+    public function setTargetPercentage($target_percentage) {
+        $this->_target_precision = $target_percentage;
+    }
+
+    public function getDefaultGridResolution() {
+        $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
+        if (!array_key_exists('default_grid_resolution',$config))
+            throw new \Exception('default_grid_resolution not found in yaml config file');
+        return $config['default_grid_resolution'];
+    }
+
+    public function getDefaultTargetPrecision() {
+        $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
+        if (!array_key_exists('default_target_precision',$config))
+            throw new \Exception('default_target_precision not found in yaml config file');
+        return $config['default_target_precision'];
+    }
+
+    public function getTargetPrecision() {
+        return $this->_target_precision;
+    }
+
+    public function setTargetPrecision($target_precision) {
+        $this->_target_precision = $target_precision;
     }
 
     /**

@@ -328,6 +328,11 @@ return array(
     'service_manager' => array(
         'factories' => array(
 
+            'Whathood\YamlConfig' => function($sm) {
+                require_once('vendor/mustangostang/spyc/Spyc.php');
+                $reader = new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
+                return $reader->fromFile('../whathood.yaml');
+            },
             'Whathood\Logger' => function($sm) {
                 $config = $sm->get('Config');
 
