@@ -27,6 +27,10 @@ class Builder extends BaseMapper {
         return $this->sm->get('mydoctrineentitymanager');
     }
 
+    public function postgresMapper() {
+        return $this->sm->get('Whathood\Mapper\PostgresMapper');
+    }
+
     public function electionMapper() {
         return $this->sm->get('Whathood\Mapper\Election');
     }

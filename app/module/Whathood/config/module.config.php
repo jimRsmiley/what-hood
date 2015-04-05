@@ -325,6 +325,15 @@ return array(
                         )
                     )
                 ),
+                'db-size-route' => array(
+                    'options' => array(
+                        'route' => 'postgres size',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\PostgresConsole',
+                            'action' => 'show-database-size'
+                        )
+                    )
+                ),
             )
         )
     ),
@@ -378,6 +387,11 @@ return array(
                 return $mapper;
             },
 
+            'Whathood\Mapper\PostgresMapper'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\PostgresMapper( $sm, $em );
+                return $mapper;
+            },
             'Whathood\Mapper\NeighborhoodMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\NeighborhoodMapper( $sm, $em );
@@ -460,6 +474,7 @@ return array(
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
 
             /* console controllers */
+            'Whathood\Controller\PostgresConsole'                => 'Whathood\Controller\Console\PostgresController',
             'Whathood\Controller\WatcherConsole'                => 'Whathood\Controller\Console\WatcherController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
         ),

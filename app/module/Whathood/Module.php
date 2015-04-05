@@ -108,6 +108,9 @@ class Module implements ConsoleUsageProviderInterface
             array('--neighborhood','specify the neighborhood name'),
             array('--region','the region name'),
             array('--grid-resolution','the grid resolution'),
+
+            // test-point-route
+            'postgres size' => 'print size information about the database',
         );
     }
 
