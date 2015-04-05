@@ -1,24 +1,25 @@
 <?php
 namespace WhathoodTest\Controller;
- 
+
 use WhathoodTest\Bootstrap;
-use Whathood\Controller\RegionRestController;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use PHPUnit_Framework_TestCase;
- 
-class RegionRestControllerTest extends PHPUnit_Framework_TestCase
+use Whathood\PHPUnit\BaseControllerTest,
+    Whathood\Controller\Restful\RegionRestController;
+
+class RegionRestControllerTest extends \Whathood\PHPUnit\BaseControllerTest
 {
     protected $controller;
     protected $request;
     protected $response;
     protected $routeMatch;
     protected $event;
- 
-    protected function setUp()
+
+    public function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
         $this->controller = new RegionRestController();
@@ -33,25 +34,22 @@ class RegionRestControllerTest extends PHPUnit_Framework_TestCase
         $this->controller->setEvent($this->event);
         $this->controller->setServiceLocator($serviceManager);
     }
- 
+
     public function testGetListCanBeAccessed()
     {
         $result   = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
- 
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testGetCanBeAccessed()
     {
         $this->routeMatch->setParam('id', '1');
- 
+
         $result   = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
- 
-        print get_class( $result ) ;
-    \Zend\Debug\Debug::dump( $result );
-    exit;
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 }

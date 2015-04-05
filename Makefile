@@ -14,3 +14,8 @@ clean-grunt:
 clean: clean-grunt
 	rm -rf /opt/whathood/*
 	rm -rf /var/www/whathood/node_modules
+
+test: phpunit
+
+phpunit:
+	phpunit -c app/module/Whathood/test

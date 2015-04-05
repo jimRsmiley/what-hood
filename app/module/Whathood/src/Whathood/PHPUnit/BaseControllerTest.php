@@ -48,11 +48,19 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         if( $DEBUG ) print "schema created\n";
     }
 
+    public function printResponse() {
+        print $this->getResponse();
+    }
+
     private $whathoodUserMapper   = null;
     private $neighborhoodMapper   = null;
     private $neighborhoodPolygonMapper = null;
     private $neighborhoodVoteMapper   = null;
     private $regionMapper         = null;
+
+    public function m() {
+        return $this->sm->get('Whathood\Mapper\Builder');
+    }
 
     public function whathoodUserMapper() {
         return $this->whathoodUserMapper = $this->sm->get(
