@@ -19,7 +19,6 @@ use Whathood\ElectionPoint;
  */
 class UserPolygonMapper extends BaseMapper {
 
-
     public function byId( $id ) {
 
         if( empty( $id ) )
@@ -76,7 +75,12 @@ class UserPolygonMapper extends BaseMapper {
     }
 
     public function getUserPolygonsNotAssociatedWithNeighborhoodPolygons() {
-        $sql = "SELECT id FROM user_polygon WHERE id NOT IN ( SELECT up_id FROM up_np )";
+        $sql = "SELECT up.id
+            FROM user_polygon up
+            INNER JOIN neighborhood n
+              ON n.id = up.neighborhood_id
+            WHERE up.id NOT IN ( SELECT up_id FROM up_np )
+            AND n.no_build_border = false";
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id','id');
         $query = $this->em->createNativeQuery($sql,$rsm);

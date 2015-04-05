@@ -27,6 +27,11 @@ class Neighborhood extends \ArrayObject {
     protected $name = null;
 
     /**
+     * @ORM\Column(name="no_build_border",type="boolean")
+     */
+    protected $_no_build_border;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Whathood\Entity\Region",cascade="persist")
      * @ORM\JoinColumn(name="region_id", referencedColumnName="id",nullable=false)
      */
@@ -101,6 +106,19 @@ class Neighborhood extends \ArrayObject {
 
     public function getUserPolygons() {
         return $this->userPolygons;
+    }
+
+    // sugar
+    public function noBuildBorder() {
+        return $this->getNoBuildBorder();
+    }
+
+    public function getNoBuildBorder() {
+        return $this->_no_build_border;
+    }
+
+    public function setNoBuildBorder($no_build_border) {
+        $this->_no_build_border = $no_build_border;
     }
 
     public function toArray(array $opts = null) {

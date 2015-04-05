@@ -1,8 +1,9 @@
 <?php
 namespace Whathood\Controller\Console;
 
-use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
+use Whathood\Spatial\PHP\Types\Geometry\MultiPoint as WhMultiPoint;
 use Whathood\Controller\BaseController;
+use Zend\Json\Json;
 
 /**
  * Handle test point actions from the console
@@ -17,9 +18,9 @@ class TestPointController extends BaseController
      *  - neighborhood name and region name
      */
     public function showAction() {
-        $neighborhood_name = $this->getRequestParameter('neighborhood_name');
-        $region_name       = $this->getRequestParameter('region_name');
-        $grid_resolution   = $this->getRequestParameter('grid_res');
+        $neighborhood_name = $this->getRequestParameter('neighborhood');
+        $region_name       = $this->getRequestParameter('region');
+        $grid_resolution   = $this->getRequestParameter('grid-res');
 
         if (empty($neighborhood_name) or empty($region_name) or empty($grid_resolution))
             die("neighborhood_name,region_name and grid_res must all be defined");
@@ -32,7 +33,7 @@ class TestPointController extends BaseController
         if (empty($user_polygons))
             die("no user polygons found for neighborhood");
 
-        $timer = \Whathood\Timer::init();
+        $timer = \Whathood\Timer::start('api');
         $points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
         $test_point_ms = $timer->elapsed_milliseconds();
         $test_point_count = count($points);
@@ -48,7 +49,7 @@ class TestPointController extends BaseController
         if (empty($points))
             die("no points returned with grid_resolution $grid_resolution");
 
-        $timer = \Whathood\Timer::init();
+        $timer = \Whathood\Timer::start('election');
         $consensus_col = $this->m()->electionMapper()->buildElectionPointCollection($points);
         $consensus_seconds = $timer->elapsed_seconds();
         $this->logger()->info(
@@ -57,5 +58,17 @@ class TestPointController extends BaseController
                 round($consensus_seconds/count($points)*1000,2)
             )
         );
+
+        $timer = \Whathood\Timer::start('election');
+        $consensus_col = $this->m()->electionMapper()->buildElectionPointCollection($points);
+
+        $points = $consensus_col->pointsByNeighborhoodId($neighborhood->getId());
+
+        \Zend\Debug\Debug::dump(get_class($points[0]));
+        print Json::encode(\Whathood\Spatial\Util::multiPointToGeoJsonArray(new WhMultiPoint($points)));
+
+    }
+
+    public function testPointElection() {
     }
 }

@@ -8,11 +8,9 @@ use Whathood\Timer;
 
 class WatcherController extends BaseController
 {
-    protected $_DEFAULT_GRID_RESOLUTION = 0.0005;
+    protected $_DEFAULT_GRID_RESOLUTION = 0.0002;
 
-    protected $_grid_resolution;
-
-    protected $_concave_hull_target_precentage = 0.99;
+    protected $_concave_hull_target_precentage = 0.9;
 
 
     public function watchAction() {
@@ -63,16 +61,9 @@ class WatcherController extends BaseController
                 $neighborhoods = $this->collate_neighborhoods($user_polygons);
                 foreach($neighborhoods as $n) {
                     $ups = $n->getUserPolygons();
-                    $this->logger()->info(
-                        sprintf("\trebuilding neighborhood %s(%s) with %s user polygons",
-                            $n->getName(),
-                            $n->getId(),
-                            count($ups)
-                        )
-                    );
 
                     try {
-                        /* build the border */ 
+                        /* build the border */
                         $timer = Timer::start('generate_border');
                         $polygon = $this->m()->electionMapper()->generateBorderPolygon(
                             $ups,
@@ -82,7 +73,11 @@ class WatcherController extends BaseController
                         );
                         $timer->stop();
 
-                        # end build
+                        if (!$polygon) {
+                            $this->logger()->warn("Could not construct a neighborhood border for ".$n->getName());
+                            continue;
+                        }
+
                         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
                             'geom' => $polygon,
                             'neighborhood' => $n,
@@ -101,7 +96,7 @@ class WatcherController extends BaseController
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());
                         $this->logger()->err($e->getTraceAsString());
-                        $err_msg = "FATAL: the watcher script died because of an error";
+                        $err_msg = "FATAL: the watcher script died because of an error\n";
                         $this->logger()->err($err_msg);
                         die($err_msg);
                     }
