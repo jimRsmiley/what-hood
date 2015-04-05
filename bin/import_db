@@ -22,7 +22,7 @@ unless ( $user eq "vagrant" ) {
 Whathood::Utils->prompt_user("warning: this will destroy the current db");
 
 init_db();
-#update_schema();
+update_schema();
 
 print "loading functions\n";
 `./dev-bin/load_sql_functions`;
