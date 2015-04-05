@@ -16,7 +16,18 @@ class NeighborhoodController extends BaseController {
         if (empty($neighborhood_name) or empty($region_name))
             throw new \InvalidArgumentException("neighborhood_name and region_name must be defined");
 
-        $neighborhood = $this->neighborhoodMapper()->byName($neighborhood_name,$region_name);
+        try {
+            $neighborhood = $this->neighborhoodMapper()
+                ->byName($neighborhood_name,$region_name);
+        } catch(\Exception $e) {
+            $viewModel = new ViewModel(array(
+                'message' => sprintf("No neighborhood named '%s' in region '%s' found",
+                    $neighborhood_name,
+                    $region_name )
+            ));
+            $viewModel->setTemplate('whathood/neighborhood/error_no_neighborhood.phtml');
+            return $viewModel;
+        }
 
         if (empty($neighborhood))
             throw new \Exception("no neighborhood was returned");
