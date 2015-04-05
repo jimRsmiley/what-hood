@@ -1,4 +1,5 @@
 <?php
+
 namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
@@ -6,27 +7,19 @@ use Zend\View\Model\JsonModel;
 use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
 use Whathood\Spatial\PHP\Types\Geometry\Feature;
 
-/**
- * Description of RegionController
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
 class RegionController extends BaseController {
 
-
-
     /**
-    *    will default to the last create event if one isn't supplied in the get
+    *   will default to the last create event if one isn't supplied in the get
     *   parameter set_number
     */
     public function showAction() {
-        $regionName = $this->getUriParameter('region_name');
-        $setNumber = $this->getUriParameter('set_number');
+        $regionName = $this->getUriParameter('region');
 
         /**
         *   let's default to Philadelphia when not supplied
         */
-        if( empty( $regionName ) ) {
+        if (empty($regionName)) {
             $regionName = 'Philadelphia';
         }
 
@@ -48,12 +41,9 @@ class RegionController extends BaseController {
     }
 
     public function listRegionsAction() {
-
         $mapper = $this->getServiceLocator()
                 ->get('Whathood\Mapper\RegionMapper');
-
         $regions = $mapper->fetchAll();
-
         return new ViewModel( array( 'regions' => $regions ) );
     }
 

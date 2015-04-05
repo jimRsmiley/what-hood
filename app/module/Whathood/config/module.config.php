@@ -50,7 +50,7 @@ return array(
             'region' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/:region_name[/]',
+                    'route'    => '/:region[/]',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller'    => 'Region',
@@ -58,7 +58,6 @@ return array(
                     ),
                 ),
             ),
-
 
             'neighborhood' => array(
                 'type'    => 'Segment',
@@ -105,9 +104,7 @@ return array(
 
 
 			/**
-			 *
 			 * User Polygon
-			 *
 			 **/
             'user_polygon_id' => array(
                 'type'    => 'Segment',
@@ -121,17 +118,6 @@ return array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller'    => 'UserPolygon',
                         'action'        => 'by-id',
-                    ),
-                ),
-            ),
-
-            'region' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/r/:action',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Region',
                     ),
                 ),
             ),
