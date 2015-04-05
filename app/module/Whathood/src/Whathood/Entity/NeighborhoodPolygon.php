@@ -30,7 +30,7 @@ class NeighborhoodPolygon extends \ArrayObject {
     protected $neighborhood = null;
 
     /**
-     * @ORM\Column(name="geom",type="geometry",nullable=false)
+     * @ORM\Column(name="polygon",type="geometry",nullable=false)
      */
     protected $geometry = null;
 

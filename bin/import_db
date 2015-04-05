@@ -10,7 +10,7 @@ use Whathood::Utils;
 my $DATA_DIR="data/whathood_db";
 my $SCHEMA_DIR="app/scripts/schema";
 my $DB_NAME="whathood";
-my $DB_BAK_FILE="$DATA_DIR/whathood_bak.sql";
+my $DB_BAK_FILE="$DATA_DIR/whathood_data.sql";
 
 my $user=`whoami`;
 chomp $user;
@@ -21,13 +21,25 @@ unless ( $user eq "vagrant" ) {
 
 Whathood::Utils->prompt_user("warning: this will destroy the current db");
 
-init_db();
-update_schema();
+rebuild_db();
+load_schema();
+load_functions();
+import_data();
 
-print "loading functions\n";
-`./dev-bin/load_sql_functions`;
+sub load_functions {
+    print "*     loading functions\n";
+    `./dev-bin/load_sql_functions`;
+}
 
-sub init_db {
+sub load_schema {
+    print "*     loading schema\n";
+    `bin/doctrine_orm_schema_create | sudo -u postgres psql $DB_NAME`;
+    print "*     applying indexes\n";
+    `psql -f app/scripts/schema/whathood-001.sql $DB_NAME`;
+}
+
+sub rebuild_db {
+    print "*     rebuild_db\n";
     print "dropping database $DB_NAME if it exists\n";
     `sudo -u postgres dropdb --if-exists $DB_NAME`;
     print "creating user\n";
@@ -37,7 +49,10 @@ sub init_db {
     `sudo -u postgres createdb $DB_NAME`;
     print "creating postgis extension\n";
     `sudo -u postgres psql -c "CREATE EXTENSION postgis" $DB_NAME`;
+    `sudo -u postgres psql -c "CREATE SCHEMA whathood" $DB_NAME`;
+}
 
+sub import_data {
     if (! -d $DATA_DIR) { # if the data dir doesn't exist
         print "data dir $DATA_DIR doesn't exist, must clone repo\n";
         clone_data_repo();
@@ -55,12 +70,12 @@ sub init_db {
         }
         chdir($_old_dir);
     }
-    print "importing data into database\n";
 
     if(! -e $DB_BAK_FILE) {
         die("FATAL: file $DB_BAK_FILE does not exist");
     }
-    `sudo -u postgres psql -U $DB_NAME < $DB_BAK_FILE 2>&1 > /dev/null`;
+    print "*     importing db file $DB_BAK_FILE to db $DB_NAME\n";
+    `psql -f $DB_BAK_FILE $DB_NAME`;
 }
 
 sub clone_data_repo {

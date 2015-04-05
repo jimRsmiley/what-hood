@@ -27,7 +27,7 @@ class Neighborhood extends \ArrayObject {
     protected $name = null;
 
     /**
-     * @ORM\Column(name="no_build_border",type="boolean")
+     * @ORM\Column(name="no_build_border",type="boolean",nullable=true)
      */
     protected $_no_build_border;
 
