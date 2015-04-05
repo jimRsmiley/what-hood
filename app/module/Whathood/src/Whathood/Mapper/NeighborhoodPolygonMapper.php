@@ -59,7 +59,7 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
 
-        $sql = "SELECT latest_neighborhoods_geojson(:regionId) as geojson";
+        $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('geojson', 'geojson');
@@ -112,14 +112,17 @@ class NeighborhoodPolygonMapper extends BaseMapper {
     }
 
     public function save( NeighborhoodPolygon $np ) {
-        $this->em->persist( $np );
 
+        // save the neighborhood polygon
+        $this->em->persist( $np );
+        $this->em->flush( $np );
         $np_id = $np->getId();
+
+        // now update the up_np table foe every UserPolygon associated with this NeighborhoodPolygon
         foreach($np->getUserPolygons() as $up) {
             $sql = "INSERT INTO up_np(up_id,np_id) VALUES (?,?)";
             $this->em->getConnection()->prepare($sql)->execute(array($up->getId(),$np_id));
         }
-        $this->em->flush( $np );
     }
 
     protected function getEntityName() {
