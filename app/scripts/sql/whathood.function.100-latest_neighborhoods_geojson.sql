@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS latest_neighborhoods_geojson( test_region_id integer );
+DROP FUNCTION IF EXISTS whathood.latest_neighborhoods_geojson( test_region_id integer );
 
-CREATE OR REPLACE FUNCTION latest_neighborhoods_geojson( test_region_id integer )
+CREATE OR REPLACE FUNCTION whathood.latest_neighborhoods_geojson( test_region_id integer )
 RETURNS varchar
 AS
 $BODY$
@@ -10,7 +10,7 @@ BEGIN
   SELECT row_to_json( fc ) INTO geojson
     FROM ( SELECT 'FeatureCollection' as type, array_to_json(array_agg(f)) as features
     FROM( SELECT 'Feature' as type
-      , ST_AsGeoJSON( slnp.geom)::json AS geometry
+      , ST_AsGeoJSON( slnp.polygon)::json AS geometry
       , row_to_json(
         (SELECT l FROM ( SELECT name,slnp.id) AS l)
       ) AS properties
