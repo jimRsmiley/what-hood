@@ -36,7 +36,6 @@ class RegionController extends BaseController {
             'setNumber' => $setNumber
             )
         );
-        $viewModel->setTemplate('whathood/region/region-show.phtml');
         return $viewModel;
     }
 
