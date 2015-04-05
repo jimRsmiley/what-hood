@@ -212,7 +212,7 @@ return array(
             /*
              *  /sitemap
              */
-            'admin' => array(
+            'sitemap' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/sitemap',
