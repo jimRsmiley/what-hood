@@ -37,6 +37,11 @@ class WatcherController extends BaseController
             )
         );
 
+
+        $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
+        print "count of neighborhoods: ".count($neighborhoods)."\n";
+        print $neighborhoods[0]->getName()."\n";
+        die('dying now');
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             if ($neighborhood_name and $region_name ) {
@@ -47,6 +52,8 @@ class WatcherController extends BaseController
             }
             else if ($force) {
                 $user_polygons = $this->userPolygonMapper()->fetchAll();
+                print(count($user_polygons));
+                exit;
             }
             else {
                 $up_t = Timer::start('gather_user_polygons');

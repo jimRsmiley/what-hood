@@ -16,39 +16,33 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase,
  */
 class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
 
-    public function setUp()
-    {
-        $this->setApplicationConfig(
-            //include '../../../../config/application.config.php'
-            include 'TestConfig.php'
-        );
+    public function setUp() {
         parent::setUp();
-        $this->initDb();
     }
-    
+
     public function testRedirect() {
         $this->getRequest()->setMethod('GET');
-        
+
         $this->dispatch( '/n/add' );
-        
+
         $this->assertResponseStatusCode(302);
     }
-    
+
     /**
      * @depends testRedirect
      */
     public function testValidAuth() {
-        
+
         $this->getRequest()->setMethod('GET');
-        
+
         $this->dispatch( '/n/add' );
-        
+
         $this->assertResponseStatusCode(302);
-        
+
         $whathoodUser = $this->getSavedAuthenticatedWhathoodUser();
-        
+
         $this->dispatch( '/n/add?region_name=Philadelphia' );
-        
+
         $this->printResponse();
         exit;
         $this->assertResponseStatusCode(302);
@@ -58,15 +52,15 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
      * @depends testRedirect
      */
     public function testInvalidAuth() {
-        
+
         $this->getRequest()->setMethod('GET');
-        
+
         $this->dispatch( '/n/add' );
-        
+
         $this->assertResponseStatusCode(302);
-        
+
         $auth = Bootstrap::getServiceManager()->get('Whathood\Model\AuthenticationService');
-        
+
         $auth->setWhathoodUser( new \Whathood\Entity\WhathoodUser( array(
             'id' => 1,
         )));
@@ -76,28 +70,28 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
              //die( $this->getResponse()->getBody() );
             $this->fail();
         } catch( AuthenticationException $e ) {
-            
-            
-        } 
-        
+
+
+        }
+
         // excect this
         catch( \FacebookApiException $e ) {
-            
+
         }
         $this->assertTrue(true);
     }
 
     public function testHome() {
-        
+
         $this->getRequest()
                 ->setMethod('GET');
-        
+
         $this->dispatch( '/');
-        
+
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('application\controller\index');
     }
-    
-    
+
+
 }
 ?>

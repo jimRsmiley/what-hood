@@ -32,19 +32,6 @@ class UserPolygonMapper extends BaseMapper {
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function getLatest(Neighborhood $neighborhood) {
-        $dql = "SELECT np FROM NeighborhoodPolygon WHERE  ORDER BY ";
-        $qb = $this->em->createQueryBuilder();
-        $qb->select( array('np') )
-                ->from($this->getEntityName(),'np')
-                ->where( 'np.neighborhood = :neighborhood_id')
-                ->orderBy( 'np.id', 'DESC' )
-                ->setParameter('neighborhood_id', $neighborhood->getId())
-                ->setMaxResults(1);
-
-        return $qb->getQuery()->getSingleResult();
-    }
-
     public function byNeighborhood(Neighborhood $neighborhood) {
         $dql = "SELECT up FROM Whathood\Entity\UserPolygon up
             WHERE up.neighborhood = :neighborhood";

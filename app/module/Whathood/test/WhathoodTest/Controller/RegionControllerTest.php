@@ -28,7 +28,7 @@ class RegionControllerTest extends \Whathood\PHPUnit\BaseControllerTest {
 
     public function testRegionByNameUrl() {
         $region = new Region(array(
-            'name' => "Test Region"
+            'name' => "Test_Region_".$this->random_number()
         ));
         $this->m()->regionMapper()->save($region);
 

@@ -18,15 +18,45 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
 
         if( getenv('APPLICATION_ENV') !==  'test' )
             throw new \Exception("you must set APPLICATION_ENV to 'test'");
-
         $this->sm = Bootstrap::getServiceManager();
 
         $this->setApplicationConfig(
             include 'TestConfig.php'
         );
+
+        try {
+            $this->sm->get('doctrine.entitymanager.orm_default');
+        } catch(\Exception $e) {
+            $this->create_database("whathood_test");
+            $this->initDb();
+        }
+    }
+
+    public static function create_database($db_name) {
+        $servername = "localhost";
+        $username = "vagrant";
+        $password = null;
+        try {
+            $conn = new \PDO("mysql:host=$servername;dbname=$db_name", $username, $password);
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "CREATE DATABASE $db_name";
+            // use exec() because no results are returned
+            $conn->exec($sql);
+            echo "Database created successfully<br>";
+        }
+        catch(PDOException $e)
+        {
+            echo $sql . "<br>" . $e->getMessage();
+        }
     }
 
     public function initDb() {
+        $configArray = $this->sm->get('config');
+        $db_name = $configArray['doctrine']['connection']['orm_default'];
+
+        \Zend\Debug\Debug::dump($db_name);
+        exit;
 
         $DEBUG = true;
         // Retrieve the Doctrine 2 entity manager
@@ -48,52 +78,16 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         if( $DEBUG ) print "schema created\n";
     }
 
-    public function printResponse() {
-        print $this->getResponse();
-    }
-
-    private $whathoodUserMapper   = null;
-    private $neighborhoodMapper   = null;
-    private $neighborhoodPolygonMapper = null;
-    private $neighborhoodVoteMapper   = null;
-    private $regionMapper         = null;
-
     public function m() {
         return $this->sm->get('Whathood\Mapper\Builder');
     }
 
-    public function whathoodUserMapper() {
-        return $this->whathoodUserMapper = $this->sm->get(
-                                                    'Whathood\Mapper\WhathoodUserMapper');
+    public function printResponse() {
+        print $this->getResponse();
     }
 
-    public function neighborhoodMapper() {
-        if( $this->neighborhoodMapper == null )
-            $this->neighborhoodMapper = $this->sm->get('Whathood\Mapper\NeighborhoodMapper');
-
-        return $this->neighborhoodMapper;
-    }
-
-    public function userPolygonMapper() {
-        if( $this->neighborhoodPolygonMapper == null )
-            $this->neighborhoodPolygonMapper = $this->sm->get('Whathood\Mapper\UserPolygonMapper');
-
-        return $this->neighborhoodPolygonMapper;
-    }
-
-    public function neighborhoodVoteMapper() {
-        if( $this->neighborhoodVoteMapper == null )
-            $this->neighborhoodVoteMapper =
-                $this->sm->get('Whathood\Mapper\NeighborhoodPolygonVoteMapper');
-
-        return $this->neighborhoodVoteMapper;
-    }
-
-    public function regionMapper() {
-        if( $this->regionMapper == null )
-            $this->regionMapper = $this->sm->get('Whathood\Mapper\Region');
-
-        return $this->regionMapper;
+    public function random_number() {
+        return rand(0,10000000);
     }
 }
 ?>

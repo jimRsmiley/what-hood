@@ -29,9 +29,27 @@ class DoctrineBaseTest extends \PHPUnit_Framework_TestCase {
 
     public function tearDown() {}
 
+    public static function create_database($db_name) {
+        $servername = "localhost";
+        $username = "vagrant";
+        $password = null;
+        try {
+            $conn = new \PDO("pgsql:host=$servername;dbname=$db_name", $username, $password);
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = "CREATE DATABASE $db_name";
+            // use exec() because no results are returned
+            $conn->exec($sql);
+            echo "Database created successfully<br>";
+        }
+        catch(PDOException $e)
+        {
+            echo $sql . "<br>" . $e->getMessage();
+        }
+    }
 
     public function initDb() {
-
+        $this->create_database("whathood_test");
         $DEBUG = false;
         // Retrieve the Doctrine 2 entity manager
         $em = $this->getServiceManager()->get('mydoctrineentitymanager');
