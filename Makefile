@@ -1,10 +1,10 @@
+SRC_DIR="/var/www/whathood"
+
+
 all: grunt
 
 grunt:
-	npm install grunt --save-dev
-	npm install grunt-contrib-watch --save-dev
-	npm install grunt-contrib-coffee --save-dev
-	npm install grunt-contrib-clean --save-dev
+	$(SRC_DIR)/bin/node_install.rb
 	grunt coffee
 
 clean-grunt:
