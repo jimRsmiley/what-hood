@@ -3,56 +3,66 @@
 DATA_DIR="data/whathood_db"
 SCHEMA_DIR="app/scripts/schema"
 DB_NAME="whathood"
-DB_BAK_FILE="$DATA_DIR/whathood_data.sql"
+DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
+DB_USER="vagrant"
 
+require 'fileutils'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
 Whathood::Util.check_for_just_root_user()
 
 Whathood::Util.prompt_user "warning: this will destroy the current db"
 
-rebuild_db(DB_NAME)
-load_schema(DB_NAME)
+rebuild_db(DB_NAME,DB_USER)
+load_whathood_schema(DB_NAME,DB_USER)
 load_functions()
-import_data()
+import_data(DB_NAME,DB_NAME,DB_BAK_FILE,DB_USER)
+
+puts "*     done in bin/import/db"
 
 BEGIN {
-    def load_functions
-        print "*     loading functions\n"
-        `./dev-bin/load_sql_functions`
-    end
 
-    def load_schema(db_name)
-        print "*     loading schema\n"
-        `sudo -u vagrant bin/doctrine_orm_schema_create | sudo -u postgres psql #{db_name}`
-        print "*     applying indexes\n"
-        `psql -f app/scripts/schema/whathood.indexes.sql #{db_name}`
-    end
-
-    def rebuild_db(db_name)
-        print "*     rebuild_db\n"
-        print "dropping database #{db_name} if it exists\n"
+    def rebuild_db(db_name,db_user)
+        puts "*     rebuild_db"
+        puts "dropping database #{db_name} if it exists"
         `sudo -u postgres dropdb --if-exists #{db_name}`
-        print "creating user\n"
-        `sudo -u postgres dropuser --if-exists #{db_name}`
-        `sudo -u postgres createuser --superuser #{db_name}`
-        print "creating database\n"
+
+        puts "creating user"
+        # we need a user for vagrant, so we can psql, but whathood php uses 'whathood'
+        `sudo -u postgres dropuser --if-exists #{db_user}`
+        `sudo -u postgres dropuser --if-exists whathood`
+        `sudo -u postgres createuser --superuser whathood`
+        `sudo -u postgres createuser --superuser #{db_user}`
+
+        puts "creating database"
         `sudo -u postgres createdb #{db_name}`
-        print "creating postgis extension\n"
+        puts "creating postgis extension"
         `sudo -u postgres psql -c "CREATE EXTENSION postgis" #{db_name}`
         `sudo -u postgres psql -c "CREATE SCHEMA whathood" #{db_name}`
     end
 
-    def import_data(data_dir, db_name, db_bak_file)
+    def load_whathood_schema(db_name,db_user)
+        puts "*     loading whathood schema with user #{db_user}"
+        `sudo -u vagrant bin/doctrine_orm_schema_create | sudo -u postgres psql -U #{db_user} #{db_name}`
+        puts "*     applying indexes"
+        `sudo -u vagrant psql -U #{db_user} -f app/scripts/schema/whathood.indexes.sql #{db_name}`
+    end
+
+    def load_functions
+        puts "*     loading functions"
+        `./dev-bin/load_sql_functions`
+    end
+
+    def import_data(data_dir, db_name, db_bak_file, db_user)
         if !File.exists?(data_dir) # if the data dir doesn't exist
             puts "data dir #{data_dir} doesn't exist, must clone repo"
-            clone_data_repo()
+            clone_data_repo(data_dir)
         else
-            _old_dir = cwd()
+            _old_dir = Dir.pwd
             Dir.chdir data_dir
             local_sha = system('git rev-parse HEAD')
             remote_sha = system('git rev-parse origin/master')
-            if local_sha ne remote_sha
+            if local_sha != remote_sha
                 puts "git data repos are different; cloning database data"
             else
                 puts "git db repos are equal, no need to clone"
@@ -62,17 +72,17 @@ BEGIN {
         end
 
         if !File.exists?(db_bak_file)
-            die("FATAL: file db_bak_file does not exist")
+            abort "FATAL: file db_bak_file '#{db_bak_file} does not exist"
         end
 
         puts "*     importing db file db_bak_file to db #{db_name}"
-        `psql -f #{db_bak_file} #{db_name}`
+        `psql -U #{db_user} -f #{db_bak_file} #{db_name}`
     end
 
-    def clone_data_repo
-        print "deleting previous data directory\n"
-        `rm -rf $DATA_DIR`
-        `mkdir -p $DATA_DIR`
-        `git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`
+    def clone_data_repo(data_dir)
+        puts "deleting previous data directory"
+        FileUtils.rmdir data_dir, true
+        FileUtils.mkdir_p data_dir
+        `git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir} > /dev/null`
     end
 }
