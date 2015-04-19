@@ -25,7 +25,11 @@ BEGIN {
     def rebuild_db(db_name,db_user)
         puts "*     rebuild_db"
         puts "dropping database #{db_name} if it exists"
-        `sudo -u postgres dropdb --if-exists #{db_name}`
+        cmd = "sudo -u postgres dropdb --if-exists #{db_name}"
+        puts "trying to run command: '#{cmd}'"
+        unless system(cmd)
+            abort "FATAL: could not drop old database '#{db_name}' if it existed"
+        end
 
         puts "creating user"
         # we need a user for vagrant, so we can psql, but whathood php uses 'whathood'
