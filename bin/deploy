@@ -33,6 +33,15 @@ APP_DIR = "#{SRC_DIR}/app"
 # deploy to
 
 whathood_config = YAML.load(File.new('whathood.yaml').read)
+
+unless whathood_config
+    abort "FATAL: unable to get config from whathood.yaml"
+end
+
+unless whathood_config.has_key?('application_dir')
+    abort "unable to locate appliation_dir in whathood.yaml"
+end
+
 DEST_DIR=whathood_config['application_dir']
 
 if options[:watcher]
