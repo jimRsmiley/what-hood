@@ -25,7 +25,7 @@ module Whathood
 		end
 
 		def self.prompt_user(str)
-			print str
+			print "#{str} Enter to continue; [CTRL-C] to abort"
 			option = gets
 		end
     end

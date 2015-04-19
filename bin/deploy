@@ -26,7 +26,7 @@ cmd_args = parse_command_line
 prompt_user = get_prompt_user(cmd_args)
 
 if prompt_user
-    Whathood::Util.prompt_user "Are you sure you want to deploy? Enter to continue [CTRL-C] to abort"
+    Whathood::Util.prompt_user "Are you sure you want to deploy?"
 end
 
 # where's our source code
