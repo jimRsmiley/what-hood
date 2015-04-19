@@ -121,11 +121,6 @@ BEGIN {
         puts "*     restarting nginx, php5-fpm"
         `sudo service nginx reload && sudo service php5-fpm restart`
 
-        puts "sleeping for 5 seconds....."
-        sleep 5
-        puts "checking for site index"
-        result = `wget http://localhost:80`
-        puts result
     end
 
     def run_composer
