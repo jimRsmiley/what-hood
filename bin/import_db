@@ -16,7 +16,7 @@ Whathood::Util.prompt_user "warning: this will destroy the current db"
 rebuild_db(DB_NAME,DB_USER)
 load_whathood_schema(DB_NAME,DB_USER)
 load_functions()
-import_data(DB_NAME,DB_NAME,DB_BAK_FILE,DB_USER)
+import_data(DATA_DIR,DB_NAME,DB_BAK_FILE,DB_USER)
 
 puts "*     done in bin/import/db"
 
@@ -80,7 +80,7 @@ BEGIN {
     end
 
     def clone_data_repo(data_dir)
-        puts "deleting previous data directory"
+        puts "deleting previous data directory '#{data_dir}'"
         FileUtils.rmdir data_dir, true
         FileUtils.mkdir_p data_dir
         `git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir} > /dev/null`
