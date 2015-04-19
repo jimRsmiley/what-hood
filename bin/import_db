@@ -1,86 +1,78 @@
-#!/usr/bin/env perl
+#!/usr/bin/env ruby
 
-use lib 'libs/perl';
-use strict;
-use warnings;
-use File::Glob ':glob';
-use Cwd;
-use Whathood::Utils;
+DATA_DIR="data/whathood_db"
+SCHEMA_DIR="app/scripts/schema"
+DB_NAME="whathood"
+DB_BAK_FILE="$DATA_DIR/whathood_data.sql"
 
-my $DATA_DIR="data/whathood_db";
-my $SCHEMA_DIR="app/scripts/schema";
-my $DB_NAME="whathood";
-my $DB_BAK_FILE="$DATA_DIR/whathood_data.sql";
+require_relative '../libs/ruby/Whathood/Util.rb'
 
-my $user=`whoami`;
-chomp $user;
-unless ( $user eq "vagrant" ) {
-   print "must be run as vagrant. Not '$user'\n";
-   exit;
-}
+Whathood::Util.check_for_just_root_user()
 
-Whathood::Utils->prompt_user("warning: this will destroy the current db");
+Whathood::Util.prompt_user "warning: this will destroy the current db"
 
-rebuild_db();
-load_schema();
-load_functions();
-import_data();
+rebuild_db(DB_NAME)
+load_schema(DB_NAME)
+load_functions()
+import_data()
 
-sub load_functions {
-    print "*     loading functions\n";
-    `./dev-bin/load_sql_functions`;
-}
+BEGIN {
+    def load_functions
+        print "*     loading functions\n"
+        `./dev-bin/load_sql_functions`
+    end
 
-sub load_schema {
-    print "*     loading schema\n";
-    `bin/doctrine_orm_schema_create | sudo -u postgres psql $DB_NAME`;
-    print "*     applying indexes\n";
-    `psql -f app/scripts/schema/whathood.indexes.sql $DB_NAME`;
-}
+    def load_schema(db_name)
+        print "*     loading schema\n"
+        `sudo -u vagrant bin/doctrine_orm_schema_create | sudo -u postgres psql #{db_name}`
+        print "*     applying indexes\n"
+        `psql -f app/scripts/schema/whathood.indexes.sql #{db_name}`
+    end
 
-sub rebuild_db {
-    print "*     rebuild_db\n";
-    print "dropping database $DB_NAME if it exists\n";
-    `sudo -u postgres dropdb --if-exists $DB_NAME`;
-    print "creating user\n";
-    `sudo -u postgres dropuser --if-exists $DB_NAME`;
-    `sudo -u postgres createuser --superuser $DB_NAME`;
-    print "creating database\n";
-    `sudo -u postgres createdb $DB_NAME`;
-    print "creating postgis extension\n";
-    `sudo -u postgres psql -c "CREATE EXTENSION postgis" $DB_NAME`;
-    `sudo -u postgres psql -c "CREATE SCHEMA whathood" $DB_NAME`;
-}
+    def rebuild_db(db_name)
+        print "*     rebuild_db\n"
+        print "dropping database #{db_name} if it exists\n"
+        `sudo -u postgres dropdb --if-exists #{db_name}`
+        print "creating user\n"
+        `sudo -u postgres dropuser --if-exists #{db_name}`
+        `sudo -u postgres createuser --superuser #{db_name}`
+        print "creating database\n"
+        `sudo -u postgres createdb #{db_name}`
+        print "creating postgis extension\n"
+        `sudo -u postgres psql -c "CREATE EXTENSION postgis" #{db_name}`
+        `sudo -u postgres psql -c "CREATE SCHEMA whathood" #{db_name}`
+    end
 
-sub import_data {
-    if (! -d $DATA_DIR) { # if the data dir doesn't exist
-        print "data dir $DATA_DIR doesn't exist, must clone repo\n";
-        clone_data_repo();
-    }
-    else {
-        my $_old_dir = cwd();
-        chdir($DATA_DIR);
-        my $local_sha = system('git rev-parse HEAD');
-        my $remote_sha = system('git rev-parse origin/master');
-        if ($local_sha ne $remote_sha) {
-            print "git data repos are different; cloning database data\n";
-        }
-        else {
-            print "git db repos are equal, no need to clone\n";
-        }
-        chdir($_old_dir);
-    }
+    def import_data(data_dir, db_name, db_bak_file)
+        if !File.exists?(data_dir) # if the data dir doesn't exist
+            puts "data dir #{data_dir} doesn't exist, must clone repo"
+            clone_data_repo()
+        else
+            _old_dir = cwd()
+            Dir.chdir data_dir
+            local_sha = system('git rev-parse HEAD')
+            remote_sha = system('git rev-parse origin/master')
+            if local_sha ne remote_sha
+                puts "git data repos are different; cloning database data"
+            else
+                puts "git db repos are equal, no need to clone"
+            end
 
-    if(! -e $DB_BAK_FILE) {
-        die("FATAL: file $DB_BAK_FILE does not exist");
-    }
-    print "*     importing db file $DB_BAK_FILE to db $DB_NAME\n";
-    `psql -f $DB_BAK_FILE $DB_NAME`;
-}
+            Dir.chdir _old_dir
+        end
 
-sub clone_data_repo {
-    print "deleting previous data directory\n";
-    `rm -rf $DATA_DIR`;
-    `mkdir -p $DATA_DIR`;
-    `git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`;
+        if !File.exists?(db_bak_file)
+            die("FATAL: file db_bak_file does not exist")
+        end
+
+        puts "*     importing db file db_bak_file to db #{db_name}"
+        `psql -f #{db_bak_file} #{db_name}`
+    end
+
+    def clone_data_repo
+        print "deleting previous data directory\n"
+        `rm -rf $DATA_DIR`
+        `mkdir -p $DATA_DIR`
+        `git clone https://github.com/jimRsmiley/whathood-data.git $DATA_DIR > /dev/null`
+    end
 }
