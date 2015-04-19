@@ -31,8 +31,6 @@ end
 
 # where's our source code
 SRC_DIR = File.expand_path(File.join(File.dirname(__FILE__), ".."))
-# where's the app root
-APP_DIR = "#{SRC_DIR}/app"
 
 whathood_config = YAML.load(File.new("#{SRC_DIR}/whathood.yaml").read)
 
@@ -44,13 +42,14 @@ unless whathood_config.has_key?('application_dir')
     abort "unable to locate appliation_dir in whathood.yaml"
 end
 
-DEST_DIR=whathood_config['application_dir']
+# where will this app live?
+APP_DIR = whathood_config['application_dir']
 
 if cmd_args[:watcher]
   init_watcher()
 else
-  update_nginx()
   deploy_new_code()
+  update_nginx(SRC_DIR,APP_DIR)
 end
 
 exit
@@ -91,15 +90,10 @@ BEGIN {
         puts "*     Building Whathood App"
         run_composer()
         run_grunt_coffee()
-
-        if SRC_DIR != DEST_DIR
-            delete_dest_code()
-            copy_to_dest()
-        end
         init_watcher()
     end
 
-    def update_nginx
+    def update_nginx(src_dir,app_dir)
         log_dir = "/var/log/whathood"
 
         puts "*     updating nginx whathood.conf"
@@ -108,7 +102,7 @@ BEGIN {
         nginx_site_avail='/etc/nginx/sites-available/whathood.conf'
         nginx_site_enabled='/etc/nginx/sites-enabled/whathood.conf'
 
-        text = Whathood::ErbalT.render_from_hash(File.read(nginx_template), {'application_dir' => DEST_DIR})
+        text = Whathood::ErbalT.render_from_hash(File.read(nginx_template), {'application_dir' => app_dir})
 
         fh = File.open(nginx_site_avail,'w+')
         fh << text
@@ -118,7 +112,7 @@ BEGIN {
             `sudo ln -s /etc/nginx/sites-available/whathood.conf /etc/nginx/sites-enabled/whathood.conf`
         end
 
-        `sudo cp -f #{APP_DIR}/../etc/php5-fpm/poold-whathood.conf /etc/php5/fpm/pool.d/whathood.conf`
+        `sudo cp -f #{src_dir}/etc/php5-fpm/poold-whathood.conf /etc/php5/fpm/pool.d/whathood.conf`
 
         puts "*     checking existence and permissions for log_dir #{log_dir} directory"
         FileUtils.mkdir_p log_dir
@@ -126,45 +120,32 @@ BEGIN {
 
         puts "*     restarting nginx, php5-fpm"
         `sudo service nginx reload && sudo service php5-fpm restart`
+
+        puts "sleeping for 5 seconds....."
+        sleep 5
+        puts "checking for site index"
+        result = `wget http://localhost:80`
+        puts result
     end
 
     def run_composer
         Dir.chdir APP_DIR
         if File.exists? "#{APP_DIR}/composer.phar"
-            p "*     composer already exists; no need to install"
+            puts "*     composer already exists; no need to install"
         else
-            p "*     installing composer"
-            `curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1`
+            puts "*     installing composer"
+            system("curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1")
         end
-        p "*     installing vendor libraries"
-        `php composer.phar install > /dev/null 2>&1`
+        puts "*     installing vendor libraries"
+        system("php composer.phar install")
     end
 
     def run_grunt_coffee
 
         # make sure we have all the grunt tasks
-        p "*     run_grunt_coffee...."
+        puts "*     run_grunt_coffee...."
         Dir.chdir SRC_DIR
         system('make grunt')
-    end
-
-	def delete_dest_code
-		puts "*     * cleaning out #{DEST_DIR}"
-		cmd = "rm -rf #{DEST_DIR}/app"
-		`#{cmd}`
-
-        cmd = "rm -f #{DEST_DIR}/*"
-		`#{cmd}`
-	end
-
-    def copy_to_dest
-        puts "*     copying files from #{SRC_DIR} to #{DEST_DIR}"
-        cmd = "rsync -av --quiet #{SRC_DIR}/app/ #{DEST_DIR}/app"
-        system(cmd)
-        `cp #{SRC_DIR}/run-app #{DEST_DIR}`
-		puts "*     setting doctrine proxy dest dir to all writeable"
-        `mkdir -p #{DEST_DIR}/app/data/DoctrineORMModule`
-        `chmod 777 #{DEST_DIR}/app/data/DoctrineORMModule -R`
     end
 
     def init_watcher
