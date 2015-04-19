@@ -2,6 +2,10 @@
 
 # this script
 #
+#   run as root:
+#     because this script copies over nginx configs and restarts the web server,
+#     it must be run under sudo
+#
 #	* runs composer on the zend framework
 #	* builds the coffeescript
 #	* copies all of the source code into /opt/whathood
@@ -12,30 +16,28 @@ require 'optparse'
 require 'pp'
 require 'yaml'
 require 'erb'
+require 'fileutils'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
-Whathood::Util.check_for_root_user()
+Whathood::Util.check_for_just_root_user()
 
-Whathood::Util.prompt_user "Are you sure you want to deploy? Enter to continue [CTRL-C] to abort"
-options = {}
+cmd_args = parse_command_line
 
-OptionParser.new do |opts|
-    opts.banner = "Usage: bin/deploy [options]"
+prompt_user = get_prompt_user(cmd_args)
 
-    opts.on("--watcher","Deploy watcher upstart script and start it") do |watcher|
-        options[:watcher] = watcher
-    end
-end.parse!
+if prompt_user
+    Whathood::Util.prompt_user "Are you sure you want to deploy? Enter to continue [CTRL-C] to abort"
+end
 
 # where's our source code
 SRC_DIR = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+# where's the app root
 APP_DIR = "#{SRC_DIR}/app"
-# deploy to
 
-whathood_config = YAML.load(File.new('whathood.yaml').read)
+whathood_config = YAML.load(File.new("#{SRC_DIR}/whathood.yaml").read)
 
 unless whathood_config
-    abort "FATAL: unable to get config from whathood.yaml"
+    abort "FATAL: unable to get config from #{SRC_DIR}/whathood.yaml"
 end
 
 unless whathood_config.has_key?('application_dir')
@@ -44,7 +46,7 @@ end
 
 DEST_DIR=whathood_config['application_dir']
 
-if options[:watcher]
+if cmd_args[:watcher]
   init_watcher()
 else
   update_nginx()
@@ -56,6 +58,35 @@ exit
 BEGIN {
     require_relative '../libs/ruby/Whathood/ErbalT.rb'
 
+    def get_prompt_user(cmd_args)
+        # if no-prompt wasn't even passed as a command line
+        if cmd_args[:no_prompt] != true
+            return true
+        elsif cmd_args[:no_prompt] == true
+            return false
+        end
+        return true
+    end
+
+    def parse_command_line
+        options = {}
+        OptionParser.new do |opts|
+            opts.banner = "Usage: bin/deploy [options]"
+
+            opts.on("--no-prompt", "Don't prompt the user for anything") do |no_prompt|
+                #warn "setting option to true"
+                options[:no_prompt] = true
+            end
+            opts.on("--watcher","Deploy watcher upstart script and start it") do |watcher|
+                options[:watcher] = watcher
+            end
+        end.parse!
+        return options
+    end
+
+    # run composer, run grunt for coffeescript
+    # and if the source and destination dirs aren't the same,
+    # copy source to destination dir
     def deploy_new_code
         puts "*     Building Whathood App"
         run_composer()
@@ -69,6 +100,8 @@ BEGIN {
     end
 
     def update_nginx
+        log_dir = "/var/log/whathood"
+
         puts "*     updating nginx whathood.conf"
 
         nginx_template='etc/nginx/whathood.conf.erb'
@@ -87,9 +120,10 @@ BEGIN {
 
         `sudo cp -f #{APP_DIR}/../etc/php5-fpm/poold-whathood.conf /etc/php5/fpm/pool.d/whathood.conf`
 
-        unless File.exists?('/var/log/whathood')
-            abort "/var/log/whathood must exist and be writeable"
-        end
+        puts "*     checking existence and permissions for log_dir #{log_dir} directory"
+        FileUtils.mkdir_p log_dir
+        FileUtils.chown 'vagrant', 'vagrant', log_dir
+
         puts "*     restarting nginx, php5-fpm"
         `sudo service nginx reload && sudo service php5-fpm restart`
     end
