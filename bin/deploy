@@ -48,8 +48,11 @@ APP_DIR = whathood_config['application_dir']
 if cmd_args[:watcher]
   init_watcher()
 else
-  deploy_new_code(APP_DIR)
-  update_nginx(SRC_DIR,APP_DIR)
+    puts "*     Building Whathood App"
+    run_composer(APP_DIR)
+    run_grunt_coffee()
+    init_watcher()
+    update_nginx(SRC_DIR,APP_DIR)
 end
 
 exit
@@ -81,16 +84,6 @@ BEGIN {
             end
         end.parse!
         return options
-    end
-
-    # run composer, run grunt for coffeescript
-    # and if the source and destination dirs aren't the same,
-    # copy source to destination dir
-    def deploy_new_code(app_dir)
-        puts "*     Building Whathood App"
-        run_composer(app_dir)
-        run_grunt_coffee()
-        init_watcher()
     end
 
     def update_nginx(src_dir,app_dir)
