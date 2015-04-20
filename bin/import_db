@@ -101,7 +101,10 @@ BEGIN {
 
     def clone_data_repo(data_dir)
         puts "deleting previous data directory '#{data_dir}'"
-        FileUtils.rmdir data_dir, true
+
+        if File.exists?(data_dir)
+            FileUtils.rmdir(data_dir, true)
+        end
         FileUtils.mkdir_p data_dir
         `git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir} > /dev/null`
     end
