@@ -22,8 +22,24 @@ puts "*     done in bin/import/db"
 
 BEGIN {
 
+    def start_postgres_if_necessary()
+        puts "*     starting postgres if necessary"
+        result = system("sudo service postgresql start");
+        #puts "result of service start: #{result}"
+        puts "*     Sleeping for 5..."
+        sleep 5;
+        result = `ps aux | grep postgres | grep -v grep`
+
+        if result.empty?
+            abort "FATAL: unable to start postgresql"
+        end
+
+        #puts "result of ps aux: #{result}"
+    end
+
     def rebuild_db(db_name,db_user)
         puts "*     rebuild_db"
+        start_postgres_if_necessary()
         puts "dropping database #{db_name} if it exists"
         cmd = "sudo -u postgres dropdb --if-exists #{db_name}"
         puts "trying to run command: '#{cmd}'"
