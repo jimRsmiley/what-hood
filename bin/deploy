@@ -48,7 +48,7 @@ APP_DIR = whathood_config['application_dir']
 if cmd_args[:watcher]
   init_watcher()
 else
-  deploy_new_code()
+  deploy_new_code(APP_DIR)
   update_nginx(SRC_DIR,APP_DIR)
 end
 
@@ -86,9 +86,9 @@ BEGIN {
     # run composer, run grunt for coffeescript
     # and if the source and destination dirs aren't the same,
     # copy source to destination dir
-    def deploy_new_code
+    def deploy_new_code(app_dir)
         puts "*     Building Whathood App"
-        run_composer()
+        run_composer(app_dir)
         run_grunt_coffee()
         init_watcher()
     end
@@ -123,9 +123,9 @@ BEGIN {
 
     end
 
-    def run_composer
-        Dir.chdir APP_DIR
-        if File.exists? "#{APP_DIR}/composer.phar"
+    def run_composer(app_dir)
+        Dir.chdir app_dir
+        if File.exists? "#{app_dir}/composer.phar"
             puts "*     composer already exists; no need to install"
         else
             puts "*     installing composer"
@@ -133,6 +133,11 @@ BEGIN {
         end
         puts "*     installing vendor libraries"
         system("php composer.phar install")
+        setup_doctrine_proxy_dir app_dir
+    end
+
+    def setup_doctrine_proxy_dir(app_dir)
+        FileUtils.mkdir_p "#{app_dir}/data/DoctrineORMModule"
     end
 
     def run_grunt_coffee
