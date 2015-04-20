@@ -8,7 +8,7 @@
 --
 --
 
-DROP FUNCTION whathood.makegrid_2d(
+DROP FUNCTION IF EXISTS whathood.makegrid_2d(
   bound_polygon geometry,
   grid_step numeric
 );
