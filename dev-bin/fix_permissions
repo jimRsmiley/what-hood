@@ -31,4 +31,4 @@ cmd="find #{HOME}/dev-bin -type f -print0 | xargs -0 sudo chmod #{BIN_PERMS}"
 `chmod #{BIN_PERMS} #{HOME}/run-app`
 
 `chmod #{BIN_PERMS} #{HOME}/app/vendor/bin`
-`chmod +x #{HOME}/app/vendor/bin`
+`chmod +x #{HOME}/app/vendor/bin/*`
