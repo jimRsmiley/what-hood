@@ -49,8 +49,6 @@ class WatcherController extends BaseController
             }
             else if ($force) {
                 $user_polygons = $this->userPolygonMapper()->fetchAll();
-                print(count($user_polygons));
-                exit;
             }
             else {
                 $up_t = Timer::start('gather_user_polygons');

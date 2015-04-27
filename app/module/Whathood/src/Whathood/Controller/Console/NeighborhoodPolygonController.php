@@ -19,6 +19,5 @@ class NeighborhoodPolygonController extends BaseController
      */
     public function consoleDefaultAction() {
         $nps = $this->m()->neighborhoodPolygonMapper()->fetchAll();
-        die( "found ".count($nps));
     }
 }
