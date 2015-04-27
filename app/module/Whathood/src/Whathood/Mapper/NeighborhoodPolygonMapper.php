@@ -125,6 +125,13 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         }
     }
 
+    public function fetchAll() {
+        $qb = $this->em->createQueryBuilder()->select( array( 'np' ) )
+            ->from('Whathood\Entity\NeighborhoodPolygon', 'np')
+            ->orderBy('np.id','ASC');
+        return $qb->getQuery()->getResult();
+    }
+
     protected function getEntityName() {
         return 'Whathood\Entity\NeighborhoodPolygon';
     }

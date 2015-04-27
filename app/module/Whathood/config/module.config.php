@@ -275,11 +275,29 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
+                'np' => array(
+                    'options' => array(
+                        'route' => 'np',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\NeighborhoodPolygonConsole',
+                            'action' => 'consoledefault'
+                        )
+                    )
+                ),
                 'up' => array(
                     'options' => array(
                         'route' => 'up',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\UserPolygon',
+                            'controller' => 'Whathood\Controller\UserPolygonConsole',
+                            'action' => 'consoledefault'
+                        )
+                    )
+                ),
+                'neighborhood' => array(
+                    'options' => array(
+                        'route' => 'neighborhood',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\NeighborhoodConsole',
                             'action' => 'consoledefault'
                         )
                     )
@@ -465,9 +483,12 @@ return array(
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
 
             /* console controllers */
-            'Whathood\Controller\PostgresConsole'                => 'Whathood\Controller\Console\PostgresController',
+            'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
             'Whathood\Controller\WatcherConsole'                => 'Whathood\Controller\Console\WatcherController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
+            'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
+            'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',
+            'Whathood\Controller\NeighborhoodPolygonConsole'            => 'Whathood\Controller\Console\NeighborhoodPolygonController'
         ),
     ),
 
