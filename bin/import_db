@@ -15,10 +15,10 @@ Whathood::Util.prompt_user "warning: this will destroy the current db"
 
 rebuild_db(DB_NAME,DB_USER)
 load_whathood_schema(DB_NAME,DB_USER)
-load_functions()
+load_functions(DB_NAME)
 import_data(DATA_DIR,DB_NAME,DB_BAK_FILE,DB_USER)
 
-puts "*     done in bin/import/db"
+puts "*     done in bin/import_db"
 
 BEGIN {
 
@@ -38,11 +38,12 @@ BEGIN {
     end
 
     def rebuild_db(db_name,db_user)
+
         puts "*     rebuild_db"
         start_postgres_if_necessary()
+
         puts "dropping database #{db_name} if it exists"
         cmd = "sudo -u postgres dropdb --if-exists #{db_name}"
-        puts "trying to run command: '#{cmd}'"
         unless system(cmd)
             abort "FATAL: could not drop old database '#{db_name}' if it existed"
         end
@@ -51,24 +52,25 @@ BEGIN {
         # we need a user for vagrant, so we can psql, but whathood php uses 'whathood'
         `sudo -u postgres dropuser --if-exists #{db_user}`
         `sudo -u postgres dropuser --if-exists whathood`
-        `sudo -u postgres createuser --superuser whathood`
+        `sudo -u postgres createuser --superuser whathood 2>&1 > /dev/null`
         `sudo -u postgres createuser --superuser #{db_user}`
 
         puts "creating database"
         `sudo -u postgres createdb #{db_name}`
+
         puts "creating postgis extension"
-        `sudo -u postgres psql -c "CREATE EXTENSION postgis" #{db_name}`
-        `sudo -u postgres psql -c "CREATE SCHEMA whathood" #{db_name}`
+        `sudo -u vagrant psql -c "CREATE EXTENSION postgis" #{db_name}`
     end
 
     def load_whathood_schema(db_name,db_user)
-        puts "*     loading whathood schema with user #{db_user}"
-        `sudo -u vagrant bin/doctrine_orm_schema_create | sudo -u postgres psql -U #{db_user} #{db_name}`
+        puts "*     loading whathood schema from doctrine"
+        `sudo -u vagrant app/vendor/bin/doctrine-module orm:schema-tool:create`
         puts "*     applying indexes"
         `sudo -u vagrant psql -U #{db_user} -f app/scripts/schema/whathood.indexes.sql #{db_name}`
     end
 
-    def load_functions
+    def load_functions(db_name)
+        `sudo -u vagrant psql -c "CREATE SCHEMA whathood" #{db_name}`
         puts "*     loading functions"
         `./dev-bin/load_sql_functions`
     end
