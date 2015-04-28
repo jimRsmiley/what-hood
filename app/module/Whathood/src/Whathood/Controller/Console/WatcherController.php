@@ -38,7 +38,6 @@ class WatcherController extends BaseController
         );
 
 
-        $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             if ($neighborhood_name and $region_name ) {
@@ -48,7 +47,7 @@ class WatcherController extends BaseController
                     ->byNeighborhood($neighborhood);
             }
             else if ($force) {
-                $user_polygons = $this->userPolygonMapper()->fetchAll();
+                $user_polygons = $this->userPolygonMapper()->fetchAllToBuild($force=true);
             }
             else {
                 $up_t = Timer::start('gather_user_polygons');

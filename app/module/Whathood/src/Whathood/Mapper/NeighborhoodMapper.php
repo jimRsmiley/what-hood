@@ -181,5 +181,17 @@ class NeighborhoodMapper extends BaseMapper {
             $this->rollback();
         }
     }
+
+    public function byBuildBorder($should_build_border) {
+        $dql = "SELECT n FROM Whathood\Entity\Neighborhood n WHERE n.no_build_border = :no_build_border";
+
+        if ($should_build_border == true)
+            $no_build_border = 0;
+        else
+            $no_build_border = 1;
+        return $this->em->createQuery($dql)
+            ->setParameter(':no_build_border', $no_build_border)
+            ->getResult();
+    }
 }
 ?>

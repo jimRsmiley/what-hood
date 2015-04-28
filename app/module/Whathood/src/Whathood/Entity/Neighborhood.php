@@ -29,7 +29,7 @@ class Neighborhood extends \ArrayObject {
     /**
      * @ORM\Column(name="no_build_border",type="boolean",nullable=true)
      */
-    protected $_no_build_border;
+    protected $no_build_border;
 
     /**
      * @ORM\ManyToOne(targetEntity="Whathood\Entity\Region",cascade="persist")
@@ -114,11 +114,11 @@ class Neighborhood extends \ArrayObject {
     }
 
     public function getNoBuildBorder() {
-        return $this->_no_build_border;
+        return $this->no_build_border;
     }
 
     public function setNoBuildBorder($no_build_border) {
-        $this->_no_build_border = $no_build_border;
+        $this->no_build_border = $no_build_border;
     }
 
     public function toArray(array $opts = null) {

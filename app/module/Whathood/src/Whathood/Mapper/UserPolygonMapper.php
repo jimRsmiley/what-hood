@@ -62,12 +62,15 @@ class UserPolygonMapper extends BaseMapper {
     }
 
     public function getUserPolygonsNotAssociatedWithNeighborhoodPolygons() {
-        $sql = "SELECT up.id
-            FROM user_polygon up
-            INNER JOIN neighborhood n
-              ON n.id = up.neighborhood_id
-            WHERE up.id NOT IN ( SELECT up_id FROM up_np )
-            AND n.no_build_border = false";
+        $sql = "
+          SELECT up.id
+          FROM user_polygon up
+          INNER JOIN neighborhood n
+            ON n.id = up.neighborhood_id
+          WHERE
+            up.id NOT IN ( SELECT up_id FROM up_np )
+            AND n.no_build_border = 0";
+
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id','id');
         $query = $this->em->createNativeQuery($sql,$rsm);
@@ -260,6 +263,38 @@ class UserPolygonMapper extends BaseMapper {
         $user_polygons = $this->byPoint($point);
         $election_point = ElectionPoint::build($point,$user_polygons);
         return $election_point;
+    }
+
+    /**
+     * fetch all user polygons to build that are associated with neighborhood borders that should get build(ie. have no_build_border = f)
+     * @param force [boolean] - it doesn't matter 
+     **/
+    public function fetchAllToBuild($force) {
+        $sql = "
+          SELECT up.id
+          FROM user_polygon up
+          INNER JOIN neighborhood n
+            ON n.id = up.neighborhood_id
+            WHERE
+              n.no_build_border = false";
+
+        if (!$force) {
+            $sql .= " AND up.id NOT IN ( SELECT up_id FROM up_np )";
+        }
+
+        $sql .= " ORDER BY up.id ASC";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id','id');
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $result = $query->getResult();
+
+        $user_polygons = array();
+        foreach($result as $row) {
+            $up = $this->byId($row['id']);
+            array_push($user_polygons,$up);
+        }
+        return $user_polygons;
     }
 
     public function fetchAll() {
