@@ -304,7 +304,7 @@ return array(
                 ),
                 'watcher-route' => array(
                     'options' => array(
-                        'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=]',
+                        'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=] [--target-precision=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\WatcherConsole',
                             'action' => 'watch'
