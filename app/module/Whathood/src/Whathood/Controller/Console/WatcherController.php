@@ -37,7 +37,6 @@ class WatcherController extends BaseController
             )
         );
 
-
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             if ($neighborhood_name and $region_name ) {
@@ -90,6 +89,8 @@ class WatcherController extends BaseController
                             'geom' => $polygon,
                             'neighborhood' => $n,
                             'user_polygons' => $ups
+                            'grid_resolution' => $this->getGridResolution(),
+                            'target_precision' => $this->getTargetResolution()
                         ));
                         $this->logger()->info(
                             sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",
@@ -97,8 +98,8 @@ class WatcherController extends BaseController
                                 $n->getName(),
                                 count($ups),
                                 $timer->elapsed_minutes()
-                            )
-                    );
+                                )
+                        );
                         $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
                     }
                     catch(\Exception $e) {
@@ -108,7 +109,6 @@ class WatcherController extends BaseController
                         $this->logger()->err($err_msg);
                         die($err_msg);
                     }
-
                 } // foreach neighborhood
             } // if there are user polygons
 

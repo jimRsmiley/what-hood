@@ -39,6 +39,15 @@ class NeighborhoodPolygon extends \ArrayObject {
      */
     protected $created_at = null;
 
+    /**
+     * @ORM\Column
+     */
+    protected $grid_resolution = null;
+
+    /**
+     * @ORM\Column
+     */
+    protected $target_precision = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="UserPolygon",mappedBy="neighborhood_polygons",cascade={"persist"})
