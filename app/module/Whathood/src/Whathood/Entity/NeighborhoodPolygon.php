@@ -40,12 +40,12 @@ class NeighborhoodPolygon extends \ArrayObject {
     protected $created_at = null;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(nullable=true)
      */
     protected $grid_resolution = null;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(nullable=true)
      */
     protected $target_precision = null;
 
