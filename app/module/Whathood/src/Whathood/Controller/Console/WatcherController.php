@@ -88,9 +88,9 @@ class WatcherController extends BaseController
                         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
                             'geom' => $polygon,
                             'neighborhood' => $n,
-                            'user_polygons' => $ups
+                            'user_polygons' => $ups,
                             'grid_resolution' => $this->getGridResolution(),
-                            'target_precision' => $this->getTargetResolution()
+                            'target_precision' => $this->getTargetPrecision()
                         ));
                         $this->logger()->info(
                             sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",
