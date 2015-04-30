@@ -32,12 +32,12 @@ class NeighborhoodController extends BaseController {
         if (empty($neighborhood))
             throw new \Exception("no neighborhood was returned");
 
-        $user_polygon_count = $this->neighborhoodPolygonMapper()
-            ->latestByNeighborhood($neighborhood)
-            ->userPolygonCount();
+        $latest_np = $this->neighborhoodPolygonMapper()->latestByNeighborhood($neighborhood);
+        $user_polygon_count = $latest_np->userPolygonCount();
 
         return new ViewModel( array(
             'neighborhood'       => $neighborhood,
+            'neighborhood_polygon' => $latest_np,
             'user_polygon_count' => $user_polygon_count
         ));
     }

@@ -74,7 +74,7 @@ W.user_polygon_add = () ->
         alert "there was an error saving neighborhood: #{textStatus}"
     return false
 
-W.neighborhood_show = () ->
+W.neighborhood_polygon_show = () ->
   $map = $('#map')
   neighborhood_id = $map.data('neighborhood-id')
   throw new Error 'neighborhood_id may not be empty' unless neighborhood_id

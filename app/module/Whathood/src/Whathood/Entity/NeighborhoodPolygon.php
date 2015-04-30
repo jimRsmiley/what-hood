@@ -119,6 +119,22 @@ class NeighborhoodPolygon extends \ArrayObject {
         $this->created_at = $created_at;
     }
 
+    public function getGridResolution() {
+        return $this->grid_resolution;
+    }
+
+    public function setGridResolution($grid_resolution) {
+        $this->grid_resolution = $grid_resolution;
+    }
+
+    public function getTargetPrecision() {
+        return $this->target_precision;
+    }
+
+    public function setTargetPrecision($target_precision) {
+        $this->target_precision = $target_precision;
+    }
+
     public function __construct(array $array = null ) {
         if( $array !== null ) {
             $hydrator = new ClassMethodHydrator();
