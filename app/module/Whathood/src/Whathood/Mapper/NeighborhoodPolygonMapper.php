@@ -135,6 +135,17 @@ class NeighborhoodPolygonMapper extends BaseMapper {
     protected function getEntityName() {
         return 'Whathood\Entity\NeighborhoodPolygon';
     }
+
+    public function area(NeighborhoodPolygon $np) {
+        $sql = "SELECT ST_Area(polygon) AS area FROM neighborhood_polygon np WHERE np.id = :np_id";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('area','area');
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $result = $query->setParameter('np_id',$np->getId())
+            ->getSingleResult();
+        return $result['area'];
+    }
 }
 
 ?>

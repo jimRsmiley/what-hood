@@ -303,5 +303,16 @@ class UserPolygonMapper extends BaseMapper {
             ->orderBy('up.id','ASC');
         return $qb->getQuery()->getResult();
     }
+
+    public function area(UserPolygon $up) {
+        $sql = "SELECT ST_Area(polygon) AS area FROM user_polygon up WHERE up.id = :up_id";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('area','area');
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $result = $query->setParameter('up_id',$up->getId())
+            ->getSingleResult();
+        return $result['area'];
+    }
 }
 ?>
