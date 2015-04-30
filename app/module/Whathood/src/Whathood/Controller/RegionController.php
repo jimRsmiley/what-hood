@@ -33,7 +33,6 @@ class RegionController extends BaseController {
 
         $viewModel = $this->getViewModel( array(
             'region'    => $region,
-            'setNumber' => $setNumber
             )
         );
         return $viewModel;
