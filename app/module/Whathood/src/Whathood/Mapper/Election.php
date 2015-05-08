@@ -33,7 +33,7 @@ class Election extends BaseMapper {
             array_push($points,$p->getPoint());
         }
 
-        $polygon = $this->m()->concaveHullMapper()
+        $polygon = $this->m()->pointsAsPolygonMapper()
             ->toPolygon(new MultiPoint($points),$target_percentage);
 
         return $polygon;
