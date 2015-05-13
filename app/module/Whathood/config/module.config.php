@@ -390,6 +390,12 @@ return array(
                 return new \Whathood\SchemaTool($sm);
             },
 
+            'Whathood\Mapper\PointsAsPolygonMapper'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\PointsAsPolygonMapper( $sm, $em );
+                return $mapper;
+            },
+
             'Whathood\Mapper\ConcaveHullMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\ConcaveHullMapper( $sm, $em );

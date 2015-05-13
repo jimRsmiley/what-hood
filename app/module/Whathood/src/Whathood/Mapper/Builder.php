@@ -14,6 +14,7 @@ class Builder extends BaseMapper {
     protected $_concave_hull_mapper;
     protected $_user_polygon_mapper;
     protected $_test_point_mapper;
+    protected $_points_as_polygon_mapper;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
@@ -33,6 +34,13 @@ class Builder extends BaseMapper {
 
     public function electionMapper() {
         return $this->sm->get('Whathood\Mapper\Election');
+    }
+
+    public function pointsAsPolygonMapper() {
+        if( $this->_points_as_polygon_mapper == null )
+            $this->_points_as_polygon_mapper =
+                $this->sm->get('Whathood\Mapper\PointsAsPolygonMapper');
+        return $this->_points_as_polygon_mapper;
     }
 
     public function concaveHullMapper() {

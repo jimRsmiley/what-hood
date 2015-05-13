@@ -60,6 +60,7 @@ BEGIN {
 
         puts "creating postgis extension"
         `sudo -u vagrant psql -c "CREATE EXTENSION postgis" #{db_name}`
+        `sudo -u vagrant psql -c "CREATE EXTENSION pgrouting" #{db_name}`
     end
 
     def load_whathood_schema(db_name,db_user)
