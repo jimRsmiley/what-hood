@@ -9,6 +9,6 @@ Whathood aims to settle the neighborhood border debate for all time by aggregati
 neighborhood borders drawn by users into heatmaps showing the "identity" of a
 location.
 
-### Goals
+### Development
 
-* Get Google, Foursquare, Yelp, and real estate sites to use published shapefiles
+Check the [https://github.com/jimRsmiley/whathood-vagrant](Whathood Vagrant repository) to download and install a development enviroment and edit away.
