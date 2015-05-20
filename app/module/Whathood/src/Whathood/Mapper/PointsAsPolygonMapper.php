@@ -22,10 +22,11 @@ class PointsAsPolygonMapper extends BaseMapper {
      * query the temp table with pgr_pointsAsPolygon to create the neighborhood border
      **/
     public function toPolygon(MultiPoint $multi_point) {
+        $this->dropTempTable($this->_tmp_table_name);
         $this->createTempTable($this->_tmp_table_name);
         $this->savePoints($multi_point,$this->_tmp_table_name);
         $polygon = $this->pointsAsPolygon($this->_tmp_table_name);
-        $this->deleteTempTable($this->_tmp_table_name);
+        $this->dropTempTable($this->_tmp_table_name);
         return $polygon;
     }
 
@@ -44,7 +45,7 @@ class PointsAsPolygonMapper extends BaseMapper {
         return $polygon;
     }
 
-    public function deleteTempTable($tbl_name) {
+    public function dropTempTable($tbl_name) {
         $sql = "DROP TABLE IF EXISTS $tbl_name";
         $this->em->getConnection()->query($sql);
     }
@@ -56,11 +57,9 @@ class PointsAsPolygonMapper extends BaseMapper {
     public function savePoints(MultiPoint $multi_point,$tbl_name) {
         $db_val = $this->spatialPlatform()->convertToDatabaseValue($multi_point);
 
-        #$sql = "INSERT INTO $tbl_name(point) VALUES ( SELECT dp.geom FROM ST_DUMP(:mp) AS dp ) )";
-        $sql = "INSERT INTO $tbl_name(point) ( SELECT geom FROM ST_DUMP(ST_GeomFromText('MULTIPOINT(
-            -75.079915094716 40.062337371379,-75.072915094716 40.062337371379,-75.086915094716 40.069337371379,-75.079915094716 40.069337371379,-75.072915094716 40.069337371379,-75.086915094716
-         40.076337371379,-75.079915094716 40.076337371379,-75.072915094716 40.076337371379,-75.079915094716 40.083337371379,-75.072915094716 40.083337371379,-75.065915094716 40.083337371379
-     )') ) )";
+        $sql = "INSERT INTO $tbl_name(point) (
+            SELECT geom FROM ST_DUMP(ST_GeomFromText(:mp) )
+        )";
         $rsm = new ResultSetMapping();
         $query = $this->em->createNativeQuery($sql,$rsm)
             ->setParameter(':mp',$db_val);
