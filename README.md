@@ -11,4 +11,4 @@ location.
 
 ### Development
 
-Check the [https://github.com/jimRsmiley/whathood-vagrant](Whathood Vagrant repository) to download and install a development enviroment and edit away.
+Check the [Whathood Vagrant repository](https://github.com/jimRsmiley/whathood-vagrant) to download and install a development enviroment and edit away.
