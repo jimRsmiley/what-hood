@@ -15,7 +15,6 @@ class NeighborhoodPolygonMapper extends BaseMapper {
 
     public function byId($neighborhoodPolygonId) {
 
-        //print $this->getCurrentDateTimeAsString() . " testing point\n";
         $query = $this->em->createQuery( 'SELECT np'
             . ' FROM '. $this->getEntityName(). ' np'
                 . ' WHERE np.id = :id'
@@ -74,41 +73,6 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
         else
             return $geojson;
-    }
-
-    /**
-     *  return a geosjon representation of a neighborhood border given user polygons
-     *  
-     *  @return string geojson of a neighborhood border
-     **/
-    public function generateBorder(
-        \Doctrine\ORM\PersistentCollection $user_polygons,
-        $neighborhood_id,
-        $grid_resolution,
-        $target_percentage
-    ) {
-        $up_ids = array();
-        foreach($user_polygons as $up) $up_ids[] = $up->getId();
-        $up_id_str = join(',',$up_ids);
-
-        $sql = "SELECT
-            ST_AsGeoJSON(
-                ST_ConcaveHull(
-                    whathood.neighborhood_point_geometry(:neighborhood_id,ST_Collect(up.polygon),:grid_resolution),
-                    $target_percentage
-                )
-            ) as geojson
-            FROM user_polygon up
-            WHERE up.id IN ( $up_id_str )";
-
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('geojson','geojson');
-        $query = $this->em->createNativeQuery($sql,$rsm);
-        $query->setParameter('neighborhood_id',$neighborhood_id);
-        $query->setParameter('grid_resolution',$grid_resolution);
-
-        $result = $query->getSingleResult();
-        return $result['geojson'];
     }
 
     public function save( NeighborhoodPolygon $np ) {
