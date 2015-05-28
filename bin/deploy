@@ -7,6 +7,8 @@
 #     it must be run under sudo
 #
 #	* runs composer on the zend framework
+#	* copies over the etc configs
+#	    * foreman.conf for upstart
 #	* builds the coffeescript
 #	* copies all of the source code into /opt/whathood
 #	* kills any watchers and then restarts them
@@ -51,7 +53,7 @@ else
     puts "*     Building Whathood App"
     run_composer(APP_DIR)
     run_grunt_coffee()
-    init_watcher()
+    config_upstart()
     update_nginx(SRC_DIR,APP_DIR)
 end
 
@@ -141,9 +143,9 @@ BEGIN {
         system('make grunt')
     end
 
-    def init_watcher
+    def config_upstart
         puts "*     starting whathood watch process"
-        `sudo cp -f #{SRC_DIR}/etc/upstart/whwatcher.conf /etc/init`
-        `sudo service whwatcher restart`
+        `sudo foreman export upstart /etc/init -a myapp`
+        `sudo service wh-watcher restart`
     end
 }

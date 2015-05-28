@@ -1,2 +1,2 @@
 coffee-compile: grunt watch
-watcher: rerun --pattern {*.php} -- ./run-app watcher
+watcher: rerun --dir ./app/module/Whathood/src --background --pattern {*.php} -- ./bin/run-app watcher --forever

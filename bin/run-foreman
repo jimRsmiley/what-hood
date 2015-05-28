@@ -1,3 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 
-foreman start
+Dir.chdir('..')
+`foreman start`
