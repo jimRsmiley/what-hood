@@ -10,7 +10,6 @@
 #	* copies over the etc configs
 #	    * foreman.conf for upstart
 #	* builds the coffeescript
-#	* copies all of the source code into /opt/whathood
 #	* kills any watchers and then restarts them
 #
 
@@ -47,15 +46,11 @@ end
 # where will this app live?
 APP_DIR = whathood_config['application_dir']
 
-if cmd_args[:watcher]
-  init_watcher()
-else
-    puts "*     Building Whathood App"
-    run_composer(APP_DIR)
-    run_grunt_coffee()
-    config_upstart()
-    update_nginx(SRC_DIR,APP_DIR)
-end
+puts "*     Building Whathood App"
+run_composer(APP_DIR)
+run_grunt_coffee()
+config_upstart()
+update_nginx(SRC_DIR,APP_DIR)
 
 exit
 
