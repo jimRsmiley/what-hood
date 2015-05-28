@@ -183,12 +183,13 @@ class NeighborhoodMapper extends BaseMapper {
     }
 
     public function byBuildBorder($should_build_border) {
+
         $dql = "SELECT n FROM Whathood\Entity\Neighborhood n WHERE n.no_build_border = :no_build_border";
 
         if ($should_build_border == true)
-            $no_build_border = 0;
+            $no_build_border = 'false';
         else
-            $no_build_border = 1;
+            $no_build_border = 'true';
         return $this->em->createQuery($dql)
             ->setParameter(':no_build_border', $no_build_border)
             ->getResult();

@@ -69,7 +69,7 @@ class UserPolygonMapper extends BaseMapper {
             ON n.id = up.neighborhood_id
           WHERE
             up.id NOT IN ( SELECT up_id FROM up_np )
-            AND n.no_build_border = 0";
+            AND n.no_build_border = false";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id','id');
