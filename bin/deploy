@@ -49,7 +49,8 @@ APP_DIR = whathood_config['application_dir']
 puts "*     Building Whathood App"
 run_composer(APP_DIR)
 run_grunt_coffee()
-config_upstart()
+#start_foreman(SRC_DIR)
+config_upstart(SRC_DIR)
 update_nginx(SRC_DIR,APP_DIR)
 
 exit
@@ -110,18 +111,19 @@ BEGIN {
 
         puts "*     restarting nginx, php5-fpm"
         `sudo service nginx reload && sudo service php5-fpm restart`
-
     end
 
     def run_composer(app_dir)
         Dir.chdir app_dir
-        if File.exists? "#{app_dir}/composer.phar"
+        composer_file = "#{app_dir}/composer.phar"
+        if File.exists? composer_file
             puts "*     composer already exists; no need to install"
         else
             puts "*     installing composer"
             system("curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1")
         end
         puts "*     installing vendor libraries"
+        puts "current working directory: "+Dir.pwd
         system("php composer.phar install")
         setup_doctrine_proxy_dir app_dir
     end
@@ -138,9 +140,29 @@ BEGIN {
         system('make grunt')
     end
 
-    def config_upstart
-        puts "*     starting whathood watch process"
-        `sudo foreman export upstart /etc/init -a myapp`
-        `sudo service wh-watcher restart`
+    def start_foreman(src_dir)
+        puts "*     spinning up foreman"
+        Dir.chdir src_dir
+        cmd = "sudo -H -u vagrant foreman start >> /var/log/whathood/foreman.log"
+
+        job1 = fork do
+              exec cmd
+        end
+
+        Process.detach(job1)
+    end
+
+    def config_upstart(src_dir)
+        puts "*     running foreman export upstart"
+        Dir.chdir src_dir
+        upstart_prefix = 'whathood'
+        upstart_log_dir = '/var/log/whathood'
+        `rm -f /etc/init/#{upstart_prefix}*`
+        `rm -f /var/log/upstart/#{upstart_prefix}*`
+        #cmd = "rvmsudo foreman export upstart /etc/init --user vagrant --log #{upstart_log_dir} -a #{upstart_prefix}"
+        cmd = "sudo foreman export upstart --user vagrant --log #{upstart_log_dir} -a #{upstart_prefix} /etc/init"
+        puts cmd
+        `#{cmd}`
+        `sudo service whathood restart`
     end
 }
