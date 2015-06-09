@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+# this script
+#
+#   run as root:
+#     because this script copies over nginx configs and restarts the web server,
+#     it must be run under sudo
+#
+#	* runs composer on the zend framework
+#	* copies over the etc configs
+#	    * foreman.conf for upstart
+#	* builds the coffeescript
+#	* kills any watchers and then restarts them
+#
+
+require 'optparse'
+require 'pp'
+require 'yaml'
+require 'erb'
+require 'fileutils'
+require_relative '../libs/ruby/Whathood/Util.rb'
+
+run_composer
+
+exit
+
+BEGIN {
+    require_relative '../libs/ruby/Whathood/ErbalT.rb'
+
+    def run_composer
+
+        Dir.chdir 'app'
+        composer_file = "composer.phar"
+        if File.exists? composer_file
+            puts "*     composer already exists; no need to install; not running composer install"
+        else
+            puts "*     installing composer"
+            system("curl -sS https://getcomposer.org/installer | php > /dev/null 2>&1")
+            puts "*     installing vendor libraries"
+            puts "current working directory: "+Dir.pwd
+            system("php composer.phar install")
+            setup_doctrine_proxy_dir
+        end
+    end
+
+    def setup_doctrine_proxy_dir()
+        FileUtils.mkdir_p "data/DoctrineORMModule"
+    end
+}
