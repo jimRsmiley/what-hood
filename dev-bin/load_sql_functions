@@ -2,31 +2,34 @@
 
 
 db_name = 'whathood'
+db_host = 'wh-postgis'
+db_user = 'docker'
 
 dir = Dir.pwd
 
 script_dir = "#{dir}/app/scripts/sql"
 
-def run_sql_script(file,db_name)
-    `sudo -u postgres psql --tuples-only --quiet #{db_name} -f #{file}`
+def run_sql_script(file, db_host, db_user, db_name)
+    `psql -h #{db_host} -U #{db_user} --tuples-only --quiet -f #{file} #{db_name}`
 end
 
-def import_files(dir_str,db_name)
+def import_files(dir_str, db_host, db_user, db_name)
     files = Dir.glob(dir_str)
     files = files.sort
     files.each do |f|
         puts "processing #{f}"
-        run_sql_script(f,db_name)
+        run_sql_script(f, db_host, db_user, db_name)
     end
 end
 
 puts "dropping all functions"
 drop_sql=`./bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
-`sudo -u postgres psql --tuples-only --quiet -c "$drop_sql"`
+system("psql -h #{db_host} -U #{db_user} --tuples-only --quiet -c \"$drop_sql\" #{db_name}")
 
-
-import_files("#{script_dir}/whathood.function.*.sql",db_name)
-import_files("#{script_dir}/whathood.view.*.sql",db_name)
+puts "loading whathood.function.*.sql"
+import_files("#{script_dir}/whathood.function.*.sql", db_host, db_user, db_name)
+puts "loading whathood.view.*.sql"
+import_files("#{script_dir}/whathood.view.*.sql",db_host,db_user,db_name)
 
 puts "done"
 

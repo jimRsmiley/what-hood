@@ -4,7 +4,7 @@ DATA_DIR="data/whathood_db"
 SCHEMA_DIR="app/scripts/schema"
 DB_NAME="whathood"
 DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
-DB_USER="vagrant"
+DB_USER="docker"
 
 require 'fileutils'
 require_relative '../libs/ruby/Whathood/Util.rb'
@@ -15,16 +15,18 @@ Whathood::Util.prompt_user "warning: this will destroy the current db"
 
 rebuild_db(DB_NAME,DB_USER)
 load_whathood_schema(DB_NAME,DB_USER)
-load_functions(DB_NAME)
+load_functions(DB_NAME,DB_USER)
 import_data(DATA_DIR,DB_NAME,DB_BAK_FILE,DB_USER)
 
 puts "*     done in bin/import_db"
 
 BEGIN {
 
+    DB_HOST="wh-postgis"
+
     def start_postgres_if_necessary()
         puts "*     starting postgres if necessary"
-        result = system("sudo service postgresql start");
+        result = system("service postgresql start");
         #puts "result of service start: #{result}"
         puts "*     Sleeping for 5..."
         sleep 5;
@@ -38,42 +40,42 @@ BEGIN {
     end
 
     def rebuild_db(db_name,db_user)
+	ENV['PGHOST'] = DB_HOST
 
         puts "*     rebuild_db"
-        start_postgres_if_necessary()
+        #start_postgres_if_necessary()
 
         puts "dropping database #{db_name} if it exists"
-        cmd = "sudo -u postgres dropdb --if-exists #{db_name}"
+        cmd = "dropdb -U #{db_user} -h #{DB_HOST} --if-exists #{db_name}"
         unless system(cmd)
             abort "FATAL: could not drop old database '#{db_name}' if it existed"
         end
 
         puts "creating user"
         # we need a user for vagrant, so we can psql, but whathood php uses 'whathood'
-        `sudo -u postgres dropuser --if-exists #{db_user}`
-        `sudo -u postgres dropuser --if-exists whathood`
-        `sudo -u postgres createuser --superuser whathood 2>&1 > /dev/null`
-        `sudo -u postgres createuser --superuser #{db_user}`
+        `dropuser -U #{db_user} --if-exists whathood`
+        `createuser -U #{db_user} --superuser whathood 2>&1 > /dev/null`
+        `createuser -U #{db_user} --superuser #{db_user}`
 
         puts "creating database"
-        `sudo -u postgres createdb #{db_name}`
+        `createdb -U #{db_user} #{db_name}`
 
         puts "creating postgis extension"
-        `sudo -u vagrant psql -c "CREATE EXTENSION postgis" #{db_name}`
-        `sudo -u vagrant psql -c "CREATE EXTENSION pgrouting" #{db_name}`
+        `psql -U #{db_user} -h #{DB_HOST} -c "CREATE EXTENSION postgis" #{db_name}`
+        `psql -U #{db_user} -h #{DB_HOST} -c "CREATE EXTENSION pgrouting" #{db_name}`
     end
 
     def load_whathood_schema(db_name,db_user)
         puts "*     loading whathood schema from doctrine"
-        `sudo -u vagrant app/vendor/bin/doctrine-module orm:schema-tool:create`
+        `./app/vendor/bin/doctrine-module orm:schema-tool:create`
         puts "*     applying indexes"
-        `sudo -u vagrant psql -U #{db_user} -f app/scripts/schema/whathood.indexes.sql #{db_name}`
+        `psql -U #{db_user} -h #{DB_HOST} -U #{db_user} -f app/scripts/schema/whathood.indexes.sql #{db_name}`
     end
 
-    def load_functions(db_name)
-        `sudo -u vagrant psql -c "CREATE SCHEMA whathood" #{db_name}`
+    def load_functions(db_name,db_user)
+        `psql -h #{DB_HOST} -U #{db_user} -c "CREATE SCHEMA whathood" #{db_name}`
         puts "*     loading functions"
-        `./dev-bin/load_sql_functions`
+        system("./dev-bin/load_sql_functions")
     end
 
     def import_data(data_dir, db_name, db_bak_file, db_user)
@@ -82,11 +84,13 @@ BEGIN {
             clone_data_repo(data_dir)
         else
             _old_dir = Dir.pwd
+            puts "changing to data dir #{data_dir}"
             Dir.chdir data_dir
             local_sha = system('git rev-parse HEAD')
             remote_sha = system('git rev-parse origin/master')
-            if local_sha != remote_sha
+            if local_sha ==  nil || local_sha != remote_sha
                 puts "git data repos are different; cloning database data"
+		`git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir}`
             else
                 puts "git db repos are equal, no need to clone"
             end

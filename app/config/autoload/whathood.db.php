@@ -5,10 +5,10 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOPgSql\Driver',
                 'params' => array(
-                    'host'     => 'localhost',
+                    'host'     => 'wh-postgis',
                     'port'     => '5432',
                     'dbname'   => 'whathood',
-                    'user'     => 'whathood',
+                    'user'     => 'docker',
                     # we don't allow remote sql connections
                     'password' => null
                 )
