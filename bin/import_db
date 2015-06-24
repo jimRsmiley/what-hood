@@ -8,8 +8,8 @@ require_relative '../libs/ruby/Whathood/Util.rb'
 Whathood::Util.prompt_user "warning: this will destroy the current db"
 
 load_whathood_schema
-load_functions
 import_data
+load_functions
 
 puts "*     done in bin/import_db"
 
