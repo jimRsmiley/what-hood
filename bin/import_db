@@ -5,7 +5,7 @@ require_relative '../libs/ruby/Whathood/Util.rb'
 
 #Whathood::Util.check_for_just_root_user()
 
-Whathood::Util.prompt_user "warning: this will destroy the current db"
+#Whathood::Util.prompt_user "warning: this will destroy the current db"
 
 load_whathood_schema
 import_data
