@@ -41,7 +41,8 @@ class NeighborhoodPolygonController extends BaseController
             }
             catch(\Exception $e) {
                 $this->getResponse()->setStatusCode(400);
-                $response_data = array( 'msg' => 'an error occurred executing the request' );
+		$this->logger()->warn($e->getMessage());
+                $array = array( 'msg' => 'an error occurred executing the request' );
             }
             return new JsonModel( $array );
         }
