@@ -1,96 +1,65 @@
 #!/usr/bin/env ruby
 
-DATA_DIR="data/whathood_db"
-SCHEMA_DIR="app/scripts/schema"
-DB_NAME="whathood"
-DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
-DB_USER="docker"
-
 require 'fileutils'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
-Whathood::Util.check_for_just_root_user()
+#Whathood::Util.check_for_just_root_user()
 
 Whathood::Util.prompt_user "warning: this will destroy the current db"
 
-rebuild_db(DB_NAME,DB_USER)
-load_whathood_schema(DB_NAME,DB_USER)
-load_functions(DB_NAME,DB_USER)
-import_data(DATA_DIR,DB_NAME,DB_BAK_FILE,DB_USER)
+#load_whathood_schema
+#load_functions
+import_data
 
 puts "*     done in bin/import_db"
 
 BEGIN {
+    DB_HOST=ENV['PGHOST'] or abort('nope')
+    DB_PORT="5432"
+    DB_USER="docker"
+    DB_NAME="whathood"
 
-    DB_HOST="wh-postgis"
+    DATA_DIR="data/whathood_db"
+    SCHEMA_DIR="app/scripts/schema"
+    DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
+    PSQL_CMD="psql -h #{DB_HOST} -U #{DB_USER} --dbname #{DB_NAME}"
 
-    def start_postgres_if_necessary()
-        puts "*     starting postgres if necessary"
-        result = system("service postgresql start");
-        #puts "result of service start: #{result}"
-        puts "*     Sleeping for 5..."
-        sleep 5;
-        result = `ps aux | grep postgres | grep -v grep`
-
-        if result.empty?
-            abort "FATAL: unable to start postgresql"
-        end
-
-        #puts "result of ps aux: #{result}"
-    end
-
-    def rebuild_db(db_name,db_user)
-	ENV['PGHOST'] = DB_HOST
-
-        puts "*     rebuild_db"
-        #start_postgres_if_necessary()
-
-        puts "dropping database #{db_name} if it exists"
-        cmd = "dropdb -U #{db_user} -h #{DB_HOST} --if-exists #{db_name}"
-        unless system(cmd)
-            abort "FATAL: could not drop old database '#{db_name}' if it existed"
-        end
-
-        puts "creating user"
-        # we need a user for vagrant, so we can psql, but whathood php uses 'whathood'
-        `dropuser -U #{db_user} --if-exists whathood`
-        `createuser -U #{db_user} --superuser whathood 2>&1 > /dev/null`
-        `createuser -U #{db_user} --superuser #{db_user}`
-
-        puts "creating database"
-        `createdb -U #{db_user} #{db_name}`
-
-        puts "creating postgis extension"
-        `psql -U #{db_user} -h #{DB_HOST} -c "CREATE EXTENSION postgis" #{db_name}`
-        `psql -U #{db_user} -h #{DB_HOST} -c "CREATE EXTENSION pgrouting" #{db_name}`
-    end
-
-    def load_whathood_schema(db_name,db_user)
+    def load_whathood_schema
         puts "*     loading whathood schema from doctrine"
         `./app/vendor/bin/doctrine-module orm:schema-tool:create`
         puts "*     applying indexes"
-        `psql -U #{db_user} -h #{DB_HOST} -U #{db_user} -f app/scripts/schema/whathood.indexes.sql #{db_name}`
+        `#{PSQL_CMD} -c "CREATE SCHEMA whathood"`
+        `#{PSQL_CMD} -f app/scripts/schema/whathood.indexes.sql`
     end
 
-    def load_functions(db_name,db_user)
-        `psql -h #{DB_HOST} -U #{db_user} -c "CREATE SCHEMA whathood" #{db_name}`
+    def load_functions
         puts "*     loading functions"
         system("./dev-bin/load_sql_functions")
     end
 
-    def import_data(data_dir, db_name, db_bak_file, db_user)
-        if !File.exists?(data_dir) # if the data dir doesn't exist
-            puts "data dir #{data_dir} doesn't exist, must clone repo"
-            clone_data_repo(data_dir)
+    def clone_data_repo
+        puts "deleting previous data directory '#{DATA_DIR}'"
+
+        if File.exists?(DATA_DIR)
+            FileUtils.rmdir(DATA_DIR, true)
+        end
+        FileUtils.mkdir_p DATA_DIR
+        `git clone https://github.com/jimRsmiley/whathood-data.git #{DATA_DIR} > /dev/null`
+    end
+
+    def import_data
+        if !File.exists?(DATA_DIR) # if the data dir doesn't exist
+            puts "data dir #{DATA_DIR} doesn't exist, must clone repo"
+            clone_data_repo
         else
             _old_dir = Dir.pwd
-            puts "changing to data dir #{data_dir}"
-            Dir.chdir data_dir
+            puts "changing to data dir #{DATA_DIR}"
+            Dir.chdir DATA_DIR
             local_sha = system('git rev-parse HEAD')
             remote_sha = system('git rev-parse origin/master')
             if local_sha ==  nil || local_sha != remote_sha
                 puts "git data repos are different; cloning database data"
-		`git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir}`
+		`git clone https://github.com/jimRsmiley/whathood-data.git #{DATA_DIR}`
             else
                 puts "git db repos are equal, no need to clone"
             end
@@ -98,21 +67,14 @@ BEGIN {
             Dir.chdir _old_dir
         end
 
-        if !File.exists?(db_bak_file)
-            abort "FATAL: file db_bak_file '#{db_bak_file} does not exist"
+        if !File.exists? DB_BAK_FILE
+            abort "FATAL: file db_bak_file '#{DB_BAK_FILE} does not exist"
         end
 
-        puts "*     importing db file db_bak_file to db #{db_name}"
-        `psql -U #{db_user} -f #{db_bak_file} #{db_name}`
+        puts "*     importing db file db_bak_file to db #{DB_NAME}"
+	cmd="#{PSQL_CMD} -f #{DB_BAK_FILE}"
+	puts cmd
+	system cmd
     end
 
-    def clone_data_repo(data_dir)
-        puts "deleting previous data directory '#{data_dir}'"
-
-        if File.exists?(data_dir)
-            FileUtils.rmdir(data_dir, true)
-        end
-        FileUtils.mkdir_p data_dir
-        `git clone https://github.com/jimRsmiley/whathood-data.git #{data_dir} > /dev/null`
-    end
 }

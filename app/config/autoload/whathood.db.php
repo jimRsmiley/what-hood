@@ -5,7 +5,7 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOPgSql\Driver',
                 'params' => array(
-                    'host'     => 'wh-postgis',
+                    'host'     =>  (getenv('PGHOST') ? getenv('PGHOST') : 'wh-postgis'),
                     'port'     => '5432',
                     'dbname'   => 'whathood',
                     'user'     => 'docker',

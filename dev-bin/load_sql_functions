@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
 
-db_name = 'whathood'
-db_host = 'wh-postgis'
+db_name = ENV['PGDATABASE'] 
+db_host = ENV['PGHOST']
 db_user = 'docker'
 
 dir = Dir.pwd
@@ -24,7 +24,7 @@ end
 
 puts "dropping all functions"
 drop_sql=`./bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
-system("psql -h #{db_host} -U #{db_user} --tuples-only --quiet -c \"$drop_sql\" #{db_name}")
+#system("psql -h #{db_host} -U #{db_user} --tuples-only --quiet -c \"$drop_sql\" #{db_name}")
 
 puts "loading whathood.function.*.sql"
 import_files("#{script_dir}/whathood.function.*.sql", db_host, db_user, db_name)
