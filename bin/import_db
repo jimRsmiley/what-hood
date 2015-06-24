@@ -14,7 +14,7 @@ import_data
 puts "*     done in bin/import_db"
 
 BEGIN {
-    DB_HOST=ENV['PGHOST'] or abort('nope')
+    DB_HOST= ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis'
     DB_PORT="5432"
     DB_USER="docker"
     DB_NAME="whathood"
@@ -23,18 +23,22 @@ BEGIN {
     SCHEMA_DIR="app/scripts/schema"
     DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
     PSQL_CMD="psql -h #{DB_HOST} -U #{DB_USER} --dbname #{DB_NAME}"
+    ROOT_DIR=File.dirname(__FILE__)+"/.."
 
     def load_whathood_schema
         puts "*     loading whathood schema from doctrine"
-        `./app/vendor/bin/doctrine-module orm:schema-tool:create`
+        cmd="#{ROOT_DIR}/app/vendor/bin/doctrine-module orm:schema-tool:create"
+	puts cmd
+	system cmd
         puts "*     applying indexes"
         `#{PSQL_CMD} -c "CREATE SCHEMA whathood"`
-        `#{PSQL_CMD} -f app/scripts/schema/whathood.indexes.sql`
+        `#{PSQL_CMD} -f #{ROOT_DIR}/app/scripts/schema/whathood.indexes.sql`
     end
 
     def load_functions
         puts "*     loading functions"
-        system("./dev-bin/load_sql_functions")
+        cmd="#{ROOT_DIR}/dev-bin/load_sql_functions"
+	system cmd
     end
 
     def clone_data_repo
