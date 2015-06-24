@@ -1,35 +1,36 @@
 #!/usr/bin/env ruby
 
 
-db_name = ENV['PGDATABASE'] 
-db_host = ENV['PGHOST']
-db_user = 'docker'
+DB_NAME = ( ENV.has_key?('PGDATABASE') ? ENV['PGDATABASE'] : 'whathood' )
+DB_HOST = ( ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis' )
+DB_USER = 'docker'
 
-dir = Dir.pwd
+ROOT_DIR=File.dirname(__FILE__)+"/.."
+dir = ROOT_DIR
 
 script_dir = "#{dir}/app/scripts/sql"
 
-def run_sql_script(file, db_host, db_user, db_name)
-    `psql -h #{db_host} -U #{db_user} --tuples-only --quiet -f #{file} #{db_name}`
+def run_sql_script(file)
+    `psql -h #{DB_HOST} -U #{DB_USER} --tuples-only --quiet -f #{file} #{DB_NAME}`
 end
 
-def import_files(dir_str, db_host, db_user, db_name)
+def import_files(dir_str)
     files = Dir.glob(dir_str)
     files = files.sort
     files.each do |f|
         puts "processing #{f}"
-        run_sql_script(f, db_host, db_user, db_name)
+        run_sql_script(f)
     end
 end
 
-puts "dropping all functions"
-drop_sql=`./bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
-#system("psql -h #{db_host} -U #{db_user} --tuples-only --quiet -c \"$drop_sql\" #{db_name}")
+#puts "dropping all functions"
+#drop_sql=`#{ROOT_DIR}/bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
+#system("psql -h #{DB_HOST} -U #{DB_USER} --tuples-only --quiet -c \"$drop_sql\" #{DB_NAME}")
 
 puts "loading whathood.function.*.sql"
-import_files("#{script_dir}/whathood.function.*.sql", db_host, db_user, db_name)
+import_files("#{script_dir}/whathood.function.*.sql")
 puts "loading whathood.view.*.sql"
-import_files("#{script_dir}/whathood.view.*.sql",db_host,db_user,db_name)
+import_files("#{script_dir}/whathood.view.*.sql")
 
 puts "done"
 
