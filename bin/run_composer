@@ -28,8 +28,8 @@ BEGIN {
     require_relative '../libs/ruby/Whathood/ErbalT.rb'
 
     def run_composer
-
-        Dir.chdir 'app'
+        script_dir = File.dirname(__FILE__)
+        Dir.chdir "#{script_dir}/../app"
         composer_file = "composer.phar"
         if File.exists? composer_file
             puts "*     composer already exists; no need to install; not running composer install"
