@@ -29,7 +29,10 @@ BEGIN {
         puts "*     loading whathood schema from doctrine"
         cmd="#{ROOT_DIR}/app/vendor/bin/doctrine-module orm:schema-tool:create"
 	puts cmd
-	system cmd
+	unless system cmd
+	  abort "was unable to properly execute command '#{cmd}'"
+	end
+
         puts "*     applying indexes"
         `#{PSQL_CMD} -c "CREATE SCHEMA whathood"`
         `#{PSQL_CMD} -f #{ROOT_DIR}/app/scripts/schema/whathood.indexes.sql`
