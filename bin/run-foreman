@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-
-Dir.chdir('..')
-`foreman start`
