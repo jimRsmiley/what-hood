@@ -1,4 +1,0 @@
-#!/bin/bash
-
-tail -f /var/log/upstart/whathood-watcher-1.log &
-tail -f /var/log/upstart/whathood-coffee-1.log &

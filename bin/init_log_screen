@@ -1,9 +1,0 @@
-#!/bin/bash
-
-#
-# tail and follow files for a live log screen
-#
-
-tail -f /var/log/whathood_nginx_access.log &
-tail -f /var/log/whathood_nginx_error.log &
-tail -f /var/log/whathood.log &
