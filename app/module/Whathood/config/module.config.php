@@ -210,6 +210,21 @@ return array(
             ),
 
             /*
+             *  /about
+             */
+            'admin' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/about',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Index',
+                        'action'        => 'about',
+                    ),
+                ),
+            ),
+
+            /*
              *  /sitemap
              */
             'sitemap' => array(
