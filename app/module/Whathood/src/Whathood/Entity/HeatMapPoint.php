@@ -35,7 +35,7 @@ class HeatMapPoint extends \ArrayObject {
     protected $point = null;
 
     /**
-     * @ORM\Column(name="percentage",type="decimal",nullable=false)
+     * @ORM\Column(name="percentage",type="float",nullable=false)
      */
     protected $percentage = null;
 
