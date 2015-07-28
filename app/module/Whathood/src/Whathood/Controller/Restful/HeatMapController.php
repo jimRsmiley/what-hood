@@ -20,7 +20,6 @@ class HeatMapController extends BaseController {
     public function getList() {
         $neighborhood_id = $this->params()->fromRoute('neighborhood_id');
 
-        $this->logger()->info("whathood REST get xy=$x,$y");
         $neighborhood = $this->m()->neighborhood()->byId($neighborhood_id);
         $heatmap_points = $this->m()->heatMapPoint()->byNeighborhood($neighborhood);
         \Zend\Debug\Debug::dump($heatmap_points);

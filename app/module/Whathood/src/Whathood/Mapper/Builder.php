@@ -79,6 +79,11 @@ class Builder extends BaseMapper {
         return $this->neighborhoodPolygonMapper;
     }
 
+    // sugar
+    public function neighborhood() {
+        return $this->neighborhoodMapper();
+    }
+
     public function neighborhoodMapper() {
         if( $this->neighborhoodMapper == null )
             $this->neighborhoodMapper =
