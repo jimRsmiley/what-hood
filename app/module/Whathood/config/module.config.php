@@ -254,6 +254,16 @@ return array(
                 )
             ),
 
+            'rest-test-point' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/v1/heat-map-points/neighborhood_id/:neighborhood_id',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\HeatMapRestful',
+                    )
+                )
+            ),
+
             'rest-neighborhood-polygon' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -508,6 +518,7 @@ return array(
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\ElectionPointRestful'          => 'Whathood\Controller\Restful\ElectionPointController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
+            'Whathood\Controller\HeatMapRestful'                => 'Whathood\Controller\Restful\HeatMapController',
 
             /* console controllers */
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
@@ -515,7 +526,7 @@ return array(
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',
-            'Whathood\Controller\NeighborhoodPolygonConsole'            => 'Whathood\Controller\Console\NeighborhoodPolygonController'
+            'Whathood\Controller\NeighborhoodPolygonConsole'    => 'Whathood\Controller\Console\NeighborhoodPolygonController',
         ),
     ),
 
