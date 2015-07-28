@@ -108,6 +108,7 @@ class WatcherController extends BaseController
                         $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
 
                         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
+                        $this->m()->heatMapPoint()->deleteByNeighborhood($n);
                         $this->m()->heatMapPoint()->savePoints($heatmap_points);
                         die("this is after a save");
                     }

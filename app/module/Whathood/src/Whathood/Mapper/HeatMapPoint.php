@@ -31,6 +31,13 @@ class HeatMapPoint extends BaseMapper {
         }
     }
 
+    public function deleteByNeighborhood(Neighborhood $neighborhood) {
+        $sql = "DELETE FROM Whathood\Entity\HeatMapPoint hmp WHERE hmp.neighborhood = :neighborhood_id";
+        $this->em->createQuery($sql)
+            ->setParameter(':neighborhood_id',$neighborhood->getId())
+            ->execute();
+    }
+
     public function savePoints(array $heatmap_points) {
         foreach($heatmap_points as $hmp) {
             $this->save($hmp);
