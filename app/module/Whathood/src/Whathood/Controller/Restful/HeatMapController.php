@@ -4,6 +4,7 @@ namespace Whathood\Controller\Restful;
 use Zend\View\Model\JsonModel;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Neighborhood;
+use Whathood\Entity\HeatMapPoint;
 
 /**
  * serve restful requests for election points
@@ -23,8 +24,6 @@ class HeatMapController extends BaseController {
 
         $neighborhood = $this->m()->neighborhood()->byId($neighborhood_id);
         $heatmap_points = $this->m()->heatMapPoint()->byNeighborhood($neighborhood);
-        \Zend\Debug\Debug::dump($heatmap_points);
-        return new JsonModel(array());
+        return new JsonModel(array(HeatMapPoint::pointsToArray($heatmap_points)));
     }
-
 }

@@ -110,7 +110,7 @@ class WatcherController extends BaseController
                         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
                         $this->m()->heatMapPoint()->deleteByNeighborhood($n);
                         $this->m()->heatMapPoint()->savePoints($heatmap_points);
-                        die("this is after a save");
+                        $this->logger()->info("\tsaved ".count($heatmap_points)." heatmap points");
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());

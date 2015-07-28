@@ -96,5 +96,20 @@ class HeatMapPoint extends \ArrayObject {
         $hmp->setCreatedAt(new \DateTime());
         return $hmp;
     }
+
+    public static function pointsToArray(array $array) {
+        $retval = array();
+        foreach ($array as $hmp) {
+            array_push($retval, $hmp->toArray());
+        }
+        return $retval;
+    }
+
+    public function toArray() {
+        return array(
+            'x' => $this->getPoint()->getX(),
+            'y' => $this->getPoint()->getY(),
+            'percentage' => $this->getPercentage() );
+    }
 }
 ?>
