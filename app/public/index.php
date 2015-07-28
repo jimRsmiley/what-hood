@@ -9,6 +9,11 @@ error_reporting(E_ALL);
 
 chdir(dirname(__DIR__));
 
+$application_env = file_get_contents("../application_env");
+
+if ($application_env == 'development')
+    ini_set("display_errors",'On');
+
 // Setup autoloading
 require 'init_autoloader.php';
 
