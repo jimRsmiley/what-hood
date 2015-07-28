@@ -3,6 +3,7 @@ namespace Whathood\Controller\Restful;
 
 use Zend\View\Model\JsonModel;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Entity\Neighborhood;
 
 /**
  * serve restful requests for election points

@@ -12,13 +12,13 @@ use Whathood\Entity\HeatMapPoint as HMP;
  */
 class HeatMapPoint extends BaseMapper {
 
-    public function byNeighborhood( Neighbborhood $neighborhood ) {
+    public function byNeighborhood( Neighborhood $neighborhood ) {
 
         if( empty( $neighborhood ) )
             throw new \InvalidArgumentException( ' may not be null' );
 
         $qb = $this->em->createQueryBuilder();
-        $qb->select( array( 'n','r' ) )
+        $qb->select( array( 'hmp') )
                 ->from('Whathood\Entity\HeatMapPoint', 'hmp')
                 ->where( 'hmp.neighborhood = ?1' )
                 ->setParameter(1, $neighborhood->getId() );
