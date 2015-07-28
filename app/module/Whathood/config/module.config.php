@@ -411,6 +411,12 @@ return array(
                 return $mapper;
             },
 
+            'Whathood\Mapper\HeatMapPoint'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\HeatMapPoint( $sm, $em );
+                return $mapper;
+            },
+
             'Whathood\Mapper\ConcaveHullMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\ConcaveHullMapper( $sm, $em );

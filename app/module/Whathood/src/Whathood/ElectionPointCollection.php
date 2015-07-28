@@ -34,9 +34,10 @@ class ElectionPointCollection {
         foreach ($this->_points as $ep) {
             $cn = $ep->candidateNeighborhood($neighborhood);
             $percentage = $cn->getNumVotes() / $ep->totalVotes();
-            array_push($heatmap_points, new HeatMapPoint( array(
+            array_push($heatmap_points, HeatMapPoint::build( array(
+                'neighborhood' => $neighborhood,
                 'point' => $ep->getPoint(),
-                'percentage' => $percentage )));
+                'weight' => $percentage )));
         }
         return $heatmap_points;
     }

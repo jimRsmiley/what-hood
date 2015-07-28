@@ -3,13 +3,14 @@
 namespace Whathood\Mapper;
 
 use Whathood\Entity\Neighborhood;
+use Whathood\Entity\HeatMapPoint as HMP;
 
 /**
  * Description of NeighborhoodMapper
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class NeighborhoodMapper extends BaseMapper {
+class HeatMapPoint extends BaseMapper {
 
     public function byNeighborhood( Neighbborhood $neighborhood ) {
 
@@ -36,7 +37,7 @@ class NeighborhoodMapper extends BaseMapper {
         }
     }
 
-    public function save( HeatMapPoint $heatmap_point ) {
+    public function save( HMP $heatmap_point ) {
 
         $this->em->persist( $heatmap_point );
         $this->em->flush( $heatmap_point );

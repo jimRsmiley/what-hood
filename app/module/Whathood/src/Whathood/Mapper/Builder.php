@@ -15,6 +15,7 @@ class Builder extends BaseMapper {
     protected $_user_polygon_mapper;
     protected $_test_point_mapper;
     protected $_points_as_polygon_mapper;
+    protected $_heatmap_point;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
@@ -34,6 +35,14 @@ class Builder extends BaseMapper {
 
     public function electionMapper() {
         return $this->sm->get('Whathood\Mapper\Election');
+    }
+
+    public function heatMapPoint() {
+        if ($this->_heatmap_point == null) {
+            $this->_heatmap_point =
+                $this->sm->get('Whathood\Mapper\HeatMapPoint');
+        }
+        return $this->_heatmap_point;
     }
 
     public function pointsAsPolygonMapper() {

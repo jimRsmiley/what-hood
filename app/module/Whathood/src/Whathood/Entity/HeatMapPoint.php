@@ -35,9 +35,9 @@ class HeatMapPoint extends \ArrayObject {
     protected $point = null;
 
     /**
-     * @ORM\Column(name="weight",type="double precision",nullable=false)
+     * @ORM\Column(name="percentage",type="decimal",nullable=false)
      */
-    protected $weight = null;
+    protected $percentage = null;
 
     /**
      * @ORM\Column(name="created_at",type="datetimetz",nullable=false)
@@ -56,49 +56,8 @@ class HeatMapPoint extends \ArrayObject {
         return $this->neighborhood;
     }
 
-    public function setNeighborhood( $data ) {
-        if( is_array( $data ) )
-            $this->neighborhood = new Neighborhood( $data );
-        else if( $data instanceof \Whathood\Entity\Neighborhood )
-            $this->neighborhood = $data;
-        else
-            throw new \InvalidArgumentException(
-                                'data must be array or Neighborhood object');
-    }
-
-    public function getUserPolygons() {
-        return $this->user_polygons;
-    }
-
-    public function setUserPolygons($user_polygons) {
-        $this->user_polygons = $user_polygons;
-    }
-
-    public function getGeometry() {
-        return $this->geometry;
-    }
-    //
-    // sugar
-    public function setGeom($geom) {
-        $this->setGeometry($geom);
-    }
-
-    public function setGeometry(  $data ) {
-        if( $data instanceof Polygon )
-            $this->geometry = $data;
-        else if( is_array( $data ) ) {
-            $ring = array();
-            foreach( $data['points'] as $point ) {
-                $ring[] = new Point( $point['x'],$point['y'] );
-            }
-            // close the ring
-            $ring[] = $ring[0];
-
-            $this->geometry = new Polygon(array($ring));
-        }
-        else {
-            throw new \InvalidArgumentException("did not get expected value for geometry");
-        }
+    public function setNeighborhood( Neighborhood $n ) {
+        $this->neighborhood = $n;
     }
 
     public function getCreatedAt() {
@@ -109,20 +68,20 @@ class HeatMapPoint extends \ArrayObject {
         $this->created_at = $created_at;
     }
 
-    public function getGridResolution() {
-        return $this->grid_resolution;
+    public function getPoint() {
+        return $this->point;
     }
 
-    public function setGridResolution($grid_resolution) {
-        $this->grid_resolution = $grid_resolution;
+    public function setPoint($point) {
+        $this->point = $point;
     }
 
-    public function getTargetPrecision() {
-        return $this->target_precision;
+    public function getPercentage() {
+        return $this->percentage;
     }
 
-    public function setTargetPrecision($target_precision) {
-        $this->target_precision = $target_precision;
+    public function setPercentage($percentage) {
+        $this->percentage = $percentage;
     }
 
     public function __construct(array $array = null ) {
@@ -132,98 +91,8 @@ class HeatMapPoint extends \ArrayObject {
         }
     }
 
-    public static function build(array $data) {
-        $neighborhood_polygon = new static($data);
-        if (null == $neighborhood_polygon->getCreatedAt())
-            $neighborhood_polygon->setCreatedAt(new \DateTime());
-        return $neighborhood_polygon;
-    }
-
-    public function userPolygonCount() {
-        return count($this->getUserPolygons());
-    }
-
-    public function setGeoJson($geojson) {
-        $polygon = \Whathood\Polygon::buildPolygonFromGeoJsonString($geojson,4326);
-        $this->setGeometry($polygon);
-    }
-
-    public function getUserPolygonIds() {
-        $ids = array();
-        foreach($this->getUserPolygons() as $up) {
-            $ids[] = $up->getId();
-        }
-        return $ids;
-    }
-
-    public function toArray(array $opts = null) {
-        if ($opts == null)
-            $opts = array();
-
-        // for geojson, we want to merge the polygon
-        $np_arr = $this->polygonToGeoJsonArray( $this->geometry );
-
-        if( $this->getNeighborhood() != null )
-            $np_arr['neighborhood'] = $this->getNeighborhood()->toArray();
-
-        $np_arr['id'] = $this->getId();
-        return $np_arr;
-    }
-
-    public static function polygonToGeoJsonArray( $polygon ) {
-
-        if (empty($polygon))
-            throw new \InvalidArgumentException("polygon may not be empty");
-        $coordinates = array();
-
-        foreach( $polygon->getRings() as $ring ) {
-            array_push( $coordinates, $ring->toArray() );
-        }
-
-        $arr = array(
-            'type'      => 'Polygon',
-            'coordinates' => $coordinates
-        );
-
-        return $arr;
-    }
-
-    public static function fromGeoJsonArray( $array ) {
-
-        $type = $array['type'];
-        $coordinates = $array['coordinates'];
-
-        $polygon = new Polygon( array( new LineString( $coordinates ) ) );
-
-        return $polgyon;
-    }
-
-    /*
-     * utility function that given an array of neighborhoods, returns a json
-     * array
-     */
-    public static function neighborhoodsToJson( $neighborhoodArray ) {
-
-        $jsonArray = array();
-        foreach( $neighborhoodArray as $n )
-            $jsonArray['neighborhoods'][] = $n->toArray();
-
-        return  \Zend\Json\Json::encode($jsonArray);
-    }
-
-    /*
-     * utility function that given an array of neighborhoods, returns a json
-     * array
-     */
-    public static function jsonToNeighborhoodPolygons( $json ) {
-
-        $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
-
-        $neighborhoodPolygons = array();
-        foreach( $array['neighborhoods'] as $neighborhoodArray ) {
-            $neighborhoodPolygons[] = new UserPolygon( $neighborhoodArray );
-        }
-        return $neighborhoodPolygons;
+    public static function build(array $array) {
+        return new HeatMapPoint($array);
     }
 }
 ?>
