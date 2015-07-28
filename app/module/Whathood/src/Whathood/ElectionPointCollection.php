@@ -37,7 +37,7 @@ class ElectionPointCollection {
             array_push($heatmap_points, HeatMapPoint::build( array(
                 'neighborhood' => $neighborhood,
                 'point' => $ep->getPoint(),
-                'weight' => $percentage )));
+                'percentage' => $percentage )));
         }
         return $heatmap_points;
     }

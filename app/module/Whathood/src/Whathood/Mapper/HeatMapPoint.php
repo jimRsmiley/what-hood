@@ -38,7 +38,6 @@ class HeatMapPoint extends BaseMapper {
     }
 
     public function save( HMP $heatmap_point ) {
-
         $this->em->persist( $heatmap_point );
         $this->em->flush( $heatmap_point );
     }

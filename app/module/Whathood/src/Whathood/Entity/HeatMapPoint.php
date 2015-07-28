@@ -92,7 +92,9 @@ class HeatMapPoint extends \ArrayObject {
     }
 
     public static function build(array $array) {
-        return new HeatMapPoint($array);
+        $hmp = new HeatMapPoint($array);
+        $hmp->setCreatedAt(new \DateTime());
+        return $hmp;
     }
 }
 ?>
