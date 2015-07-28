@@ -8,11 +8,6 @@ String.prototype.pluralize = function(count, plural)
   return (count == 1 ? this : plural)
 }
 
-L.TileLayer.HeatMap.prototype.getBounds = function() {
-     var self = this;
-     return self._bounds;
-}
-
 L.GeoJSON.prototype.getCenter = function(){
     var pts = this._latlngs;
 

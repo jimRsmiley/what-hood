@@ -23,7 +23,6 @@ Whathood.Map = L.Map.extend
 
     streetLayer.addTo @
     @layerGroup().addLayer streetLayer
-    @centerOnRegion()
     return
 
   addGeoJson: ( url, callback ) ->

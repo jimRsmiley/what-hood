@@ -109,7 +109,9 @@ class HeatMapPoint extends \ArrayObject {
         return array(
             'x' => $this->getPoint()->getX(),
             'y' => $this->getPoint()->getY(),
-            'percentage' => $this->getPercentage() );
+            'percentage' => $this->getPercentage(),
+            'weight' => round(10*$this->getPercentage())
+        );
     }
 }
 ?>
