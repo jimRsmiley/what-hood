@@ -72,12 +72,17 @@ class WatcherController extends BaseController
                     try {
                         /* build the border */
                         $timer = Timer::start('generate_border');
-                        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
+                        $electionCollection = $this->m()->electionMapper()->getCollection(
                             $ups,
                             $n->getId(),
                             $this->getGridResolution(),
                             $this->getTargetPrecision()
                         );
+
+                        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
+                            $electionCollection, $n
+                        );
+
                         $timer->stop();
 
                         if (!$polygon) {
@@ -101,6 +106,10 @@ class WatcherController extends BaseController
                                 )
                         );
                         $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
+
+                        $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
+                        $this->m()->heatMapPoint()->savePoints($heatmap_points);
+                        die("this is after a save");
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());
