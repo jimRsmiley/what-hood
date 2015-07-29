@@ -369,13 +369,23 @@ return array(
 
 
     'service_manager' => array(
+
+        'invokables' => array(
+            'TimerListener' => 'Whathood\Event\TimerListener'
+        ),
+
         'factories' => array(
+
+            #'TimeListener' => function($sm) {
+            #    return new \Whathood\Event\TimerListener($sm);
+            #},
 
             'Whathood\YamlConfig' => function($sm) {
                 require_once('vendor/mustangostang/spyc/Spyc.php');
                 $reader = new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
                 return $reader->fromFile('../whathood.yaml');
             },
+
             'Whathood\Logger' => function($sm) {
                 $config = $sm->get('Config');
 
