@@ -22,11 +22,6 @@ class BaseController extends AbstractActionController {
         return $this->_mapper_builder;
     }
 
-    public function onDispatch(\Zend\Mvc\MvcEvent $event) {
-        die("on dispatch is firing");
-        return parent::onDispatch($event);
-    }
-
     // a more accurate function description
     public function getRequestParameter($key) {
         $val = $this->getUriParameter($key);
