@@ -370,15 +370,19 @@ return array(
 
     'service_manager' => array(
 
-        'invokables' => array(
-            'TimerListener' => 'Whathood\Event\TimerListener'
-        ),
-
         'factories' => array(
 
-            #'TimeListener' => function($sm) {
-            #    return new \Whathood\Event\TimerListener($sm);
-            #},
+            'TimerListener' => function($sm) {
+                return new \Whathood\Event\TimerListener($sm->get('Whathood\Logger'));
+            },
+
+            'Whathood\Timer' => function($sm) {
+                static $timer_instance = null;
+                if (null == $timer_instance) {
+                    $timer_instance = new \Whathood\Timer();
+                }
+                return $timer_instance;
+            },
 
             'Whathood\YamlConfig' => function($sm) {
                 require_once('vendor/mustangostang/spyc/Spyc.php');

@@ -10,10 +10,17 @@ class TimerListener implements ListenerAggregateInterface
 {
     protected $listeners = array();
 
-    protected $_sm = null;
+    protected $_timer;
 
-    public function __construct() {
+    protected $_start;
+
+    protected $_logger;
+
+    public function __construct(\Whathood\Logger $logger) {
+        $this->_logger = $logger;
     }
+
+    public function logger() { return $this->_logger; }
 
     public function attach(EventManagerInterface $events)
     {
@@ -32,12 +39,12 @@ class TimerListener implements ListenerAggregateInterface
     }
 
     public function startTimer(MvcEvent $event) {
-    #    print("stopTimer is happening".$this->getControllerString($event));
+        $this->_start = microtime(true);
     }
 
     public function recordTimers(MvcEvent $event) {
-    #    print("doEvent is happening".$event->getController());
-    #    die("and now dying");
+        $this->_end = microtime(true);
+        $this->logger()->info($this->getControllerString($event). " ".round(($this->_end-$this->_start)*1000)."ms");
     }
 
     public function getControllerString(MvcEvent $event) {
