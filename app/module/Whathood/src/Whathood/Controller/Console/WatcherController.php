@@ -24,18 +24,8 @@ class WatcherController extends BaseController
             $this->getRequest()->getParam(
                 'grid-res',$this->getDefaultGridResolution()
             ));
-        $this->setTargetPrecision(
-            $this->getRequest()->getParam(
-                'target-precision',$this->getDefaultTargetPrecision()
-            ));
 
         $this->logger()->info("Whathood watcher has started");
-        $this->logger()->info(
-            sprintf("\tgrid-resolution=%g target-precision=%s",
-                $this->getGridResolution(),
-                $this->getTargetPercentage()
-            )
-        );
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
