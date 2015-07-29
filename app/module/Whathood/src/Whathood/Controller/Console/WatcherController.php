@@ -32,15 +32,15 @@ class WatcherController extends BaseController
             if ($neighborhood_name and $region_name ) {
                 $neighborhood = $this->m()->neighborhoodMapper()
                     ->byName($neighborhood_name,$region_name);
-                $user_polygons = $this->userPolygonMapper()
+                $user_polygons = $this->m()->userPolygonMapper()
                     ->byNeighborhood($neighborhood);
             }
             else if ($force) {
-                $user_polygons = $this->userPolygonMapper()->fetchAllToBuild($force=true);
+                $user_polygons = $this->m()->userPolygonMapper()->fetchAllToBuild($force=true);
             }
             else {
                 $up_t = Timer::start('gather_user_polygons');
-                $user_polygons = $this->userPolygonMapper()
+                $user_polygons = $this->m()->userPolygonMapper()
                     ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
                 $up_t->stop();
             }
@@ -95,7 +95,7 @@ class WatcherController extends BaseController
                                 $timer->elapsed_minutes()
                                 )
                         );
-                        $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
+                        $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
 
                         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
                         $this->m()->heatMapPoint()->deleteByNeighborhood($n);
