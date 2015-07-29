@@ -415,7 +415,7 @@ return array(
 
             'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Config');
-                $emailer = new \Whathood\Model\Email($config['whathood']['log']['email'] );
+                $emailer = new \Whathood\Email($config['whathood']['log']['email'] );
                 return $emailer;
             },
 
