@@ -60,7 +60,7 @@ W.user_polygon_add = () ->
       alert "polygon_json must be defined"
     unless neighborhood_name
       alert "neighborhood_name must be defined"
-    url = '/whathood/user-polygon/add'
+    url = '/whathood/user-polygon/add-post'
     data =
       polygon_json: map.getDrawnGeoJson()
       neighborhood_name: neighborhood_name

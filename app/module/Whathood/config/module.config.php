@@ -206,6 +206,17 @@ return array(
                 )
             ),
 
+            'user_neighborhood_add_post' => array(
+                'type'  => 'Segment',
+                'options' => array(
+                    'route' => '/whathood/user-polygon/add-post',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Whathood\Controller\UserPolygon',
+                        'action'        => 'addPost'
+                    )
+                )
+            ),
             /*
              *  /about
              */
