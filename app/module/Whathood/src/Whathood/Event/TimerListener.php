@@ -51,10 +51,14 @@ class TimerListener implements ListenerAggregateInterface
         return $this->getControllerName($event)."::".$this->getActionName($event);
     }
     public function getControllerName(MvcEvent $event) {
+        if (!$event->getRouteMatch())
+            return '[UnknownController]';
         return $event->getRouteMatch()->getParam('controller');
     }
 
     public function getActionName(MvcEvent $event) {
+        if (!$event->getRouteMatch())
+            return '[unknownAction]';
         return $event->getRouteMatch()->getParam('action');
     }
 }
