@@ -47,6 +47,7 @@ W.user_polygon_add = () ->
 
   map = new W.DrawMap('map')
   map.init()
+  map.centerOnRegion()
 
   $('#add-polygon-form').on 'submit', (e) =>
     e.preventDefault()
