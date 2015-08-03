@@ -212,7 +212,7 @@ return array(
             /*
              *  /about
              */
-            'admin' => array(
+            'about' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/about',
