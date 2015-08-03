@@ -191,9 +191,13 @@ class UserPolygonController extends BaseController
     }
 
     public function addAction() {
+        return new ViewModel();
+    }
+
+    public function addPostAction() {
 
         if (!$this->getRequest()->isPost())
-            return new ViewModel();
+            throw new \Exception("addPostAction expects a POST");
 
         $neighborhood_name  = $this->getRequest()->getPost('neighborhood_name');
         $region_name        = $this->getRequest()->getPost('region_name');
@@ -227,7 +231,7 @@ class UserPolygonController extends BaseController
             )
         );
 
-        $this->userPolygonMapper()->save( $userPolygon );
+        $this->m()->userPolygonMapper()->save( $userPolygon );
 
         $this->logger()->info( "user polygon added id(".$userPolygon->getId().")" );
 
