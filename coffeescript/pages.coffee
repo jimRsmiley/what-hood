@@ -129,7 +129,7 @@ W.region_show = () ->
   map = new W.RegionMap('map')
   map.addStreetLayer()
 
-  map.addGeoJson get_url(region_name,create_event)
+  map.addNeighborhoods get_url(region_name,create_event)
   map.whathoodClick true
 
   l_geosearch = new W.GeoSearch
