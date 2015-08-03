@@ -70,6 +70,8 @@ W.user_polygon_add = () ->
       url: url
       data: data
       success: (data) ->
+        unless data.user_polygon_id
+          throw new Error "no user_polygon_id returned"
         window.location.href = "/whathood/user-polygon/by-id/#{data.user_polygon_id}"
       error: (xhr,textStatus,errorThrown) ->
         alert "there was an error saving neighborhood: #{textStatus}"
