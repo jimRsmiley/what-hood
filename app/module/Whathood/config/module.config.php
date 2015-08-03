@@ -369,6 +369,12 @@ return array(
 
         'factories' => array(
 
+            'Whathood\ErrorHandling' =>  function($sm) {
+                $logger = $sm->get('Whathood\Logger');
+                $service = new \Whathood\ErrorHandling($logger);
+                return $service;
+            },
+
             'TimerListener' => function($sm) {
                 return new \Whathood\Event\TimerListener($sm->get('Whathood\Logger'));
             },

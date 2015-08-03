@@ -28,10 +28,21 @@ class Module implements ConsoleUsageProviderInterface
         $moduleRouteListener->attach($eventManager);
 
         $sharedManager = $eventManager->getSharedManager();
+
         // controller can't dispatch request action that passed to the url
         $sharedManager->attach('Zend\Mvc\Controller\AbstractActionController',
             'dispatch',
             array($this, 'handleControllerCannotDispatchRequest' ), 101);
+
+        $eventManager->attach('dispatch.error', function($event) {
+            $exception = $event->getResult()->exception;
+            if ($exception) {
+                $sm = $event->getApplication()->getServiceManager();
+                $service = $sm->get('Whathood\ErrorHandling');
+                $service->logException($exception);
+            }
+        });
+
         //controller not found, invalid, or route is not matched anymore
         $eventManager->attach('dispatch.error',
                array($this,
