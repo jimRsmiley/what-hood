@@ -194,9 +194,6 @@ return array(
                 ),
 			),
 
-            /*
-             *  /admin
-             */
             'user_neighborhood_add' => array(
                 'type'  => 'Segment',
                 'options' => array(
@@ -207,18 +204,6 @@ return array(
                         'action'        => 'add'
                     )
                 )
-            ),
-
-            'admin' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/admin',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Admin',
-                        'action'        => 'index',
-                    ),
-                ),
             ),
 
             /*
