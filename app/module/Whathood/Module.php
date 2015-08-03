@@ -51,26 +51,27 @@ class Module implements ConsoleUsageProviderInterface
     public function handleControllerNotFoundAndControllerInvalidAndRouteNotFound(MvcEvent $e)
     {
         $error  = $e->getError();
+        $logger = $e->getApplication()->getServiceManager()->get('Whathood\Logger');
         if ($error == Application::ERROR_CONTROLLER_NOT_FOUND) {
             //there is no controller named $e->getRouteMatch()->getParam('controller')
             $logText =  'The requested controller '
                         .$e->getRouteMatch()->getParam('controller'). '  could not be mapped to an existing controller class.';
 
-            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+            $logger->err($logText);
         }
 
-        if ($error == Application::ERROR_CONTROLLER_INVALID) {
+        else if ($error == Application::ERROR_CONTROLLER_INVALID) {
             //the controller doesn't extends AbstractActionController
             $logText =  'The requested controller '
                         .$e->getRouteMatch()->getParam('controller'). ' is not dispatchable';
 
-            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+            $logger->err($logText);
         }
 
-        if ($error == Application::ERROR_ROUTER_NO_MATCH) {
+        else if ($error == Application::ERROR_ROUTER_NO_MATCH) {
             // the url doesn't match route, for example, there is no /foo literal of route
             $logText =  'The requested URL could not be matched by routing.';
-            $e->getApplication()->getServiceManager()->get('Whathood\Logger')->err($logText);
+            $logger->err($logText);
         }
     }
 
