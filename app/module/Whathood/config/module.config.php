@@ -197,6 +197,18 @@ return array(
             /*
              *  /admin
              */
+            'user_neighborhood_add' => array(
+                'type'  => 'Segment',
+                'options' => array(
+                    'route' => '/whathood/user-polygon/add',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Whathood\Controller\UserPolygon',
+                        'action'        => 'add'
+                    )
+                )
+            ),
+
             'admin' => array(
                 'type'    => 'Segment',
                 'options' => array(
