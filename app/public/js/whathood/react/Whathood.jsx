@@ -1,18 +1,22 @@
-var CommentList = React.createClass({
+var WhathoodClickResultNeighborhood = React.createClass({
   render: function() {
     return (
-      <div className="commentList">
-        Hello, world! I am a CommentList.
-      </div>
+      <div>Neighborhood {this.props.name}</div>
     );
   }
 });
 
-var CommentForm = React.createClass({
+var WhathoodClickResult = React.createClass({
   render: function() {
+    var rows = new Array();
+    for (var i = 0; i < this.props.neighborhoods.length; i++) {
+      console.log(this.props.neighborhoods[i]);
+      rows.push(<WhathoodClickResultNeighborhood data={this.props.neighborhoods[i]} />);
+    }
     return (
-      <div className="commentForm">
-        Hello, world! I am a CommentForm.
+      <div className="whathoodClickResult">
+        {this.props.region.name}
+        {rows}
       </div>
     );
   }

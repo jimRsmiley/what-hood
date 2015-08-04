@@ -20,10 +20,10 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       y = result.Y
       this._showLocation result
       Whathood.Search.by_coordinates x, y, (data) =>
-        @_positionMarker.bindPopup("<div id='reactpopup'></div>").openPopup()
-        rElement = React.createElement CommentList
-        console.log React.render(rElement,document.getElementById('reactpopup'))
-
+        console.log data
+        @_positionMarker.bindPopup("<div id='reactpopup'>alsdkfjsaldkfjsalkdfjasldkjfasldkjfasldkjfasldkjfsa</div>").openPopup()
+        React.render( React.createElement(WhathoodClickResult, data), document.getElementById('reactpopup') )
+        @_positionMarker.redraw()
     _geosearch: () ->
       queryBox = document.getElementById 'leaflet-control-geosearch-qry'
       @geosearch queryBox.value
