@@ -1,7 +1,7 @@
 var WhathoodClickResultNeighborhood = React.createClass({
   render: function() {
     return (
-      <div>Neighborhood {this.props.name}</div>
+      <div>Neighborhood {this.props.data.name}</div>
     );
   }
 });
@@ -10,7 +10,7 @@ var WhathoodClickResult = React.createClass({
   render: function() {
     var rows = new Array();
     for (var i = 0; i < this.props.neighborhoods.length; i++) {
-      console.log(this.props.neighborhoods[i]);
+      console.log(this.props);
       rows.push(<WhathoodClickResultNeighborhood data={this.props.neighborhoods[i]} />);
     }
     return (
