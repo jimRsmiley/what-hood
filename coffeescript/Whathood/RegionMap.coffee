@@ -113,12 +113,10 @@ Whathood.RegionMap = Whathood.Map.extend
       .openPopup()
 
     # send a point election api request and popup the marker with it's result
-    __self = this
-    cb = (pointElection) ->
-      __self.locationMarker.bindPopup(
-        __self.getPopup pointElection, __self.regionName
+    pointElection = Whathood.PointElection.build lng, lat, (pointElection) ->
+      @locationMarker.bindPopup(
+        @getPopup pointElection, @regionName
       ).openPopup()
-    pointElection = Whathood.PointElection.build lng, lat, cb
 
   getNeighborhoodBrowseUrl: (lat,lng) ->
     "/whathood/user-polygon/page-center/page/1/x/#{lat}/y/#{lng}"

@@ -18,7 +18,6 @@ class Whathood.PointElection
       url: @api_url x, y
       context: document.body
       success: (data) ->
-        pointElection = new Whathood.PointElection data
-        cb pointElection
+        cb data
       fail: (xhr,textStatus) ->
         throw new Error "PointElection request failed"
