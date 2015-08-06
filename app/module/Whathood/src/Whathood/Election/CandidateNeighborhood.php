@@ -23,6 +23,11 @@ class CandidateNeighborhood {
         $this->_neighborhood = $neighborhood;
     }
 
+    // sugar
+    public function pointElection() {
+        return $this->getPointElection();
+    }
+
     public function getPointElection() {
         return $this->_election_point;
     }
