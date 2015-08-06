@@ -6,9 +6,9 @@ use Whathood\Entity\Neighborhood;
 
 /**
  * store a point and all the user_polygons that contain it.
- * Provide accessor methods for counting them
+ * Provide accessor methods for running an election
  */
-class ElectionPoint extends \ArrayObject {
+class PointElection extends \ArrayObject {
 
     protected $_point;
 

@@ -297,7 +297,7 @@ return array(
                 'options' => array(
                     'route' => '/api/v1/whathood[/x/:x][/y/:y]',
                     'defaults' => array(
-                        'controller' => 'Whathood\Controller\ElectionPointRestful'
+                        'controller' => 'Whathood\Controller\PointElectionRestful'
                     )
                 )
             ),
@@ -544,7 +544,7 @@ return array(
             'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
             'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\Restful\UserPolygonController',
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
-            'Whathood\Controller\ElectionPointRestful'          => 'Whathood\Controller\Restful\ElectionPointController',
+            'Whathood\Controller\PointElectionRestful'          => 'Whathood\Controller\Restful\PointElectionController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
             'Whathood\Controller\HeatMapRestful'                => 'Whathood\Controller\Restful\HeatMapController',
 

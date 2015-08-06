@@ -4,8 +4,8 @@ namespace Whathood\Mapper;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
-use Whathood\Election\ElectionPoint;
-use Whathood\Election\ElectionPointCollection;
+use Whathood\Election\PointElection;
+use Whathood\Election\PointElectionCollection;
 
 /**
  *  handles getting the calculations which determine what neighborhood a point
@@ -16,7 +16,7 @@ class Election extends BaseMapper {
 
     public function getCollection($user_polygons,$neighborhood_id,$grid_resolution) {
         $test_points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
-        return $this->buildElectionPointCollection($test_points);
+        return $this->buildPointElectionCollection($test_points);
     }
 
     /**
@@ -47,19 +47,19 @@ class Election extends BaseMapper {
      * given an array of test points, build a collection of election test points
      *
      * @param array - an array of test point objects
-     * @return mixed - ElectionPointCollection
+     * @return mixed - PointElectionCollection
      */
-    public function buildElectionPointCollection($test_points) {
+    public function buildPointElectionCollection($test_points) {
         $c_points = array();
         foreach ($test_points as $p) {
-            array_push($c_points, $this->buildElectionPoint($p));
+            array_push($c_points, $this->buildPointElection($p));
         }
-        return new ElectionPointCollection($c_points);
+        return new PointElectionCollection($c_points);
     }
 
-    public function buildElectionPoint(Point $point) {
+    public function buildPointElection(Point $point) {
         $user_polygons = $this->m()->userPolygonMapper()->byPoint($point);
-        $consensus_point = ElectionPoint::build($point, $user_polygons);
+        $consensus_point = PointElection::build($point, $user_polygons);
         return $consensus_point;
     }
 }

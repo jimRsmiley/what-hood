@@ -8,7 +8,7 @@ use Whathood\Entity\HeatMapPoint;
  * store whathood consensus units and provide easy retreival methods
  *
  */
-class ElectionPointCollection {
+class PointElectionCollection {
 
     protected $_points;
 

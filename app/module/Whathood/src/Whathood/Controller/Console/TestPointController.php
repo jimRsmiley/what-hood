@@ -50,7 +50,7 @@ class TestPointController extends BaseController
             die("no points returned with grid_resolution $grid_resolution");
 
         $timer = \Whathood\Timer::start('election');
-        $consensus_col = $this->m()->electionMapper()->buildElectionPointCollection($points);
+        $consensus_col = $this->m()->electionMapper()->buildPointElectionCollection($points);
         $consensus_seconds = $timer->elapsed_seconds();
         $this->logger()->info(
             sprintf("got consensus in %s seconds; %sms per point",
@@ -60,7 +60,7 @@ class TestPointController extends BaseController
         );
 
         $timer = \Whathood\Timer::start('election');
-        $consensus_col = $this->m()->electionMapper()->buildElectionPointCollection($points);
+        $consensus_col = $this->m()->electionMapper()->buildPointElectionCollection($points);
 
         $points = $consensus_col->pointsByNeighborhoodId($neighborhood->getId());
 
