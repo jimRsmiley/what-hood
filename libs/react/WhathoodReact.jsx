@@ -1,8 +1,12 @@
 var CandidateNeighborhood = React.createClass({
   render: function() {
     var cn = this.props.candidate_neighborhood;
+    console.log(cn);
     return (
-      <div>{cn.name}: {cn.percentage}%</div>
+      <div>
+        <p>{cn.name}: {cn.percentage}%</p>
+        <p><a href="asdf">Browse Neighborhoods at this location</a></p>
+      </div>
     );
   }
 });
