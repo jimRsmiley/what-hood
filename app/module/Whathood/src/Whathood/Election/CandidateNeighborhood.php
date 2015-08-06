@@ -1,6 +1,6 @@
 <?php
 
-namespace Whathood;
+namespace Whathood\Election;
 
 /**
  * represent a neighborhood up for a point election. The class

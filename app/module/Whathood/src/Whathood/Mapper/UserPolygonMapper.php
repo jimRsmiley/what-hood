@@ -10,7 +10,7 @@ use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\WhathoodUser;
-use Whathood\ElectionPoint;
+use Whathood\Election\ElectionPoint;
 
 /**
  * Description of NeighborhoodPolygonMapper

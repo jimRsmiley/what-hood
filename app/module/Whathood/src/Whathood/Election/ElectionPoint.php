@@ -1,5 +1,5 @@
 <?php
-namespace Whathood;
+namespace Whathood\Election;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Neighborhood;

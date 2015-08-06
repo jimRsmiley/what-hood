@@ -4,8 +4,8 @@ namespace Whathood\Mapper;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
-use Whathood\ElectionPoint;
-use Whathood\ElectionPointCollection;
+use Whathood\Election\ElectionPoint;
+use Whathood\Election\ElectionPointCollection;
 
 /**
  *  handles getting the calculations which determine what neighborhood a point

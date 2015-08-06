@@ -1,6 +1,6 @@
 <?php
 
-namespace Whathood;
+namespace Whathood\Election;
 
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\HeatMapPoint;
