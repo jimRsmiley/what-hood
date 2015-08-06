@@ -103,14 +103,11 @@ class PointElection extends \ArrayObject {
                 $this->_candidate_neighborhoods[$n->getId()]->increment_vote();
             }
             else
-                $cn = 
-                 CandidateNeighborhood::build(
-                                                                array(
-                                                                    'point' => $this->getPoint(),
-                                                                    'num_votes'=> 1,
-                                                                    'neighborhood'=> $n
-                                                                )
-                                                            );
+                $cn = CandidateNeighborhood::build(array(
+                    'point_election' => $this,
+                    'num_votes'=> 1,
+                    'neighborhood'=> $n
+                ));
                 $this->_candidate_neighborhoods[$n->getId()]=$cn;
         }
     }
