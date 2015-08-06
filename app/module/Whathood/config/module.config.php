@@ -252,55 +252,70 @@ return array(
              * REST APIs
              *
              **/
-            'rest-test-point' => array(
+            'api_v1' => array(
                 'type' => 'Segment',
+                'may_terminate' => true,
                 'options' => array(
-                    'route' => '/api/v1/test-point[/:id]',
+                    'route' => '/api/v1',
                     'defaults' => array(
-                        'controller' => 'Whathood\Controller\TestPointRestful'
-                    )
-                )
-            ),
+                        'controller' => 'Whathood\Controller\Activities',
+                        'action' => 'index',
+                    ),
+                ),
+                'child_routes' => array(
+                    'rest_testpoint' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/testpoint',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\TestPointRestful'
+                            )
+                        )
+                    ),
 
-            'rest-test-point' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/v1/heat-map-points/neighborhood_id/:neighborhood_id',
-                    'defaults' => array(
-                        'controller' => 'Whathood\Controller\HeatMapRestful',
-                    )
-                )
-            ),
+                    'rest_test_point' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/heat-map-points/neighborhood_id/:neighborhood_id',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\HeatMapRestful',
+                            )
+                        )
+                    ),
 
-            'rest-neighborhood-polygon' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/v1/neighborhood-polygon[/:id]',
-                    'defaults' => array(
-                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful'
-                    )
-                )
-            ),
+                    'rest_neighborhood_polygon' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/neighborhood-polygon[/:id]',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful'
+                            )
+                        )
+                    ),
 
-            'rest-user-polygon' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/v1/user-polygon[/:id]',
-                    'defaults' => array(
-                        'controller' => 'Whathood\Controller\UserPolygonRestful'
-                    )
-                )
-            ),
+                    'rest_user_polygon' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/user-polygon[/:id]',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\UserPolygonRestful'
+                            )
+                        )
+                    ),
 
-            'rest-whathood' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/v1/whathood[/x/:x][/y/:y]',
-                    'defaults' => array(
-                        'controller' => 'Whathood\Controller\PointElectionRestful'
-                    )
+                    'rest_whathood' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/point-election[/x/:x][/y/:y]',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\PointElectionRestful',
+                                'action' => 'get-list'
+
+                            )
+                        )
+                    ),
                 )
-            ),
+            )
         ),
     ),
 
