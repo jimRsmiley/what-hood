@@ -9,7 +9,8 @@ class UserPolygonController extends BaseController {
     protected $collectionOptions = array('GET','POST');
     protected $resourceOptions = array('GET','PUT','DELETE');
 
-    public function get($id) {
+    public function getAction() {
+        $id = $this->params()->fromRoute('id');
         if (empty($id) or $id=='null')
             return $this->badRequestJson("id may not be empty");
         try {

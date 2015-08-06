@@ -21,6 +21,7 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       this._showLocation result
       Whathood.Search.by_coordinates x, y, (point_election_data) =>
         @_positionMarker.bindPopup(Whathood.RegionMap.getPopupHtml(point_election_data)).openPopup()
+
     _geosearch: () ->
       queryBox = document.getElementById 'leaflet-control-geosearch-qry'
       @geosearch queryBox.value

@@ -4,14 +4,9 @@ Whathood = window.Whathood
 class Whathood.PointElection
 
   @api_url: (x,y) ->
-    "/api/v1/point-election/x/#{x}/y/#{y}"
+    Whathood.UrlBuilder.point_election x, y
 
   constructor: (args) ->
-    @winners        = args.winners
-    @region         = args.region
-    @neighborhoods  = args.neighborhoods
-    @total_votes    = args.total_votes
-    @point          = args.point
 
   @build: (x,y,cb) ->
     $.ajax
