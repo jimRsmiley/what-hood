@@ -199,7 +199,7 @@ class PointElection extends \ArrayObject {
         return array(
             'region'        => $this->getRegion()->toArray(),
             'winners'       => $winners,
-            'neighborhoods' => $neighborhoods_array,
+            'candidate_neighborhoods' => $neighborhoods_array,
             'total_votes'   => $this->getTotalVotes(),
             'point' => array(
                 'x' => $this->getPoint()->getX(),

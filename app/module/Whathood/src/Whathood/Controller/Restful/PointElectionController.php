@@ -17,7 +17,7 @@ class PointElectionController extends BaseController {
      * can handle queries of:
      *  - x and y
      */
-    public function getList() {
+    public function getListAction() {
         $x = $this->params()->fromRoute('x');
         $y = $this->params()->fromRoute('y');
 

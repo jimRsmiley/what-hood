@@ -4,7 +4,7 @@ Whathood = window.Whathood
 class Whathood.PointElection
 
   @api_url: (x,y) ->
-    "/api/v1/whathood/x/#{x}/y/#{y}"
+    "/api/v1/point-election/x/#{x}/y/#{y}"
 
   constructor: (args) ->
     @winners        = args.winners
