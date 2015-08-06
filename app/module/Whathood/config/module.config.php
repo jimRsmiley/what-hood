@@ -158,6 +158,27 @@ return array(
              * /whathood/user-polygon/page-list/page/:page
              *
              **/
+            'user_neighborhood' => array(
+                'type' => 'segment',
+                'may_terminate' => false,
+                'options' => array(
+                    'route' => '/whathood/user-neighborhood'
+                ),
+                'child_routes' => array(
+                    'user_polygon_page_center' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page-center/page/:page/x/:x/y/:y[/]',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller' => 'Whathood\Controller\UserPolygon',
+                                'action'     => 'page-center',
+                            ),
+                        ),
+                    ),
+                )
+            ),
+
             'user_polygon_page_list' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -182,17 +203,6 @@ return array(
                 ),
 			),
 
-            'user_polygon_page_center' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-center/page/:page/x/:x/y/:y',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-center',
-                    ),
-                ),
-			),
 
             'user_neighborhood_add' => array(
                 'type'  => 'Segment',
@@ -298,7 +308,8 @@ return array(
                         'options' => array(
                             'route' => '/user-polygon[/:id]',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\UserPolygonRestful'
+                                'controller' => 'Whathood\Controller\UserPolygonRestful',
+                                'action' => 'get'
                             )
                         )
                     ),
@@ -306,7 +317,7 @@ return array(
                     'rest_whathood' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/point-election[/x/:x][/y/:y]',
+                            'route' => '/point-election[/x/:x][/y/:y][/]',
                             'defaults' => array(
                                 'controller' => 'Whathood\Controller\PointElectionRestful',
                                 'action' => 'get-list'

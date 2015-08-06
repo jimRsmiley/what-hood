@@ -113,4 +113,5 @@ Whathood.RegionMap = Whathood.Map.extend
     @on 'click', @mapClickEventHandler
 
 Whathood.RegionMap.getPopupHtml = (point_election_data) ->
-    return React.renderToString( React.createElement(PointElection, point_election_data), document.getElementById('reactpopup') )
+    url = Whathood.UrlBuilder.user_neighborhood_by_point(point_election_data.point.x, point_election_data.point.y)
+    return React.renderToString( React.createElement(PointElection, {browse_url: url, point_election: point_election_data}), document.getElementById('reactpopup') )

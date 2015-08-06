@@ -14,7 +14,6 @@ W.user_polygon_page_id = () ->
     up_id = $node.data('user_polygon_id')
 
     url = "/api/v1/user-polygon/#{up_id}"
-    console.log url
     $.ajax
       url: url
       success: (user_polygon) ->
@@ -31,7 +30,6 @@ W.user_polygon_page_center = () ->
     $.ajax
       url: "/api/v1/user-polygon/#{up_id}"
       success: (user_polygon) ->
-        console.log user_polygon
         $form = $('.user_polygon_form')
         $name = $('input[name="neighborhood_name"]')
         $name.val user_polygon.neighborhood.name
@@ -84,7 +82,6 @@ W.neighborhood_polygon_show = () ->
   $.ajax
     url: "/api/v1/heat-map-points/neighborhood_id/#{neighborhood_id}"
     success: (mydata) =>
-        console.log mydata[0]
         testData = {
           max: 10
           data: mydata[0] }
@@ -109,6 +106,7 @@ W.neighborhood_polygon_show = () ->
         map.addStreetLayer()
         map.addGeoJson W.Util.np_api_latest(neighborhood_id)
         heatmapLayer.setData(testData)
+
 W.region_show = () ->
 
   get_region_name = () ->
@@ -119,6 +117,13 @@ W.region_show = () ->
     return page_info.dataset.createEventId
   get_url = (region_name,create_event_id) ->
     return  "/whathood/neighborhood-polygon/show-region?region_name=#{region_name}&format=json"
+
+  $('#current-location-btn').on 'click', (evt) ->
+    W.Geo.browser_location (location) =>
+      l_geosearch._my_showLocation
+        X: location.coords.longitude
+        Y: location.coords.latitude
+      $('#address-modal').dialog 'close'
 
   region_name = get_region_name()
   create_event = get_create_event()
@@ -161,10 +166,3 @@ W.region_show = () ->
         }
       ]
 
-  $btn = $('#current-location-btn')
-  $btn.on 'click', (evt) ->
-    W.Geo.browser_location (location) =>
-      l_geosearch._my_showLocation
-        X: location.coords.longitude
-        Y: location.coords.latitude
-      $('#address-modal').dialog 'close'

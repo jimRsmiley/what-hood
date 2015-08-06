@@ -39,7 +39,7 @@ class UserPolygonController extends BaseController
             throw new \InvalidArgumentException("must specify x and y");
 
 
-		$query = $this->userPolygonMapper()->getPaginationQuery(
+		$query = $this->m()->userPolygonMapper()->getPaginationQuery(
 			array(
 				'x' => $x,
 				'y' => $y
