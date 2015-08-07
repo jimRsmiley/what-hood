@@ -1,5 +1,5 @@
 <?php
-namespace Whathood\Model;
+namespace Whathood\View\Paginator;
 /**
  * Description of NeighborhoodPaginator
  *
