@@ -1,8 +1,9 @@
 var CandidateNeighborhood = React.createClass({
   render: function() {
     var cn = this.props.candidate_neighborhood;
+    var url = Whathood.UrlBuilder.neighborhood_by_name(cn.region.name, cn.name);
     return (
-        <p>{cn.name}: {cn.percentage}%</p>
+        <p><a href={url}>{cn.name}</a>: {cn.percentage}%</p>
     );
   }
 });
@@ -10,7 +11,6 @@ var CandidateNeighborhood = React.createClass({
 var PointElection = React.createClass({
   render: function() {
     var point_election = this.props.point_election;
-    console.log(point_election);
     var rows = new Array();
     for (var i = 0; i < point_election.candidate_neighborhoods.length; i++) {
       rows.push(<CandidateNeighborhood key={i} candidate_neighborhood={point_election.candidate_neighborhoods[i]} />);

@@ -9,3 +9,6 @@ class Whathood.UrlBuilder
 
   @point_election: (x,y) ->
     "/api/v1/point-election/x/#{x}/y/#{y}/"
+
+  @neighborhood_by_name: (region_name,neighborhood_name) ->
+    "/#{region_name}/#{neighborhood_name}"
