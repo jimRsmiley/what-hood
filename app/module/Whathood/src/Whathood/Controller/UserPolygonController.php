@@ -28,7 +28,7 @@ class UserPolygonController extends BaseController
      * @throws \InvalidArgumentException
      */
     public function pageCenterAction() {
-        $base_url = '/whathood/user-polygon/page-center';
+        $base_url = '/whathood/user-neighborhood/page-center';
         $item_count_per_page = 1;
 
         $x  = $this->getUriParameter('x');
@@ -54,8 +54,8 @@ class UserPolygonController extends BaseController
         if( empty($pageNum) )
             $pageNum = 1;
 
-        $paginator = new \Whathood\Model\UserPolygonPaginator(
-                        new \Whathood\Model\UserPolygonPaginatorAdapter($query)
+        $paginator = new \Whathood\View\Paginator\UserPolygonPaginator(
+                        new \Whathood\View\Paginator\UserPolygonPaginatorAdapter($query)
                 );
         $paginator->setDefaultItemCountPerPage($item_count_per_page);
 		$paginator->setBaseUrl($base_url);
@@ -105,8 +105,8 @@ class UserPolygonController extends BaseController
             $pageNum = 1;
 
         // prep the paginator
-        $paginator = new \Whathood\Model\UserPolygonPaginator(
-                new \Whathood\Model\UserPolygonPaginatorAdapter($query)
+        $paginator = new \Whathood\View\Paginator\UserPolygonPaginator(
+                new \Whathood\View\Paginator\UserPolygonPaginatorAdapter($query)
         );
         $paginator->setDefaultItemCountPerPage($item_count_per_page);
 		$paginator->setBaseUrl($base_url);

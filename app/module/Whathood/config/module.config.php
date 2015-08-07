@@ -165,7 +165,7 @@ return array(
                     'route' => '/whathood/user-neighborhood'
                 ),
                 'child_routes' => array(
-                    'user_polygon_page_center' => array(
+                    'user_neighborhood_page_center' => array(
                         'type'    => 'Segment',
                         'options' => array(
                             'route'    => '/page-center/page/:page/x/:x/y/:y[/]',
