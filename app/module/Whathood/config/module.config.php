@@ -286,9 +286,10 @@ return array(
                     'rest_test_point' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/heat-map-points/neighborhood_id/:neighborhood_id',
+                            'route' => '/heatmap-points/neighborhood_id/:neighborhood_id',
                             'defaults' => array(
                                 'controller' => 'Whathood\Controller\HeatMapRestful',
+                                'action' => 'get-list'
                             )
                         )
                     ),

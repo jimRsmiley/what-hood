@@ -16,9 +16,7 @@ $this->headTitle()->prepend($this->neighborhood->getName() . ' / ' . $this->neig
 <div id="map" data-neighborhood-id="<?=$neighborhood->getId()?>" data-neighborhood-polygon-created-at="<?=date_format($np->getCreatedAt(),'Y-m-d H:i:s')?>" data-neighborhood-polygon-id="<?= $this->neighborhood_polygon->getId() ?>" data-np-grid-resolution="<?= $np->getGridResolution() ?>" data-np-target-precision="<?=$np->getTargetPrecision()?>" class="automargin mapheight" style="height: 400px;"></div>
 
 <script>
-    Whathood = window.Whathood;
-
     $('document').ready( function() {
-        Whathood.neighborhood_polygon_show();
+        window.Whathood.neighborhood_polygon_show();
     });
 </script>
