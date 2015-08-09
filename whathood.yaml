@@ -1,3 +1,2 @@
 application_dir: /var/www/whathood/app
 default_grid_resolution: 0.00006
-default_target_precision: 0.8

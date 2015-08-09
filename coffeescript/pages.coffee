@@ -77,7 +77,7 @@ W.user_polygon_add = () ->
 
 W.neighborhood_polygon_show = () ->
   $map = $('#map')
-  new W.Map.NeighborhoodMap().add($map.data('neighborhood-id'))
+  map = W.Map.NeighborhoodMap.build 'map', $map.data('neighbrhoodId')
 
 W.region_show = () ->
 

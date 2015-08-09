@@ -85,6 +85,7 @@ class WatcherController extends BaseController
                 sleep(5);
         }
         while ($forever);
+        $this->logger()->info("watcher finished");
     }
 
     public function buildAndSaveNeighborhoodPolygon(ElectionCollection $electionCollection) {

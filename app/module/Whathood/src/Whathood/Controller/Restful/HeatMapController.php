@@ -19,7 +19,7 @@ class HeatMapController extends BaseController {
      * can handle queries of:
      *  - x and y
      */
-    public function getList() {
+    public function getListAction() {
         $neighborhood_id = $this->params()->fromRoute('neighborhood_id');
 
         $neighborhood = $this->m()->neighborhood()->byId($neighborhood_id);
