@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                     'coffeescript/Whathood/RegionMap.coffee',
                     'coffeescript/Whathood/UserPolygonMap.coffee',
                     'coffeescript/Whathood/DrawMap.coffee',
-                    'coffeescript/Whathood/Map/NeighborhoodPolygonMap.coffee',
+                    'coffeescript/Whathood/Map/*.coffee',
                     'coffeescript/Whathood/*.coffee',
                     // the pages
                     'coffeescript/*.coffee',
