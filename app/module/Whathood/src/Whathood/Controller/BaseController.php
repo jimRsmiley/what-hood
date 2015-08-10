@@ -99,6 +99,10 @@ class BaseController extends AbstractActionController {
             'ip_address' => $ip_address ));
     }
 
+    public function whathoodConfig() {
+        return $this->getServiceLocator()->get('Whathood\Config');
+    }
+
     protected function _getLogger() {
         return $this->getServiceLocator()->get('Whathood\Logger');
     }

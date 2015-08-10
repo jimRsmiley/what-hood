@@ -1,2 +1,3 @@
+log_file: /var/log/whathood/php-zend.log
 application_dir: /var/www/whathood/app
 default_grid_resolution: 0.00006
