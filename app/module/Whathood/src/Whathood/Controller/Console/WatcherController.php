@@ -16,6 +16,7 @@ class WatcherController extends BaseController
     protected $_grid_resolution;
 
     public function watchAction() {
+        $this->whathoodConfig();
         $api_timer = Timer::start('api');
 
         $force                  = $this->getRequest()->getParam('force',false);

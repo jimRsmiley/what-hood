@@ -429,14 +429,24 @@ return array(
             'Whathood\YamlConfig' => function($sm) {
                 require_once('vendor/mustangostang/spyc/Spyc.php');
                 $reader = new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
-                return $reader->fromFile('../whathood.yaml');
+                $global_config = $reader->fromFile('../whathood.yaml');
+
+                if (file_exists('../whathood.local.yaml'))
+                    $local_config  = $reader->fromFile('../whathood.local.yaml');
+                else
+                    $local_config = array();
+                return array_merge($global_config,$local_config);
+            },
+
+            'Whathood\Config' => function($sm) {
+                $yaml_config = $sm->get('Whathood\YamlConfig');
+                return new \Zend\Config\Config($yaml_config);
             },
 
             'Whathood\Logger' => function($sm) {
-                $config = $sm->get('Config');
+                $config = $sm->get('Whathood\Config');
 
-                $file = $config['whathood']['log']['logfile'];
-                $file_writer = new \Zend\Log\Writer\Stream($file);
+                $file_writer = new \Zend\Log\Writer\Stream($config->log_file);
 
                 $logger = new \Whathood\Logger;
                 $logger->addWriter($file_writer);
