@@ -294,12 +294,13 @@ return array(
                         )
                     ),
 
-                    'rest_neighborhood_polygon' => array(
+                    'neighborhood_border' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/neighborhood-polygon[/:id]',
+                            'route' => '/neighborhood-border/:neighborhood_id',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful'
+                                'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
+                                'action' => 'get-list'
                             )
                         )
                     ),

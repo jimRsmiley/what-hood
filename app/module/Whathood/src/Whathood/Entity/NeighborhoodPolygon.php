@@ -176,10 +176,6 @@ class NeighborhoodPolygon extends \ArrayObject {
         if( $this->getNeighborhood() != null )
             $np_arr['neighborhood'] = $this->getNeighborhood()->toArray();
 
-        if( $this->getHeatmapPoints() )
-            $np_arr['heatmap_points'] = HeatMapPoint::pointsToArray(
-                $this->heatmapPoints() );
-
         $np_arr['id'] = $this->getId();
         return $np_arr;
     }

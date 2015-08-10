@@ -98,6 +98,8 @@ class HeatMapPoint extends \ArrayObject {
     }
 
     public static function pointsToArray(array $array) {
+        if (empty($array))
+            return;
         $retval = array();
         foreach ($array as $hmp) {
             array_push($retval, $hmp->toArray());
