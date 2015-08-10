@@ -21,25 +21,21 @@ class NeighborhoodPolygonRestfulController extends BaseController {
      * latest_polygon_id - get the latest neighborhood polygon based on id
      *
      */
-    public function getList() {
+    public function getListAction() {
         $query_type = $this->params()->fromQuery('query_type');
 
-        $neighborhood_latest_polygon_id = $this->params()
-                                    ->fromQuery('neighborhood_latest_polygon_id');
+        $neighborhood_id = $this->params()->fromRoute('neighborhood_id');
 
-        if ('latest'==$query_type) {
-            $neighborhood_id = $this->params()->fromQuery('neighborhood_id');
+        if (empty($neighborhood_id))
+            return $this->badRequestJson("neighborhood_id must be defined");
 
-            // get the neighborhood
-            $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
+        // get the neighborhood
+        $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
 
-            // get the latest NeighborhoodPolygon
-            $neighborhood_polygon = $this->m()->neighborhoodPolygonMapper()
-                ->latestByNeighborhood($neighborhood);
+        // get the latest NeighborhoodPolygon
+        $neighborhood_polygon = $this->m()->neighborhoodPolygonMapper()
+            ->latestByNeighborhood($neighborhood);
 
-            return new JsonModel( $neighborhood_polygon->toArray() );
-        }
-        return new JsonModel( array(
-            'msg' => 'not yet implemented' ));
+        return new JsonModel( $neighborhood_polygon->toArray() );
     }
 }

@@ -16,5 +16,8 @@ class Whathood.UrlBuilder
   @neighborhood_by_name: (region_name,neighborhood_name) ->
     "/#{region_name}/#{neighborhood_name}"
 
+  @neighborhood_border_by_id: (neighborhood_id) ->
+    "#{@api_root()}/neighborhood-border/#{neighborhood_id}"
+
   @heatmap_points_by_n_id: (neighborhood_id) ->
     "#{@api_root()}/heatmap-points/neighborhood_id/#{neighborhood_id}"
