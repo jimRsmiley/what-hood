@@ -5,6 +5,8 @@ namespace Whathood\Controller\Console;
 use Whathood\Controller\BaseController;
 use Whathood\Entity\NeighborhoodPolygon;
 use Whathood\Timer;
+use Whathood\Election\PointElectionCollection;
+use Whathood\Entity\Neighborhood;
 
 class WatcherController extends BaseController
 {
@@ -20,12 +22,9 @@ class WatcherController extends BaseController
         $forever                = $this->getRequest()->getParam('forever',false);
         $neighborhood_name      = $this->getRequest()->getParam('neighborhood',null);
         $region_name            = $this->getRequest()->getParam('region',null);
-        $this->setGridResolution(
-            $this->getRequest()->getParam(
-                'grid-res',$this->getDefaultGridResolution()
-            ));
 
         $this->logger()->info("Whathood watcher has started");
+        $this->logger()->info("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
@@ -68,8 +67,18 @@ class WatcherController extends BaseController
                             $this->getGridResolution(),
                             $this->getTargetPrecision()
                         );
-                        $this->buildAndSaveNeighborhoodPolygon($electionCollection);
-                        $this->buildAndSaveHeatmapPoints($electionCollection);
+                        $this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups);
+                        $this->logger()->info("saved neighborhood polygon");
+                        $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                        $this->logger()->info("saved heatmap points");
+                        $timer->stop();
+                        $this->logger()->info(
+                            sprintf("\tid=%s name=%s num_user_polygons=%s",
+                                $n->getId(),
+                                $n->getName(),
+                                count($ups)
+                                )
+                        );
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());
@@ -88,12 +97,10 @@ class WatcherController extends BaseController
         $this->logger()->info("watcher finished");
     }
 
-    public function buildAndSaveNeighborhoodPolygon(ElectionCollection $electionCollection) {
+    public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
         $polygon = $this->m()->electionMapper()->generateBorderPolygon(
             $electionCollection, $n
         );
-
-        $timer->stop();
 
         if (!$polygon) {
             $this->logger()->warn("Could not construct a neighborhood border for ".$n->getName());
@@ -104,22 +111,13 @@ class WatcherController extends BaseController
             'geom' => $polygon,
             'neighborhood' => $n,
             'user_polygons' => $ups,
-            'grid_resolution' => $this->getGridResolution(),
-            'target_precision' => $this->getTargetPrecision()
+            'grid_resolution' => $this->getGridResolution()
         ));
-        $this->logger()->info(
-            sprintf("\tid=%s name=%s num_user_polygons=%s build_time=%s mins",
-                $n->getId(),
-                $n->getName(),
-                count($ups),
-                $timer->elapsed_minutes()
-                )
-        );
         $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
         return $neighborhoodPolygon;
     }
 
-    public function buildAndSaveHeatmapPoints(ElectionCollection $electionCollection) {
+    public function buildAndSaveHeatmapPoints(PointElectionCollection $electionCollection, Neighborhood $n) {
         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
         $this->m()->heatMapPoint()->deleteByNeighborhood($n);
         $this->m()->heatMapPoint()->savePoints($heatmap_points);
@@ -128,7 +126,9 @@ class WatcherController extends BaseController
     }
 
     public function getGridResolution() {
-        return $this->_grid_resolution;
+        return $this->getRequest()->getParam(
+            'grid-res',$this->getDefaultGridResolution()
+        );
     }
 
     public function setGridResolution($grid_resolution) {
