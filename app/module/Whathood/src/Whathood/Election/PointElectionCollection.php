@@ -16,6 +16,10 @@ class PointElectionCollection {
         $this->_points = $points;
     }
 
+    public function getPoints() {
+        return $this->_points;
+    }
+
     /**
      * return the points that belong to the neighborhood
      */
