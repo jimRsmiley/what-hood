@@ -72,9 +72,17 @@ class WatcherController extends BaseController
                            $this->logger()->warn("electionCollection contains no points");
                         }
                         else {
-                            $this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups);
-                            $this->logger()->info("\t\tsaved neighborhood polygon");
-                            $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                            try {
+                                if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
+                                    $this->logger()->info("\t\tsaved neighborhood polygon");
+                                    $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                                }
+                                else {
+                                    $this->logger()->err("did not get a neighborhood polygon");
+                                }
+                            } catch(\Exception $e) {
+                                $this->logger()->err("big error trying to build neighborhood polygon");
+                            }
                         }
                         $timer->stop();
                     }
@@ -113,7 +121,7 @@ class WatcherController extends BaseController
 
         if (!$polygon) {
             $this->logger()->warn("Could not construct a neighborhood border for ".$n->getName());
-            continue;
+            return;
         }
 
         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
@@ -132,7 +140,7 @@ class WatcherController extends BaseController
         if (!empty($heatmap_points)) {
             $this->m()->heatMapPoint()->deleteByNeighborhood($n);
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
-            $this->logger()->warn("\t\tsaved ".count($heatmap_points)." heatmap points from " . count($electionCollection->getPoints()) . " points");
+            $this->logger()->info("\t\tsaved ".count($heatmap_points)." heatmap points from " . count($electionCollection->getPoints()) . " points");
         }
         else
             $this->logger()->info("\t\tno heatmap_points generated to save");
