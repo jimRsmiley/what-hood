@@ -36,7 +36,7 @@ class Election extends BaseMapper {
         $neighborhood_points = $electionCollection->byNeighborhoodId($neighborhood_id);
 
         if (empty($neighborhood_points)) {
-            $this->logger()->info("electionCollection did not return any neighborhood points dispite being given ".count($electionCollection->getPoints())." points");
+            $this->logger()->err("electionCollection did not return any neighborhood points dispite being given ".count($electionCollection->getPoints())." points");
             return null;
         }
         $points = array();
