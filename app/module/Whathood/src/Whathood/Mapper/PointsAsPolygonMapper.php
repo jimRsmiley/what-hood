@@ -22,6 +22,8 @@ class PointsAsPolygonMapper extends BaseMapper {
      * query the temp table with pgr_pointsAsPolygon to create the neighborhood border
      **/
     public function toPolygon(MultiPoint $multi_point) {
+        if (empty($multi_point->getPoints()))
+            throw new \InvalidArgumentException("multi_point must contain points");
         $this->dropTempTable($this->_tmp_table_name);
         $this->createTempTable($this->_tmp_table_name);
         $this->savePoints($multi_point,$this->_tmp_table_name);

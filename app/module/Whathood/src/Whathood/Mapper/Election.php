@@ -39,7 +39,6 @@ class Election extends BaseMapper {
 
         $polygon = $this->m()->pointsAsPolygonMapper()
             ->toPolygon(new MultiPoint($points));
-
         return $polygon;
     }
 

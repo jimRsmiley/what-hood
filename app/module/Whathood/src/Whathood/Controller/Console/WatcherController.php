@@ -46,19 +46,18 @@ class WatcherController extends BaseController
             }
 
             if (!empty($user_polygons)) {
-                foreach($user_polygons as $up) {
-                    $this->logger()->info(
-                        sprintf("\tprocessing new user generated polygon(%s) for neighborhood %s",
-                            $up->getId(),
-                            $up->getNeighborhood()->getName()
-                        )
-                    );
-                }
+                $this->logFoundUserBorders($user_polygons);
 
-                $neighborhoods = $this->collate_neighborhoods($user_polygons);
-                foreach($neighborhoods as $n) {
+                foreach($this->collate_neighborhoods($user_polygons) as $n) {
                     $ups = $n->getUserPolygons();
 
+                    $this->logger()->info(
+                        sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
+                            $n->getId(),
+                            $n->getName(),
+                            count($ups)
+                            )
+                    );
                     try {
                         /* build the border */
                         $timer = Timer::start('generate_border');
@@ -68,18 +67,16 @@ class WatcherController extends BaseController
                             $this->getGridResolution(),
                             $this->getTargetPrecision()
                         );
-                        $this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups);
-                        $this->logger()->info("saved neighborhood polygon");
-                        $this->buildAndSaveHeatmapPoints($electionCollection, $n);
-                        $this->logger()->info("saved heatmap points");
+
+                        if (empty($electionCollection->getPoints())) {
+                           $this->logger()->warn("electionCollection contains no points");
+                        }
+                        else {
+                            $this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups);
+                            $this->logger()->info("\t\tsaved neighborhood polygon");
+                            $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                        }
                         $timer->stop();
-                        $this->logger()->info(
-                            sprintf("\tid=%s name=%s num_user_polygons=%s",
-                                $n->getId(),
-                                $n->getName(),
-                                count($ups)
-                                )
-                        );
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());
@@ -96,6 +93,17 @@ class WatcherController extends BaseController
         }
         while ($forever);
         $this->logger()->info("watcher finished");
+    }
+
+    public function logFoundUserBorders($user_polygons) {
+        foreach($user_polygons as $up) {
+            $this->logger()->info(
+                sprintf("\tfound new user generated polygon(%s) for neighborhood %s",
+                    $up->getId(),
+                    $up->getNeighborhood()->getName()
+                )
+            );
+        }
     }
 
     public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
@@ -120,9 +128,14 @@ class WatcherController extends BaseController
 
     public function buildAndSaveHeatmapPoints(PointElectionCollection $electionCollection, Neighborhood $n) {
         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
-        $this->m()->heatMapPoint()->deleteByNeighborhood($n);
-        $this->m()->heatMapPoint()->savePoints($heatmap_points);
-        $this->logger()->info("\tsaved ".count($heatmap_points)." heatmap points");
+
+        if (!empty($heatmap_points)) {
+            $this->m()->heatMapPoint()->deleteByNeighborhood($n);
+            $this->m()->heatMapPoint()->savePoints($heatmap_points);
+            $this->logger()->info("\t\tsaved ".count($heatmap_points)." heatmap points");
+        }
+        else
+            $this->logger()->info("\t\tno heatmap_points generated to save");
         return $heatmap_points;
     }
 

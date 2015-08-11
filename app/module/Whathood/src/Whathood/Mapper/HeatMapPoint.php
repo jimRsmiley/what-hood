@@ -39,6 +39,8 @@ class HeatMapPoint extends BaseMapper {
     }
 
     public function savePoints(array $heatmap_points) {
+        if (empty($heatmap_points))
+            throw new \InvalidArgumentException("heatmap_points may not be empty");
         foreach($heatmap_points as $hmp) {
             $this->save($hmp);
         }
