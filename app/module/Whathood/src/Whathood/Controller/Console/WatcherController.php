@@ -132,7 +132,7 @@ class WatcherController extends BaseController
         if (!empty($heatmap_points)) {
             $this->m()->heatMapPoint()->deleteByNeighborhood($n);
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
-            $this->logger()->info("\t\tsaved ".count($heatmap_points)." heatmap points");
+            $this->logger()->warn("\t\tsaved ".count($heatmap_points)." heatmap points from " . count($electionCollection->getPoints()) . " points");
         }
         else
             $this->logger()->info("\t\tno heatmap_points generated to save");
