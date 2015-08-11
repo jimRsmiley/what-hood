@@ -30,8 +30,15 @@ class Election extends BaseMapper {
      */
     public function generateBorderPolygon($electionCollection,$neighborhood_id) {
 
+        if (empty($electionCollection->getPoints()))
+            throw new \InvalidArgumentException("electionCollection must have points");
+
         $neighborhood_points = $electionCollection->byNeighborhoodId($neighborhood_id);
 
+        if (empty($neighborhood_points)) {
+            $this->logger()->info("electionCollection did not return any neighborhood points dispite being given ".count($electionCollection->getPoints())." points");
+            return null;
+        }
         $points = array();
         foreach ($neighborhood_points as $p) {
             array_push($points,$p->getPoint());
