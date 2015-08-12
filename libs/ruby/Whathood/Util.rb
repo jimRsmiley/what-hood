@@ -2,6 +2,12 @@ module Whathood
 
     class Util
 
+        def self.run_cmd(cmd)
+            unless system cmd
+                abort "could not run command: '#{cmd}'"
+            end
+        end
+
         def self.exec_sql_stmt(sql_stmt,db_name)
             puts "executing #{sql_stmt}"
             puts `sudo -u postgres psql --tuples-only -c "#{sql_stmt}" #{db_name}`
