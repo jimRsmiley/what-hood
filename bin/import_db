@@ -26,10 +26,10 @@ BEGIN {
     ROOT_DIR=File.dirname(__FILE__)+"/.."
 
     def import_database
-        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git || true"
+        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
         puts "*     loading whathood schema from doctrine"
-        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./whathood-data/whathood_schema.sql"
-        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./whathood-data/whathood_data.sql"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_schema.sql"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_data.sql"
         puts "*     applying indexes"
         #Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE SCHEMA whathood'"
         Whathood::Util.run_cmd "#{PSQL_CMD} -f #{ROOT_DIR}/app/scripts/schema/whathood.indexes.sql"
