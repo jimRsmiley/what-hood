@@ -80,8 +80,13 @@ class WatcherController extends BaseController
                                 else {
                                     $this->logger()->err("did not get a neighborhood polygon");
                                 }
+                            }
+                            catch(\Whathood\Exception $e) {
+                                $this->logger()->err("Failed to build polygon for ".$n->getName().": ". $e->getMessage());
                             } catch(\Exception $e) {
                                 $this->logger()->err("big error trying to build neighborhood polygon");
+                                $this->logger()->err(get_class($e));
+                                $this->logger()->err($e);
                             }
                         }
                         $timer->stop();
