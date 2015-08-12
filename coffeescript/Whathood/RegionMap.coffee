@@ -77,26 +77,7 @@ Whathood.RegionMap = Whathood.Map.extend
     .done () ->
       self.spin(false)
 
-  getPopup: (electionPoint,regionName) ->
-    neighborhoods = electionPoint.neighborhoods
-    region_name   = electionPoint.region.name
 
-    html = ''
-    unless neighborhoods.length
-      html = 'no neighborhoods found for this point'
-
-    else
-      for n in neighborhoods
-        name  = n.name
-        votes = n.num_votes
-        html += votes + ' ' + "vote".pluralize(votes) + " for <a href='/#{region_name}/#{name}'>#{name}</a><br/>"
-
-        url = @getNeighborhoodBrowseUrl electionPoint.point.x, electionPoint.point.y
-
-        if( typeof regionName != 'undefined' )
-            url += '&region_name='+regionName
-        html += '<a href="'+url+'">Browse these neighborhoods</a>'
-    return html
 
   # when a user clicks on the map, get the lat,lng and send a request for a
   # point election, then display it
@@ -113,12 +94,10 @@ Whathood.RegionMap = Whathood.Map.extend
       .openPopup()
 
     # send a point election api request and popup the marker with it's result
-    __self = this
-    cb = (pointElection) ->
-      __self.locationMarker.bindPopup(
-        __self.getPopup pointElection, __self.regionName
+    pointElection = Whathood.PointElection.build lng, lat, (pointElection) =>
+      @locationMarker.bindPopup(
+        Whathood.RegionMap.getPopupHtml pointElection
       ).openPopup()
-    pointElection = Whathood.PointElection.build lng, lat, cb
 
   getNeighborhoodBrowseUrl: (lat,lng) ->
     "/whathood/user-polygon/page-center/page/1/x/#{lat}/y/#{lng}"
@@ -132,3 +111,6 @@ Whathood.RegionMap = Whathood.Map.extend
     if( bool != true )
       return
     @on 'click', @mapClickEventHandler
+
+Whathood.RegionMap.getPopupHtml = (point_election_data) ->
+    return React.renderToString( React.createElement(PointElection, point_election_data), document.getElementById('reactpopup') )

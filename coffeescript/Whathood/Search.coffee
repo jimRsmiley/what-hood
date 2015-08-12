@@ -3,7 +3,7 @@ Whathood = window.Whathood
 
 class Whathood.Search
   @by_coordinates: (x,y,callback) ->
-    url = "/api/v1/whathood/x/#{x}/y/#{y}"
+    url = "/api/v1/point-election/x/#{x}/y/#{y}"
     $.ajax
       url: url
       success: (data) ->

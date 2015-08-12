@@ -4,7 +4,7 @@ Whathood = window.Whathood
 class Whathood.PointElection
 
   @api_url: (x,y) ->
-    "/api/v1/whathood/x/#{x}/y/#{y}"
+    "/api/v1/point-election/x/#{x}/y/#{y}"
 
   constructor: (args) ->
     @winners        = args.winners
@@ -18,7 +18,6 @@ class Whathood.PointElection
       url: @api_url x, y
       context: document.body
       success: (data) ->
-        pointElection = new Whathood.PointElection data
-        cb pointElection
+        cb data
       fail: (xhr,textStatus) ->
         throw new Error "PointElection request failed"

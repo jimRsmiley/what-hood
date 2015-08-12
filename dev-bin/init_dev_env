@@ -4,11 +4,10 @@
 # to ease development, create some symlinks to directories
 #
 
-ln -s app/module/Whathood/src/Whathood/ W
-ln -s app/module/Whathood/config/module.config.php module.config.php
-ln -s app/module/Whathood/test test
-ln -s app/module/Whathood/view view
-ln -s app/public/js/whathood/whathood.js whathood.js
-ln -s app/module/Whathood/Module.php Module.php
-ln -s app/public/css/style.css whathood.css
-ln -s app/public/js/whathood js
+ln -s app/module/Whathood/src/Whathood/ $PWD/W
+ln -s app/module/Whathood/config/module.config.php $PWD/module.config.php
+ln -s app/module/Whathood/test $PWD/test
+ln -s app/module/Whathood/view $PWD/view
+ln -s app/module/Whathood/Module.php $PWD/Module.php
+ln -s app/public/css/style.css $PWD/whathood.css
+ln -s app/public/js/whathood $PWD/js
