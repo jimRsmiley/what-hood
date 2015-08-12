@@ -31,7 +31,7 @@ class SearchController extends BaseController {
             $neighborhoods = array();
         }
 
-       $this->logger()->info( "neighbordhood/region search for '$queryString' ms=".$this->timer->elapsed_milliseconds() );
+       $this->logger()->info( "neighbordhood/region search for '$queryString'");
        return new ViewModel( array(
             'queryString' => $queryString,
             'regions' => $regions,

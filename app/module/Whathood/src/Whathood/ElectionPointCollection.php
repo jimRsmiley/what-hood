@@ -2,13 +2,15 @@
 
 namespace Whathood;
 
+use Whathood\Entity\Neighborhood;
+use Whathood\Entity\HeatMapPoint;
 /**
  * store whathood consensus units and provide easy retreival methods
  *
  */
 class ElectionPointCollection {
 
-    protected $points;
+    protected $_points;
 
     public function __construct($points) {
         $this->_points = $points;
@@ -25,5 +27,18 @@ class ElectionPointCollection {
                     array_push($points,$p);
         }
         return $points;
+    }
+
+    public function heatMapPointsByNeighborhood(Neighborhood $neighborhood) {
+        $heatmap_points = array();
+        foreach ($this->_points as $ep) {
+            $cn = $ep->candidateNeighborhood($neighborhood);
+            $percentage = $cn->getNumVotes() / $ep->totalVotes();
+            array_push($heatmap_points, HeatMapPoint::build( array(
+                'neighborhood' => $neighborhood,
+                'point' => $ep->getPoint(),
+                'percentage' => $percentage )));
+        }
+        return $heatmap_points;
     }
 }

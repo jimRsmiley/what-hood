@@ -17,7 +17,7 @@ class NeighborhoodController extends BaseController {
             throw new \InvalidArgumentException("neighborhood_name and region_name must be defined");
 
         try {
-            $neighborhood = $this->neighborhoodMapper()
+            $neighborhood = $this->m()->neighborhoodMapper()
                 ->byName($neighborhood_name,$region_name);
         } catch(\Exception $e) {
             $viewModel = new ViewModel(array(
@@ -32,7 +32,7 @@ class NeighborhoodController extends BaseController {
         if (empty($neighborhood))
             throw new \Exception("no neighborhood was returned");
 
-        $latest_np = $this->neighborhoodPolygonMapper()->latestByNeighborhood($neighborhood);
+        $latest_np = $this->m()->neighborhoodPolygonMapper()->latestByNeighborhood($neighborhood);
         $user_polygon_count = $latest_np->userPolygonCount();
 
         return new ViewModel( array(

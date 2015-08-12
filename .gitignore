@@ -1,4 +1,4 @@
-TODO.md
+application_env
 whathood-local.yaml
 whathood.css
 whathood.js
@@ -8,13 +8,12 @@ package.json
 /grunt_watch.log
 /data
 /module.config.php
-nginx_access.log
-nginx_error.log
 /view
 /js
 /node_modules
 /app/node_modules/
 /W
+/app/vendor
 /app/public/test
 /app/draft
 /app/draft/

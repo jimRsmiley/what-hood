@@ -141,8 +141,6 @@ class UserPolygonMapper extends BaseMapper {
             $userPolygon->getNeighborhood()->setRegion($region);
         }
 
-        $this->logger()->info("after region");
-
         /*
          * NEIGHBORHOOD
          *
@@ -163,8 +161,6 @@ class UserPolygonMapper extends BaseMapper {
                                     $userPolygon->getNeighborhood() );
         }
 
-        $this->logger()->info('after neighborhood');
-
         $whathoodUser = $this->getMaybeSaveByName($userPolygon->getWhathoodUser()->getIpAddress());
         $userPolygon->setWhathoodUser($whathoodUser);
 
@@ -176,11 +172,8 @@ class UserPolygonMapper extends BaseMapper {
             exit;
         }
 
-        $this->logger()->info("about to save");
         $this->em->persist( $userPolygon );
-        $this->logger()->info("about to flush");
         $this->em->flush( $userPolygon );
-        $this->logger()->info("saved");
     }
 
     public function getMaybeSaveByName($ip_address) {

@@ -33,8 +33,8 @@ class NeighborhoodPolygonController extends BaseController
         if( $format == 'json' ) {
             try {
 
-                $region = $this->regionMapper()->getRegionByName( $regionName );
-                $json = $this->neighborhoodPolygonMapper()
+                $region = $this->m()->regionMapper()->getRegionByName( $regionName );
+                $json = $this->m()->neighborhoodPolygonMapper()
                         ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
 
                 $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
@@ -66,7 +66,7 @@ class NeighborhoodPolygonController extends BaseController
         if( $format === 'json' ) {
 
             try {
-                $neighborhoodPolygon = $this->neighborhoodPolygonMapper()->getNpById($neighborhoodPolygonId);
+                $neighborhoodPolygon = $this->m()->neighborhoodPolygonMapper()->getNpById($neighborhoodPolygonId);
             } catch( \Doctrine\ORM\NoResultException $e ) {
                 return new ErrorViewModel( array(
                     'message'   => 'No Neighborhood exists with id ' . $neighborhoodPolygonId
@@ -90,7 +90,7 @@ class NeighborhoodPolygonController extends BaseController
         if( empty( $userName ) )
             return new ErrorViewModel( array( 'message' => 'user id may not be null' ) );
 
-        $neighborhoods = $this->userPolygonMapper()->byUserName($userName);
+        $neighborhoods = $this->m()->userPolygonMapper()->byUserName($userName);
 
         if( empty( $neighborhoods ) )
             return new ViewModel( array(
@@ -146,9 +146,9 @@ class NeighborhoodPolygonController extends BaseController
         /*
          * make sure this neighborhood belongs to the user
          */
-        $neighborhood = $this->neighborhoodMapper()->byId($neighborhoodId);
+        $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhoodId);
         $neighborhood->setDeleted(true);
-        $this->neighborhoodMapper()->update( $neighborhood );
+        $this->m()->neighborhoodMapper()->update( $neighborhood );
     }
 }
 

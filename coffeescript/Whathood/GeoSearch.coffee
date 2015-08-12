@@ -1,3 +1,6 @@
+window = exports ? this
+Whathood = window.Whathood
+
 #
 # extends L.Control.GeoSearch and override its action functions to catch the geocode result
 # and popup a marker with content
@@ -17,18 +20,15 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
       y = result.Y
       this._showLocation result
       Whathood.Search.by_coordinates x, y, (data) =>
-        popup_html = @popup_html data
-        this._positionMarker.bindPopup(popup_html).openPopup()
+        console.log data
+        template_manager = new Whathood.TemplateManager()
+        template_manager.load_template "whathood_click_result", "whathood_click_result", =>
+          markup = template_manager.transform "whathood_click_result", data
+          @_positionMarker.bindPopup(markup).openPopup()
+          return markup
 
     _geosearch: () ->
       queryBox = document.getElementById 'leaflet-control-geosearch-qry'
       @geosearch queryBox.value
-
-    popup_html: (pointElection) ->
-      str = ""
-      for neighborhood in pointElection.neighborhoods
-        str = "#{str}#{neighborhood.name}: #{neighborhood.votes}<br/>"
-      str = "#{str}Disagree? <a href='/whathood/user-polygon/add'>Draw your own neighborhood</a> and we'll include merge it into the borders"
-      return str
 })
 

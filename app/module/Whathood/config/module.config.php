@@ -194,25 +194,33 @@ return array(
                 ),
 			),
 
-            /*
-             *  /admin
-             */
-            'admin' => array(
-                'type'    => 'Segment',
+            'user_neighborhood_add' => array(
+                'type'  => 'Segment',
                 'options' => array(
-                    'route'    => '/admin',
+                    'route' => '/whathood/user-polygon/add',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Admin',
-                        'action'        => 'index',
-                    ),
-                ),
+                        'controller'    => 'Whathood\Controller\UserPolygon',
+                        'action'        => 'add'
+                    )
+                )
             ),
 
+            'user_neighborhood_add_post' => array(
+                'type'  => 'Segment',
+                'options' => array(
+                    'route' => '/whathood/user-polygon/add-post',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller'    => 'Whathood\Controller\UserPolygon',
+                        'action'        => 'addPost'
+                    )
+                )
+            ),
             /*
              *  /about
              */
-            'admin' => array(
+            'about' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/about',
@@ -250,6 +258,16 @@ return array(
                     'route' => '/api/v1/test-point[/:id]',
                     'defaults' => array(
                         'controller' => 'Whathood\Controller\TestPointRestful'
+                    )
+                )
+            ),
+
+            'rest-test-point' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/api/v1/heat-map-points/neighborhood_id/:neighborhood_id',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\HeatMapRestful',
                     )
                 )
             ),
@@ -359,13 +377,33 @@ return array(
 
 
     'service_manager' => array(
+
         'factories' => array(
+
+            'Whathood\ErrorHandling' =>  function($sm) {
+                $logger = $sm->get('Whathood\Logger');
+                $service = new \Whathood\ErrorHandling($logger);
+                return $service;
+            },
+
+            'TimerListener' => function($sm) {
+                return new \Whathood\Event\TimerListener($sm->get('Whathood\Logger'));
+            },
+
+            'Whathood\Timer' => function($sm) {
+                static $timer_instance = null;
+                if (null == $timer_instance) {
+                    $timer_instance = new \Whathood\Timer();
+                }
+                return $timer_instance;
+            },
 
             'Whathood\YamlConfig' => function($sm) {
                 require_once('vendor/mustangostang/spyc/Spyc.php');
                 $reader = new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
                 return $reader->fromFile('../whathood.yaml');
             },
+
             'Whathood\Logger' => function($sm) {
                 $config = $sm->get('Config');
 
@@ -391,7 +429,7 @@ return array(
 
             'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Config');
-                $emailer = new \Whathood\Model\Email($config['whathood']['log']['email'] );
+                $emailer = new \Whathood\Email($config['whathood']['log']['email'] );
                 return $emailer;
             },
 
@@ -408,6 +446,12 @@ return array(
             'Whathood\Mapper\PointsAsPolygonMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\PointsAsPolygonMapper( $sm, $em );
+                return $mapper;
+            },
+
+            'Whathood\Mapper\HeatMapPoint'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\HeatMapPoint( $sm, $em );
                 return $mapper;
             },
 
@@ -502,6 +546,7 @@ return array(
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\ElectionPointRestful'          => 'Whathood\Controller\Restful\ElectionPointController',
             'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
+            'Whathood\Controller\HeatMapRestful'                => 'Whathood\Controller\Restful\HeatMapController',
 
             /* console controllers */
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
@@ -509,7 +554,7 @@ return array(
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',
-            'Whathood\Controller\NeighborhoodPolygonConsole'            => 'Whathood\Controller\Console\NeighborhoodPolygonController'
+            'Whathood\Controller\NeighborhoodPolygonConsole'    => 'Whathood\Controller\Console\NeighborhoodPolygonController',
         ),
     ),
 

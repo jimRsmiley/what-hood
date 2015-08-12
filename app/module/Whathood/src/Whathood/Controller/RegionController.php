@@ -24,7 +24,7 @@ class RegionController extends BaseController {
         }
 
         try {
-            $region = $this->regionMapper()->getRegionByName( $regionName );
+            $region = $this->m()->regionMapper()->getRegionByName( $regionName );
         } catch( \Doctrine\ORM\NoResultException $e ) {
             $viewModel = new ViewModel( array( 'regionName' => $regionName ) );
             $viewModel->setTemplate('whathood/region/no-region-by-name.phtml');
@@ -39,8 +39,7 @@ class RegionController extends BaseController {
     }
 
     public function listRegionsAction() {
-        $mapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\RegionMapper');
+        $mapper = $this->m()->regionMapper();
         $regions = $mapper->fetchAll();
         return new ViewModel( array( 'regions' => $regions ) );
     }
@@ -48,7 +47,7 @@ class RegionController extends BaseController {
     public function editAction() {
         $regionName = $this->getEvent()->getRouteMatch()->getParam('region');
 
-        $neighborhoods = $this->neighborhoodMapper()
+        $neighborhoods = $this->m()->neighborhoodMapper()
                                 ->getAuthoritativeNeghborhoodsByRegionName($regionName);
 
         \Zend\Debug\Debug::dump($neighborhoods);

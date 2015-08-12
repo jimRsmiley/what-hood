@@ -24,33 +24,23 @@ class WatcherController extends BaseController
             $this->getRequest()->getParam(
                 'grid-res',$this->getDefaultGridResolution()
             ));
-        $this->setTargetPrecision(
-            $this->getRequest()->getParam(
-                'target-precision',$this->getDefaultTargetPrecision()
-            ));
 
         $this->logger()->info("Whathood watcher has started");
-        $this->logger()->info(
-            sprintf("\tgrid-resolution=%g target-precision=%s",
-                $this->getGridResolution(),
-                $this->getTargetPercentage()
-            )
-        );
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         do {
             if ($neighborhood_name and $region_name ) {
                 $neighborhood = $this->m()->neighborhoodMapper()
                     ->byName($neighborhood_name,$region_name);
-                $user_polygons = $this->userPolygonMapper()
+                $user_polygons = $this->m()->userPolygonMapper()
                     ->byNeighborhood($neighborhood);
             }
             else if ($force) {
-                $user_polygons = $this->userPolygonMapper()->fetchAllToBuild($force=true);
+                $user_polygons = $this->m()->userPolygonMapper()->fetchAllToBuild($force=true);
             }
             else {
                 $up_t = Timer::start('gather_user_polygons');
-                $user_polygons = $this->userPolygonMapper()
+                $user_polygons = $this->m()->userPolygonMapper()
                     ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
                 $up_t->stop();
             }
@@ -72,12 +62,17 @@ class WatcherController extends BaseController
                     try {
                         /* build the border */
                         $timer = Timer::start('generate_border');
-                        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
+                        $electionCollection = $this->m()->electionMapper()->getCollection(
                             $ups,
                             $n->getId(),
                             $this->getGridResolution(),
                             $this->getTargetPrecision()
                         );
+
+                        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
+                            $electionCollection, $n
+                        );
+
                         $timer->stop();
 
                         if (!$polygon) {
@@ -100,7 +95,12 @@ class WatcherController extends BaseController
                                 $timer->elapsed_minutes()
                                 )
                         );
-                        $this->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
+                        $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
+
+                        $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
+                        $this->m()->heatMapPoint()->deleteByNeighborhood($n);
+                        $this->m()->heatMapPoint()->savePoints($heatmap_points);
+                        $this->logger()->info("\tsaved ".count($heatmap_points)." heatmap points");
                     }
                     catch(\Exception $e) {
                         $this->logger()->err($e->getMessage());

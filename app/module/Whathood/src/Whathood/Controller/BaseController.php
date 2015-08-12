@@ -13,16 +13,6 @@ use Whathood\Entity\WhathoodUser;
  */
 class BaseController extends AbstractActionController {
 
-    private $neighborhoodMapper;
-    private $userPolygonMapper;
-    private $neighborhoodPolygonMapper;
-    private $whathoodUserMapper;
-    private $regionMapper;
-    private $neighborhoodStrengthOfIdentityMapper;
-    private $testPointMapper;
-    private $contentiousPointMapper;
-    private $_concaveHullMapper;
-
     private $_mapper_builder;
 
     public function m() {
@@ -30,100 +20,6 @@ class BaseController extends AbstractActionController {
             $this->_mapper_builder = $this->getServiceLocator()
                 ->get('Whathood\Mapper\Builder');
         return $this->_mapper_builder;
-    }
-
-    public function onDispatch(\Zend\Mvc\MvcEvent $event) {
-        return parent::onDispatch($event);
-    }
-
-    public function concaveHullMapper() {
-
-        if( $this->_concaveHullMapper == null ) {
-            $this->_concaveHullMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\ConcaveHullMapper' );
-        }
-        return $this->_concaveHullMapper;
-    }
-
-
-    public function neighborhoodMapper() {
-
-        if( $this->neighborhoodMapper == null ) {
-            $this->neighborhoodMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\NeighborhoodMapper' );
-        }
-        return $this->neighborhoodMapper;
-    }
-
-    public function userPolygonMapper() {
-
-        if( $this->userPolygonMapper == null ) {
-            $this->userPolygonMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\UserPolygonMapper' );
-        }
-        return $this->userPolygonMapper;
-    }
-
-    public function testPointMapper() {
-
-        if( $this->testPointMapper == null ) {
-            $this->testPointMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\TestPointMapper' );
-        }
-        return $this->testPointMapper;
-    }
-
-    public function neighborhoodPolygonMapper() {
-
-        if( $this->neighborhoodPolygonMapper == null ) {
-            $this->neighborhoodPolygonMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\NeighborhoodPolygonMapper' );
-        }
-        return $this->neighborhoodPolygonMapper;
-    }
-
-    public function regionMapper() {
-
-        if( $this->regionMapper == null ) {
-            $this->regionMapper = $this->getServiceLocator()
-                    ->get( 'Whathood\Mapper\RegionMapper' );
-        }
-        return $this->regionMapper;
-    }
-
-    public function whathoodUserMapper() {
-
-        if( $this->whathoodUserMapper == null ) {
-            $this->whathoodUserMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\WhathoodUserMapper');
-        }
-        return $this->whathoodUserMapper;
-    }
-
-    public function neighborhoodStrengthOfIdentityMapper() {
-        if( $this->neighborhoodStrengthOfIdentityMapper == null ) {
-            $this->neighborhoodStrengthOfIdentityMapper = $this->getServiceLocator()
-                                    ->get('Whathood\Mapper\NeighborhoodPointStrengthOfIdentityMapper');
-        }
-        return $this->neighborhoodStrengthOfIdentityMapper;
-    }
-
-    public function contentiousPointMapper() {
-
-        if( $this->contentiousPointMapper == null ) {
-            $this->contentiousPointMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\ContentiousPointMapper');
-        }
-        return $this->contentiousPointMapper;
-    }
-
-    public function createEventMapper() {
-
-        if( $this->contentiousPointMapper == null ) {
-            $this->contentiousPointMapper = $this->getServiceLocator()
-                ->get('Whathood\Mapper\CreateEventMapper');
-        }
-        return $this->contentiousPointMapper;
     }
 
     // a more accurate function description
@@ -220,11 +116,6 @@ class BaseController extends AbstractActionController {
             return $this->_getLogger();
         }
     }
-
-    public static function prompt_user($msg) {
-        \Whathood\Util::prompt_user("$msg; Enter to continue; CTRL-C to cancel");
-    }
-
 }
 
 ?>

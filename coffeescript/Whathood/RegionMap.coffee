@@ -6,7 +6,7 @@ Whathood.RegionMap = Whathood.Map.extend
   _neighborhood_color: '5487b8'
   locationMarker: null
 
-  addGeoJson: ( url, callback ) ->
+  addNeighborhoods: ( url, callback ) ->
     self = this
     $.ajax
         url: url,

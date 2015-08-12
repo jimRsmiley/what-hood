@@ -13,6 +13,12 @@ use Whathood\ElectionPointCollection;
  */
 class Election extends BaseMapper {
 
+
+    public function getCollection($user_polygons,$neighborhood_id,$grid_resolution) {
+        $test_points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
+        return $this->buildElectionPointCollection($test_points);
+    }
+
     /**
      * given an array of $user_polygons, returns a polygon representing the border
      *
@@ -22,9 +28,7 @@ class Election extends BaseMapper {
      * @param double - concave hull target precision
      * @return mixed - Polygon object
      */
-    public function generateBorderPolygon($user_polygons,$neighborhood_id,$grid_resolution,$target_percentage) {
-        $test_points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
-        $electionCollection = $this->buildElectionPointCollection($test_points);
+    public function generateBorderPolygon($electionCollection,$neighborhood_id) {
 
         $neighborhood_points = $electionCollection->byNeighborhoodId($neighborhood_id);
 
@@ -34,7 +38,7 @@ class Election extends BaseMapper {
         }
 
         $polygon = $this->m()->pointsAsPolygonMapper()
-            ->toPolygon(new MultiPoint($points),$target_percentage);
+            ->toPolygon(new MultiPoint($points));
 
         return $polygon;
     }

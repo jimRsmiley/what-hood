@@ -2,6 +2,7 @@
 namespace Whathood;
 
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Entity\Neighborhood;
 
 /**
  * store a point and all the user_polygons that contain it.
@@ -28,6 +29,14 @@ class ElectionPoint extends \ArrayObject {
 
     public function getCandidateNeighborhoods() {
         return $this->_candidate_neighborhoods;
+    }
+
+    public function candidateNeighborhood(Neighborhood $n) {
+        foreach ($this->getCandidateNeighborhoods() as $cn) {
+            if ($cn->getNeighborhood()->getId() == $n->getId()) {
+                return $cn;
+            }
+        }
     }
 
     public function __construct(Point $point, $user_polygons) {
@@ -57,9 +66,9 @@ class ElectionPoint extends \ArrayObject {
      * @param integer - neighborhood id
      * @return boolean
      */
-    public function isWinner($neighborhood_id) {
+    public function isWinner(Neighborhood $neighborhood) {
         foreach($this->getWinningCandidates() as $cn) {
-            if ($neighborhood_id == $cn->getNeighborhood()->getId())
+            if ($neighborhood->getId() == $cn->getNeighborhood()->getId())
                 return true;
         }
         return false;

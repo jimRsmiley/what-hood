@@ -11,3 +11,4 @@ ln -s app/module/Whathood/view view
 ln -s app/public/js/whathood/whathood.js whathood.js
 ln -s app/module/Whathood/Module.php Module.php
 ln -s app/public/css/style.css whathood.css
+ln -s app/public/js/whathood js

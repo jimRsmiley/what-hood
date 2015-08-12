@@ -47,6 +47,7 @@ W.user_polygon_add = () ->
 
   map = new W.DrawMap('map')
   map.init()
+  map.centerOnRegion()
 
   $('#add-polygon-form').on 'submit', (e) =>
     e.preventDefault()
@@ -59,7 +60,7 @@ W.user_polygon_add = () ->
       alert "polygon_json must be defined"
     unless neighborhood_name
       alert "neighborhood_name must be defined"
-    url = '/whathood/user-polygon/add'
+    url = '/whathood/user-polygon/add-post'
     data =
       polygon_json: map.getDrawnGeoJson()
       neighborhood_name: neighborhood_name
@@ -69,6 +70,8 @@ W.user_polygon_add = () ->
       url: url
       data: data
       success: (data) ->
+        unless data.user_polygon_id
+          throw new Error "no user_polygon_id returned"
         window.location.href = "/whathood/user-polygon/by-id/#{data.user_polygon_id}"
       error: (xhr,textStatus,errorThrown) ->
         alert "there was an error saving neighborhood: #{textStatus}"
@@ -78,10 +81,34 @@ W.neighborhood_polygon_show = () ->
   $map = $('#map')
   neighborhood_id = $map.data('neighborhood-id')
   throw new Error 'neighborhood_id may not be empty' unless neighborhood_id
-  map = new W.Map 'map'
-  map.addStreetLayer()
-  map.addGeoJson W.Util.np_api_latest(neighborhood_id)
-
+  $.ajax
+    url: "/api/v1/heat-map-points/neighborhood_id/#{neighborhood_id}"
+    success: (mydata) =>
+        console.log mydata[0]
+        testData = {
+          max: 10
+          data: mydata[0] }
+        cfg = {
+          "radius": 30,
+          "maxOpacity": .8, 
+          latField: 'y',
+          lngField: 'x',
+          valueField: 'weight'
+        }
+        baseLayer = L.tileLayer(
+          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+            maxZoom: 18
+          }
+        )
+        heatmapLayer = new HeatmapOverlay(cfg)
+        map = new Whathood.Map 'map', {
+          center: new L.LatLng(39.962863586971,-75.126734904035)
+          zoom: 14 
+          layers: [ heatmapLayer ] }
+        map.addStreetLayer()
+        map.addGeoJson W.Util.np_api_latest(neighborhood_id)
+        heatmapLayer.setData(testData)
 W.region_show = () ->
 
   get_region_name = () ->
@@ -102,7 +129,7 @@ W.region_show = () ->
   map = new W.RegionMap('map')
   map.addStreetLayer()
 
-  map.addGeoJson get_url(region_name,create_event)
+  map.addNeighborhoods get_url(region_name,create_event)
   map.whathoodClick true
 
   l_geosearch = new W.GeoSearch

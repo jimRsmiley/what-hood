@@ -11,6 +11,10 @@ $modules = array(
 );
 
 return array(
+    'listeners' => array(
+        'TimerListener'
+    ),
+
     // This should be an array of module namespaces used in the application.
     'modules' => $modules,
 
