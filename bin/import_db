@@ -8,7 +8,6 @@ require_relative '../libs/ruby/Whathood/Util.rb'
 #Whathood::Util.prompt_user "warning: this will destroy the current db"
 
 import_database
-check_for_schema_update
 load_functions
 
 puts "*     done in bin/import_db"
@@ -27,11 +26,14 @@ BEGIN {
 
     def import_database
         Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
-        puts "*     loading whathood schema from doctrine"
+
+        puts "*     loading whathood schema"
         Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_schema.sql"
+
         Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_data.sql"
         puts "*     applying indexes"
-        #Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE SCHEMA whathood'"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE SCHEMA whathood' || true"
+
         Whathood::Util.run_cmd "#{PSQL_CMD} -f #{ROOT_DIR}/app/scripts/schema/whathood.indexes.sql"
     end
 
