@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
+require 'fileutils'
 backup_dir = get_backup_dir
+
+HOST="0.0.0.0"
 
 puts "backing up schema"
 backup_schema backup_dir
@@ -17,21 +20,30 @@ BEGIN {
         bin_dir = File.dirname(__FILE__)
         cwd = Dir.pwd
         abs_path = "#{cwd}/#{bin_dir}"
-        backup_dir="#{abs_path}/../data/whathood_db"
+        backup_dir="#{abs_path}/../../whathood_db"
+		FileUtils.mkdir_p backup_dir
+		Dir.chdir backup_dir
+
+		unless system("git status")
+		  puts "no git repository found in #{backup_dir}; initializing it"
+  		  system "git clone https://github.com/whathood/whathood-data.git ."
+        end
+
         return backup_dir
     end
 
-    def backup_data(backup_dir)
-        cmd="pg_dump --no-owner --data-only whathood > #{backup_dir}/whathood_data.sql"
+    def backup_schema(backup_dir)
+        cmd="pg_dump -h #{HOST} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
         system cmd
     end
 
-    def backup_schema(backup_dir)
-        cmd="pg_dump --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
+    def backup_data(backup_dir)
+        cmd="pg_dump -h #{HOST} --no-owner --data-only whathood > #{backup_dir}/whathood_data.sql"
         system cmd
     end
 
     def commit_and_push(backup_dir)
+		puts "trying backup dir #{backup_dir}"
         Dir.chdir backup_dir
         time = Time.new
         `git add -A`
