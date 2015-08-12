@@ -18,7 +18,7 @@ Whathood.Map = L.Map.extend
 
 
   addStreetLayer: ->
-    streetLayer = @streetLayer
+    streetLayer = Whathood.Map.streetLayer()
     streetLayer.addTo @
     @layerGroup().addLayer streetLayer
 
