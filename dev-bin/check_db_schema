@@ -1,0 +1,3 @@
+#!/bin/sh
+
+app/vendor/bin/doctrine-module orm:schema-too:update --dump-sql
