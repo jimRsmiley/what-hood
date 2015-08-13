@@ -73,6 +73,15 @@ class Module implements ConsoleUsageProviderInterface
             $logText =  'The requested URL could not be matched by routing.';
             $logger->err($logText);
         }
+        else if ($error == Application::ERROR_EXCEPTION) {
+            $exception = $e->getParam('exception');
+
+            if ($exception) {
+                $sm = $e->getApplication()->getServiceManager();
+                $service = $sm->get('Whathood\ErrorHandling');
+                $service->logException($exception);
+            }
+        }
     }
 
     /**

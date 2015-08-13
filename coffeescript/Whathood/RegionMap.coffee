@@ -99,9 +99,6 @@ Whathood.RegionMap = Whathood.Map.extend
         Whathood.RegionMap.getPopupHtml pointElection
       ).openPopup()
 
-  getNeighborhoodBrowseUrl: (lat,lng) ->
-    "/whathood/user-polygon/page-center/page/1/x/#{lat}/y/#{lng}"
-
   #
   #/*
   #* add the ability to click on the map, and have a whathood popup telling what

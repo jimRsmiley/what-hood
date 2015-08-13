@@ -162,7 +162,7 @@ return array(
                 'type' => 'segment',
                 'may_terminate' => false,
                 'options' => array(
-                    'route' => '/whathood/user-neighborhood'
+                    'route' => '/user-neighborhood'
                 ),
                 'child_routes' => array(
                     'user_neighborhood_page_center' => array(
@@ -176,57 +176,57 @@ return array(
                             ),
                         ),
                     ),
-                )
-            ),
-
-            'user_polygon_page_list' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-list/page/:page',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-list',
+                    'user_polygon_page_list' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page-list/page/:page',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller' => 'Whathood\Controller\UserPolygon',
+                                'action'     => 'page-list',
+                            ),
+                        ),
                     ),
-                ),
-            ),
 
-            'user_polygon_page_neighborhood' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page/region/:region/neighborhood/:neighborhood/:page[/]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-neighborhood',
+                    'user_polygon_page_neighborhood' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page/region/:region/neighborhood/:neighborhood/:page[/]',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller' => 'Whathood\Controller\UserPolygon',
+                                'action'     => 'page-neighborhood',
+                            ),
+                        ),
                     ),
-                ),
-			),
 
 
-            'user_neighborhood_add' => array(
-                'type'  => 'Segment',
-                'options' => array(
-                    'route' => '/whathood/user-polygon/add',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood\Controller\UserPolygon',
-                        'action'        => 'add'
-                    )
+                    'user_neighborhood_add' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/add',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller'    => 'Whathood\Controller\UserPolygon',
+                                'action'        => 'add'
+                            )
+                        )
+                    ),
+
+                    'user_neighborhood_add_post' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/add-post',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller'    => 'Whathood\Controller\UserPolygon',
+                                'action'        => 'addPost'
+                            )
+                        )
+                    ),
                 )
             ),
 
-            'user_neighborhood_add_post' => array(
-                'type'  => 'Segment',
-                'options' => array(
-                    'route' => '/whathood/user-polygon/add-post',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood\Controller\UserPolygon',
-                        'action'        => 'addPost'
-                    )
-                )
-            ),
             /*
              *  /about
              */
@@ -410,7 +410,8 @@ return array(
 
             'Whathood\ErrorHandling' =>  function($sm) {
                 $logger = $sm->get('Whathood\Logger');
-                $service = new \Whathood\ErrorHandling($logger);
+                $emailer = $sm->get('Whathood\Emailer');
+                $service = new \Whathood\ErrorHandling($logger, $emailer);
                 return $service;
             },
 
@@ -435,7 +436,7 @@ return array(
                     $local_config  = $reader->fromFile('../whathood.local.yaml');
                 else
                     $local_config = array();
-                return array_merge($global_config,$local_config);
+                return array_replace_recursive($global_config, $local_config);
             },
 
             'Whathood\Config' => function($sm) {
@@ -466,8 +467,8 @@ return array(
             },
 
             'Whathood\Emailer' => function($sm) {
-                $config = $sm->get('Config');
-                $emailer = new \Whathood\Email($config['whathood']['log']['email'] );
+                $config = $sm->get('Whathood\Config');
+                $emailer = \Whathood\Email::build($config['email']->toArray());
                 return $emailer;
             },
 
