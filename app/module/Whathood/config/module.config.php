@@ -162,7 +162,7 @@ return array(
                 'type' => 'segment',
                 'may_terminate' => false,
                 'options' => array(
-                    'route' => '/whathood/user-neighborhood'
+                    'route' => '/user-neighborhood'
                 ),
                 'child_routes' => array(
                     'user_neighborhood_page_center' => array(
@@ -176,57 +176,57 @@ return array(
                             ),
                         ),
                     ),
-                )
-            ),
-
-            'user_polygon_page_list' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page-list/page/:page',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-list',
+                    'user_polygon_page_list' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page-list/page/:page',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller' => 'Whathood\Controller\UserPolygon',
+                                'action'     => 'page-list',
+                            ),
+                        ),
                     ),
-                ),
-            ),
 
-            'user_polygon_page_neighborhood' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood/user-polygon/page/region/:region/neighborhood/:neighborhood/:page[/]',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller' => 'Whathood\Controller\UserPolygon',
-                        'action'     => 'page-neighborhood',
+                    'user_polygon_page_neighborhood' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page/region/:region/neighborhood/:neighborhood/:page[/]',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller' => 'Whathood\Controller\UserPolygon',
+                                'action'     => 'page-neighborhood',
+                            ),
+                        ),
                     ),
-                ),
-			),
 
 
-            'user_neighborhood_add' => array(
-                'type'  => 'Segment',
-                'options' => array(
-                    'route' => '/whathood/user-polygon/add',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood\Controller\UserPolygon',
-                        'action'        => 'add'
-                    )
+                    'user_neighborhood_add' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/add',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller'    => 'Whathood\Controller\UserPolygon',
+                                'action'        => 'add'
+                            )
+                        )
+                    ),
+
+                    'user_neighborhood_add_post' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/add-post',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'Whathood\Controller',
+                                'controller'    => 'Whathood\Controller\UserPolygon',
+                                'action'        => 'addPost'
+                            )
+                        )
+                    ),
                 )
             ),
 
-            'user_neighborhood_add_post' => array(
-                'type'  => 'Segment',
-                'options' => array(
-                    'route' => '/whathood/user-polygon/add-post',
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood\Controller\UserPolygon',
-                        'action'        => 'addPost'
-                    )
-                )
-            ),
             /*
              *  /about
              */

@@ -8,7 +8,7 @@ class Whathood.UrlBuilder
 
   @user_neighborhood_by_point: (x, y, page_num) ->
     page_num = 0 unless page_num
-    "/whathood/user-neighborhood/page-center/page/#{page_num}/x/#{x}/y/#{y}/"
+    "/user-neighborhood/page-center/page/#{page_num}/x/#{x}/y/#{y}/"
 
   @point_election: (x,y) ->
     "#{@api_root()}/point-election/x/#{x}/y/#{y}/"
@@ -21,3 +21,6 @@ class Whathood.UrlBuilder
 
   @heatmap_points_by_n_id: (neighborhood_id) ->
     "#{@api_root()}/heatmap-points/neighborhood_id/#{neighborhood_id}"
+
+  @getNeighborhoodBrowseUrl: (lat,lng) ->
+    "/user-neighborhood/page-center/page/1/x/#{lat}/y/#{lng}"
