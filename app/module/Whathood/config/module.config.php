@@ -410,7 +410,8 @@ return array(
 
             'Whathood\ErrorHandling' =>  function($sm) {
                 $logger = $sm->get('Whathood\Logger');
-                $service = new \Whathood\ErrorHandling($logger);
+                $emailer = $sm->get('Whathood\Emailer');
+                $service = new \Whathood\ErrorHandling($logger, $emailer);
                 return $service;
             },
 
@@ -435,7 +436,7 @@ return array(
                     $local_config  = $reader->fromFile('../whathood.local.yaml');
                 else
                     $local_config = array();
-                return array_merge($global_config,$local_config);
+                return array_replace_recursive($global_config, $local_config);
             },
 
             'Whathood\Config' => function($sm) {
@@ -466,8 +467,8 @@ return array(
             },
 
             'Whathood\Emailer' => function($sm) {
-                $config = $sm->get('Config');
-                $emailer = new \Whathood\Email($config['whathood']['log']['email'] );
+                $config = $sm->get('Whathood\Config');
+                $emailer = \Whathood\Email::build($config['email']->toArray());
                 return $emailer;
             },
 

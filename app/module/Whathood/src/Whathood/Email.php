@@ -13,10 +13,29 @@ class Email {
     protected $smtpUser;
     protected $smtpPass;
     protected $smtpHost;
+    protected $smtpPort;
 
-    public function __construct( $data ) {
+    public function __construct(array $data) {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods(false);
         $hydrator->hydrate($data,$this);
+    }
+
+    public static function build(array $data) {
+        $emailer = new static($data);
+
+        if (!$emailer->getSmtpHost())
+            throw new \InvalidArgumentException("smtpHost must be defined");
+        if (!$emailer->getSmtpUser())
+            throw new \InvalidArgumentException("smtpUser must be defined");
+        if (!$emailer->getSmtpPass())
+            throw new \InvalidArgumentException("smtpPass must be defined");
+        if (!$emailer->getFromAddress())
+            throw new \InvalidArgumentException("fromAddress must be defined");
+        if (!$emailer->getSmtpPort())
+            throw new \InvalidArgumentException("smtpPort must be defined");
+        if (!$emailer->getToAddress())
+            throw new \InvalidArgumentException("toAddress must be defined");
+        return $emailer;
     }
 
     public function send($subject,$messageBody) {
@@ -38,19 +57,32 @@ class Email {
 
     public function getTransport() {
         $transport = new SmtpTransport();
-        $options   = new SmtpOptions(array(
-            'name'              => 'localhost.localdomain',
-            'host'              => $this->smtpHost,
-            'connection_class'  => 'login',
-            'connection_config' => array(
-                'username' => $this->smtpUser,
-                'password' => $this->smtpPass,
-            ),
-        ));
-        $transport->setOptions($options);
+        $transport->setOptions($this->getTransportOptions());
         return $transport;
     }
 
+    public function getTransportOptions() {
+
+        $connection_config =  array(
+            'username' => $this->smtpUser,
+            'password' => $this->smtpPass
+        );
+
+        if (465 == $this->getSmtpPort())
+            $connection_config['ssl'] = 'ssl';
+        else if (587 == $this->getSmtpPort())
+            $connection_config['ssl'] = 'tls';
+
+        $options   = new SmtpOptions(array(
+            'name'              => 'localhost.localdomain',
+            'host'              => $this->getSmtpHost(),
+            'port'              => $this->getSmtpPort(),
+            'connection_class'  => 'login',
+            'connection_config' => $connection_config
+        ));
+
+        return $options;
+    }
     public function getToAddress() {
         return $this->toAddress;
     }
@@ -81,6 +113,14 @@ class Email {
 
     public function setSmtpHost( $smtpHost ) {
         $this->smtpHost = $smtpHost;
+    }
+
+    public function getSmtpPort() {
+        return $this->smtpPort;
+    }
+
+    public function setSmtpPort( $smtpPort ) {
+        $this->smtpPort = $smtpPort;
     }
 
     public function getFromAddress() {
