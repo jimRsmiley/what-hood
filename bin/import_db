@@ -25,8 +25,12 @@ BEGIN {
     ROOT_DIR=File.dirname(__FILE__)+"/.."
 
     def import_database
-        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
+        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data"
 
+        Whathood::Util.run_cmd "psql -h #{DB_HOST} -U #{DB_USER} -c 'CREATE DATABASE whathood' postgres"
+
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION postgis'"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION pgrouting'"
         puts "*     loading whathood schema"
         Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_schema.sql"
 
