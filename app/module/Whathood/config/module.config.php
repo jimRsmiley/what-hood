@@ -403,7 +403,6 @@ return array(
         )
     ),
 
-
     'service_manager' => array(
 
         'factories' => array(
@@ -415,7 +414,8 @@ return array(
                 }
                 catch(\Exception $e) {
                     $emailer = null;
-                    $logger->error("ServiceManager could not build Whathood\Emailer: ".$e->getMessage());
+                    $logger->error("ServiceManager could not build Whathood\Emailer: ".$e);
+                    $logger->error("\n\n\n\n\n");
                 }
                 $service = new \Whathood\ErrorHandling($logger, $emailer);
                 return $service;
