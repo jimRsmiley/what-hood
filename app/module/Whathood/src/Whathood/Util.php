@@ -8,6 +8,13 @@ class Util {
 		return gethostname();
 	}
 
+    public static function environment() {
+        if (static::is_production())
+            return "production";
+        else
+            return getenv("APPLICATION_ENV");
+    }
+
 	public static function is_production() {
 		return static::getHostname() == 'market.phl.io';
 	}

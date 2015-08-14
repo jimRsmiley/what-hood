@@ -35,10 +35,13 @@ class Email {
             throw new \InvalidArgumentException("smtpPort must be defined");
         if (!$emailer->getToAddress())
             throw new \InvalidArgumentException("toAddress must be defined");
+
         return $emailer;
     }
 
     public function send($subject,$messageBody) {
+
+        $subject = "[".strtoupper(\Whathood\Util::environment())."] ".$subject;
 
         $html = new \Zend\Mime\Part(nl2br($messageBody));
         $html->type = 'text/html';

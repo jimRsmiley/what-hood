@@ -19,6 +19,8 @@ else {
     $application_env = 'production';
 }
 
+putenv("APPLICATION_ENV=$application_env");
+
 if ($application_env == 'development') {
     ini_set("display_errors",'On');
 }
