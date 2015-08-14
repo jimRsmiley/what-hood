@@ -11,7 +11,8 @@ class Util {
     public static function memory_usage() {
         $bytes = memory_get_usage();
         $kbytes = $bytes / 1024;
-        return $kbytes;
+        $mbytes = $kbytes / 1024;
+        return round($mbytes,3);
     }
 
     public static function environment() {

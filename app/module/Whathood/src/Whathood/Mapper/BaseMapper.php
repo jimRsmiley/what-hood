@@ -111,7 +111,17 @@ abstract class BaseMapper {
     }
 
     public function detach( $entity ) {
-        $this->em->detach( $entity );
+
+        if (is_array($entity)) {
+            foreach ($entity as $e)
+                $this->em->detach($e);
+            $this->em->flush();
+        }
+
+        else {
+            $this->em->detach( $entity );
+            $this->em->flush();
+        }
     }
 
     public function getLastCreateEventId() {

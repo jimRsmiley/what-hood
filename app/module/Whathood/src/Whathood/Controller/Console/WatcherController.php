@@ -28,88 +28,81 @@ class WatcherController extends BaseController
         $this->logger()->info("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
-        do {
-            if ($neighborhood_name and $region_name ) {
-                $neighborhood = $this->m()->neighborhoodMapper()
-                    ->byName($neighborhood_name,$region_name);
-                $user_polygons = $this->m()->userPolygonMapper()
-                    ->byNeighborhood($neighborhood);
-            }
-            else if ($force) {
-                $user_polygons = $this->m()->userPolygonMapper()->fetchAllToBuild($force=true);
-            }
-            else {
-                $up_t = Timer::start('gather_user_polygons');
-                $user_polygons = $this->m()->userPolygonMapper()
-                    ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
-                $up_t->stop();
-            }
-
-            if (!empty($user_polygons)) {
-                $this->logFoundUserBorders($user_polygons);
-
-                foreach($this->collate_neighborhoods($user_polygons) as $n) {
-                    $ups = $n->getUserPolygons();
-
-                    $this->logger()->info(
-                        sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
-                            $n->getId(),
-                            $n->getName(),
-                            count($ups)
-                            )
-                    );
-                    try {
-                        /* build the border */
-                        $timer = Timer::start('generate_border');
-                        $electionCollection = $this->m()->electionMapper()->getCollection(
-                            $ups,
-                            $n->getId(),
-                            $this->getGridResolution(),
-                            $this->getTargetPrecision()
-                        );
-
-                        if (empty($electionCollection->getPoints())) {
-                           $this->logger()->warn("electionCollection contains no points");
-                        }
-                        else {
-                            try {
-                                if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
-                                    $this->logger()->info("\t\tsaved neighborhood polygon");
-                                    $this->buildAndSaveHeatmapPoints($electionCollection, $n);
-                                }
-                                else {
-                                    $this->logger()->err("did not get a neighborhood polygon");
-                                }
-                            }
-                            catch(\Whathood\Exception $e) {
-                                $this->logger()->err("Failed to build polygon for ".$n->getName().": ". $e->getMessage());
-                            } catch(\Exception $e) {
-                                $this->logger()->err("big error trying to build neighborhood polygon");
-                                $this->logger()->err(get_class($e));
-                                $this->logger()->err($e);
-                            }
-                        }
-                        $timer->stop();
-                    }
-                    catch(\Exception $e) {
-                        $this->logger()->err($e->getMessage());
-                        $this->logger()->err($e->getTraceAsString());
-                        $err_msg = "FATAL: the watcher script died because of an error\n";
-                        $this->logger()->err($err_msg);
-                        die($err_msg);
-                    }
-                    $this->logger()->err(
-                        sprintf("memory: %skb",
-                            \Whathood\Util::memory_usage()
-                        )
-                    );
-                } // foreach neighborhood
-            } // if there are user polygons
-
-            if ($forever)
-                sleep(5);
+        if ($neighborhood_name and $region_name ) {
+            $neighborhood = $this->m()->neighborhoodMapper()
+                ->byName($neighborhood_name,$region_name);
+            $user_polygons = $this->m()->userPolygonMapper()
+                ->byNeighborhood($neighborhood);
         }
-        while ($forever);
+        else if ($force) {
+            $user_polygons = $this->m()->userPolygonMapper()->fetchAllToBuild($force=true);
+        }
+        else {
+            $up_t = Timer::start('gather_user_polygons');
+            $user_polygons = $this->m()->userPolygonMapper()
+                ->getUserPolygonsNotAssociatedWithNeighborhoodPolygons();
+            $up_t->stop();
+        }
+
+        if (!empty($user_polygons)) {
+            $this->logFoundUserBorders($user_polygons);
+
+            foreach($this->collate_neighborhoods($user_polygons) as $n) {
+                $ups = $n->getUserPolygons();
+
+                $this->logger()->info(
+                    sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
+                        $n->getId(),
+                        $n->getName(),
+                        count($ups)
+                        )
+                );
+                try {
+                    /* build the border */
+                    $timer = Timer::start('generate_border');
+                    $electionCollection = $this->m()->electionMapper()->getCollection(
+                        $ups,
+                        $n->getId(),
+                        $this->getGridResolution()
+                    );
+
+                    if (empty($electionCollection->getPoints())) {
+                       $this->logger()->warn("electionCollection contains no points");
+                    }
+                    else {
+                        try {
+                            if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
+                                $this->logger()->info("\t\tsaved neighborhood polygon");
+                                $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                            }
+                            else {
+                                $this->logger()->err("did not get a neighborhood polygon");
+                            }
+                        }
+                        catch(\Whathood\Exception $e) {
+                            $this->logger()->err("Failed to build polygon for ".$n->getName().": ". $e->getMessage());
+                        } catch(\Exception $e) {
+                            $this->logger()->err("big error trying to build neighborhood polygon");
+                            $this->logger()->err(get_class($e));
+                            $this->logger()->err($e);
+                        }
+                    }
+                    $timer->stop();
+                }
+                catch(\Exception $e) {
+                    $this->logger()->err($e->getMessage());
+                    $this->logger()->err($e->getTraceAsString());
+                    $err_msg = "FATAL: the watcher script died because of an error\n";
+                    $this->logger()->err($err_msg);
+                    die($err_msg);
+                }
+                $this->logger()->err(
+                    sprintf("memory: %skb",
+                        \Whathood\Util::memory_usage()
+                    )
+                );
+            } // foreach neighborhood
+        } // if there are user polygons
         $this->logger()->info("watcher finished");
     }
 
@@ -141,6 +134,7 @@ class WatcherController extends BaseController
             'grid_resolution' => $this->getGridResolution()
         ));
         $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
+        $this->m()->neighborhoodPolygonMapper()->detach($neighborhoodPolygon);
         return $neighborhoodPolygon;
     }
 
@@ -150,6 +144,7 @@ class WatcherController extends BaseController
         if (!empty($heatmap_points)) {
             $this->m()->heatMapPoint()->deleteByNeighborhood($n);
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
+            $this->m()->heatMapPoint()->detach($heatmap_points);
             $this->logger()->info("\t\tsaved ".count($heatmap_points)." heatmap points from " . count($electionCollection->getPoints()) . " points");
         }
         else
@@ -167,34 +162,11 @@ class WatcherController extends BaseController
         $this->_grid_resolution = $grid_resolution;
     }
 
-    public function getTargetPercentage() {
-        return $this->_target_precision;
-    }
-
-    public function setTargetPercentage($target_percentage) {
-        $this->_target_precision = $target_percentage;
-    }
-
     public function getDefaultGridResolution() {
         $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
         if (!array_key_exists('default_grid_resolution',$config))
             throw new \Exception('default_grid_resolution not found in yaml config file');
         return $config['default_grid_resolution'];
-    }
-
-    public function getDefaultTargetPrecision() {
-        $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
-        if (!array_key_exists('default_target_precision',$config))
-            throw new \Exception('default_target_precision not found in yaml config file');
-        return $config['default_target_precision'];
-    }
-
-    public function getTargetPrecision() {
-        return $this->_target_precision;
-    }
-
-    public function setTargetPrecision($target_precision) {
-        $this->_target_precision = $target_precision;
     }
 
     /**
