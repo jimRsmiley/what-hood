@@ -410,7 +410,13 @@ return array(
 
             'Whathood\ErrorHandling' =>  function($sm) {
                 $logger = $sm->get('Whathood\Logger');
-                $emailer = $sm->get('Whathood\Emailer');
+                try {
+                    $emailer = $sm->get('Whathood\Emailer');
+                }
+                catch(\Exception $e) {
+                    $emailer = null;
+                    $logger->error("ServiceManager could not build Whathood\Emailer: ".$e->getMessage());
+                }
                 $service = new \Whathood\ErrorHandling($logger, $emailer);
                 return $service;
             },
