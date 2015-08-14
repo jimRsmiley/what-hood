@@ -9,7 +9,15 @@ error_reporting(E_ALL);
 
 chdir(dirname(__DIR__));
 
-$application_env = trim(file_get_contents("../application_env"));
+$app_env_file = "../application_env";
+
+if (file_exists($app_env_file)) {
+    $application_env = trim(file_get_contents("../application_env"));
+}
+else {
+    // assume it's production
+    $application_env = 'production';
+}
 
 if ($application_env == 'development') {
     ini_set("display_errors",'On');
