@@ -98,6 +98,11 @@ class WatcherController extends BaseController
                         $this->logger()->err($err_msg);
                         die($err_msg);
                     }
+                    $this->logger()->err(
+                        sprintf("memory: %skb",
+                            \Whathood\Util::memory_usage()
+                        )
+                    );
                 } // foreach neighborhood
             } // if there are user polygons
 

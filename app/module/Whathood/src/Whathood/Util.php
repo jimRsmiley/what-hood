@@ -8,6 +8,12 @@ class Util {
 		return gethostname();
 	}
 
+    public static function memory_usage() {
+        $bytes = memory_get_usage();
+        $kbytes = $bytes / 1024;
+        return $kbytes;
+    }
+
     public static function environment() {
         if (static::is_production())
             return "production";
