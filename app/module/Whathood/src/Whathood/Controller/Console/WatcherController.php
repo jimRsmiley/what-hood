@@ -76,12 +76,7 @@ class WatcherController extends BaseController
                                 $this->logger()->info(
                                     sprintf("\t\tsaved neighborhood polygon elapsed=%ssecs", $elapsed_secs));
 
-                                $electionCollection = $this->m()->electionMapper()->getCollection(
-                                    $ups,
-                                    $n->getId(),
-                                    $this->getHeatmapGridResolution()
-                                );
-                                $this->buildAndSaveHeatmapPoints($electionCollection, $n);
+                                $this->buildAndSaveHeatmapPoints($ups, $n, $this->getHeatmapGridResolution());
                             }
                             else {
                                 $this->logger()->err("did not get a neighborhood polygon");
@@ -146,14 +141,27 @@ class WatcherController extends BaseController
         return $neighborhoodPolygon;
     }
 
-    public function buildAndSaveHeatmapPoints(PointElectionCollection $electionCollection, Neighborhood $n) {
+    public function buildAndSaveHeatmapPoints($user_polygons, Neighborhood $n, $grid_resolution) {
+
+        $timer = Timer::start("heatmap_builder");
+        $electionCollection = $this->m()->electionMapper()
+            ->getCollection(
+                $user_polygons,
+                $n->getId(),
+                $grid_resolution
+            );
+
         $heatmap_points = $electionCollection->heatMapPointsByNeighborhood($n);
 
         if (!empty($heatmap_points)) {
             $this->m()->heatMapPoint()->deleteByNeighborhood($n);
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
             $this->m()->heatMapPoint()->detach($heatmap_points);
-            $this->logger()->info("\t\tsaved ".count($heatmap_points)." heatmap points from " . count($electionCollection->getPoints()) . " points");
+            $this->logger()->info(
+                sprintf("\t\tsaved %s heatmap points from %s points elapsed=%s",
+                    count($heatmap_points), count($electionCollection->getPoints()), $timer->elapsed_seconds()
+                )
+            );
         }
         else
             $this->logger()->info("\t\tno heatmap_points generated to save");

@@ -12,12 +12,9 @@ class Timer {
 
     protected $_start_time;
 
+    // private constructor
     private function __construct(array $data) {
-        $this->_description = $data['description']; 
-    }
-
-    protected function setStartTime($start_time) {
-        $this->_start_time = $start_time;
+        $this->_description = $data['description'];
     }
 
     public static function start($timer_str) {
@@ -26,6 +23,10 @@ class Timer {
         $t = new static(array('description'=>$timer_str));
         $t->setStartTime(microtime(true));
         return $t;
+    }
+
+    protected function setStartTime($start_time) {
+        $this->_start_time = $start_time;
     }
 
     public function stop() {
