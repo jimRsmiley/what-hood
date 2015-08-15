@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require_relative '../libs/ruby/Whathood/Util.rb'
+
+check_for_schema_update
+
+
+BEGIN {
+    DB_HOST= ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis'
+    DB_PORT="5432"
+    DB_USER="docker"
+    DB_NAME="whathood"
+
+    DATA_DIR="data/whathood_db"
+    SCHEMA_DIR="app/scripts/schema"
+    DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
+    PSQL_CMD="psql -h #{DB_HOST} -U #{DB_USER} --dbname #{DB_NAME}"
+    ROOT_DIR=File.dirname(__FILE__)+"/.."
+
+    def import_database
+        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data"
+
+        Whathood::Util.run_cmd "psql -h #{DB_HOST} -U #{DB_USER} -c 'CREATE DATABASE whathood' postgres"
+
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION postgis'"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION pgrouting'"
+        puts "*     loading whathood schema"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_schema.sql"
+
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_data.sql"
+        puts "*     applying indexes"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE SCHEMA whathood' || true"
+
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f #{ROOT_DIR}/app/scripts/schema/whathood.indexes.sql"
+    end
+
+    # does the current database look like the doctrine orm?
+    def check_for_schema_update
+        cmd = "app/vendor/bin/doctrine-module orm:validate-schema"
+        result = `#{cmd}`
+        puts "result of validate-schema:\n#{result}"
+        cmd = "#{ROOT_DIR}/app/vendor/bin/doctrine-module orm:schema-tool:update --dump-sql"
+        result = `#{cmd}`
+        puts "result of schema-update:\n#{result}"
+        abort 
+    end
+
+    def load_functions
+        puts "*     loading functions"
+        cmd="#{ROOT_DIR}/dev-bin/load_sql_functions"
+	system cmd
+    end
+
+    def clone_data_repo
+        puts "deleting previous data directory '#{DATA_DIR}'"
+
+        if File.exists?(DATA_DIR)
+            FileUtils.rmdir(DATA_DIR, true)
+        end
+        FileUtils.mkdir_p DATA_DIR
+        `git clone https://github.com/jimRsmiley/whathood-data.git #{DATA_DIR} > /dev/null`
+    end
+
+    def import_data
+        if !File.exists?(DATA_DIR) # if the data dir doesn't exist
+            puts "data dir #{DATA_DIR} doesn't exist, must clone repo"
+            clone_data_repo
+        else
+            _old_dir = Dir.pwd
+            puts "changing to data dir #{DATA_DIR}"
+            Dir.chdir DATA_DIR
+            local_sha = system('git rev-parse HEAD')
+            remote_sha = system('git rev-parse origin/master')
+            if local_sha ==  nil || local_sha != remote_sha
+                puts "git data repos are different; cloning database data"
+		`git clone https://github.com/jimRsmiley/whathood-data.git #{DATA_DIR}`
+            else
+                puts "git db repos are equal, no need to clone"
+            end
+
+            Dir.chdir _old_dir
+        end
+
+        if !File.exists? DB_BAK_FILE
+            abort "FATAL: file db_bak_file '#{DB_BAK_FILE} does not exist"
+        end
+
+        puts "*     importing db file db_bak_file to db #{DB_NAME}"
+	cmd="#{PSQL_CMD} -f #{DB_BAK_FILE}"
+	puts cmd
+	system cmd
+    end
+
+}
