@@ -73,6 +73,12 @@ class WatcherController extends BaseController
                         try {
                             if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
                                 $this->logger()->info("\t\tsaved neighborhood polygon");
+
+                                $electionCollection = $this->m()->electionMapper()->getCollection(
+                                    $ups,
+                                    $n->getId(),
+                                    $this->getHeatmapGridResolution()
+                                );
                                 $this->buildAndSaveHeatmapPoints($electionCollection, $n);
                             }
                             else {
@@ -158,15 +164,19 @@ class WatcherController extends BaseController
         );
     }
 
-    public function setGridResolution($grid_resolution) {
-        $this->_grid_resolution = $grid_resolution;
-    }
-
     public function getDefaultGridResolution() {
         $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
         if (!array_key_exists('default_grid_resolution',$config))
             throw new \Exception('default_grid_resolution not found in yaml config file');
         return $config['default_grid_resolution'];
+    }
+
+    public function getHeatmapGridResolution() {
+        $key = 'heatmap_grid_resolution';
+        $config = $this->getServiceLocator()->get('Whathood\YamlConfig');
+        if (!array_key_exists($key,$config))
+            throw new \Exception("$key not found in yaml config file");
+        return $config[$key];
     }
 
     /**
