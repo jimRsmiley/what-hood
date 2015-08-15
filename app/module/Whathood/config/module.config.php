@@ -191,7 +191,7 @@ return array(
                     'page_neighborhood' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/page/region/:region/neighborhood/:neighborhood/:page[/]',
+                            'route'    => '/page/:page/region/:region/neighborhood/:neighborhood[/]',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'Whathood\Controller',
                                 'controller' => 'Whathood\Controller\UserPolygon',
