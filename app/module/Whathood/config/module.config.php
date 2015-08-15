@@ -188,7 +188,7 @@ return array(
                         ),
                     ),
 
-                    'user_polygon_page_neighborhood' => array(
+                    'page_neighborhood' => array(
                         'type'    => 'Segment',
                         'options' => array(
                             'route'    => '/page/region/:region/neighborhood/:neighborhood/:page[/]',
