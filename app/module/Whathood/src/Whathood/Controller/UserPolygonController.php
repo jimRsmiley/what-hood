@@ -79,6 +79,7 @@ class UserPolygonController extends BaseController
 
         $neighborhood_name  = $this->getUriParameter('neighborhood');
         $region_name        = $this->getUriParameter('region');
+        $pageNum            = $this->getUriParameter('page');
 
         $this->logger()->info(
             sprintf("Controller/UserPolygon/page-neighborhood neighborhood_name=%s region_name=%s",
