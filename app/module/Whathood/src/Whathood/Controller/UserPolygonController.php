@@ -74,7 +74,7 @@ class UserPolygonController extends BaseController
      * @throws \InvalidArgumentException
      */
     public function pageNeighborhoodAction() {
-        $base_url = '/user-neighborhood/page';
+        $base_url = '/user-neighborhood';
         $item_count_per_page = 1;
 
         $neighborhood_name  = $this->getUriParameter('neighborhood');
@@ -97,8 +97,8 @@ class UserPolygonController extends BaseController
         $query = $this->m()->userPolygonMapper()->createByNeighborhoodQuery($neighborhood);
 
         $uriParams = array(
-            'neighborhood' => $neighborhood_name,
-            'region' => $region_name
+            'region' => $region_name,
+            'neighborhood' => $neighborhood_name
         );
 
         if( empty($pageNum) )

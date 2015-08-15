@@ -191,6 +191,7 @@ class WatcherController extends BaseController
 
     /**
      * we can have multiple user polygons with the same neighborhood, so just return one neighborhood
+     * and order the neighborhoods so the ones with the oldest polygons go first
      */
     public function collate_neighborhoods(array $user_polygons) {
         $neighborhoood_array = array();
@@ -199,7 +200,30 @@ class WatcherController extends BaseController
             $neighborhood_array[$up->getNeighborhood()->getId()] = $up->getNeighborhood();
         }
 
-        return array_values($neighborhood_array);
+        $neighborhoods = array_values($neighborhood_array);
+        usort($neighborhoods,array($this,'sortNeighborhoodsByYoungestPolygon'));
+        return $neighborhoods;
+    }
+
+
+    /**
+     * returns 1 if n1 has a younger(or no) polygon than n2, else if n2 is younger, returns -1, if they're equal, returns 0
+    **/
+    public function sortNeighborhoodsByYoungestPolygon(Neighborhood $n1, Neighborhood $n2) {
+        $mapper = $this->m()->neighborhoodPolygonMapper();
+        $np1 = $mapper->latestByNeighborhood($n1);
+        $np2 = $mapper->latestByNeighborhood($n2);
+        if ($np1 == null and $np2 == null)
+            return 0;
+        else if ($np1 == null and $np2)
+            return 1;
+        else if ($np1 and $np2 == null)
+            return -1;
+        else if ($np1->getCreatedAt() < $np2->getCreatedAt())
+            return 1;
+        else if ($np1->getCreatedAt() > $np2->getCreatedAt())
+            return -1;
+        return 0;
     }
 
 }
