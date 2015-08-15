@@ -3,6 +3,7 @@ module Whathood
     class Util
 
         def self.run_cmd(cmd)
+	    puts cmd
             unless system cmd
                 abort "could not run command: '#{cmd}'"
             end
