@@ -4,8 +4,8 @@ Whathood = root.Whathood
 class Whathood.Map.NeighborhoodMap extends Whathood.Map
 
   @heatmap_cfg : () ->
-    "radius": 30,
-    "maxOpacity": .8,
+    "radius": 8,
+    "maxOpacity": .65,
     latField: 'y',
     lngField: 'x',
     valueField: 'weight'
