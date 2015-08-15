@@ -47,13 +47,19 @@ class Timer {
         return round($this->elapsed_seconds()/60,2);
     }
 
-    public function elapsed_string() {
-        if ($this->elapsed_milliseconds() < 1000)
-            return sprintf("%sms",$this->elapsed_milliseconds());
-        else if ($this->elapsed_seconds() < 180)
-            return sprintf("%ssecs",$this->elapsed_seconds());
-        else
-            return sprintf("%smins",$this->elapsed_minutes());
+    public function elapsedReadableString() {
+        $elapsed_milli= $this->elapsed_milliseconds();
+        if ($elapsed_milli < 1000)
+            return sprintf("%sms",$elapsed_milli);
+        else {
+            $elapsed_seconds = $elapsed_milli / 1000;
+            if ($elapsed_seconds < 60)
+                return sprintf("%ssecs",$elapsed_seconds);
+            else {
+                $elapsed_minutes = $elapsed_seconds / 60;
+                return sprintf("%smins",$elapsed_minutes);
+            }
+        }
     }
 
     /**

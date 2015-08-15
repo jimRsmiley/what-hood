@@ -72,9 +72,8 @@ class WatcherController extends BaseController
                     else {
                         try {
                             if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
-                                $elapsed_secs = $timer->elapsed_seconds();
                                 $this->logger()->info(
-                                    sprintf("\t\tsaved neighborhood polygon elapsed=%ssecs", $elapsed_secs));
+                                    sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
 
                                 $this->buildAndSaveHeatmapPoints($ups, $n, $this->getHeatmapGridResolution());
                             }
@@ -159,7 +158,7 @@ class WatcherController extends BaseController
             $this->m()->heatMapPoint()->detach($heatmap_points);
             $this->logger()->info(
                 sprintf("\t\tsaved %s heatmap points from %s points elapsed=%s",
-                    count($heatmap_points), count($electionCollection->getPoints()), $timer->elapsed_seconds()
+                    count($heatmap_points), count($electionCollection->getPoints()), $timer->elapsedReadableString()
                 )
             );
         }
