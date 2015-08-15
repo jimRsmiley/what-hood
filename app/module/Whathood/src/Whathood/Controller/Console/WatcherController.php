@@ -72,7 +72,9 @@ class WatcherController extends BaseController
                     else {
                         try {
                             if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
-                                $this->logger()->info("\t\tsaved neighborhood polygon");
+                                $elapsed_secs = $timer->elapsed_seconds();
+                                $this->logger()->info(
+                                    sprintf("\t\tsaved neighborhood polygon elapsed=%ssecs", $elapsed_secs));
 
                                 $electionCollection = $this->m()->electionMapper()->getCollection(
                                     $ups,
@@ -103,7 +105,7 @@ class WatcherController extends BaseController
                     die($err_msg);
                 }
                 $this->logger()->err(
-                    sprintf("memory: %skb",
+                    sprintf("memory: %smb",
                         \Whathood\Util::memory_usage()
                     )
                 );
