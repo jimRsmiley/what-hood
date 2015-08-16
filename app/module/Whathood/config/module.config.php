@@ -10,13 +10,7 @@ namespace Whathood;
 return array(
     'router' => array(
 
-		/*  routes are processed in descending order, put the most important at the bottom!
-
-		/whathood/admin
-		/whathood/user
-		/whathood/user-polygon/by-id/id/:id
-
-		*/
+		/*  routes are processed in descending order, put the most important at the bottom! */
 
         'routes' => array(
 
