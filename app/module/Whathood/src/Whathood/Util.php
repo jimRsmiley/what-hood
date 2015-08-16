@@ -31,5 +31,17 @@ class Util {
         $handle = fopen("php://stdin",'r');
         $line = fgets($handle);
     }
+
+    public static function getRemoteIp($request) {
+        $server = $request->getServer();
+
+        if ($server->get("HTTP_X_REAL_IP")) {
+            die("returning here");
+            return $server->get("HTTP_X_REAL_IP");
+        }
+        else {
+            return $server->get("REMOTE_ADDR");
+        }
+    }
 }
 

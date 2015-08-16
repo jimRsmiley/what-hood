@@ -11,9 +11,11 @@ use Zend\View\Model\ViewModel;
 class UtilController extends BaseController {
 
     public function whatsMyIpAction() {
-        return new ViewModel( array(
-            'user_ip_address' => $this->getRequest()->getServer()->get('REMOTE_ADDRESS')
-        ));
+        $remote_ip = \Whathood\Util::getRemoteIp(
+                $this->getRequest() );
+
+        return new ViewModel(array(
+            'remoteIp' => $remote_ip ));
 	}
 
     public function phpInfoAction() {
