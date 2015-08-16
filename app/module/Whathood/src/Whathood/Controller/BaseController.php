@@ -89,14 +89,7 @@ class BaseController extends AbstractActionController {
 	}
 
     public function getWhathoodUser() {
-        if ( 'test' == getenv('APPLICATION_ENV')) {
-            $ip_address = "127.0.0.1";
-        }
-        else {
-            $ip_address = $this->getRequest()->getServer()->get('REMOTE_ADDR');
-        }
-        return new WhathoodUser( array(
-            'ip_address' => $ip_address ));
+        return \Whathood\Entity\WhathoodUser::build($this->getRequest());
     }
 
     public function whathoodConfig() {

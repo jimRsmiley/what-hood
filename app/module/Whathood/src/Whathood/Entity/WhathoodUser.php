@@ -52,6 +52,13 @@ class WhathoodUser extends \ArrayObject {
         }
     }
 
+    public function build($request) {
+        $ip_address = \Whathood\Util::getRemoteIp($request);
+        $user = new WhathoodUser( array(
+            'ip_address' => $ip_address ));
+        return $user;
+    }
+
     public function toArray() {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
 

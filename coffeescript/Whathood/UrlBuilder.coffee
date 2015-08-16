@@ -24,3 +24,5 @@ class Whathood.UrlBuilder
 
   @getNeighborhoodBrowseUrl: (lat,lng) ->
     "/user-neighborhood/page-center/page/1/x/#{lat}/y/#{lng}"
+  @userBorderAddPost: () ->
+    "/user-neighborhood/add-post"
