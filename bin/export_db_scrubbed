@@ -6,11 +6,8 @@ backup_dir = get_backup_dir
 HOST="0.0.0.0"
 USER="docker"
 
-puts "backing up schema"
-backup_schema backup_dir
-
-puts "backing up data"
-backup_data backup_dir
+puts "backing up database"
+backup_db backup_dir
 
 puts "data dumperd to directory #{backup_dir}"
 commit_and_push backup_dir
@@ -33,13 +30,15 @@ BEGIN {
         return backup_dir
     end
 
-    def backup_schema(backup_dir)
+    def backup_db(backup_dir)
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner whathood > #{backup_dir}/whathood_schema.sql"
+		puts cmd
+		system cmd
         cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
+		puts cmd
         system cmd
-    end
-
-    def backup_data(backup_dir)
-        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --data-only whathood > #{backup_dir}/whathood_data.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --disable-triggers --data-only whathood > #{backup_dir}/whathood_data.sql"
+		puts cmd
         system cmd
     end
 
