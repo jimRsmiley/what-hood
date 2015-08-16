@@ -11,7 +11,7 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
     valueField: 'weight'
 
 # need to build the map because the heatmapLayer needs to go into the map constructor
-Whathood.Map.NeighborhoodMap.build = (css_id,neighborhood_id) ->
+  @build: (css_id,neighborhood_id) ->
     throw new Error "neighborhood_id must be defined" unless neighborhood_id
 
     $.ajax
