@@ -19,16 +19,43 @@ class PointElection extends \ArrayObject {
     // an array of CandidateNeighborhoods
     protected $_candidate_neighborhoods = null;
 
+    protected $_logger = null;
+
+    public function setLogger($logger) {
+        $this->_logger = $logger;
+    }
+
+    public function getLogger() {
+        return $this->_logger;
+    }
+
+    // sugar
+    public function logger() {
+        return $this->getLogger();
+    }
+
     public function getUserPolygons() {
         return $this->_user_polygons;
+    }
+
+    public function setUserPolygons($user_polygons) {
+        $this->_user_polygons = $user_polygons;
     }
 
     public function getPoint() {
         return $this->_point;
     }
 
+    public function setPoint($point) {
+        $this->_point = $point;
+    }
+
     public function getCandidateNeighborhoods() {
         return $this->_candidate_neighborhoods;
+    }
+
+    public function getNumCandidates() {
+        return count($this->getCandidateNeighborhoods());
     }
 
     public function candidateNeighborhood(Neighborhood $n) {
@@ -39,17 +66,23 @@ class PointElection extends \ArrayObject {
         }
     }
 
-    public function __construct(Point $point, $user_polygons) {
-        $this->_point = $point;
-        $this->_user_polygons = $user_polygons;
+    public function __construct(array $data = null) {
+        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
+        $hydrator->hydrate($data, $this);
+        $this->_candidate_neighborhoods = array();
     }
 
     /**
      * create a new election point and have it count it's user polygons
      */
-    public static function build(Point $point, $user_polygons) {
-        $election_point = new static($point,$user_polygons);
+    public static function build(array $data = null) {
+
+        if (!array_key_exists('logger', $data))
+            throw new \InvalidArgumentException("logger must be defined");
+
+        $election_point = new static($data);
         $election_point->runElection();
+
         return $election_point;
     }
 
@@ -74,17 +107,25 @@ class PointElection extends \ArrayObject {
         return false;
     }
 
+    public function getNumWinners() {
+        return count($this->getWinningCandidates());
+    }
+
+    public function getWinningPercentage() {
+        return $this->getWinningCandidates()[0]->percentage();
+    }
+
     /**
      * throw exception if there's more or less than one winner
      */
     public function getSingleWinner() {
-        $count = count($this->getWinners());
+        $count = count($this->getWinningCandidates());
         if ($count < 1)
-            throw new \Exception("was expecting one winner, did not get any");
+            throw new \Whathood\Exception("was expecting one winner, did not get any");
         else if ($count > 1)
-            throw new \Exception("was expecting one winner, got more than one");
+            throw new \Whathood\Exception("was expecting one winner, got more than one");
         else
-            return $this->getWinners()[0];
+            return $this->getWinningCandidates()[0];
     }
 
     /**
@@ -99,16 +140,43 @@ class PointElection extends \ArrayObject {
         foreach($this->_user_polygons as $up) {
             $n = $up->getNeighborhood();
 
-            if (array_key_exists($n->getId(),$this->_user_polygons)) {
+            if (array_key_exists($n->getId(),$this->_candidate_neighborhoods)) {
                 $this->_candidate_neighborhoods[$n->getId()]->increment_vote();
             }
-            else
+            else {
                 $cn = CandidateNeighborhood::build(array(
                     'point_election' => $this,
                     'num_votes'=> 1,
                     'neighborhood'=> $n
                 ));
                 $this->_candidate_neighborhoods[$n->getId()]=$cn;
+            }
+        }
+
+        if (0 and $this->getNumCandidates() > 1) {
+            print $this->__toString();
+
+            foreach ($this->getCandidateNeighborhoods() as $cn) {
+                $this->logger()->info($cn->__toString());
+            }
+        }
+
+        if (0 and $this->getNumWinners() == 1) {
+            $winner = $this->getSingleWinner();
+
+            $percentage = $winner->percentage();
+            $this->logger()->debug(
+                sprintf("winner is %s with %s percent of the vote",
+                    $winner->getNeighborhood()->getName(),
+                    $winner->percentage()
+                )
+            );
+            if ($percentage < 100 ) {
+                foreach($this->getUserPolygons() as  $up ) {
+                    $this->logger()->err("up: ".$up->getNeighborhood()->getName());
+                }
+                die("dieing now");
+            }
         }
     }
 
@@ -205,6 +273,24 @@ class PointElection extends \ArrayObject {
                 'x' => $this->getPoint()->getX(),
                 'y' => $this->getPoint()->getY()
             )
+        );
+    }
+
+
+    public function __toString() {
+        $winner_str = "";
+        $winner_arr = array();
+        foreach ($this->getWinningCandidates() as $cn) {
+            array_push($winner_arr, $cn->getName());
+        }
+        $winner_str = join(',',$winner_arr);
+        return sprintf("point=[%s] num-candidates=%s winning-percentage=%s is-tie=%s num-winners=%s winners=[%s]",
+            $this->getPoint()->__toString(),
+            $this->getNumCandidates(),
+            $this->getWinningPercentage(),
+            $this->isTie(),
+            $this->getNumWinners(),
+            $winner_str
         );
     }
 }

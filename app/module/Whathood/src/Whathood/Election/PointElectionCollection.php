@@ -10,14 +10,29 @@ use Whathood\Entity\HeatMapPoint;
  */
 class PointElectionCollection {
 
-    protected $_points;
+    protected $_point_elections;
 
     public function __construct($points) {
-        $this->_points = $points;
+        $this->_point_elections = $points;
     }
 
-    public function getPoints() {
-        return $this->_points;
+    public function getPointElections() {
+        return $this->_point_elections;
+    }
+
+    /**
+     * get the peak count of user neighborhoods for the given neighborhood in
+     * the election. Do that by getting the highest count of user polygons for that neighborhood
+     * in an election point
+     **/
+    public function getPeakNumUserNeighborhoods(Neighborhood $neighborhood) {
+        $peak_num = 0;
+        foreach ($this->getPointElections() as $point_election) {
+            $num_votes = $point_election->candidateNeighborhood($neighborhood)->getNumVotes();
+            if ($peak_num < $num_votes)
+                $peak_num = $num_votes;
+        }
+        return $peak_num;
     }
 
     /**
@@ -25,7 +40,7 @@ class PointElectionCollection {
      */
     public function byNeighborhoodId($n_id) {
         $points = array();
-        foreach($this->_points as $p) {
+        foreach($this->_point_elections as $p) {
             if (!$p->isTie())
                 if($p->isWinner($n_id))
                     array_push($points,$p);
@@ -34,15 +49,17 @@ class PointElectionCollection {
     }
 
     public function heatMapPointsByNeighborhood(Neighborhood $neighborhood) {
-        $heatmap_points = array();
-        foreach ($this->_points as $ep) {
+        $heatmap_point_elections = array();
+        $peakNumForPoints = $this->getPeakNumUserNeighborhoods($neighborhood);
+        foreach ($this->getPointElections() as $ep) {
             $cn = $ep->candidateNeighborhood($neighborhood);
-            $percentage = $cn->getNumVotes() / $ep->totalVotes();
-            array_push($heatmap_points, HeatMapPoint::build( array(
+            $percentage = $cn->getNumVotes() / $peakNumForPoints;
+            array_push($heatmap_point_elections, HeatMapPoint::build( array(
                 'neighborhood' => $neighborhood,
+                'electionPoint' => $ep,
                 'point' => $ep->getPoint(),
                 'percentage' => $percentage )));
         }
-        return $heatmap_points;
+        return $heatmap_point_elections;
     }
 }

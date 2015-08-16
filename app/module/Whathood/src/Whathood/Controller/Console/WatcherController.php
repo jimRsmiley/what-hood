@@ -66,7 +66,7 @@ class WatcherController extends BaseController
                         $this->getGridResolution()
                     );
 
-                    if (empty($electionCollection->getPoints())) {
+                    if (empty($electionCollection->getPointElections())) {
                        $this->logger()->warn("electionCollection contains no points");
                     }
                     else {
@@ -161,7 +161,7 @@ class WatcherController extends BaseController
             $this->m()->heatMapPoint()->detach($heatmap_points);
             $this->logger()->info(
                 sprintf("\t\tsaved %s heatmap points from %s points elapsed=%s",
-                    count($heatmap_points), count($electionCollection->getPoints()), $timer->elapsedReadableString()
+                    count($heatmap_points), count($electionCollection->getPointElections()), $timer->elapsedReadableString()
                 )
             );
         }

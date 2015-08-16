@@ -23,6 +23,10 @@ class CandidateNeighborhood {
         $this->_neighborhood = $neighborhood;
     }
 
+    public function getName() {
+        return $this->getNeighborhood()->getName();
+    }
+
     // sugar
     public function pointElection() {
         return $this->getPointElection();
@@ -53,6 +57,10 @@ class CandidateNeighborhood {
         $this->_num_votes = $vote_num;
     }
 
+    public function increment_vote() {
+        $this->_num_votes++;
+    }
+
     // sugar
     public function numVotes() {
         return $this->getNumVotes();
@@ -74,10 +82,6 @@ class CandidateNeighborhood {
         return $candidate_neighborhood;
     }
 
-    public function incremenet_vote() {
-        $this->_vote_num++;
-    }
-
     public function percentage() {
         return round($this->numVotes() / $this->totalVotes() * 100);
     }
@@ -91,5 +95,12 @@ class CandidateNeighborhood {
         $array['percentage'] = $this->percentage();
 
         return $array;
+    }
+
+    public function __toString() {
+        return sprintf("name=%s percentage=%s",
+            $this->getName(),
+            $this->percentage()
+        );
     }
 }

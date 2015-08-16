@@ -30,13 +30,13 @@ class PointElectionMapper extends BaseMapper {
      */
     public function generateBorderPolygon($electionCollection,$neighborhood_id) {
 
-        if (empty($electionCollection->getPoints()))
+        if (empty($electionCollection->getPointElections()))
             throw new \InvalidArgumentException("electionCollection must have points");
 
         $neighborhood_points = $electionCollection->byNeighborhoodId($neighborhood_id);
 
         if (empty($neighborhood_points)) {
-            $this->logger()->err("electionCollection did not return any neighborhood points dispite being given ".count($electionCollection->getPoints())." points");
+            $this->logger()->err("electionCollection did not return any neighborhood points dispite being given ".count($electionCollection->getPointElections())." points");
             return null;
         }
         $points = array();
@@ -65,8 +65,8 @@ class PointElectionMapper extends BaseMapper {
 
     public function buildPointElection(Point $point) {
         $user_polygons = $this->m()->userPolygonMapper()->byPoint($point);
-        $consensus_point = PointElection::build($point, $user_polygons);
-        return $consensus_point;
+        $pointElection = PointElection::build(array('point' => $point, 'user_polygons' => $user_polygons, 'logger' => $this->logger()));
+        return $pointElection;
     }
 }
 
