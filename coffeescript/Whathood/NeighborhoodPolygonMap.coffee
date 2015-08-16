@@ -17,6 +17,7 @@ Whathood.Map.NeighborhoodMap.build = (css_id,neighborhood_id) ->
     $.ajax
       url: Whathood.UrlBuilder.heatmap_points_by_n_id neighborhood_id
       success: (heatmap_points) =>
+        console.log heatmap_points
         streetLayer = Whathood.Map.streetLayer()
         heatmapLayer = new HeatmapOverlay(Whathood.Map.NeighborhoodMap.heatmap_cfg())
         map = new Whathood.Map css_id,
@@ -28,5 +29,7 @@ Whathood.Map.NeighborhoodMap.build = (css_id,neighborhood_id) ->
             max: 10
             data: heatmap_points
           heatmapLayer.setData(testData)
-        map.addGeoJson Whathood.UrlBuilder.neighborhood_border_by_id neighborhood_id
+        map.addGeoJson Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id), ->
+          heatmapLayer.setData(testData)
         return map
+
