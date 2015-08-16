@@ -455,6 +455,8 @@ return array(
 
                 $file_writer = new \Zend\Log\Writer\Stream($config->log_file);
 
+                $filter = new \Zend\Log\Filter\Priority(Logger::INFO);
+                $file_writer->addFilter($filter);
                 $logger = new \Whathood\Logger;
                 $logger->addWriter($file_writer);
 
@@ -471,6 +473,10 @@ return array(
             'Whathood\ConsoleLogger' => function($sm) {
                 $logger = $sm->get('Whathood\Logger');
                 $console_writer = new \Zend\Log\Writer\Stream('php://output');
+
+                $filter = new \Zend\Log\Filter\Priority(Logger::INFO);
+                $console_writer->addFilter($filter);
+
                 $logger->addWriter($console_writer);
                 return $logger;
             },

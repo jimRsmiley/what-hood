@@ -24,8 +24,8 @@ class WatcherController extends BaseController
         $neighborhood_name      = $this->getRequest()->getParam('neighborhood',null);
         $region_name            = $this->getRequest()->getParam('region',null);
 
-        $this->logger()->info("Whathood watcher has started");
-        $this->logger()->info("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
+        $this->logger()->debug("Whathood watcher has started");
+        $this->logger()->debug("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood_name = str_replace('+',' ',$neighborhood_name);
         if ($neighborhood_name and $region_name ) {
@@ -110,7 +110,7 @@ class WatcherController extends BaseController
 
     public function logFoundUserBorders($user_polygons) {
         foreach($user_polygons as $up) {
-            $this->logger()->info(
+            $this->logger()->debug(
                 sprintf("\tfound new user generated polygon(%s) for neighborhood %s",
                     $up->getId(),
                     $up->getNeighborhood()->getName()
