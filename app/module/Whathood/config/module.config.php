@@ -47,6 +47,7 @@ return array(
                 )
             ),
 
+            // don't put any routes before this
             'region' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -59,6 +60,7 @@ return array(
                 ),
             ),
 
+            // don't put any routes before this one either
             'neighborhood' => array(
                 'type'    => 'Segment',
                 'options' => array(
@@ -75,6 +77,17 @@ return array(
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
             // using the path /application/:controller/:action
+            'util' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/util[/:action]',
+                    'defaults' => array(
+                        'controller' => 'Whathood\Controller\Util',
+                        'action' => 'index'
+                    )
+                )
+            ),
+
             'whathood_default' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -582,6 +595,7 @@ return array(
 
             /* mvc controllers */
             'Whathood\Controller\Admin' => 'Whathood\Controller\AdminController',
+            'Whathood\Controller\Util' => 'Whathood\Controller\UtilController',
             'Whathood\Controller\ContentiousPoint' => 'Whathood\Controller\ContentiousPointController',
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
