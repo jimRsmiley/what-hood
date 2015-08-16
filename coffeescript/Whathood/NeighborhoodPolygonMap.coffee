@@ -27,7 +27,6 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
           testData =
             max: 10
             data: heatmap_points
-          heatmapLayer.setData(testData)
         map.addGeoJson Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id), ->
           heatmapLayer.setData(testData)
         return map
