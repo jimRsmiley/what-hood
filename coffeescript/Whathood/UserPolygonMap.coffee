@@ -9,6 +9,10 @@ Whathood.UserPolygonMap = Whathood.Map.extend
     @geojsonLayer.addTo(@)
     @fitBounds(@geojsonLayer)
 
+  # sugar
+  addNeighborhoodBorder: (args) ->
+    @addGeoJson args
+
   addGeoJson: (args) ->
 
     if args.geojson

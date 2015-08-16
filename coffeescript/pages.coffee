@@ -6,7 +6,7 @@ W.user_polygon_view = () ->
   throw new Error "user_polygon_id is not defined" unless user_polygon_id
   geoJsonUrl = "/api/v1/user-polygon/#{user_polygon_id}"
   map = new W.UserPolygonMap('map')
-  map.addGeoJson( geoJsonUrl )
+  map.addNeighborhoodBorder geoJsonUrl
   map.addStreetLayer()
 
 W.user_polygon_page_id = () ->
