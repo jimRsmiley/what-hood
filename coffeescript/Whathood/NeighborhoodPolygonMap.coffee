@@ -17,7 +17,6 @@ Whathood.Map.NeighborhoodMap.build = (css_id,neighborhood_id) ->
     $.ajax
       url: Whathood.UrlBuilder.heatmap_points_by_n_id neighborhood_id
       success: (heatmap_points) =>
-        console.log heatmap_points
         streetLayer = Whathood.Map.streetLayer()
         heatmapLayer = new HeatmapOverlay(Whathood.Map.NeighborhoodMap.heatmap_cfg())
         map = new Whathood.Map css_id,
