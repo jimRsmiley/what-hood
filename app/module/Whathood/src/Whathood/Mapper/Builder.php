@@ -33,8 +33,8 @@ class Builder extends BaseMapper {
         return $this->sm->get('Whathood\Mapper\PostgresMapper');
     }
 
-    public function electionMapper() {
-        return $this->sm->get('Whathood\Mapper\Election');
+    public function pointElectionMapper() {
+        return $this->sm->get('Whathood\Mapper\PointElectionMapper');
     }
 
     public function heatMapPoint() {

@@ -5,7 +5,7 @@ namespace Whathood\Election;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\HeatMapPoint;
 /**
- * store whathood consensus units and provide easy retreival methods
+ * store whathood PointElections and provide easy retreival methods
  *
  */
 class PointElectionCollection {

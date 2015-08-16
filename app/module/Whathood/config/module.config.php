@@ -524,9 +524,9 @@ return array(
                 return $mapper;
             },
 
-            'Whathood\Mapper\Election'  => function($sm) {
+            'Whathood\Mapper\PointElectionMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
-                return new \Whathood\Mapper\Election($sm,$em);
+                return new \Whathood\Mapper\PointElectionMapper($sm,$em);
             },
 
             'Whathood\Mapper\UserPolygonMapper'  => function($sm) {

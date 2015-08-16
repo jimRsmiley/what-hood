@@ -11,7 +11,7 @@ use Whathood\Election\PointElectionCollection;
  *  handles getting the calculations which determine what neighborhood a point
  *  exists in
  */
-class Election extends BaseMapper {
+class PointElectionMapper extends BaseMapper {
 
 
     public function getCollection($user_polygons,$neighborhood_id,$grid_resolution) {

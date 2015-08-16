@@ -60,7 +60,7 @@ class WatcherController extends BaseController
                 try {
                     /* build the border */
                     $timer = Timer::start('generate_border');
-                    $electionCollection = $this->m()->electionMapper()->getCollection(
+                    $electionCollection = $this->m()->pointElectionMapper()->getCollection(
                         $ups,
                         $n->getId(),
                         $this->getGridResolution()
@@ -120,7 +120,7 @@ class WatcherController extends BaseController
     }
 
     public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
-        $polygon = $this->m()->electionMapper()->generateBorderPolygon(
+        $polygon = $this->m()->pointElectionMapper()->generateBorderPolygon(
             $electionCollection, $n
         );
 
@@ -140,10 +140,13 @@ class WatcherController extends BaseController
         return $neighborhoodPolygon;
     }
 
+    /**
+     * take the user polygons, run a point election, and save the points in the db
+     **/
     public function buildAndSaveHeatmapPoints($user_polygons, Neighborhood $n, $grid_resolution) {
 
         $timer = Timer::start("heatmap_builder");
-        $electionCollection = $this->m()->electionMapper()
+        $electionCollection = $this->m()->pointElectionMapper()
             ->getCollection(
                 $user_polygons,
                 $n->getId(),
