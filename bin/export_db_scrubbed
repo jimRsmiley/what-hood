@@ -4,6 +4,7 @@ require 'fileutils'
 backup_dir = get_backup_dir
 
 HOST="0.0.0.0"
+USER="docker"
 
 puts "backing up schema"
 backup_schema backup_dir
@@ -33,12 +34,12 @@ BEGIN {
     end
 
     def backup_schema(backup_dir)
-        cmd="pg_dump -h #{HOST} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
         system cmd
     end
 
     def backup_data(backup_dir)
-        cmd="pg_dump -h #{HOST} --no-owner --data-only whathood > #{backup_dir}/whathood_data.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --data-only whathood > #{backup_dir}/whathood_data.sql"
         system cmd
     end
 
