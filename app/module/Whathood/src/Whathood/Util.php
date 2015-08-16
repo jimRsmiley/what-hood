@@ -36,7 +36,6 @@ class Util {
         $server = $request->getServer();
 
         if ($server->get("HTTP_X_REAL_IP")) {
-            die("returning here");
             return $server->get("HTTP_X_REAL_IP");
         }
         else {
