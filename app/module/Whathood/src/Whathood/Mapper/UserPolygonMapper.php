@@ -254,7 +254,7 @@ class UserPolygonMapper extends BaseMapper {
      */
     public function getPointElection(Point $point) {
         $user_polygons = $this->byPoint($point);
-        $election_point = PointElection::build($point,$user_polygons);
+        $election_point = PointElection::build(array('point' => $point, 'user_polygons' => $user_polygons, 'logger' => $this->logger() ));
         return $election_point;
     }
 
