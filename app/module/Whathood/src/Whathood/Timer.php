@@ -54,10 +54,10 @@ class Timer {
         else {
             $elapsed_seconds = $elapsed_milli / 1000;
             if ($elapsed_seconds < 60)
-                return sprintf("%ssecs",$elapsed_seconds);
+                return sprintf("%ssecs",round($elapsed_seconds,1));
             else {
                 $elapsed_minutes = $elapsed_seconds / 60;
-                return sprintf("%smins",$elapsed_minutes);
+                return sprintf("%smins",round($elapsed_minutes,1));
             }
         }
     }
