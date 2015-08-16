@@ -17,6 +17,10 @@ Whathood.Map = L.Map.extend
     this.setView([39.9505, -75.148], 12)
 
 
+  addMarker: (x, y, popupHtml) ->
+    L.marker([y, x]).addTo(@)
+      .bindPopup(popupHtml+"")
+
   addStreetLayer: ->
     streetLayer = Whathood.Map.streetLayer()
     streetLayer.addTo @
