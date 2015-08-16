@@ -10,7 +10,7 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
     lngField: 'x',
     valueField: 'weight'
 
-# need to build the map because the heatmapLayer needs to go into the map constructor
+  # need to build the map because the heatmapLayer needs to go into the map constructor
   @build: (css_id,neighborhood_id) ->
     throw new Error "neighborhood_id must be defined" unless neighborhood_id
 
@@ -19,7 +19,7 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
       success: (heatmap_points) =>
         streetLayer = Whathood.Map.streetLayer()
         heatmapLayer = new HeatmapOverlay(Whathood.Map.NeighborhoodMap.heatmap_cfg())
-        map = new Whathood.Map css_id,
+        map = new Whathood.Map.NeighborhoodMap css_id,
           center: new L.LatLng(39.962863586971,-75.126734904035)
           zoom: 14
           layers: [streetLayer,heatmapLayer]
@@ -27,7 +27,10 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
           testData =
             max: 10
             data: heatmap_points
-        map.addGeoJson Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id), ->
+        map.addNeighborhoodBorder Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id), ->
           heatmapLayer.setData(testData)
         return map
 
+  # sugar
+  addNeighborhoodBorder: (url, cb) ->
+    @addGeoJson url, cb
