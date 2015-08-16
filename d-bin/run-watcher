@@ -1,4 +1,3 @@
 #!/bin/sh
 
-echo $@
-sudo docker exec -it wh-nginx /bin/sh -c 'cd /var/www/whathood; ./bin/run-app watcher --region=Philadelphia --neighborhood=University+City'
+sudo docker exec -it wh-nginx /bin/sh -c 'cd /var/www/whathood; ./bin/run-app watcher --force'
