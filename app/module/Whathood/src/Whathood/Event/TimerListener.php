@@ -12,8 +12,6 @@ class TimerListener implements ListenerAggregateInterface
 
     protected $_timer;
 
-    protected $_start;
-
     protected $_logger;
 
     public function __construct(\Whathood\Logger $logger) {
@@ -24,7 +22,7 @@ class TimerListener implements ListenerAggregateInterface
 
     public function attach(EventManagerInterface $events)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'startTimer'));
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, array($this, 'startTimer'));
         $this->listeners[] = $events->attach(MvcEvent::EVENT_RENDER, array($this, 'recordTimers'));
     }
 
@@ -39,12 +37,14 @@ class TimerListener implements ListenerAggregateInterface
     }
 
     public function startTimer(MvcEvent $event) {
-        $this->_start = microtime(true);
+        $this->_timer = \Whathood\Timer::start(rand(1,99999999));
     }
 
     public function recordTimers(MvcEvent $event) {
-        $this->_end = microtime(true);
-        $this->logger()->info($this->getControllerString($event). " ".round(($this->_end-$this->_start)*1000)."ms");
+        $elapsed_string = $this->_timer->elapsedReadableString();
+        $this->logger()->info(
+            sprintf("%s %s",
+                $this->getControllerString($event), $elapsed_string));
     }
 
     public function getControllerString(MvcEvent $event) {

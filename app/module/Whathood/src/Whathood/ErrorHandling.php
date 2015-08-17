@@ -32,8 +32,9 @@ class ErrorHandling
     }
 
     public static function emailException(\Exception $e, Email $emailer) {
-        $subject = "An exception occurred on Whathood";
-        $messageBody = $e->getTraceAsString();
+        $subject = $e->getMessage()."  ".rand(1000,9999);
+        $messageBody = sprintf("<strong>%s</strong><br/><br/>%s",
+            $e->getMessage(), $e->getTraceAsString() );
 
         $emailer->send($subject, $messageBody);
     }

@@ -18,11 +18,11 @@ class UtilController extends BaseController {
             'remoteIp' => $remote_ip ));
 	}
 
-    public function phpInfoAction() {
+    public function phpinfoAction() {
         die(phpinfo());
     }
 
-    public function testExceptionLoggingAction() {
+    public function testExceptionAction() {
         throw new \Exception(
             'this is a test in IndexController\testExceptionLogging');
     }
