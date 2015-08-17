@@ -74,7 +74,7 @@ class WhathoodUser extends \ArrayObject {
 
     public function __toString() {
         return sprintf("remote-ip=%s",
-            $this->getRemoteIp() );
+            $this->getIpAddress() );
     }
 }
 ?>
