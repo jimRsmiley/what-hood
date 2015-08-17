@@ -467,9 +467,9 @@ return array(
                 $logger = new \Whathood\Logger;
                 $logger->addWriter($file_writer);
 
-                // register the logger to handle php errors
-                \Zend\Log\Logger::registerErrorHandler($logger);
-                \Zend\Log\Logger::registerExceptionHandler($logger);
+                // DO NOT THINK THIS IS WORKING register the logger to handle php errors
+                #\Zend\Log\Logger::registerErrorHandler($logger);
+                #\Zend\Log\Logger::registerExceptionHandler($logger);
 
                 return $logger;
             },
