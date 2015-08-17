@@ -421,7 +421,7 @@ return array(
                 }
                 catch(\Exception $e) {
                     $emailer = null;
-                    $logger->error("ServiceManager could not build Whathood\Emailer: ".$e);
+                    $logger->error("ServiceManager could not build Whathood\Emailer: ".$e->getMessage()."\n\nprevious: ".$e->getPrevious()->getMessage());
                     $logger->error("\n\n\n\n\n");
                 }
                 $service = new \Whathood\ErrorHandling($logger, $emailer);
@@ -469,6 +469,7 @@ return array(
 
                 // register the logger to handle php errors
                 \Zend\Log\Logger::registerErrorHandler($logger);
+                \Zend\Log\Logger::registerExceptionHandler($logger);
 
                 return $logger;
             },
@@ -490,10 +491,15 @@ return array(
 
             'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Whathood\Config');
-                $emailer = \Whathood\Email::build($config['email']->toArray());
+                $emailer = \Whathood\Email::build(array_merge($config['email']->toArray(), array('logger' => $sm->get('Whathood\Logger'))));
                 return $emailer;
             },
 
+            'Whathood\Service\Messaging' => function($sm) {
+                $emailer = $sm->get("Whathood\Emailer");
+                $messenger = \Whathood\Service\MessagingService::build(array('emailer'=>$emailer));
+                return $messenger;
+            },
 
             'mydoctrineentitymanager'  => function($sm) {
                 $em = $sm->get('doctrine.entitymanager.orm_default');

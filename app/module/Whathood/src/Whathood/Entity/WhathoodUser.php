@@ -73,7 +73,8 @@ class WhathoodUser extends \ArrayObject {
     }
 
     public function __toString() {
-        return \Zend\Debug\Debug::dump( $this, false );
+        return sprintf("remote-ip=%s",
+            $this->getRemoteIp() );
     }
 }
 ?>

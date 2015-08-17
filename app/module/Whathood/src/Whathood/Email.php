@@ -15,7 +15,17 @@ class Email {
     protected $smtpHost;
     protected $smtpPort;
 
-    public function __construct(array $data) {
+    protected $_logger;
+
+    public function setLogger($logger) {
+        $this->_logger = $logger;
+    }
+
+    public function logger() {
+        return $this->_logger;
+    }
+
+    protected function __construct(array $data) {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods(false);
         $hydrator->hydrate($data,$this);
     }
@@ -35,12 +45,14 @@ class Email {
             throw new \InvalidArgumentException("smtpPort must be defined");
         if (!$emailer->getToAddress())
             throw new \InvalidArgumentException("toAddress must be defined");
+        if (!array_key_exists('logger',$data))
+            throw new \InvalidArgumentException("logger must be defined");
 
         return $emailer;
     }
 
     public function send($subject,$messageBody) {
-
+        $timer = \Whathood\Timer::start("email-sender");
         $subject = "[".strtoupper(\Whathood\Util::environment())."] ".$subject;
 
         $html = new \Zend\Mime\Part(nl2br($messageBody));
@@ -56,6 +68,10 @@ class Email {
 
         $transport = $this->getTransport();
         $transport->send($message);
+
+        $elapsed = $timer->elapsedReadableString();
+
+        $this->logger()->info("to send email, it took: $elapsed");
     }
 
     public function getTransport() {

@@ -223,8 +223,10 @@ class UserPolygonController extends BaseController
             'region' => $region,
             'whathoodUser' => $whathoodUser  ));
 
+        $this->m()->userPolygonMapper()->save( $userPolygon );
+
         $this->logger()->info(
-            sprintf("saving user-polygon id=%s neighborhood=%s region=%s ip-address=%s",
+            sprintf("saved user-polygon id=%s neighborhood=%s region=%s ip-address=%s",
                 $userPolygon->getId(),
                 $neighborhood->getName(),
                 $region->getName(),
@@ -232,9 +234,8 @@ class UserPolygonController extends BaseController
             )
         );
 
-        $this->m()->userPolygonMapper()->save( $userPolygon );
-
-        $this->logger()->info( "user polygon added id(".$userPolygon->getId().")" );
+        $this->getServiceLocator()->get('Whathood\Service\Messaging')
+            ->notifyUserNeighborhoodAdd($userPolygon);
 
         return new JsonModel( array(
             'status' => 'success',
