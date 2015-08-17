@@ -208,7 +208,7 @@ return array(
                     ),
 
 
-                    'user_neighborhood_add' => array(
+                    'add' => array(
                         'type'  => 'Segment',
                         'options' => array(
                             'route' => '/add',
