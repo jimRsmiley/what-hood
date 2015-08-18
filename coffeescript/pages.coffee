@@ -89,7 +89,6 @@ W.region_show = () ->
     page_info = document.querySelector('#page-info')
     return page_info.dataset.createEventId
   get_url = (region_name,create_event_id) ->
-    console.log  W.UrlBuilder.neighborhood_border_by_region(region_name)
     return  W.UrlBuilder.neighborhood_border_by_region(region_name)
 
   $('#current-location-btn').on 'click', (evt) ->
