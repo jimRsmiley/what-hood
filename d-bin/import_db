@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sudo docker exec -it wh-nginx /bin/sh -c "cd /var/www/whathood; ./bin/import_db"
