@@ -88,8 +88,6 @@ W.region_show = () ->
   get_create_event = () ->
     page_info = document.querySelector('#page-info')
     return page_info.dataset.createEventId
-  get_url = (region_name,create_event_id) ->
-    return  W.UrlBuilder.neighborhood_border_by_region(region_name)
 
   $('#current-location-btn').on 'click', (evt) ->
     W.Geo.browser_location (location) =>
@@ -107,7 +105,7 @@ W.region_show = () ->
   map = new W.RegionMap('map')
   map.addStreetLayer()
 
-  map.addNeighborhoods get_url(region_name,create_event)
+  map.addNeighborhoods W.UrlBuilder.neighborhood_border_by_region region_name, create_event
   map.whathoodClick true
 
   l_geosearch = new W.GeoSearch
