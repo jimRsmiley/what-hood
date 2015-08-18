@@ -38,4 +38,20 @@ class NeighborhoodPolygonRestfulController extends BaseController {
 
         return new JsonModel( $neighborhood_polygon->toArray() );
     }
+
+    public function byRegionAction() {
+        $regionName = $this->getUriParameter('region');
+
+        try {
+            $region = $this->m()->regionMapper()->getRegionByName( $regionName );
+            $json = $this->m()->neighborhoodPolygonMapper()
+                    ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
+
+            $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
+        }
+        catch(\Exception $e) {
+            $this->getResponse()->setStatusCode(400);
+        }
+        return new JsonModel( $array );
+    }
 }

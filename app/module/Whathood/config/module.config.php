@@ -304,10 +304,34 @@ return array(
                     'neighborhood_border' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/neighborhood-border/:neighborhood_id',
+                            'route' => '/neighborhood-border',
                             'defaults' => array(
                                 'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
                                 'action' => 'get-list'
+                            )
+                        ),
+                        'child_routes' => array(
+
+                            'by_region' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/region/:region[/]',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
+                                        'action' => 'byRegion'
+                                    )
+                                )
+                            ),
+
+                            'by_neighborhood_id' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/:neighborhood_id[/]',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
+                                        'action' => 'get-list'
+                                    )
+                                )
                             )
                         )
                     ),

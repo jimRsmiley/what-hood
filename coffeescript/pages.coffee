@@ -89,7 +89,8 @@ W.region_show = () ->
     page_info = document.querySelector('#page-info')
     return page_info.dataset.createEventId
   get_url = (region_name,create_event_id) ->
-    return  "/whathood/neighborhood-polygon/show-region?region_name=#{region_name}&format=json"
+    console.log  W.UrlBuilder.neighborhood_border_by_region(region_name)
+    return  W.UrlBuilder.neighborhood_border_by_region(region_name)
 
   $('#current-location-btn').on 'click', (evt) ->
     W.Geo.browser_location (location) =>

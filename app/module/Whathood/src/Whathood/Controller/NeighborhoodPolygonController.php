@@ -27,32 +27,13 @@ class NeighborhoodPolygonController extends BaseController
      *
      */
     public function showRegionAction() {
-        $format     = $this->getUriParameter('format');
         $regionName = $this->getUriParameter('region_name');
 
-        if( $format == 'json' ) {
-            try {
+        $viewModel = new ViewModel( array(
+            'region' => $region
+        ));
 
-                $region = $this->m()->regionMapper()->getRegionByName( $regionName );
-                $json = $this->m()->neighborhoodPolygonMapper()
-                        ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
-
-                $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
-            }
-            catch(\Exception $e) {
-                $this->getResponse()->setStatusCode(400);
-		$this->logger()->warn($e->getMessage());
-                $array = array( 'msg' => 'an error occurred executing the request' );
-            }
-            return new JsonModel( $array );
-        }
-        else {
-            $viewModel = new ViewModel( array(
-                'region' => $region
-            ));
-
-            return $viewModel;
-        }
+        return $viewModel;
     }
 
     public function byIdAction() {
@@ -110,10 +91,7 @@ class NeighborhoodPolygonController extends BaseController
 
         $polygonArray = \Zend\Json\Json::decode($polygonGeoJson,\Zend\Json\Json::TYPE_ARRAY);
 
-        //\Zend\Debug\Debug::dump( $polygonArray );
         $lineStringArray = $polygonArray['geometry']['coordinates'];
-        //\Zend\Debug\Debug::dump( $lineStringArray );
-        //exit;
         $ring = array();
 
         foreach( $lineStringArray as $lineString ) {
