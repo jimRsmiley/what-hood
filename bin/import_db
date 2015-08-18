@@ -25,7 +25,7 @@ BEGIN {
     ROOT_DIR=File.dirname(__FILE__)+"/.."
 
     def import_database
-        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data"
+        Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
 
         Whathood::Util.run_cmd "psql -h #{DB_HOST} -U #{DB_USER} -c 'CREATE DATABASE whathood' postgres"
 
