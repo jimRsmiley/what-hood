@@ -414,6 +414,20 @@ return array(
 
         'factories' => array(
 
+            'Whathood\Service\Caching' => function($sm) {
+                // Via factory:
+                $cache = \Zend\Cache\StorageFactory::factory(array(
+                    'adapter' => array(
+                        'name'    => 'apc',
+                        'options' => array('ttl' => 3600),
+                    ),
+                    'plugins' => array(
+                        'exception_handler' => array('throw_exceptions' => false),
+                    ),
+                ));
+                return $cache;
+            },
+
             'Whathood\ErrorHandling' =>  function($sm) {
                 $logger = $sm->get('Whathood\Logger');
                 try {
