@@ -56,27 +56,38 @@ class NeighborhoodPolygonMapper extends BaseMapper {
 
     public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {
 
-        $key = "np_region_geojson-".$region->getId();
-
-        $this->logger()->info($key);
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
 
-        $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
+        $key = "np_region_geojson-".$region->getId();
 
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('geojson', 'geojson');
 
-        $query = $this->em->createNativeQuery($sql,$rsm);
-        $query->setParameter('regionId', $region->getId() );
+        $geojson = $this->cache()->getItem($key, $success);
 
-        $result = $query->getSingleResult();
+        if (!$geojson) {
+            $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
 
-        $geojson = $result['geojson'];
-        if (preg_match('/"features":null/',$geojson))
-            throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
-        else
-            return $geojson;
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('geojson', 'geojson');
+
+            $query = $this->em->createNativeQuery($sql,$rsm);
+            $query->setParameter('regionId', $region->getId() );
+
+            $result = $query->getSingleResult();
+
+            $geojson = $result['geojson'];
+            if (preg_match('/"features":null/',$geojson))
+                throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
+
+            ///$m->set($key, $geojson);
+            $this->logger()->info("data was cacehd using key $key");
+            $this->cache()->setItem($key, $geojson);
+        }
+        else {
+            $this->logger()->info("key $key was pulled from cache");
+        }
+
+        return $geojson;
     }
 
     public function save( NeighborhoodPolygon $np ) {
