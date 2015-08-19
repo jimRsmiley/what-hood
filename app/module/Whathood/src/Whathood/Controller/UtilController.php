@@ -18,6 +18,8 @@ class UtilController extends BaseController {
             'remoteIp' => $remote_ip ));
 	}
 
+    public function emptyAction() {}
+
     public function phpinfoAction() {
         die(phpinfo());
     }
