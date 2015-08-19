@@ -60,9 +60,8 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             throw new \InvalidArgumentException("region.id must not be null");
 
         $key = "np_region_geojson-".$region->getId();
-        $this->logger()->info($key);
 
-        $geojson = $this->cacher()->getItem($key, $success);
+        $geojson = $this->cache()->getItem($key, $success);
 
         if (!$success) {
             $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
@@ -79,7 +78,6 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             if (preg_match('/"features":null/',$geojson))
                 throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
 
-            ///$m->set($key, $geojson);
             $this->logger()->info("data was cacehd using key $key");
             $this->cache()->setItem($key, $geojson);
         }
