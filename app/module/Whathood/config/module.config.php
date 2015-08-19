@@ -440,6 +440,7 @@ return array(
 
             'Whathood\Service\Caching' => function($sm) {
                 // Via factory:
+                $whconfig = $sm->get('Whathood\Config');
                 $cache = \Zend\Cache\StorageFactory::factory(array(
                     'adapter' => array(
                         'name'    => 'memcached',
@@ -457,7 +458,7 @@ return array(
                         ),
                     ),
                     'plugins' => array(
-                        'exception_handler' => array('throw_exceptions' => true),
+                        'exception_handler' => array('throw_exceptions' => $config->memcached_throw_exceptions ),
                     ),
                 ));
                 return $cache;
