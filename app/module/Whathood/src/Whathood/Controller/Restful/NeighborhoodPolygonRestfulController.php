@@ -50,7 +50,9 @@ class NeighborhoodPolygonRestfulController extends BaseController {
             $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
         }
         catch(\Exception $e) {
+            $this->logger()->err($e);
             $this->getResponse()->setStatusCode(400);
+            $array = array( 'message' => 'unable to complete request' );
         }
         return new JsonModel( $array );
     }

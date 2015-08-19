@@ -443,10 +443,21 @@ return array(
                 $cache = \Zend\Cache\StorageFactory::factory(array(
                     'adapter' => array(
                         'name'    => 'memcached',
-                        'options' => array('ttl' => 3600),
+                        'lifetime' => 7200,
+                        'options' => array(
+                            'ttl' => 3600,
+                            'servers' => array( array('host' => "127.0.0.1", 'port' => 11211 ) ),
+                            'namespace'  => 'MYMEMCACHEDNAMESPACE',
+                            'liboptions' => array (
+                                'COMPRESSION' => true,
+                                'binary_protocol' => true,
+                                'no_block' => true,
+                                'connect_timeout' => 100
+                            )
+                        ),
                     ),
                     'plugins' => array(
-                        'exception_handler' => array('throw_exceptions' => false),
+                        'exception_handler' => array('throw_exceptions' => true),
                     ),
                 ));
                 return $cache;
@@ -603,7 +614,7 @@ return array(
 
             'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
-                $cacher = $sm->get('Whathood\Service\CachingService');
+                $cacher = $sm->get('Whathood\Service\Caching');
                 $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em, $cacher );
                 return $mapper;
             },

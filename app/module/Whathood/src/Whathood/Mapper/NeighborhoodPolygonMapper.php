@@ -56,27 +56,38 @@ class NeighborhoodPolygonMapper extends BaseMapper {
 
     public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {
 
-        $key = "np_region_geojson-".$region->getId();
-
-        $this->logger()->info($key);
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
 
-        $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
+        $key = "np_region_geojson-".$region->getId();
+        $this->logger()->info($key);
 
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('geojson', 'geojson');
+        $geojson = $this->cacher()->getItem($key, $success);
 
-        $query = $this->em->createNativeQuery($sql,$rsm);
-        $query->setParameter('regionId', $region->getId() );
+        if (!$success) {
+            $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
 
-        $result = $query->getSingleResult();
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('geojson', 'geojson');
 
-        $geojson = $result['geojson'];
-        if (preg_match('/"features":null/',$geojson))
-            throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
-        else
-            return $geojson;
+            $query = $this->em->createNativeQuery($sql,$rsm);
+            $query->setParameter('regionId', $region->getId() );
+
+            $result = $query->getSingleResult();
+
+            $geojson = $result['geojson'];
+            if (preg_match('/"features":null/',$geojson))
+                throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
+
+            $this->logger()->info("setting cache key $key");
+            $result = $this->cacher()->setItem($key, $geojson);
+            $this->logger()->info("result of setItem was $result");
+        }
+        else {
+            throw new \Exception("yup, it was cached!");
+        }
+
+        return $geojson;
     }
 
     public function save( NeighborhoodPolygon $np ) {
