@@ -55,6 +55,10 @@ class NeighborhoodPolygonMapper extends BaseMapper {
     }
 
     public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {
+
+        $key = "np_region_geojson-".$region->getId();
+
+        $this->logger()->info($key);
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
 

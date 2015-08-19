@@ -17,7 +17,9 @@ abstract class BaseMapper {
     protected $_spatial_platform;
     protected $_mapper_builder;
 
-    public function __construct( $serviceManager, $doctrineEntityManager ) {
+    protected $_cacher;
+
+    public function __construct( $serviceManager, $doctrineEntityManager, $cacher = null) {
 
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
             throw new \InvalidArgumentException(
@@ -25,6 +27,7 @@ abstract class BaseMapper {
 
         $this->sm = $serviceManager;
         $this->em = $doctrineEntityManager;
+        $this->_cacher = $cacher;
     }
 
     public function begin_trans() {
@@ -118,6 +121,10 @@ abstract class BaseMapper {
 
     public function logger() {
         return $this->sm->get('Whathood\Logger');
+    }
+
+    public function cacher() {
+        return $this->_cacher;
     }
 }
 ?>

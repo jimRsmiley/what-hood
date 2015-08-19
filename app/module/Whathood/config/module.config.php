@@ -442,7 +442,7 @@ return array(
                 // Via factory:
                 $cache = \Zend\Cache\StorageFactory::factory(array(
                     'adapter' => array(
-                        'name'    => 'apc',
+                        'name'    => 'memcached',
                         'options' => array('ttl' => 3600),
                     ),
                     'plugins' => array(
@@ -560,12 +560,6 @@ return array(
                 return $mapper;
             },
 
-            'Whathood\Mapper\ConcaveHullMapper'  => function($sm) {
-                $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\ConcaveHullMapper( $sm, $em );
-                return $mapper;
-            },
-
             'Whathood\Mapper\PostgresMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\PostgresMapper( $sm, $em );
@@ -576,7 +570,6 @@ return array(
                 $mapper = new \Whathood\Mapper\NeighborhoodMapper( $sm, $em );
                 return $mapper;
             },
-
 
             'Whathood\Mapper\RegionMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
@@ -610,7 +603,8 @@ return array(
 
             'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
-                $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em );
+                $cacher = $sm->get('Whathood\Service\CachingService');
+                $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em, $cacher );
                 return $mapper;
             },
 
