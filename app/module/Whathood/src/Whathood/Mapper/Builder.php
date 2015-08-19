@@ -11,7 +11,6 @@ class Builder extends BaseMapper {
     protected $regionMapper;
     protected $whathoodUserMapper;
     protected $_spatial_platform;
-    protected $_concave_hull_mapper;
     protected $_user_polygon_mapper;
     protected $_test_point_mapper;
     protected $_points_as_polygon_mapper;
@@ -50,13 +49,6 @@ class Builder extends BaseMapper {
             $this->_points_as_polygon_mapper =
                 $this->sm->get('Whathood\Mapper\PointsAsPolygonMapper');
         return $this->_points_as_polygon_mapper;
-    }
-
-    public function concaveHullMapper() {
-        if( $this->_concave_hull_mapper == null )
-            $this->_concave_hull_mapper =
-                $this->sm->get('Whathood\Mapper\ConcaveHullMapper');
-        return $this->_concave_hull_mapper;
     }
 
     public function testPointMapper() {

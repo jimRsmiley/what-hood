@@ -15,7 +15,6 @@ abstract class BaseMapper {
     protected $regionMapper;
     protected $whathoodUserMapper;
     protected $_spatial_platform;
-    protected $_concave_hull_mapper;
     protected $_mapper_builder;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
@@ -62,24 +61,8 @@ abstract class BaseMapper {
         return $this->_spatial_platform;
     }
 
-    public function _concave_hull_mapper() {
-        if( $this->_concave_hull_mapper == null )
-            $this->_concave_hull_mapper =
-                $this->sm->get('Whathood\Mapper\ConcaveHullMapper');
-        return $this->_concave_hull_mapper;
-    }
-
     public function userPolygonMapper() {
         return $this->sm->get('Whathood\Mapper\UserPolygonMapper');
-    }
-
-    public function neighborhoodPolygonMapper() {
-        die('this is trouble right here');
-        if( $this->neighborhoodPolygonMapper == null )
-            $this->neighborhoodPolygonMapper =
-                $this->sm->get('Whathood\Mapper\UserPolygonMapper');
-
-        return $this->neighborhoodPolygonMapper;
     }
 
     public function neighborhoodMapper() {
