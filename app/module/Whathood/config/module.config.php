@@ -447,7 +447,7 @@ return array(
                         'lifetime' => 7200,
                         'options' => array(
                             'ttl' => 3600,
-                            'servers' => array( array('host' => "127.0.0.1", 'port' => 11211 ) ),
+                            'servers' => array( array('host' => "wh_memcached", 'port' => 11211 ) ),
                             'namespace'  => 'MYMEMCACHEDNAMESPACE',
                             'liboptions' => array (
                                 'COMPRESSION' => true,
