@@ -78,7 +78,7 @@ class NeighborhoodPolygonMapper extends BaseMapper {
             if (preg_match('/"features":null/',$geojson))
                 throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
 
-            $this->logger()->info("data was cacehd using key $key");
+            $this->logger()->info("data was pulled from cache w key $key");
             $this->cache()->setItem($key, $geojson);
         }
         else {
