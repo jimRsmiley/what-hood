@@ -15,14 +15,24 @@ var PointElection = React.createClass({
     for (var i = 0; i < point_election.candidate_neighborhoods.length; i++) {
       rows.push(<CandidateNeighborhood key={i} candidate_neighborhood={point_election.candidate_neighborhoods[i]} />);
     }
-    return (
-      <div className="point-election">
-        {this.props.address}
-        {rows}
-        <p>
-          <a href={this.props.browse_url}>Browse Neighborhoods at this location</a>
-        </p>
-      </div>
-    );
+
+    if (point_election.total_votes > 0) {
+        return (
+          <div className="point-election">
+            {this.props.address}
+            {rows}
+            <p>
+              <a href={this.props.browse_url}>Browse Neighborhoods at this location</a>
+            </p>
+          </div>
+        );
+    }
+    else {
+        return (
+            <div className="point-election">
+                <p>We have no neighborhood borders at this location</p>
+            </div>
+            );
+    }
   }
 });

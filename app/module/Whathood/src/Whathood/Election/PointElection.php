@@ -264,8 +264,14 @@ class PointElection extends \ArrayObject {
             array_push($winners,$wcn->toArray());
         }
 
+        $region_arr = array();
+
+        if ($this->getCandidateNeighborhoods()) {
+            $region_arr = $this->getRegion()->toArray();
+        }
+
         return array(
-            'region'        => $this->getRegion()->toArray(),
+            'region'        => $region_arr,
             'winners'       => $winners,
             'candidate_neighborhoods' => $neighborhoods_array,
             'total_votes'   => $this->getTotalVotes(),

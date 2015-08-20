@@ -10,7 +10,6 @@ use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\WhathoodUser;
-use Whathood\Election\PointElection;
 
 /**
  * Description of NeighborhoodPolygonMapper
@@ -247,20 +246,8 @@ class UserPolygonMapper extends BaseMapper {
     }
 
     /**
-     * get all UserPolygons that intersect 'point' and return an PointElection
-     *
-     * @param mixed a Point
-     * @return mixed an PointElection
-     */
-    public function getPointElection(Point $point) {
-        $user_polygons = $this->byPoint($point);
-        $election_point = PointElection::build(array('point' => $point, 'user_polygons' => $user_polygons, 'logger' => $this->logger() ));
-        return $election_point;
-    }
-
-    /**
      * fetch all user polygons to build that are associated with neighborhood borders that should get build(ie. have no_build_border = f)
-     * @param force [boolean] - it doesn't matter 
+     * @param force [boolean] - it doesn't matter
      **/
     public function fetchAllToBuild($force) {
         $sql = "

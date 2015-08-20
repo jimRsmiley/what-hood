@@ -3,6 +3,7 @@ namespace Whathood\Controller\Restful;
 
 use Zend\View\Model\JsonModel;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Whathood\Election\PointElection;
 
 /**
  * serve restful requests for election points
@@ -23,10 +24,17 @@ class PointElectionController extends BaseController {
 
         $this->logger()->info("whathood REST get xy=$x,$y");
         $point = new Point($x,$y);
-        $electionPoint = $this->m()->userPolygonMapper()->getPointElection($point);
+        $userPolygons = $this->m()->userPolygonMapper()
+            ->byPoint($point);
 
-        if (null == $electionPoint)
-            return $this->badRequestJson("no user polygons found with point");
+        if (empty($userPolygons)) {
+            $userPolygons = array();
+        }
+
+        $electionPoint = PointElection::Build(array(
+            'point' => $point,
+            'user_polygons' => $userPolygons,
+            'logger' => $this->logger() ));
 
         return new JsonModel($electionPoint->toArray());
     }
