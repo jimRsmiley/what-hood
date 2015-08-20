@@ -1,3 +1,5 @@
 #!/bin/sh
 
 sudo docker exec -it wh-nginx /bin/sh -c 'cd /var/www/whathood; ./bin/check_db_schema'
+
+exit 0
