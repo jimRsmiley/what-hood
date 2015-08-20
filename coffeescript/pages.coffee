@@ -105,7 +105,32 @@ W.region_show = () ->
   map = new W.RegionMap('map')
   map.addStreetLayer()
 
-  map.addNeighborhoods W.UrlBuilder.neighborhood_border_by_region region_name, create_event
+  neighborhoods_url = W.UrlBuilder.neighborhood_border_by_region region_name, create_event
+  map.addNeighborhoods neighborhoods_url, () =>
+    # if address is in the query string, fill in the address search bar
+    if QueryString.address
+      $address_input.val replace_plus(QueryString.address)
+      # fire off the geocoding
+      l_geosearch._geosearch()
+    else
+      # only fit bounds if we're not popping up a marker
+      map.fitBounds( map.geojsonLayer )
+
+      # and pop up the address prompt
+      $("#address-modal").dialog
+        title: "Find your neighborhood"
+        draggable: false
+        modal: true
+        resizable: false
+        buttons: [
+          {
+            text: "Close to Browse Map"
+            click: () ->
+              $(this).dialog 'close'
+          }
+        ]
+
+
   map.whathoodClick true
 
   l_geosearch = new W.GeoSearch
@@ -117,23 +142,4 @@ W.region_show = () ->
 
   $leaflet_top_center = $('#map > div.leaflet-control-container > div.leaflet-top.leaflet-center')
   $leaflet_top_center.hide()
-
-  # if address is in the query string, fill in the address search bar
-  if QueryString.address
-    $address_input.val replace_plus(QueryString.address)
-    # fire off the geocoding
-    l_geosearch._geosearch()
-  else
-    $("#address-modal").dialog
-      title: "Find your neighborhood"
-      draggable: false
-      modal: true
-      resizable: false
-      buttons: [
-        {
-          text: "Close to Browse Map"
-          click: () ->
-            $(this).dialog 'close'
-        }
-      ]
 

@@ -68,7 +68,6 @@ Whathood.RegionMap = Whathood.Map.extend
                 onEachFeature: onEachFeature
             }).addTo(self)
             self.layerGroup().addLayer( self.geojsonLayer )
-            self.fitBounds( self.geojsonLayer )
 
             if( ( typeof callback ) != 'undefined' )
                 callback()
@@ -76,8 +75,6 @@ Whathood.RegionMap = Whathood.Map.extend
             throw new Error "WH.init(): something went wrong loading json source"
     .done () ->
       self.spin(false)
-
-
 
   # when a user clicks on the map, get the lat,lng and send a request for a
   # point election, then display it
