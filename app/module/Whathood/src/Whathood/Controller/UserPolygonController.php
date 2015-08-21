@@ -300,6 +300,8 @@ class UserPolygonController extends BaseController
         $this->neighborhoodMapper()->update( $neighborhood );
     }
 
+    public function listAction() {}
+
     public function consoledefaultAction() {
 
         $collection = new Collection($this->userPolygonMapper()->fetchAll());

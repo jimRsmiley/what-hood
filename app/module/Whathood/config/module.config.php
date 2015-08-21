@@ -169,7 +169,12 @@ return array(
                 'type' => 'segment',
                 'may_terminate' => false,
                 'options' => array(
-                    'route' => '/user-neighborhood'
+                    'route' => '/user-neighborhood',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\UserPolygon',
+                        'action'     => 'index'
+                    ),
                 ),
                 'child_routes' => array(
                     'user_neighborhood_page_center' => array(
@@ -207,7 +212,6 @@ return array(
                         ),
                     ),
 
-
                     'add' => array(
                         'type'  => 'Segment',
                         'options' => array(
@@ -228,6 +232,16 @@ return array(
                                 '__NAMESPACE__' => 'Whathood\Controller',
                                 'controller'    => 'Whathood\Controller\UserPolygon',
                                 'action'        => 'addPost'
+                            )
+                        )
+                    ),
+
+                    'default' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/:action',
+                            'defaults' => array(
+                                'controller'    => 'Whathood\Controller\UserPolygon',
                             )
                         )
                     ),
@@ -330,6 +344,47 @@ return array(
                                     'defaults' => array(
                                         'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
                                         'action' => 'get-list'
+                                    )
+                                )
+                            )
+                        )
+                    ),
+
+                    'user_neighborhood' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/user-neighborhood',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\UserPolygonRestful',
+                            )
+                        ),
+                        'child_routes' => array(
+                            'data_tables' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/data-tables',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
+                                        'action' => 'data-tables'
+                                    )
+                                )
+                            ),
+                            'list' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/list[/page/:page][/count_per_page/:count_per_page]',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
+                                        'action' => 'list'
+                                    )
+                                )
+                            ),
+                            'default' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/:action',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
                                     )
                                 )
                             )

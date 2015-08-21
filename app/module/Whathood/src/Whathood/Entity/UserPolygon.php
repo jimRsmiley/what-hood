@@ -261,12 +261,16 @@ class UserPolygon extends \ArrayObject {
 		if (empty($opts)) $opts = array();
         $config = new Config($opts);
 
-        if($config->get('strings-only')) {
+        if($config->get('strings_only')) {
             $array=array(
                 'id' => $this->getId(),
                 'neighborhood_name' => $this->getNeighborhood()->getName(),
                 'datetime_added' => $this->getDateTimeAdded()
             );
+
+            if ($config->get('include_neighborhood')) {
+                $array['neighborhood'] = $this->getNeighborhood()->toArray();
+            }
         }
         else {
 			$hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
@@ -290,6 +294,14 @@ class UserPolygon extends \ArrayObject {
             }
         }
         return $array;
+    }
+
+    public static function polygonsToArray($user_polygons, array $options = null) {
+        $arr = array();
+        foreach ($user_polygons as $up) {
+            array_push($arr, $up->toArray($options));
+        }
+        return $arr;
     }
 
     public function __toString() {

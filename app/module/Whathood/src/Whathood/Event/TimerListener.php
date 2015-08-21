@@ -41,10 +41,12 @@ class TimerListener implements ListenerAggregateInterface
     }
 
     public function recordTimers(MvcEvent $event) {
-        $elapsed_string = $this->_timer->elapsedReadableString();
-        $this->logger()->info(
-            sprintf("%s %s",
-                $this->getControllerString($event), $elapsed_string));
+        if ($this->_timer) {
+            $elapsed_string = $this->_timer->elapsedReadableString();
+            $this->logger()->info(
+                sprintf("%s %s",
+                    $this->getControllerString($event), $elapsed_string));
+        }
     }
 
     public function getControllerString(MvcEvent $event) {

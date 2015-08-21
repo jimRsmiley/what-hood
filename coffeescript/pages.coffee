@@ -1,6 +1,16 @@
 window = exports ? this
 W = window.Whathood
 
+W.user_neighborhood =
+  list: () ->
+    console.log "pulling"
+    $('#up_dataTable').DataTable( {
+      "ordering": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": '/api/v1/user-neighborhood/data-tables'
+    })
+
 W.user_polygon_view = () ->
   user_polygon_id = $("#user_polygon").attr 'data-id'
   throw new Error "user_polygon_id is not defined" unless user_polygon_id
