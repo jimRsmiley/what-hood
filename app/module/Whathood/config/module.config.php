@@ -766,6 +766,13 @@ return array(
                 $viewHelper->setServiceLocator($serviceLocator);
                 return $viewHelper;
             },
+            'google_analytics' => function( $helperPluginManager ) {
+                $sm = $helperPluginManager->getServiceLocator();
+                $config = $sm->get("Whathood\Config");
+                $viewHelper = new \Whathood\View\Helper\GoogleAnalytics();
+                $viewHelper->setGoogleUi($config->google_ui);
+                return $viewHelper;
+            }
         )
     ),
 
