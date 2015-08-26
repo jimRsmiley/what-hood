@@ -21,7 +21,7 @@ class MessagingService {
         $hydrator->hydrate($data, $this);
     }
 
-    public function build(array $data) {
+    public static function build(array $data) {
         $messenger = new \Whathood\Service\MessagingService($data);
         return $messenger;
     }

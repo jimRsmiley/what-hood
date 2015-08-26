@@ -52,7 +52,7 @@ class WhathoodUser extends \ArrayObject {
         }
     }
 
-    public function build($request) {
+    public static function build($request) {
         $ip_address = \Whathood\Util::getRemoteIp($request);
         $user = new WhathoodUser( array(
             'ip_address' => $ip_address ));
