@@ -75,6 +75,7 @@ class Neighborhood extends \ArrayObject {
     }
 
     public function setName( $name ) {
+        $name = ucwords(strtolower($name));
         $this->name = $name;
     }
 
