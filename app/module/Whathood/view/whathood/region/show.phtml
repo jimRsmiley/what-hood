@@ -14,12 +14,19 @@ $createEventId = $this->setNumber;
 >
 </page-info>
 
-<div id="address-modal" class="visibility: none">
-    <form>
-        <input type="text" name='address' placeholder="enter address">
-    </form>
-    <p>- OR -</p>
+<!-- <div id="address-modal" class="visibility: none"> -->
+
+<div id="address-modal" class="ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons" tabindex="-1" role="dialog" aria-describedby="address-modal" aria-labelledby="ui-id-1">
+  <form>
+    <input type="text" name="address" placeholder=" enter address" class="enter-address" id='enter-address'>
+    <button class="btn-submit btn btn-default" id="btn-submit" type="button">Submit</button>
+  </form>
+
+  <p class='clear'>
+    <span>- OR -</span>
+
     <button class="btn btn-default" id="current-location-btn" type="button">Current Location</button>
+  </p>
 </div>
 
 <script>

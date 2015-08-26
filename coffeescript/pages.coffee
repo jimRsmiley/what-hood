@@ -114,6 +114,7 @@ W.region_show = () ->
   # create a new region map
   map = new W.RegionMap('map')
   map.addStreetLayer()
+  map.whathoodClick true
 
   neighborhoods_url = W.UrlBuilder.neighborhood_border_by_region region_name, create_event
   map.addNeighborhoods neighborhoods_url, () =>
@@ -127,11 +128,17 @@ W.region_show = () ->
       map.fitBounds( map.geojsonLayer )
 
       # and pop up the address prompt
-      $("#address-modal").dialog
-        title: "Find your neighborhood"
+      $addressModal = $('#address-modal')
+      $addressModal.dialog
+        title: "Let's find your neighborhood"
+        width: 600,
+        autoOpen: false,
+        dialogClass: "test",
         draggable: false
-        modal: true
-        resizable: false
+        modal: true,
+        responsive: true
+        # must be false for the jquery responsive hack in whathood.js
+        #resizable: false
         buttons: [
           {
             text: "Close to Browse Map"
@@ -139,17 +146,22 @@ W.region_show = () ->
               $(this).dialog 'close'
           }
         ]
-
-
-  map.whathoodClick true
+      $addressModal.find('#btn-submit').on 'click', ->
+        $address_input.val( $('#enter-address').val() )
+        l_geosearch._geosearch()
+        $addressModal.dialog "close"
+      $addressModal.dialog("open")
 
   l_geosearch = new W.GeoSearch
     provider: new L.GeoSearch.Provider.OpenStreetMap()
   .addTo(map)
 
-  # we want its functionality, but not to see it
+  # this is what GeoSearch needs
   $address_input = $('#leaflet-control-geosearch-qry')
 
+  console.log "this is address_input"
+  console.log $address_input
+  # we want its functionality, but not to see it
   $leaflet_top_center = $('#map > div.leaflet-control-container > div.leaflet-top.leaflet-center')
   $leaflet_top_center.hide()
 

@@ -116,10 +116,6 @@ div.container.header {
     padding-left: 10px;
 }
 
-form#addressLookupForm legend {
-    text-align: center;
-}
-
 #no-match-neighborhood {
     color: red;
     text-align: center;
@@ -151,4 +147,126 @@ form#addressLookupForm legend {
 .page-table {
     margin: 0 auto;
     margin-top: 30px;
+}
+
+/* Inline style overrides that should be moved to javascript */
+.ui-dialog {
+  width: 80%;
+  text-align: center;
+}
+h4 {
+ padding: 0 2%;
+}
+/* this is ?????*/ 
+.ui-button {
+  background: #fa824f;
+}
+/* WhatHood theme */
+/* this is the ?????*/ 
+.ui-dialog {
+  background: #000;
+  font-family: 'Raleway', sans-serif;
+}
+.current-location-btn {
+  clear: both;
+}
+h5 {
+  padding: 1em;
+}
+/*SUBMIT BUTTON*/
+
+/*NAVY BACKGROUND*/
+.ui-widget {
+  background: #49565d;
+}
+/*FONT FOR FIND YOUR NEIGHBORHOOD*/
+.ui-dialog .ui-dialog-titlebar {
+  color: #FFF;
+  text-align: left;
+}
+.enter-address {
+  width: 100%;
+  max-width: 400px;
+  height: 50px;
+  border-radius: 4px 0 0 4px;
+}
+
+
+/*WHITE -OR- USE OUR MAP and We'll never share-*/
+.ui-widget-content {
+  color: #fff;
+}
+.clear {
+  margin: 1em;
+}
+
+/* x to cancel out box*/
+.ui-widget-content .ui-state-default.ui-button.ui-button-icon-only {
+  background: #ccc;
+}
+
+#enter-address {margin: 0;}
+
+/*COLOR OF THE BAR FOR FIND YOUR NEIGHBORHOOD*/
+
+
+.ui-dialog .ui-dialog-titlebar {
+  background: #333333;
+  font-family: 'Raleway', sans-serif;
+  margin: 10px;
+  font-weight: normal;
+  border-radius: 10px;
+}
+
+@media only screen and (min-width: 620px){
+.ui-dialog .ui-dialog-titlebar {
+  font-size: 1.6em;
+  padding: 10px 50px;
+}
+}
+/*FONT COLOR FOR CURRENT LOCATION*/
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  margin: 0 0 0 10px;
+  font-weight: 200;
+  font-size: 1.1em;
+  box-sizing: border-box;
+}
+
+.ui-widget input {
+  color: black;
+}
+
+#btn-submit {
+  border-radius: 0 4px 4px 0;
+  height: 50px; 
+  margin: -3px 0 0 0;
+}
+/* CURRENT LOCATION ORANGE*/
+/*.btn-default {
+  background: #fa824f;
+}*/
+
+.btn {
+  background: #fa824f;
+  height: 50px;
+}
+
+.clear {clear: both;}
+
+/*FONT FOR CLOSE THE MAP*/
+.ui-button-text {
+  color: #fff;
+}
+.ui-button, .ui-widget-content .ui-state-default.ui-button {
+  background: #999999;
+   border-radius: 7px;
+}
+
+#address-modal {
+  width: 600px; 
+  height: auto;
+  display: none;
 }
