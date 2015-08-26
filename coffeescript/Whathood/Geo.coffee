@@ -8,4 +8,5 @@ class Whathood.Geo
 
   @browser_location: (cb) ->
     if @browser_can_geo_locate()
-      navigator.geolocation.getCurrentPosition cb
+      navigator.geolocation.getCurrentPosition (location) ->
+        cb(location)
