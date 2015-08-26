@@ -58,7 +58,12 @@ class PointElectionMapper extends BaseMapper {
     public function buildPointElectionCollection($test_points) {
         $c_points = array();
         foreach ($test_points as $p) {
-            array_push($c_points, $this->buildPointElection($p));
+            $user_polygons = $this->m()->userPolygonMapper()->byPoint($p);
+            array_push($c_points, PointElection::build(array(
+                'point' => $p,
+                'userPolygons' => $user_polygons,
+                'logger' => $this->logger()
+            )));
         }
         return new PointElectionCollection($c_points);
     }
