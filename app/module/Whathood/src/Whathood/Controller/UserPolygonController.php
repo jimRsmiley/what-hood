@@ -234,8 +234,10 @@ class UserPolygonController extends BaseController
             )
         );
 
-        $this->getServiceLocator()->get('Whathood\Service\Messaging')
-            ->notifyUserNeighborhoodAdd($userPolygon);
+
+        $this->pushEmailJob(
+            \Whathood\View\MailMessageBuilder::buildNewUserPolygon($userPolygon)
+        );
 
         return new JsonModel( array(
             'status' => 'success',

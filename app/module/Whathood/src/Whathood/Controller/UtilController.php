@@ -18,6 +18,12 @@ class UtilController extends BaseController {
             'remoteIp' => $remote_ip ));
 	}
 
+    public function testQueueAction() {
+        $queue = $this->queue('message_queue')
+            ->push('Whathood\Job\EmailJob',array('subject' => 'My Test Subject',
+                'body' => 'My test body'));
+    }
+
     public function emptyAction() {}
 
     public function phpinfoAction() {

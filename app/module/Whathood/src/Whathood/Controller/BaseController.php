@@ -113,6 +113,11 @@ class BaseController extends AbstractActionController {
             return $this->_getLogger();
         }
     }
+
+    public function pushEmailJob(array $emailJobData) {
+        $this->queue('message_queue')
+            ->push('Whathood\Job\EmailJob',$emailJobData);
+    }
 }
 
 ?>

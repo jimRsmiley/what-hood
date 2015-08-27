@@ -7,7 +7,9 @@ $modules = array(
     'ZfcUser',
     'ZfcUserDoctrineORM',
     'BjyAuthorize',
-	'SamUser'
+	'SamUser',
+    'SlmQueue',
+    'SlmQueueDoctrine'
 );
 
 return array(
@@ -33,7 +35,8 @@ return array(
         // modules are loaded. These effectively overide configuration
         // provided by modules themselves. Paths may use GLOB_BRACE notation.
         'config_glob_paths' => array(
-            'config/autoload/whathood.db.php'
+            'config/autoload/whathood.db.php',
+            'config/autoload/*.global.php'
         ),
     ),
 );

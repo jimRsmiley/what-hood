@@ -601,9 +601,14 @@ return array(
                 return $emailer;
             },
 
-            'Whathood\Service\Messaging' => function($sm) {
+            'Whathood\Service\MessageQueue' => function($sm) {
+                $queueManager = $sm->get('SlmQueue\Queue\QueuePluginManager');
+                return $queueManager->get('message_queue');
+            },
+
+            'Whathood\Service\Notifier' => function($sm) {
                 $emailer = $sm->get("Whathood\Emailer");
-                $messenger = \Whathood\Service\MessagingService::build(array('emailer'=>$emailer));
+                $messenger = \Whathood\Service\NotifierService::build(array('emailer'=>$emailer));
                 return $messenger;
             },
 
