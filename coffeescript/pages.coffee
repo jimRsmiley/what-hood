@@ -133,12 +133,11 @@ W.region_show = () ->
         title: "Let's find your neighborhood"
         width: 600,
         autoOpen: false,
-        dialogClass: "test",
-        draggable: false
         modal: true,
         responsive: true
-        # must be false for the jquery responsive hack in whathood.js
-        #resizable: false
+        # resizable and draggable cannot be false for the jquery responsive hack in whathood.js
+        # resizable: false
+        # draggable: false
         buttons: [
           {
             text: "Close to Browse Map"
@@ -159,9 +158,6 @@ W.region_show = () ->
   # this is what GeoSearch needs
   $address_input = $('#leaflet-control-geosearch-qry')
 
-  console.log "this is address_input"
-  console.log $address_input
-  # we want its functionality, but not to see it
   $leaflet_top_center = $('#map > div.leaflet-control-container > div.leaflet-top.leaflet-center')
   $leaflet_top_center.hide()
 
