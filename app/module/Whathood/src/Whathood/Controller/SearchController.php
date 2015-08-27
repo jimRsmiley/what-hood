@@ -32,6 +32,9 @@ class SearchController extends BaseController {
         }
 
        $this->logger()->info( "neighbordhood/region search for '$queryString'");
+
+        $this->pushEmailJob(\Whathood\View\MailMessageBuilder::buildSomeoneSearched($queryString));
+
        return new ViewModel( array(
             'queryString' => $queryString,
             'regions' => $regions,
