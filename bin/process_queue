@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /var/www/whathood/app
+php public/index.php queue doctrine message_queue --start
