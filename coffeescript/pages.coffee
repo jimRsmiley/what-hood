@@ -100,7 +100,7 @@ W.region_show = () ->
 
   $('#current-location-btn').on 'click', (evt) ->
     W.Geo.browser_location (location) =>
-      l_geosearch._my_showLocation
+      l_geosearch.showLocation
         X: location.coords.longitude
         Y: location.coords.latitude
       $('#address-modal').dialog 'close'
@@ -121,7 +121,7 @@ W.region_show = () ->
     if QueryString.address
       $address_input.val replace_plus(QueryString.address)
       # fire off the geocoding
-      l_geosearch.geosearch $address_input.val()
+      l_geosearch.geosearch $address_input.val(), region_name
     else
       # only fit bounds if we're not popping up a marker
       map.fitBounds( map.geojsonLayer )
@@ -146,7 +146,7 @@ W.region_show = () ->
         ]
       $addressModal.find('#btn-submit').on 'click', ->
         $address_input.val( $('#enter-address').val() )
-        l_geosearch.geosearch $address_input.val()
+        l_geosearch.geosearch $address_input.val(), region_name
         $addressModal.dialog "close"
       $addressModal.dialog("open")
 
