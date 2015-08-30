@@ -43,7 +43,6 @@ W.user_polygon_page_center = () ->
         $form = $('.user_polygon_form')
         $name = $('input[name="neighborhood_name"]')
         $name.val user_polygon.neighborhood.name
-        $name.text "adsfasdfasd"
 
         map = new W.UserPolygonMap 'map'
         map.addStreetLayer()
