@@ -16,10 +16,10 @@ class Util {
     }
 
     public static function environment() {
-        if (static::is_production())
-            return "production";
-        else
-            return getenv("APPLICATION_ENV");
+        $env = getenv("APPLICATION_ENV");
+        if (!$env)
+            $env = 'production';
+        return $env;
     }
 
 	public static function is_production() {
