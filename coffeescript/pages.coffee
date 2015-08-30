@@ -121,7 +121,7 @@ W.region_show = () ->
     if QueryString.address
       $address_input.val replace_plus(QueryString.address)
       # fire off the geocoding
-      l_geosearch._geosearch()
+      l_geosearch.geosearch $address_input.val()
     else
       # only fit bounds if we're not popping up a marker
       map.fitBounds( map.geojsonLayer )
@@ -146,7 +146,7 @@ W.region_show = () ->
         ]
       $addressModal.find('#btn-submit').on 'click', ->
         $address_input.val( $('#enter-address').val() )
-        l_geosearch._geosearch()
+        l_geosearch.geosearch $address_input.val()
         $addressModal.dialog "close"
       $addressModal.dialog("open")
 

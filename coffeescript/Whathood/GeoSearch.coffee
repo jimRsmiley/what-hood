@@ -7,6 +7,8 @@ Whathood = window.Whathood
 #
 class Whathood.GeoSearch extends L.Control.GeoSearch
 
+    search_address: null
+
     _processResults: (results) ->
       if (results.length > 0)
         this._map.fireEvent('geosearch_foundlocations', {Locations: results})
@@ -22,6 +24,8 @@ class Whathood.GeoSearch extends L.Control.GeoSearch
       Whathood.Search.by_coordinates x, y, (point_election_data) =>
         @_positionMarker.bindPopup(Whathood.RegionMap.getPopupHtml(point_election_data)).openPopup()
 
-    _geosearch: () ->
-      queryBox = document.getElementById 'leaflet-control-geosearch-qry'
-      @geosearch queryBox.value
+    geosearch: (value) ->
+      console.log "processing #{value}"
+      throw new Error("value must be defined") unless value
+      #queryBox = document.getElementById 'leaflet-control-geosearch-qry'
+      super value
