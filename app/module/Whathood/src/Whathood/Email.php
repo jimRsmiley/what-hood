@@ -52,8 +52,14 @@ class Email {
     }
 
     public function send($subject,$messageBody) {
+
+        if (empty($subject))
+            throw new \InvalidArgumentException("subject may not be empty");
+
         $timer = \Whathood\Timer::start("email-sender");
-        $subject = "[".strtoupper(\Whathood\Util::environment())."] ".$subject;
+        $subject = sprintf("[%s] %s",
+            substr(strtoupper(\Whathood\Util::environment()), 0, 4),
+            $subject);
 
         $html = new \Zend\Mime\Part(nl2br($messageBody));
         $html->type = 'text/html';

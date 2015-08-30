@@ -10,6 +10,8 @@ class EmailJob extends AbstractJob {
     protected $_emailer;
 
     public function __construct($emailer) {
+	if (empty($emailer))
+	    throw new \InvalidArgumentExceptiON('emailer must be defined');
         $this->_emailer = $emailer;
     }
 
