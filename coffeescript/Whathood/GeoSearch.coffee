@@ -5,7 +5,7 @@ Whathood = window.Whathood
 # extends L.Control.GeoSearch and override its action functions to catch the geocode result
 # and popup a marker with content
 #
-Whathood.GeoSearch = L.Control.GeoSearch.extend({
+class Whathood.GeoSearch extends L.Control.GeoSearch
 
     _processResults: (results) ->
       if (results.length > 0)
@@ -25,5 +25,3 @@ Whathood.GeoSearch = L.Control.GeoSearch.extend({
     _geosearch: () ->
       queryBox = document.getElementById 'leaflet-control-geosearch-qry'
       @geosearch queryBox.value
-})
-
