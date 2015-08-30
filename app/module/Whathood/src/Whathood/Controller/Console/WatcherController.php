@@ -105,7 +105,7 @@ class WatcherController extends BaseController
                 );
             } // foreach neighborhood
         } // if there are user polygons
-        $this->logger()->info("watcher finished");
+        $this->logger()->debug("watcher finished");
     }
 
     public function logFoundUserBorders($user_polygons) {
