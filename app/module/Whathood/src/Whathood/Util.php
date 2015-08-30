@@ -23,7 +23,7 @@ class Util {
     }
 
 	public static function is_production() {
-		return static::getHostname() == 'market.phl.io';
+		return static::environment() == 'production';
 	}
 
     public static function prompt_user($msg) {
