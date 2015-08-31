@@ -1,5 +1,7 @@
 <?php
 
+$app_root = "../../..";
+
 return array(
     'modules' => array(
         'Whathood',
@@ -9,16 +11,18 @@ return array(
         'ZfcUser',
         'ZfcUserDoctrineORM',
         'BjyAuthorize',
-        'SamUser'
+        'SamUser',
+        'SlmQueue',
+        'SlmQueueDoctrine'
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
-        '../../../config/autoload/whathood.db.php',
-        '../../../config/autoload/whathood.global.php',
+            $app_root . '/config/autoload/whathood.db.php',
+            $app_root . '../../../config/autoload/*.global.php',
         ),
         'module_paths' => array(
-            'module',
-            'vendor'
+            $app_root . '/module',
+            $app_root . '/vendor'
         ),
     ),
 );

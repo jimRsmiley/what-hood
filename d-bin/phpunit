@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo docker exec -it wh-nginx /bin/sh -c 'cd /var/www/whathood/app/module/Whathood/test; phpunit .'

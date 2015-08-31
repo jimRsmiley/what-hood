@@ -28,59 +28,6 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
         $this->assertResponseStatusCode(302);
     }
 
-    /**
-     * @depends testRedirect
-     */
-    public function testValidAuth() {
-
-        $this->getRequest()->setMethod('GET');
-
-        $this->dispatch( '/n/add' );
-
-        $this->assertResponseStatusCode(302);
-
-        $whathoodUser = $this->getSavedAuthenticatedWhathoodUser();
-
-        $this->dispatch( '/n/add?region_name=Philadelphia' );
-
-        $this->printResponse();
-        exit;
-        $this->assertResponseStatusCode(302);
-    }
-
-    /*
-     * @depends testRedirect
-     */
-    public function testInvalidAuth() {
-
-        $this->getRequest()->setMethod('GET');
-
-        $this->dispatch( '/n/add' );
-
-        $this->assertResponseStatusCode(302);
-
-        $auth = Bootstrap::getServiceManager()->get('Whathood\Model\AuthenticationService');
-
-        $auth->setWhathoodUser( new \Whathood\Entity\WhathoodUser( array(
-            'id' => 1,
-        )));
-
-        try {
-            $this->dispatch( '/n/add' );
-             //die( $this->getResponse()->getBody() );
-            $this->fail();
-        } catch( AuthenticationException $e ) {
-
-
-        }
-
-        // excect this
-        catch( \FacebookApiException $e ) {
-
-        }
-        $this->assertTrue(true);
-    }
-
     public function testHome() {
 
         $this->getRequest()
