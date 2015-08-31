@@ -7,7 +7,10 @@
 // Report all PHP errors (see changelog)
 error_reporting(E_ALL);
 
-chdir(dirname(__DIR__));
+$APP_ROOT = dirname(__DIR__);
+chdir($APP_ROOT);
+
+putenv("APPLICATION_ROOT=$APP_ROOT");
 
 $app_env_file = "../application_env";
 

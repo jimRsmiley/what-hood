@@ -1,5 +1,6 @@
 <?php
 namespace Whathood;
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -546,10 +547,15 @@ return array(
                 return $timer_instance;
             },
 
-            'Whathood\YamlConfig' => function($sm) {
-                require_once('vendor/mustangostang/spyc/Spyc.php');
-                $reader = new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
-                $global_config = $reader->fromFile('../whathood.yaml');
+            'Zend\Config\Reader\Yaml' => function($sm) {
+                return new \Zend\Config\Reader\Yaml(array('Spyc','YAMLLoadString'));
+            },
+
+            'Whathood\Config\Yaml' => function($sm) {
+                $reader = $sm->get('Zend\Config\Reader\Yaml');
+                $global_config = $reader->fromFile(
+                    getenv("APPLICATION_ROOT") . '/../whathood.yaml'
+                );
 
                 if (file_exists('../whathood.local.yaml'))
                     $local_config  = $reader->fromFile('../whathood.local.yaml');
@@ -559,8 +565,10 @@ return array(
             },
 
             'Whathood\Config' => function($sm) {
-                $yaml_config = $sm->get('Whathood\YamlConfig');
-                return new \Zend\Config\Config($yaml_config);
+                $yaml_config = $sm->get('Whathood\Config\Yaml');
+                $config = new \Whathood\Config($yaml_config);
+                return $config;
+                die("here's here");
             },
 
             'Whathood\Logger' => function($sm) {
