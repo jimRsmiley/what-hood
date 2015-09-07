@@ -4,7 +4,7 @@ namespace Whathood\Mapper;
 class Builder extends BaseMapper {
 
     protected $sm;
-    protected $em;
+    protected $_entityManager;
 
     protected $neighborhoodPolygonMapper;
     protected $neighborhoodMapper;
@@ -21,11 +21,11 @@ class Builder extends BaseMapper {
             throw new \InvalidArgumentException(
                                     "serviceManager must be of type dfafdaf");
         $this->sm = $serviceManager;
-        $this->em = $doctrineEntityManager;
+        $this->_entityManager = $doctrineEntityManager;
     }
 
-    public function doctrineEntityManager() {
-        return $this->sm->get('mydoctrineentitymanager');
+    public function entityManager() {
+        return $this->_entityManager;
     }
 
     public function postgresMapper() {

@@ -117,7 +117,7 @@ class UserPolygonMapper extends BaseMapper {
         return $result['geojson'];
     }
 
-    public function save( UserPolygon $userPolygon ) {
+    public function save( UserPolygon &$userPolygon, $flush = true) {
 
         /*
          * REGION
@@ -166,13 +166,10 @@ class UserPolygonMapper extends BaseMapper {
         if( $userPolygon->getDateTimeAdded() == null )
             $userPolygon->setDateTimeAdded( $this->getCurrentDateTimeAsString() );
 
-        if( 0 ) {
-            \Zend\Debug\Debug::dump( $userPolygon->getId(), 'in UserPolygonMapper' );
-            exit;
-        }
-
         $this->em->persist( $userPolygon );
-        $this->em->flush( $userPolygon );
+        if ($flush) {
+            $this->em->flush( $userPolygon );
+        }
     }
 
     public function getMaybeSaveByName($ip_address) {

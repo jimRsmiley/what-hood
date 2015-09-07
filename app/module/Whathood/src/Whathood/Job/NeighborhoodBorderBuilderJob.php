@@ -12,11 +12,6 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
 {
 
     protected $_gridResolution;
-    protected $_mapperBuilder;
-
-    public function setMapperBuilder($mapperBuilder) {
-        $this->_mapperBuilder = $mapperBuilder;
-    }
 
     public function setGridResolution($gridResolution) {
         $this->_gridResolution = $gridResolution;
@@ -48,25 +43,30 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
 
     public function execute() {
         $api_timer = Timer::start('api');
-        $this->infoLog($this->getName()." started");
+        $this->infoLog("job ".$this->getName()." started");
         $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood = $this->getNeighborhood();
+        $this->infoLog(sprintf("nieghborhood %s(%s)",
+            $neighborhood->getName(), $neighborhood->getId()));
+
         if (!$neighborhood)
             throw new \Whathood\Exception("must include neighborhood in job content");
-        $userPolygons = $neighborhood->getUserPolygons();
 
-        if (empty($userPolygons))
-            return;
-        $this->logFoundUserBorders($userPolygons);
+        $entityManager = $this->m()->entityManager();
+        $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
+        $userPolygons = $this->m()->userPolygonMapper()->fetchAll();
+
+        if (empty($userPolygons)) {
+            throw new \Whathood\Exception(
+                sprintf($this->getName().": no user polygons found for neighborhood %s(%s)",
+                    $neighborhood->getName(), $neighborhood->getId() ));
+        }
 
         $this->infoLog(
             sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
-                $neighborhood->getId(),
-                $neighborhood->getName(),
-                count($userPolygons)
-                )
-        );
+                $neighborhood->getId(), $neighborhood->getName(), count($userPolygons)));
+
         try {
             /* build the border */
             $timer = Timer::start('generate_border');
@@ -107,21 +107,6 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             throw $e;
         }
         $this->infoLog("job finished");
-    }
-
-    public function m() {
-        return $this->_mapperBuilder;
-    }
-
-    public function logFoundUserBorders($user_polygons) {
-        foreach($user_polygons as $up) {
-            $this->logger()->debug(
-                sprintf("\tfound new user generated polygon(%s) for neighborhood %s",
-                    $up->getId(),
-                    $up->getNeighborhood()->getName()
-                )
-            );
-        }
     }
 
     public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
