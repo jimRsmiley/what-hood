@@ -15,12 +15,32 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
     protected $_gridResolution;
     protected $_mapperBuilder;
 
+    public function setMapperBuilder($mapperBuilder) {
+        $this->_mapperBuilder = $mapperBuilder;
+    }
+
     public function setGridResolution($gridResolution) {
-        $this->_grid_resolution = $gridResolution;
+        $this->_gridResolution = $gridResolution;
+    }
+
+    public function getGridResolution() {
+        return $this->_gridResolution;
     }
 
     public function __construct(array $data) {
         parent::__construct($data);
+    }
+
+    public static function build(array $data) {
+        $job = new NeighborhoodBorderBuilderJob($data);
+
+        if (empty($job->m()))
+            throw new \InvalidArgumentException("must define mapperBuilder");
+
+        if (empty($job->getGridResolution()))
+            throw new \InvalidArgumentException("gridResolution may not be empty");
+
+        return $job;
     }
 
     public function getNeighborhood() {
@@ -38,6 +58,9 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
 
         $neighborhood = $this->getNeighborhood();
         $userPolygons = $this->getUserPolygons();
+
+        if (empty($userPolygons))
+            return;
         $this->logFoundUserBorders($userPolygons);
 
         $this->logger()->info(
@@ -51,8 +74,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             /* build the border */
             $timer = Timer::start('generate_border');
             $electionCollection = $this->m()->pointElectionMapper()->getCollection(
-                $ups,
-                $n->getId(),
+                $userPolygons,
+                $neighborhood->getId(),
                 $this->getGridResolution()
             );
 
@@ -61,7 +84,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             }
             else {
                 try {
-                    if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, $ups)) {
+                    if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, ups)) {
                         $this->logger()->info(
                             sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
 
@@ -84,9 +107,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         catch(\Exception $e) {
             $this->logger()->err($e->getMessage());
             $this->logger()->err($e->getTraceAsString());
-            $err_msg = "FATAL: the watcher script died because of an error\n";
-            $this->logger()->err($err_msg);
-            die($err_msg);
+            throw $e;
         }
         $this->logger()->debug("job finished");
     }

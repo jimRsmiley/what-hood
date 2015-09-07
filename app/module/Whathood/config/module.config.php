@@ -584,7 +584,7 @@ return array(
 
             'Whathood\Config' => function($sm) {
                 $yaml_config = $sm->get('Whathood\Config\Yaml');
-                $config = new \Whathood\Config($yaml_config);
+                $config = \Whathood\Config::build($yaml_config);
                 return $config;
             },
 

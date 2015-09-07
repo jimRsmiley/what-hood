@@ -33,6 +33,9 @@ class TestPointMapper extends BaseMapper {
         $result = $query->getResult();
 
         if (empty($result))
+            throw new \Whathood\Exception("no points were returned in makegrid");
+
+        if (empty($result))
             return null;
         return $this->_doctrineResultToPoints($result,'test_point');
     }

@@ -16,6 +16,9 @@ class PointElectionMapper extends BaseMapper {
 
     public function getCollection($user_polygons,$neighborhood_id,$grid_resolution) {
         $test_points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
+
+        if (empty($test_points))
+            throw new \Whathood\Exception("no test points were created");
         return $this->buildPointElectionCollection($test_points);
     }
 
@@ -55,7 +58,9 @@ class PointElectionMapper extends BaseMapper {
      * @param array - an array of test point objects
      * @return mixed - PointElectionCollection
      */
-    public function buildPointElectionCollection($test_points) {
+    public function buildPointElectionCollection(array $test_points) {
+        if (empty($test_points))
+            throw new \InvalidArgumentException("test_points may not be empty");
         $c_points = array();
         foreach ($test_points as $p) {
             $user_polygons = $this->m()->userPolygonMapper()->byPoint($p);

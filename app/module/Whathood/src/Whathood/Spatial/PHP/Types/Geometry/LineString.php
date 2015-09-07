@@ -15,11 +15,11 @@ class LineString extends CrEOFLineString {
     public function close() {
         $startPoint = $this->points[0];
         $endPoint = $this->points[count($this->points)-1];
-        
+
         if( $startPoint[0] != $endPoint[0] || $startPoint[1] != $endPoint[1] )
             $this->points[] = $this->points[0];
     }
-    
+
 }
 
 ?>
