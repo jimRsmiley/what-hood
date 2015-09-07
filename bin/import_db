@@ -3,20 +3,21 @@
 require 'fileutils'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
-#Whathood::Util.check_for_just_root_user()
-
-#Whathood::Util.prompt_user "warning: this will destroy the current db"
-
-import_database
-load_functions
+if (Whathood::Util.get_cmd_arg('load-functions-only'))
+  load_functions
+else
+  import_database
+  load_functions
+end
 
 puts "*     done in bin/import_db"
 
 BEGIN {
+    require_relative '../libs/ruby/Whathood/Util.rb'
     DB_HOST= ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis'
+    DB_NAME = Whathood::Util.get_cmd_arg('db-name') || 'whathood'
     DB_PORT="5432"
     DB_USER="docker"
-    DB_NAME="whathood"
 
     DATA_DIR="data/whathood_db"
     SCHEMA_DIR="app/scripts/schema"

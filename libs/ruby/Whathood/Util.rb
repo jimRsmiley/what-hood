@@ -6,6 +6,10 @@ module Whathood
             return ARGV
         end
 
+        def self.get_cmd_arg (arg_str)
+            self.cmd_args.each
+        end
+
         def self.run_cmd(cmd)
     	    puts cmd
             unless system cmd
