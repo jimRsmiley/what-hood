@@ -38,11 +38,6 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         $this->getRequest()->setServer($serverParams);
     }
 
-    public function setupDb() {
-        $doctrineBaseTest = new \Whathood\Doctrine();
-        $doctrineBaseTest->initDb();
-    }
-
     public function m() {
         return $this->sm->get('Whathood\Mapper\Builder');
     }
