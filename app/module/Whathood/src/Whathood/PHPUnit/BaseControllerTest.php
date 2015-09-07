@@ -31,6 +31,11 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
 
         putenv("WHATHOOD_DB=$testName");
         $doctrine->initDb($testName);
+
+        $serverParams = $this->getRequest()->getServer();
+
+        $serverParams->set("REMOTE_ADDR","0.0.0.0");
+        $this->getRequest()->setServer($serverParams);
     }
 
     public function setupDb() {
