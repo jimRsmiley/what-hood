@@ -24,7 +24,7 @@ class TestPointMapper extends BaseMapper {
             array_push($ids,$up->getId());
         }
 
-        $sql = "SELECT ST_AsText(unnest(whathood.makegrid_2d(ST_Collect(polygon),:grid_resolution))) as test_point FROM user_polygon up WHERE up.id IN (".join(',',$ids).")";
+        $sql = "SELECT ST_AsText(unnest(whathood.makegrid_2d(ST_Collect(polygon),cast(:grid_resolution as numeric)))) as test_point FROM user_polygon up WHERE up.id IN (".join(',',$ids).")";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('test_point','test_point');

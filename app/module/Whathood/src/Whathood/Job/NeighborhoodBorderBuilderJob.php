@@ -4,7 +4,6 @@ namespace Whathood\Job;
 
 
 use Whathood\Entity\NeighborhoodPolygon;
-use SlmQueue\Job\AbstractJob;
 use Whathood\Timer;
 use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;
@@ -84,18 +83,18 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             }
             else {
                 try {
-                    if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $n, ups)) {
+                    if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons)) {
                         $this->logger()->info(
                             sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
 
-                        $this->buildAndSaveHeatmapPoints($ups, $n, $this->getHeatmapGridResolution());
+                        $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
                     }
                     else {
                         $this->logger()->err("did not get a neighborhood polygon");
                     }
                 }
                 catch(\Whathood\Exception $e) {
-                    $this->logger()->err("Failed to build polygon for ".$n->getName().": ". $e->getMessage());
+                    $this->logger()->err("Failed to build polygon for ".$neighborhood->getName().": ". $e->getMessage());
                 } catch(\Exception $e) {
                     $this->logger()->err("big error trying to build neighborhood polygon");
                     $this->logger()->err(get_class($e));
