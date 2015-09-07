@@ -17,8 +17,7 @@ class EmailJob extends AbstractJob {
         $body       = $payload['body'];
 
         $this->getEmailer()->send($subject, $body);
-        print "sent email; subject='$subject'\n";
-        print "body: $body\n";
+        $this->infoLog("sent email; subject='$subject'\nbody: $body");
     }
 
     public function getEmailer() {

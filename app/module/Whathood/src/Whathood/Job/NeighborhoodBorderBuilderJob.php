@@ -46,23 +46,21 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         return $this->getContent()['neighborhood'];
     }
 
-    public function getUserPolygons() {
-        return $this->getContent()['userPolygons'];
-    }
-
     public function execute() {
         $api_timer = Timer::start('api');
-
-        $this->logger()->info("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
+        $this->infoLog($this->getName()." started");
+        $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood = $this->getNeighborhood();
-        $userPolygons = $this->getUserPolygons();
+        if (!$neighborhood)
+            throw new \Whathood\Exception("must include neighborhood in job content");
+        $userPolygons = $neighborhood->getUserPolygons();
 
         if (empty($userPolygons))
             return;
         $this->logFoundUserBorders($userPolygons);
 
-        $this->logger()->info(
+        $this->infoLog(
             sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
                 $neighborhood->getId(),
                 $neighborhood->getName(),
@@ -79,18 +77,18 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             );
 
             if (empty($electionCollection->getPointElections())) {
-               $this->logger()->warn("electionCollection contains no points");
+               $this->infoLog("WARN: electionCollection contains no points");
             }
             else {
                 try {
                     if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons)) {
-                        $this->logger()->info(
+                        $this->infoLog(
                             sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
 
                         $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
                     }
                     else {
-                        $this->logger()->err("did not get a neighborhood polygon");
+                        $this->infoLog("ERROR: did not get a neighborhood polygon");
                     }
                 }
                 catch(\Whathood\Exception $e) {
@@ -108,7 +106,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             $this->logger()->err($e->getTraceAsString());
             throw $e;
         }
-        $this->logger()->debug("job finished");
+        $this->infoLog("job finished");
     }
 
     public function m() {
