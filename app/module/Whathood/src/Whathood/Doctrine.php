@@ -39,6 +39,19 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         $hydrator->hydrate($data, $this);
     }
 
+    // return results
+    public static function querySql($conn, $sql) {
+        if (static::$DEBUG) print $sql."\n";
+        $query = $conn
+            ->query($sql);
+
+        if (!$query->execute()) {
+            throw new \Exception("could not execute query");
+        }
+
+        return $query->fetchAll();
+    }
+
     public static function execSql($conn, $sql) {
         if (static::$DEBUG) print $sql."\n";
         try {
@@ -46,13 +59,8 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
             $conn->exec($sql);
         }
         catch(\PDOException $e) {
-            die($e->getMessage());
+            throw new Exception($e->getMessage());
         }
-    }
-
-    public static function createExtension($conn, $extension) {
-        $sql = "CREATE EXTENSION $extension";
-        static::execSql($conn, $sql);
     }
 
     public static function createDb($conn, $db_name) {
@@ -98,26 +106,16 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
     }
 
     public static function dbConnections ($conn, $dbName) {
-        $sql = "SELECT * from pg_stat_activity";
-
-        $query = $conn
-            ->query($sql);
-
-        if (!$query->execute()) {
-            die("could see if dbExists");
-        }
-
-        $result = $query->fetchAll();
+        $results = static::querySql($conn, "SELECT * from pg_stat_activity");
 
         $connections = array();
-
-        foreach ($result as $row) {
+        foreach ($results as $row) {
             $pid = $row['pid'];
             $datname = $row['datname'];
             $query = $row['query'];
 
             if ($dbName == $datname or $dbName == null) {
-                array_push($row, $connections);
+                array_push($connections, $row);
                 if (static::$DEBUG) print "db_connection: $pid $datname: $query\n";
             }
         }
@@ -134,26 +132,29 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         return false;
     }
 
-    public static function dropDb ($conn, $dbName) {
-        $sql = "DROP DATABASE $dbName";
+    public static function log($str) {
+        if (self::$DEBUG)
+            print "$str\n";
+    }
 
-        try {
-            $conn->exec($sql);
+    public static function dropDb ($conn, $dbName) {
+
+        if (!static::dbExists($conn, $dbName)) {
+            self::log("database does not exist, not attempting to drop");
+            return;
         }
-        catch (\PDOException $e) {
-            if (strpos($e->getMessage(), "is being accessed by other users")) {
-                static::removeUserConnections($conn, $dbName);
-            }
-            die("could not drop database $dbName: ".$e->getMessage());
-        }
+        static::removeUserConnections($conn, $dbName);
+        static::execSql($conn, "DROP DATABASE $dbName");
     }
 
     public static function removeUserConnections($conn, $dbName) {
         $connections = static::dbConnections($conn, $dbName);
 
-        if (!empty($connections)) {
-            throw new \Exception("should implement this");
-        }
+        if (!empty($connections))
+            static::execSql($conn, "SELECT pg_terminate_backend(pg_stat_activity.pid)
+                FROM pg_stat_activity
+                WHERE pg_stat_activity.datname = '$dbName'
+                  AND pid <> pg_backend_pid()");
     }
 
     /**
@@ -163,7 +164,6 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
     public function initDb($dbName) {
         if (static::$DEBUG) print "initializing database $dbName\n";
         $conn = $this->getPostgresConnection('postgres');
-        $this->dbConnections($conn, $dbName);
         if ($this->dbExists($conn, $dbName)) {
             if (static::$DEBUG) print "database $dbName already exists\n";
             $this->dropDb($conn, $dbName);

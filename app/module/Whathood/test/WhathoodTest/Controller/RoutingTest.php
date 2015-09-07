@@ -21,6 +21,7 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
     }
 
     public function testHome() {
+        $this->initDb();
         $this->getRequest()
                 ->setMethod('GET');
         $this->dispatch( '/');

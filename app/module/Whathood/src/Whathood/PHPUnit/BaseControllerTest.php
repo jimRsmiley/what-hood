@@ -11,6 +11,8 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 class BaseControllerTest extends AbstractHttpControllerTestCase {
 
     protected $sm;
+    protected $_entityManager;
+    protected $_testName;
 
     public function setUp()
     {
@@ -19,23 +21,39 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         if( getenv('APPLICATION_ENV') !==  'test' )
             throw new \Exception("you must set APPLICATION_ENV to 'test'");
         $this->sm = Bootstrap::getServiceManager();
+        $this->setApplicationConfig(include 'TestConfig.php');
+        $this->setRemoteAddr();
+        $this->initTestName();
+        $this->setDbName();
+    }
 
-        $this->setApplicationConfig(
-            include 'TestConfig.php'
-        );
-
+    public function tearDown() {
         $doctrine = $this->sm->get('Whathood\Doctrine');
+        $doctrine->dropDb(
+            $doctrine->getPostgresConnection($this->getTestName()),
+            $this->getTestName()
+        );
+    }
+
+    public function initTestName() {
         $reflect = new \ReflectionClass($this);
-
         $testName = strtolower($reflect->getShortName()."_".$this->getName());
+        $this->setTestName($testName);
+    }
 
-        putenv("WHATHOOD_DB=$testName");
-        $doctrine->initDb($testName);
+    public function setDbName() {
+        putenv("WHATHOOD_DB=".$this->getTestName());
+    }
 
+    public function setRemoteAddr() {
         $serverParams = $this->getRequest()->getServer();
-
         $serverParams->set("REMOTE_ADDR","0.0.0.0");
         $this->getRequest()->setServer($serverParams);
+    }
+
+    public function initDb() {
+        $doctrine = $this->sm->get('Whathood\Doctrine');
+        $doctrine->initDb($this->getTestName());
     }
 
     public function m() {
@@ -49,5 +67,14 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
     public function random_number() {
         return rand(0,10000000);
     }
+
+    public function setTestName($testName) {
+        $this->_testName = $testName;
+    }
+
+    public function getTestName() {
+        return $this->_testName;
+    }
+
 }
 ?>

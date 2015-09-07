@@ -23,7 +23,7 @@ class UserPolygonControllerTest extends BaseControllerTest {
      * @group add-neighborhood
      */
     public function testAddPostAction() {
-
+        $this->initDb();
         $polygon_json_str = $this->get_test_geojson();
         $polygon_array = \Zend\Json\Json::decode($polygon_json_str,\Zend\Json\Json::TYPE_ARRAY);
         $this->getRequest()
@@ -46,7 +46,7 @@ class UserPolygonControllerTest extends BaseControllerTest {
      * @group add-neighborhood
      */
     public function testPostAction() {
-
+        $this->initDb();
         $polygon_json_str = $this->get_test_geojson();
         $polygon_array = \Zend\Json\Json::decode($polygon_json_str,\Zend\Json\Json::TYPE_ARRAY);
         $this->getRequest()
