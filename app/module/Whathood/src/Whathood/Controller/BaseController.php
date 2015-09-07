@@ -114,6 +114,10 @@ class BaseController extends AbstractActionController {
         }
     }
 
+    public function messageQueue() {
+        return $this->queue('message_queue');
+    }
+
     public function pushEmailJob(array $emailJobData) {
         $this->queue('message_queue')
             ->push('Whathood\Job\EmailJob',$emailJobData);

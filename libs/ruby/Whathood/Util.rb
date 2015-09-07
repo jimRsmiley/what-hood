@@ -2,8 +2,12 @@ module Whathood
 
     class Util
 
+        def self.cmd_args
+            return ARGV
+        end
+
         def self.run_cmd(cmd)
-	    puts cmd
+    	    puts cmd
             unless system cmd
                 abort "could not run command: '#{cmd}'"
             end

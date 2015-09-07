@@ -15,17 +15,6 @@ use Whathood\Spatial\PHP\Types\Geometry\Feature;
  */
 class RegionRestController extends AbstractRestfulController {
 
-    public function getList() {
-        $regions = $this->getRegionMapper()->fetchAll();
-
-
-        $array = [];
-        foreach( $regions as $region ) {
-            array_push( $array, $region->toArray() );
-        }
-        return new JsonModel( array( "regions" => $array ) );
-    }
-
     public function get($id) {
         $region = $this->getRegionMapper()->byId($id);
 

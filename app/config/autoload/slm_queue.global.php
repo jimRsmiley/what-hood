@@ -85,7 +85,8 @@ return array(
          */
         'job_manager' => array(
             'factories' => array(
-                'Whathood\job\EmailJob' => 'Whathood\Factory\EmailJobFactory'
+                'Whathood\Job\EmailJob' => 'Whathood\Factory\EmailJobFactory',
+                'Whathood\Job\NeighborhoodBorderBuilderJob' => 'Whathood\Factory\NeighborhoodBorderBuilderJobFactory'
             )
         ),
 

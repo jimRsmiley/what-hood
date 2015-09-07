@@ -1,6 +1,10 @@
 <?php
 namespace Whathood;
 
+if (empty(getenv("APPLICATION_ROOT")))
+    die("in module.config.php; APPLICATION_ROOT var must be defined");
+
+
 /**
  * Zend Framework (http://framework.zend.com/)
  *
@@ -564,12 +568,15 @@ return array(
 
             'Whathood\Config\Yaml' => function($sm) {
                 $reader = $sm->get('Zend\Config\Reader\Yaml');
+                $app_root = getenv("APPLICATION_ROOT");
+                $whathood_local = "$app_root/../whathood.local.yaml";
+
                 $global_config = $reader->fromFile(
                     getenv("APPLICATION_ROOT") . '/../whathood.yaml'
                 );
 
-                if (file_exists('../whathood.local.yaml'))
-                    $local_config  = $reader->fromFile('../whathood.local.yaml');
+                if (file_exists($whathood_local))
+                    $local_config  = $reader->fromFile($whathood_local);
                 else
                     $local_config = array();
                 return array_replace_recursive($global_config, $local_config);
@@ -579,7 +586,6 @@ return array(
                 $yaml_config = $sm->get('Whathood\Config\Yaml');
                 $config = new \Whathood\Config($yaml_config);
                 return $config;
-                die("here's here");
             },
 
             'Whathood\Logger' => function($sm) {

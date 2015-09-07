@@ -1,10 +1,6 @@
 <?php
 namespace Whathood\Job;
 
-use SlmQueue\Job\AbstractJob;
-use SlmQueue\Queue\QueueAwareInterface;
-use SlmQueue\Queue\QueueAwareTrait;
-
 class EmailJob extends AbstractJob {
 
     protected $_emailer;

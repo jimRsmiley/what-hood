@@ -234,6 +234,12 @@ class UserPolygonController extends BaseController
             )
         );
 
+        $this->messageQueue()->push(
+            'Whathood\Job\NeighborhoodBorderBuilderJob',
+            array(
+                'neighborhood' => $neighborhood
+            )
+        );
 
         $this->pushEmailJob(
             \Whathood\View\MailMessageBuilder::buildNewUserPolygon($userPolygon)
