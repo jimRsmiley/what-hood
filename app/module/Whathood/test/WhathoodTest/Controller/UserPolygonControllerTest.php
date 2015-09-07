@@ -40,7 +40,6 @@ class UserPolygonControllerTest extends BaseControllerTest {
 
         $this->dispatch('/whathood/user-polygon/add');
 
-        print $this->getResponse()->getBody();
         $this->assertResponseStatusCode(200);
         $this->assertNotControllerName('error');
     }

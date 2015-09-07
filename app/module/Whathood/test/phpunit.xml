@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap="Bootstrap.php" APPLICATION_ENV="test">
-    
+
     <php>
         <env name="APPLICATION_ENV" value="test"/>
+        <!-- remember this is inside docker -->
+        <env name="APPLICATION_ROOT" value="/var/www/whathood/app"/>
     </php>
 
     <testsuites>

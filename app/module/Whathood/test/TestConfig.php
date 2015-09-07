@@ -17,8 +17,8 @@ return array(
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(
-            $app_root . '/config/autoload/whathood.db.php',
-            $app_root . '../../../config/autoload/*.global.php',
+            $app_root . '/config/autoload/*.global.php',
+            $app_root . '/module/Whathood/test/whathood.test.php',
         ),
         'module_paths' => array(
             $app_root . '/module',

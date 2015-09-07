@@ -24,58 +24,18 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
             include 'TestConfig.php'
         );
 
-        try {
-            $this->sm->get('doctrine.entitymanager.orm_default');
-        } catch(\Exception $e) {
-            $this->create_database("whathood_test");
-            $this->initDb();
-        }
+        $doctrine = $this->sm->get('Whathood\Doctrine');
+        $reflect = new \ReflectionClass($this);
+
+        $testName = strtolower($reflect->getShortName()."_".$this->getName());
+
+        putenv("WHATHOOD_DB=$testName");
+        $doctrine->initDb($testName);
     }
 
-    public static function create_database($db_name) {
-        $servername = "localhost";
-        $username = "vagrant";
-        $password = null;
-        try {
-            $conn = new \PDO("mysql:host=$servername;dbname=$db_name", $username, $password);
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "CREATE DATABASE $db_name";
-            // use exec() because no results are returned
-            $conn->exec($sql);
-            echo "Database created successfully<br>";
-        }
-        catch(PDOException $e)
-        {
-            echo $sql . "<br>" . $e->getMessage();
-        }
-    }
-
-    public function initDb() {
-        $configArray = $this->sm->get('config');
-        $db_name = $configArray['doctrine']['connection']['orm_default'];
-
-        \Zend\Debug\Debug::dump($db_name);
-        exit;
-
-        $DEBUG = true;
-        // Retrieve the Doctrine 2 entity manager
-        $em = $this->sm->get('doctrine.entitymanager.orm_default');
-
-        // Instantiate the schema tool
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
-
-        // Retrieve all of the mapping metadata
-        $classes = $em->getMetadataFactory()->getAllMetadata();
-
-        if( $DEBUG ) print "dropping schema\n";
-        // Delete the existing test database schema
-        $tool->dropSchema($classes);
-
-        if( $DEBUG ) print "creating schema\n";
-        // Create the test database schema
-        $tool->createSchema($classes);
-        if( $DEBUG ) print "schema created\n";
+    public function setupDb() {
+        $doctrineBaseTest = new \Whathood\Doctrine();
+        $doctrineBaseTest->initDb();
     }
 
     public function m() {

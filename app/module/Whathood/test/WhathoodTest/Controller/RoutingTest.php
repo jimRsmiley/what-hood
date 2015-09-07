@@ -20,25 +20,12 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
         parent::setUp();
     }
 
-    public function testRedirect() {
-        $this->getRequest()->setMethod('GET');
-
-        $this->dispatch( '/n/add' );
-
-        $this->assertResponseStatusCode(302);
-    }
-
     public function testHome() {
-
         $this->getRequest()
                 ->setMethod('GET');
-
         $this->dispatch( '/');
-
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('application\controller\index');
+        $this->assertControllerName('whathood\controller\region');
     }
-
-
 }
 ?>

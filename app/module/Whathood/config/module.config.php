@@ -539,6 +539,17 @@ return array(
                 return new \Whathood\Event\TimerListener($sm->get('Whathood\Logger'));
             },
 
+            'Whathood\Doctrine' => function($sm) {
+                $eventManager = $sm->get('doctrine.eventmanager.orm_default');
+                $emConfig = $sm->get('doctrine.configuration.orm_default');
+                return new \Whathood\Doctrine(
+                    array(
+                        'config' => $emConfig,
+                        'eventManager' => $eventManager
+                    )
+                );
+            },
+
             'Whathood\Timer' => function($sm) {
                 static $timer_instance = null;
                 if (null == $timer_instance) {
