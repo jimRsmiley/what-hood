@@ -1,21 +1,36 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
+require 'optparse'
 require_relative '../libs/ruby/Whathood/Util.rb'
 
-if (Whathood::Util.get_cmd_arg('load-functions-only'))
+options = {}
+OptionParser.new do |opts|
+  opts.on('--load-functions-only') do
+    options[:load_functions_only] = true
+  end
+  opts.on('--db-name [DB_NAME]') do |value|
+    $DB_NAME = value
+  end
+end.parse!
+
+$DB_NAME = $DB_NAME || 'whathood'
+
+if (options[:load_functions_only])
+  puts "load only"
   load_functions
 else
+  puts "full"
   import_database
   load_functions
 end
 
-puts "*     done in bin/import_db"
+abort
 
 BEGIN {
     require_relative '../libs/ruby/Whathood/Util.rb'
     DB_HOST= ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis'
-    DB_NAME = Whathood::Util.get_cmd_arg('db-name') || 'whathood'
+    DB_NAME = $DB_NAME
     DB_PORT="5432"
     DB_USER="docker"
 
@@ -24,6 +39,18 @@ BEGIN {
     DB_BAK_FILE="#{DATA_DIR}/whathood_data.sql"
     PSQL_CMD="psql -h #{DB_HOST} -U #{DB_USER} --dbname #{DB_NAME}"
     ROOT_DIR=File.dirname(__FILE__)+"/.."
+
+    def db_name
+      options = {}
+      OptionParser.new do |opts|
+        opts.banner = "Usage: example.rb [options]"
+
+        opts.on('--db-name') do |value|
+            return value
+        end
+      end
+      return 'whathood'
+    end
 
     def import_database
         Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
@@ -50,13 +77,13 @@ BEGIN {
         cmd = "#{ROOT_DIR}/app/vendor/bin/doctrine-module orm:schema-tool:update --dump-sql"
         result = `#{cmd}`
         puts "result of schema-update:\n#{result}"
-        abort 
+        abort
     end
 
     def load_functions
         puts "*     loading functions"
-        cmd="#{ROOT_DIR}/dev-bin/load_sql_functions"
-	system cmd
+        cmd="#{ROOT_DIR}/dev-bin/load_sql_functions --db-name #{$DB_NAME}"
+	    system cmd
     end
 
     def clone_data_repo

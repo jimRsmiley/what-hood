@@ -63,7 +63,14 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         }
     }
 
+    public static function applicationRoot() {
+        return getenv("APPLICATION_ROOT");
+    }
+
     public static function createDb($conn, $db_name) {
+
+        if (static::dbExists($conn,$db_name))
+            die("why existies?");
         $sql = "CREATE DATABASE $db_name";
 
         if (static::$DEBUG) print $sql."\n";
@@ -124,6 +131,7 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
 
     public static function dbExists ($conn, $dbName) {
         $dbs = static::listDbs($conn);
+
         foreach ($dbs as $db) {
             if ($db['datname'] == $dbName) {
                 return true;
@@ -159,18 +167,22 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
 
     /**
      *  Initialize a database. Drop it if it already exists.
-     *
-     ***/
+     **/
     public function initDb($dbName) {
         if (static::$DEBUG) print "initializing database $dbName\n";
+
         $conn = $this->getPostgresConnection('postgres');
-        if ($this->dbExists($conn, $dbName)) {
+
+        if (static::dbExists($conn, $dbName)) {
             if (static::$DEBUG) print "database $dbName already exists\n";
-            $this->dropDb($conn, $dbName);
-            if ($this->dbExists($conn, $dbName)) {
+
+            static::dropDb($conn, $dbName);
+
+            if (static::dbExists($conn, $dbName)) {
                 die("why does db $dbName still exist?");
             }
         }
+
         $this->createDb($conn, $dbName);
 
         if (!$this->dbExists($conn, $dbName))
@@ -181,6 +193,11 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
                 $this->getEventManager(),
                 $dbName
         );
+
+        $entityManager->createNativeQuery(
+            "CREATE SCHEMA whathood",
+            new \Doctrine\ORM\Query\ResultSetMapping()
+        )->execute();
 
         $entityManager->createNativeQuery(
             "CREATE EXTENSION postgis",
@@ -201,6 +218,8 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         // Create the test database schema
         $tool->createSchema($classes);
         if( static::$DEBUG ) print "schema created\n";
+
+        system(static::applicationRoot()."/../bin/import_db --load-functions-only --db-name $dbName");
 
         // don't really know why we have to clear this but it works to stop
         // it when the entity manager doesn't seem to persist shit

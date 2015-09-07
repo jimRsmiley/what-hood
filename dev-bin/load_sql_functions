@@ -1,33 +1,36 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+require_relative '../libs/ruby/Whathood/Util.rb'
 
-DB_NAME = ( ENV.has_key?('PGDATABASE') ? ENV['PGDATABASE'] : 'whathood' )
+OptionParser.new do |opts|
+  opts.on('--db-name [DB_NAME]') do |value|
+    $DB_NAME = value
+  end
+end.parse!
+
+DB_NAME = $DB_NAME || ( ENV.has_key?('PGDATABASE') ? ENV['PGDATABASE'] : 'whathood' )
 DB_HOST = ( ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis' )
 DB_USER = 'docker'
 
 ROOT_DIR=File.dirname(__FILE__)+"/.."
-dir = ROOT_DIR
 
-script_dir = "#{dir}/app/scripts/sql"
+script_dir = "#{ROOT_DIR}/app/scripts/sql"
 
 def run_sql_script(file)
-    `psql -h #{DB_HOST} -U #{DB_USER} --tuples-only --quiet -f #{file} #{DB_NAME}`
+    Whathood::Util.run_cmd("psql -h #{DB_HOST} -U #{DB_USER} --tuples-only --quiet -f #{file} #{DB_NAME}")
 end
 
 def import_files(dir_str)
     files = Dir.glob(dir_str)
     files = files.sort
     files.each do |f|
-        puts "processing #{f}"
+        puts "processing #{DB_NAME}: #{f}"
         run_sql_script(f)
     end
 end
 
-#puts "dropping all functions"
-#drop_sql=`#{ROOT_DIR}/bin/run_sql app/scripts/sql/whathood.script.generate_function_drops.sql | grep DROP`
-#system("psql -h #{DB_HOST} -U #{DB_USER} --tuples-only --quiet -c \"$drop_sql\" #{DB_NAME}")
-
-puts "loading whathood.function.*.sql"
+puts "loading whathood.function.*.sql INTO #{DB_NAME}"
 import_files("#{script_dir}/whathood.function.*.sql")
 puts "loading whathood.view.*.sql"
 import_files("#{script_dir}/whathood.view.*.sql")
