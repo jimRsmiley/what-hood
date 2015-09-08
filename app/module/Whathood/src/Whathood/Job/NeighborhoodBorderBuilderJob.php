@@ -12,14 +12,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
 {
 
     protected $_gridResolution;
-
-    public function setGridResolution($gridResolution) {
-        $this->_gridResolution = $gridResolution;
-    }
-
-    public function getGridResolution() {
-        return $this->_gridResolution;
-    }
+    protected $_heatmapGridResolution;
 
     public function __construct(array $data) {
         parent::__construct($data);
@@ -34,11 +27,9 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         if (empty($job->getGridResolution()))
             throw new \InvalidArgumentException("gridResolution may not be empty");
 
+        if (empty($job->getHeatmapGridResolution()))
+            throw new \InvalidArgumentException("heatmapGridResolution may not be empty");
         return $job;
-    }
-
-    public function getNeighborhood() {
-        return $this->getContent()['neighborhood'];
     }
 
     public function execute() {
@@ -47,15 +38,11 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
 
         $neighborhood = $this->getNeighborhood();
-        $this->infoLog(sprintf("nieghborhood %s(%s)",
-            $neighborhood->getName(), $neighborhood->getId()));
 
         if (!$neighborhood)
             throw new \Whathood\Exception("must include neighborhood in job content");
 
-        $entityManager = $this->m()->entityManager();
-        $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
-        $userPolygons = $this->m()->userPolygonMapper()->fetchAll();
+        $userPolygons = $this->m()->userPolygonMapper()->byNeighborhood($neighborhood);
 
         if (empty($userPolygons)) {
             throw new \Whathood\Exception(
@@ -64,8 +51,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         }
 
         $this->infoLog(
-            sprintf("\tprocessing id=%s name=%s num_user_polygons=%s",
-                $neighborhood->getId(), $neighborhood->getName(), count($userPolygons)));
+            sprintf("neighborhood %s(%s) num_user_polygons=%s",
+                $neighborhood->getName(), $neighborhood->getId(), count($userPolygons)));
 
         try {
             /* build the border */
@@ -76,29 +63,11 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
                 $this->getGridResolution()
             );
 
-            if (empty($electionCollection->getPointElections())) {
-               $this->infoLog("WARN: electionCollection contains no points");
-            }
-            else {
-                try {
-                    if ($this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons)) {
-                        $this->infoLog(
-                            sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
+            $this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
+            $this->infoLog(
+                sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
 
-                        $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
-                    }
-                    else {
-                        $this->infoLog("ERROR: did not get a neighborhood polygon");
-                    }
-                }
-                catch(\Whathood\Exception $e) {
-                    $this->logger()->err("Failed to build polygon for ".$neighborhood->getName().": ". $e->getMessage());
-                } catch(\Exception $e) {
-                    $this->logger()->err("big error trying to build neighborhood polygon");
-                    $this->logger()->err(get_class($e));
-                    $this->logger()->err($e);
-                }
-            }
+            #$this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
             $timer->stop();
         }
         catch(\Exception $e) {
@@ -110,6 +79,9 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
     }
 
     public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
+        if (empty($electionCollection->getPointElections()))
+            throw new \InvalidArgumentException("electionCollection may not be empty");
+
         $polygon = $this->m()->pointElectionMapper()->generateBorderPolygon(
             $electionCollection, $n
         );
@@ -150,7 +122,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
             $this->m()->heatMapPoint()->detach($heatmap_points);
             $this->logger()->info(
-                sprintf("\t\tsaved %s heatmap points from %s points elapsed=%s",
+                sprintf("saved %s heatmap points from %s points elapsed=%s",
                     count($heatmap_points), count($electionCollection->getPointElections()), $timer->elapsedReadableString()
                 )
             );
@@ -159,4 +131,25 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             $this->logger()->info("\t\tno heatmap_points generated to save");
         return $heatmap_points;
     }
+
+    public function setHeatmapGridResolution($gridRes) {
+        $this->_heatmapGridResolution = $gridRes;
+    }
+
+    public function getHeatmapGridResolution() {
+        return $this->_heatmapGridResolution;
+    }
+
+    public function setGridResolution($gridResolution) {
+        $this->_gridResolution = $gridResolution;
+    }
+
+    public function getGridResolution() {
+        return $this->_gridResolution;
+    }
+
+    public function getNeighborhood() {
+        return $this->getContent()['neighborhood'];
+    }
+
 }
