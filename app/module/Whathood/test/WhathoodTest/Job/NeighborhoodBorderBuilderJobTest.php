@@ -19,7 +19,7 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
         parent::setUp();
     }
 
-    public function testUserPolygons() {
+    public function testValidData() {
         $this->initDb();
         $serviceLocator = $this->getServiceLocator();
 
@@ -27,7 +27,7 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
 
         $job = \Whathood\Job\NeighborhoodBorderBuilderJob::build(array(
             'gridResolution'        => 1,
-            'heatmapGridResolution' => $whathoodConfig->heatmapGridResolution(),
+            'heatmapGridResolution' => .5,
             'mapperBuilder'         => $serviceLocator->get('Whathood\Mapper\Builder'),
             'logger'                => $serviceLocator->get('Whathood\Logger')
         ));
@@ -74,7 +74,7 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
         if (count($neighborhood->getUserPolygons()))
             die("should have had more than 0 user polygons");
         $job->setContent(array(
-            'neighborhood' => $neighborhood,
+            'neighborhood_id' => $neighborhood->getId()
         ));
 
         $job->execute();
