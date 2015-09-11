@@ -56,7 +56,6 @@ class Email {
         if (empty($subject))
             throw new \InvalidArgumentException("subject may not be empty");
 
-        $timer = \Whathood\Timer::start("email-sender");
         $subject = sprintf("[%s] %s",
             substr(strtoupper(\Whathood\Util::environment()), 0, 4),
             $subject);
@@ -74,10 +73,6 @@ class Email {
 
         $transport = $this->getTransport();
         $transport->send($message);
-
-        $elapsed = $timer->elapsedReadableString();
-
-        $this->logger()->info("to send email, it took: $elapsed");
     }
 
     public function getTransport() {
