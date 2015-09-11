@@ -237,7 +237,8 @@ class UserPolygonController extends BaseController
         $this->messageQueue()->push(
             'Whathood\Job\NeighborhoodBorderBuilderJob',
             array(
-                'neighborhood' => $neighborhood
+                'neighborhood' => $neighborhood,
+                'neighborhood_id' => $neighborhood->getId()
             )
         );
 

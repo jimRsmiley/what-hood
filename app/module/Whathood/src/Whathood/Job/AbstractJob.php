@@ -3,9 +3,19 @@ namespace Whathood\Job;
 
 abstract class AbstractJob extends \SlmQueue\Job\AbstractJob {
 
-    protected $_logger = null;
+    private $_logger = null;
     protected $_name = null;
     protected $_mapperBuilder;
+
+    public static function build(array $data) {
+        $obj = new static($data);
+        if (!$obj->logger())
+            throw new \InvalidArgumentException("logger may not be empty");
+
+        if (!$obj->m())
+            throw new \InvalidArgumentException("mapperBuilder may not be empty");
+        return $obj;
+    }
 
     public function __construct(array $data) {
         $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods(true);
@@ -32,10 +42,17 @@ abstract class AbstractJob extends \SlmQueue\Job\AbstractJob {
         $this->_logger = $logger;
     }
 
+    public function throwException($str) {
+        $this->infoLog($str);
+        throw new \Exception($str);
+    }
+
     public function infoLog($str) {
+        $str = "MessageQueue: $str";
+        if ($this->logger())
+            $this->logger()->info($str);
         print "$str\n";
     }
 
-    public function logger() { return $this->_logger; }
-
+    private function logger() { return $this->_logger; }
 }

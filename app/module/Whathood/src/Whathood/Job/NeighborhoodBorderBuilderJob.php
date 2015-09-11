@@ -14,12 +14,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
     protected $_gridResolution;
     protected $_heatmapGridResolution;
 
-    public function __construct(array $data) {
-        parent::__construct($data);
-    }
-
     public static function build(array $data) {
-        $job = new NeighborhoodBorderBuilderJob($data);
+        $job = parent::build($data);
 
         if (empty($job->m()))
             throw new \InvalidArgumentException("must define mapperBuilder");
@@ -36,18 +32,31 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         $api_timer = Timer::start('api');
         $this->infoLog("job ".$this->getName()." started");
         $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
+        $this->infoLog("heatmap-grid-resolution: ".rtrim(sprintf("%.8F",$this->getHeatmapGridResolution()),"0"));
 
-        $neighborhood = $this->getNeighborhood();
+        $neighborhood_id = $this->getNeighborhoodId();
 
-        if (!$neighborhood)
-            throw new \Whathood\Exception("must include neighborhood in job content");
+        $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
+
+        if (!$neighborhood) {
+            $str = "must include neighborhood in job content";
+            $this->infoLog($str);
+            throw new \Whathood\Exception($str);
+        }
+
+        if (!$neighborhood->getId())
+            $this->throwException("neighborhood must have id defined");
+
+        $this->infoLog(
+            sprintf("neighborhood %s(%s)", $neighborhood->getName(), $neighborhood->getId()));
 
         $userPolygons = $this->m()->userPolygonMapper()->byNeighborhood($neighborhood);
 
         if (empty($userPolygons)) {
-            throw new \Whathood\Exception(
-                sprintf($this->getName().": no user polygons found for neighborhood %s(%s)",
-                    $neighborhood->getName(), $neighborhood->getId() ));
+            $str = sprintf("%s: no user polygons found for neighborhood %s(%s)",
+                $this->getName(), $neighborhood->getName(), $neighborhood->getId());
+            $this->infoLog($str);
+            throw new \Whathood\Exception($str);
         }
 
         $this->infoLog(
@@ -63,42 +72,40 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
                 $this->getGridResolution()
             );
 
-            $this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
-            $this->infoLog(
-                sprintf("\t\tsaved neighborhood polygon elapsed=%s", $timer->elapsedReadableString()));
+            //$this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
+            $this->infoLog( sprintf("saved neighborhood polygon elapsed=%s",
+                $timer->elapsedReadableString()));
 
-            #$this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
+            $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
             $timer->stop();
         }
         catch(\Exception $e) {
-            $this->logger()->err($e->getMessage());
-            $this->logger()->err($e->getTraceAsString());
+            $this->infoLog($e->getMessage());
+            $this->infoLog($e->getTraceAsString());
             throw $e;
         }
         $this->infoLog("job finished");
     }
 
-    public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $n,$ups) {
+    public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
         if (empty($electionCollection->getPointElections()))
             throw new \InvalidArgumentException("electionCollection may not be empty");
 
-        $polygon = $this->m()->pointElectionMapper()->generateBorderPolygon(
-            $electionCollection, $n
-        );
+        $this->infoLog(sprintf("building neighborhood polygon with %s points",
+            count($electionCollection->getPointElections()) ));
+        $polygon = $this->m()->pointElectionMapper()
+            ->generateBorderPolygon($electionCollection, $neighborhood);
 
-        if (!$polygon) {
-            $this->logger()->warn("Could not construct a neighborhood border for ".$n->getName());
-            return;
-        }
+        if (!$polygon)
+            $this->throwException("No polygon created for neighborhood; possibly not dominant for any point ".$neighborhood->getName());
 
         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
             'geom' => $polygon,
-            'neighborhood' => $n,
+            'neighborhood' => $neighborhood,
             'user_polygons' => $ups,
             'grid_resolution' => $this->getGridResolution()
         ));
         $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
-        $this->m()->neighborhoodPolygonMapper()->detach($neighborhoodPolygon);
         return $neighborhoodPolygon;
     }
 
@@ -121,14 +128,14 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             $this->m()->heatMapPoint()->deleteByNeighborhood($n);
             $this->m()->heatMapPoint()->savePoints($heatmap_points);
             $this->m()->heatMapPoint()->detach($heatmap_points);
-            $this->logger()->info(
+            $this->infoLog(
                 sprintf("saved %s heatmap points from %s points elapsed=%s",
                     count($heatmap_points), count($electionCollection->getPointElections()), $timer->elapsedReadableString()
                 )
             );
         }
         else
-            $this->logger()->info("\t\tno heatmap_points generated to save");
+            $this->infoLog("\t\tno heatmap_points generated to save");
         return $heatmap_points;
     }
 
@@ -148,8 +155,11 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         return $this->_gridResolution;
     }
 
-    public function getNeighborhood() {
-        return $this->getContent()['neighborhood'];
+    public function getNeighborhoodId() {
+        return $this->getContent()['neighborhood_id'];
     }
 
+    public function __construct(array $data) {
+        parent::__construct($data);
+    }
 }

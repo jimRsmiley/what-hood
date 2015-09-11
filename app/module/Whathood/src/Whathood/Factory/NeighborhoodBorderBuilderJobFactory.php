@@ -12,7 +12,7 @@ class NeighborhoodBorderBuilderJobFactory implements FactoryInterface {
         $serviceLocator = $sl->getServiceLocator();
         $config = $serviceLocator->get('Whathood\Config');
 
-        $job = new \Whathood\Job\NeighborhoodBorderBuilderJob(array(
+        $job = \Whathood\Job\NeighborhoodBorderBuilderJob::build(array(
             'gridResolution'        => $config->gridResolution(),
             'heatmapGridResolution' => $config->heatmapGridResolution(),
             'mapperBuilder'         => $serviceLocator->get('Whathood\Mapper\Builder'),
