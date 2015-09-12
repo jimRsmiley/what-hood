@@ -68,9 +68,15 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
                 $this->getGridResolution()
             );
 
-            $this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
+            $polygon = $this->buildNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
 
-            $this->infoLog(sprintf("saved neighborhood polygon elapsed="));
+            if ($polygon) {
+                $this->saveNeighborhoodPolygon($neighborhood, $polygon, $userPolygons);
+                $this->infoLog(sprintf("saved neighborhood polygon"));
+            }
+            else {
+                $this->infoLog(sprintf("NOTE: no neighborhoodPolygon was built, possibly not a dominant neighborhood"));
+            }
         }
         catch(\Exception $e) {
             $this->infoLog($e->getMessage());
@@ -79,23 +85,29 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
         }
     }
 
-    public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
+    /**
+     *  build the neighborhood polygon
+     *
+     **/
+    public function buildNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
         if (empty($electionCollection->getPointElections()))
             throw new \InvalidArgumentException("electionCollection may not be empty");
-
-        $this->infoLog(sprintf("building neighborhood polygon with %s points",
+        $this->infoLog(sprintf("working with %s election points",
             count($electionCollection->getPointElections()) ));
-        $polygon = $this->m()->pointElectionMapper()
+        return $this->m()->pointElectionMapper()
             ->generateBorderPolygon($electionCollection, $neighborhood);
+    }
 
-        if (!$polygon)
-            $this->throwException("No polygon created for neighborhood; possibly not dominant for any point ".$neighborhood->getName());
-
+    /**
+     *  save the neighborhood polygon
+     *
+     **/
+    public function saveNeighborhoodPolygon($neighborhood, $polygon, $ups) {
         $neighborhoodPolygon = NeighborhoodPolygon::build( array(
-            'geom' => $polygon,
-            'neighborhood' => $neighborhood,
-            'user_polygons' => $ups,
-            'grid_resolution' => $this->getGridResolution()
+            'geom'              => $polygon,
+            'neighborhood'      => $neighborhood,
+            'user_polygons'     => $ups,
+            'grid_resolution'   => $this->getGridResolution()
         ));
         $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
         return $neighborhoodPolygon;
