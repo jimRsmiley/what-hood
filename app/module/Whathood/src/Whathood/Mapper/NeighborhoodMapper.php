@@ -200,7 +200,7 @@ class NeighborhoodMapper extends BaseMapper {
      **/
     public function sortByOldestBorder(array $neighborhoods) {
         usort($neighborhoods,array($this,'sortNeighborhoodsByYoungestPolygon'));
-        return $neighborhoods;
+        return array_reverse($neighborhoods);
     }
 
     /**
