@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# pass in the path of the test starting from the module Whathood directory, so "test/" should start the path.
+# gives the benefit of having autocomplete
+# or pass nothing for all tests
+
+ARGS=`echo $@`
+
+sudo docker exec -it wh-nginx /bin/sh -c "cd /var/www/whathood &&  ./bin/run-app $ARGS"

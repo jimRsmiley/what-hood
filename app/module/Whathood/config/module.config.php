@@ -451,12 +451,12 @@ return array(
                         )
                     )
                 ),
-                'watcher-route' => array(
+                'queue' => array(
                     'options' => array(
-                        'route' => 'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=] [--target-precision=]',
+                        'route' => 'queue --rebuild-borders',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\WatcherConsole',
-                            'action' => 'watch'
+                            'controller' => 'Whathood\Controller\JobConsole',
+                            'action' => 'rebuild-borders'
                         )
                     )
                 ),
@@ -749,7 +749,7 @@ return array(
 
             /* console controllers */
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
-            'Whathood\Controller\WatcherConsole'                => 'Whathood\Controller\Console\WatcherController',
+            'Whathood\Controller\JobConsole'                => 'Whathood\Controller\Console\JobController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',

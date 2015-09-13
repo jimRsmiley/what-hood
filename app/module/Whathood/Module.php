@@ -92,7 +92,7 @@ class Module implements ConsoleUsageProviderInterface
         return array(
 
             // watcher-route
-            'watcher [--forever] [--force] [--neighborhood=] [--region=] [--grid-res=] [--target-precision=]' => 'watch for changes in user polygons',
+            array('queue --rebuild-borders', 'rebuild all neighborhood borders'),
             array('--forever','run watcher in a loop forever'),
             array('--force','force a rebuild of whole system'),
             array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),
