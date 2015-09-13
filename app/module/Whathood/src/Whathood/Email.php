@@ -72,7 +72,9 @@ class Email {
         $message->setBody($body);
 
         $transport = $this->getTransport();
-        $transport->send($message);
+
+        if (\Whathood\Util::is_production())
+            $transport->send($message);
     }
 
     public function getTransport() {
