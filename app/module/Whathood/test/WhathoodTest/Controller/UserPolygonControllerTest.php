@@ -36,8 +36,7 @@ class UserPolygonControllerTest extends BaseControllerTest {
                 ))
             );
 
-        $this->dispatch('/whathood/user-polygon/add-post');
-
+        $this->dispatch('/user-neighborhood/add-post');
         $this->assertResponseStatusCode(200);
         $this->assertNotControllerName('error');
     }

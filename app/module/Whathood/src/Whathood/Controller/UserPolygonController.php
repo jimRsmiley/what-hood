@@ -228,9 +228,9 @@ class UserPolygonController extends BaseController
         $this->logger()->info(
             sprintf("saved user-polygon id=%s neighborhood=%s(%s) region=%s ip-address=%s",
                 $userPolygon->getId(),
-                $neighborhood->getName(),
-                $neighborhood->getId(),
-                $region->getName(),
+                $userPolygon->getNeighborhood()->getName(),
+                $userPolygon->getNeighborhood()->getId(),
+                $userPolygon->getRegion()->getName(),
                 $whathoodUser->getIpAddress()
             )
         );
