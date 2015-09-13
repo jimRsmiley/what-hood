@@ -8,31 +8,23 @@ use Whathood\Timer;
 use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;
 
-class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
+class HeatmapBuilderJob extends \Whathood\Job\AbstractJob
 {
 
     protected $_gridResolution;
-    protected $_heatmapGridResolution;
 
     public static function build(array $data) {
         $job = parent::build($data);
-
         if (empty($job->m()))
             throw new \InvalidArgumentException("must define mapperBuilder");
-
         if (empty($job->getGridResolution()))
             throw new \InvalidArgumentException("gridResolution may not be empty");
-
-        if (empty($job->getHeatmapGridResolution()))
-            throw new \InvalidArgumentException("heatmapGridResolution may not be empty");
         return $job;
     }
 
     public function execute() {
         $this->infoLog("job ".$this->getName()." started");
         $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
-        $this->infoLog("heatmap-grid-resolution: ".rtrim(sprintf("%.8F",$this->getHeatmapGridResolution()),"0"));
-
         $neighborhood = $this->m()->neighborhoodMapper()
             ->byId($this->getNeighborhoodId());
 
