@@ -48,7 +48,8 @@ abstract class AbstractJob extends \SlmQueue\Job\AbstractJob {
     }
 
     public function infoLog($str) {
-        $str = "MessageQueue: $str";
+        $str = sprintf( "message-queue:%s %s",
+            $this->getName(), $str);
         if ($this->logger())
             $this->logger()->info($str);
         print "$str\n";
