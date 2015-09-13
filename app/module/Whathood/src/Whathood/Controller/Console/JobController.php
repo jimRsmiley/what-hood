@@ -33,8 +33,7 @@ class JobController extends BaseController {
             'Whathood\Job\NeighborhoodBorderBuilderJob',
             array(
                 'neighborhood_id' => $neighborhood->getId()
-            ),
-
+            )
         );
     }
 
