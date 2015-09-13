@@ -28,11 +28,11 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
     }
 
     public function tearDown() {
-        $doctrine = $this->sm->get('Whathood\Doctrine');
+        /*$doctrine = $this->sm->get('Whathood\Doctrine');
         $doctrine->dropDb(
             $doctrine->getPostgresConnection($this->getTestName()),
             $this->getTestName()
-        );
+        );*/
     }
 
     public function initTestName() {
