@@ -26,8 +26,9 @@ return array(
 
         'job_manager' => array(
             'factories' => array(
-                'Whathood\Job\EmailJob' => 'Whathood\Factory\EmailJobFactory',
-                'Whathood\Job\NeighborhoodBorderBuilderJob' => 'Whathood\Factory\NeighborhoodBorderBuilderJobFactory'
+                'Whathood\Job\EmailJob'                     => 'Whathood\Factory\EmailJobFactory',
+                'Whathood\Job\NeighborhoodBorderBuilderJob' => 'Whathood\Factory\NeighborhoodBorderBuilderJobFactory',
+                'Whathood\Job\HeatmapBuilderJob'            => 'Whathood\Factory\HeatmapBuilderJobFactory'
             )
         ),
 
