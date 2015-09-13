@@ -58,6 +58,9 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
         $queue   = $this->getQueue();
         $job     = $queue->getJobPluginManager()
             ->get('Whathood\Job\HeatmapBuilderJob');
+        $job->setContent(array(
+            'neighborhood_id' => $this->getNeighborhoodId()
+        ));
         $queue->push($job);
     }
 

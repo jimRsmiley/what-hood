@@ -66,8 +66,6 @@ class UserPolygonTest extends \Whathood\PHPUnit\BaseTest {
         $this->assertFalse( empty($userPolygon->GetId()) );
         $this->assertFalse( empty($userPolygon->getNeighborhood()) );
         $this->assertFalse( empty($userPolygon->getNeighborhood()->getId()) );
-
-        print "====>".$userPolygon->getNeighborhood()->getId();
     }
 }
 ?>

@@ -22,6 +22,15 @@ class HeatmapBuilderJob extends \Whathood\Job\AbstractJob
         return $job;
     }
 
+    public function setContent($content) {
+        parent::setContent($content);
+
+        if (!array_key_exists('neighborhood_id', $content))
+            throw new \InvalidArgumentException("neighborhood_id must be included");
+        if (empty($content['neighborhood_id']))
+            throw new \InvalidArgumentException("neighborhood_id may not be empty");
+    }
+
     public function execute() {
         $this->infoLog("job ".$this->getName()." started");
         $this->infoLog("grid-resolution: ".rtrim(sprintf("%.8F",$this->getGridResolution()),"0"));
