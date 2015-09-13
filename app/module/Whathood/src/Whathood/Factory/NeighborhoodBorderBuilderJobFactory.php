@@ -9,14 +9,18 @@ class NeighborhoodBorderBuilderJobFactory implements FactoryInterface {
 
     public function createService(ServiceLocatorInterface $sl)
     {
-        $serviceLocator = $sl->getServiceLocator();
+        if ($sl instanceof \SlmQueue\Job\JobPluginManager)
+            $serviceLocator = $sl->getServiceLocator();
+        else
+            $serviceLocator = $sl;
+
         $config = $serviceLocator->get('Whathood\Config');
 
         $job = \Whathood\Job\NeighborhoodBorderBuilderJob::build(array(
             'gridResolution'        => $config->gridResolution(),
-            'heatmapGridResolution' => $config->heatmapGridResolution(),
             'mapperBuilder'         => $serviceLocator->get('Whathood\Mapper\Builder'),
-            'logger'                => $serviceLocator->get('Whathood\Logger')
+            'logger'                => $serviceLocator->get('Whathood\Logger'),
+            'queue'                 => $serviceLocator->get('Whathood\Service\MessageQueue')
         ));
         return $job;
     }

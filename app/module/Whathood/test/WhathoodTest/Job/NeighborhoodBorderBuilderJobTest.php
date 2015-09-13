@@ -25,18 +25,16 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
 
         $whathoodConfig = $serviceLocator->get('Whathood\Config');
 
-        $job = \Whathood\Job\NeighborhoodBorderBuilderJob::build(array(
-            'gridResolution'        => 1,
-            'heatmapGridResolution' => .5,
-            'mapperBuilder'         => $serviceLocator->get('Whathood\Mapper\Builder'),
-            'logger'                => $serviceLocator->get('Whathood\Logger')
-        ));
+        $factory = new \Whathood\Factory\NeighborhoodBorderBuilderJobFactory();
 
+        $job = $factory->createService(\WhathoodTest\Bootstrap::getServiceManager());
+
+        $job->setGridResolution(1);
         $region = new \Whathood\Entity\Region(array(
             'name' => "Region_".$this->getTestName()
         ));
-        $this->m()->regionMapper()->save($region);
 
+        $this->m()->regionMapper()->save($region);
 
         $whathoodUser = new \Whathood\Entity\WhathoodUser(array(
             'ipAddress' => '0.0.0.0'

@@ -67,11 +67,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
                 $this->getGridResolution()
             );
 
-            //$this->buildAndSaveNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
-            $this->infoLog( sprintf("saved neighborhood polygon elapsed=%s",
-                $timer->elapsedReadableString()));
-
-            $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getHeatmapGridResolution());
+            $this->buildAndSaveHeatmapPoints($userPolygons, $neighborhood, $this->getGridResolution());
             $timer->stop();
         }
         catch(\Exception $e) {
@@ -80,28 +76,6 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
             throw $e;
         }
         $this->infoLog("job finished");
-    }
-
-    public function buildAndSaveNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
-        if (empty($electionCollection->getPointElections()))
-            throw new \InvalidArgumentException("electionCollection may not be empty");
-
-        $this->infoLog(sprintf("building neighborhood polygon with %s points",
-            count($electionCollection->getPointElections()) ));
-        $polygon = $this->m()->pointElectionMapper()
-            ->generateBorderPolygon($electionCollection, $neighborhood);
-
-        if (!$polygon)
-            $this->throwException("No polygon created for neighborhood; possibly not dominant for any point ".$neighborhood->getName());
-
-        $neighborhoodPolygon = NeighborhoodPolygon::build( array(
-            'geom' => $polygon,
-            'neighborhood' => $neighborhood,
-            'user_polygons' => $ups,
-            'grid_resolution' => $this->getGridResolution()
-        ));
-        $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
-        return $neighborhoodPolygon;
     }
 
     /**

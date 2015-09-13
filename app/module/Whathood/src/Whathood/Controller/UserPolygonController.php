@@ -202,33 +202,34 @@ class UserPolygonController extends BaseController
 
         $neighborhood_name  = $this->getRequest()->getPost('neighborhood_name');
         $region_name        = $this->getRequest()->getPost('region_name');
-        $polygon_array       = $this->getRequest()->getPost('polygon_json');
+        $polygon_array      = $this->getRequest()->getPost('polygon_json');
 
         if (empty($polygon_array))
             throw new \InvalidArgumentException("polygon_json may not be empty");
         if (empty($neighborhood_name))
             throw new \InvalidArgumentException("neighborhood_name may not be empty");
 
-        $neighborhood = new Neighborhood(array(
-            'name' => $neighborhood_name ));
-        $region = new Region( array(
-            'name' => $region_name ));
         $polygon = \Whathood\Polygon::buildPolygonFromGeoJsonArray($polygon_array,$srid=4326);
 
         $whathoodUser = $this->getWhathoodUser();
 
         $userPolygon = new UserPolygon( array(
-            'neighborhood' => $neighborhood,
+            'neighborhood' => new Neighborhood(array(
+                'name' => $neighborhood_name )
+            ),
             'polygon' => $polygon,
-            'region' => $region,
+            'region' => new Region( array(
+                'name' => $region_name )
+            ),
             'whathoodUser' => $whathoodUser  ));
 
         $this->m()->userPolygonMapper()->save( $userPolygon );
 
         $this->logger()->info(
-            sprintf("saved user-polygon id=%s neighborhood=%s region=%s ip-address=%s",
+            sprintf("saved user-polygon id=%s neighborhood=%s(%s) region=%s ip-address=%s",
                 $userPolygon->getId(),
                 $neighborhood->getName(),
+                $neighborhood->getId(),
                 $region->getName(),
                 $whathoodUser->getIpAddress()
             )
@@ -237,8 +238,7 @@ class UserPolygonController extends BaseController
         $this->messageQueue()->push(
             'Whathood\Job\NeighborhoodBorderBuilderJob',
             array(
-                'neighborhood' => $neighborhood,
-                'neighborhood_id' => $neighborhood->getId()
+                'neighborhood_id' => $userPolygon->getNeighborhood()->getId()
             )
         );
 
@@ -248,7 +248,8 @@ class UserPolygonController extends BaseController
 
         return new JsonModel( array(
             'status' => 'success',
-            'user_polygon_id' => $userPolygon->getId() ));
+            'user_polygon_id' => $userPolygon->getId() )
+        );
     }
 
     public function byIdAction() {

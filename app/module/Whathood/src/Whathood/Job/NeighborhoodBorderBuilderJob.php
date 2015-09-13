@@ -2,28 +2,39 @@
 
 namespace Whathood\Job;
 
-
-use Whathood\Entity\NeighborhoodPolygon;
+use SlmQueue\Queue\QueueAwareInterface;
+use SlmQueue\Queue\QueueAwareTrait;
+use SlmQueue\Queue\QueueInterface;
 use Whathood\Timer;
 use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;
+use Whathood\Entity\NeighborhoodPolygon;
 
-class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
+class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements QueueAwareInterface
 {
+    use QueueAwareTrait;
 
     protected $_gridResolution;
-    protected $_heatmapGridResolution;
 
     public static function build(array $data) {
-        $job = parent::build($data);
-
+        $job = new static($data);
         if (empty($job->m()))
             throw new \InvalidArgumentException("must define mapperBuilder");
-
         if (empty($job->getGridResolution()))
             throw new \InvalidArgumentException("gridResolution may not be empty");
-
+        if (empty($job->getQueue()))
+            throw new \InvalidArgumentException("queue may not be empty");
         return $job;
+    }
+
+    public function setContent($content) {
+        parent::setContent($content);
+
+        if (!array_key_exists('neighborhood_id', $content))
+            throw new \InvalidArgumentException("neighborhood_id may not be empty");
+
+        if (empty($content['neighborhood_id']))
+            throw new \InvalidArgumentException("must define a neighborhood id");
     }
 
     public function execute() {
@@ -35,7 +46,19 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
 
         $this->processNeighborhood($neighborhood);
 
+        $this->triggerHeatmapJob();
+
         $this->infoLog("job finished");
+    }
+
+    /**
+     *  trigger a heatmap job
+     **/
+    public function triggerHeatmapJob() {
+        $queue   = $this->getQueue();
+        $job     = $queue->getJobPluginManager()
+            ->get('Whathood\Job\HeatmapBuilderJob');
+        $queue->push($job);
     }
 
     /**
