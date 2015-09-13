@@ -95,6 +95,7 @@ class Module implements ConsoleUsageProviderInterface
 
             // watcher-route
             array('queue --rebuild-borders', 'rebuild all neighborhood borders'),
+            array('queue --info', 'display info about the queue'),
             array('--forever','run watcher in a loop forever'),
             array('--force','force a rebuild of whole system'),
             array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),

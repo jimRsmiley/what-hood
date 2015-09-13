@@ -15,6 +15,7 @@ class Builder extends BaseMapper {
     protected $_test_point_mapper;
     protected $_points_as_polygon_mapper;
     protected $_heatmap_point;
+    protected $_queue_mapper;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
@@ -42,6 +43,12 @@ class Builder extends BaseMapper {
                 $this->sm->get('Whathood\Mapper\HeatMapPoint');
         }
         return $this->_heatmap_point;
+    }
+
+    public function queueMapper() {
+        if (!$this->_queue_mapper)
+            $this->_queue_mapper = $this->sm->get('Whathood\Mapper\QueueMapper');
+        return $this->_queue_mapper;
     }
 
     public function pointsAsPolygonMapper() {

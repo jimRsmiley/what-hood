@@ -451,6 +451,15 @@ return array(
                         )
                     )
                 ),
+                'queue-info' => array(
+                    'options' => array(
+                        'route' => 'queue --info',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\JobConsole',
+                            'action' => 'info'
+                        )
+                    )
+                ),
                 'queue' => array(
                     'options' => array(
                         'route' => 'queue --rebuild-borders',
@@ -647,6 +656,11 @@ return array(
                 return new \Whathood\SchemaTool($sm);
             },
 
+            'Whathood\Mapper\QueueMapper'  => function($sm) {
+                $em = $sm->get('mydoctrineentitymanager');
+                $mapper = new \Whathood\Mapper\QueueMapper( $sm, $em );
+                return $mapper;
+            },
             'Whathood\Mapper\PointsAsPolygonMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\PointsAsPolygonMapper( $sm, $em );
@@ -749,7 +763,7 @@ return array(
 
             /* console controllers */
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
-            'Whathood\Controller\JobConsole'                => 'Whathood\Controller\Console\JobController',
+            'Whathood\Controller\JobConsole'                    => 'Whathood\Controller\Console\JobController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',
