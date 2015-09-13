@@ -69,8 +69,10 @@ class Module implements ConsoleUsageProviderInterface
         }
 
         else if ($error == Application::ERROR_ROUTER_NO_MATCH) {
+            $requestUri = $e->getApplication()->getRequest()->getRequestUri();
+
             // the url doesn't match route, for example, there is no /foo literal of route
-            $logText =  'The requested URL could not be matched by routing.';
+            $logText =  "The requested URL($requestUri) could not be matched by routing.";
             $logger->err($logText);
         }
         else if ($error == Application::ERROR_EXCEPTION) {
