@@ -22,9 +22,16 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
 
     public function testHome() {
         $this->initDb();
+
+        $region = new \Whathood\Entity\Region(array(
+            'name' => 'Philadelphia'
+        ));
+        $this->m()->regionMapper()->save($region);
+
         $this->getRequest()
                 ->setMethod('GET');
         $this->dispatch( '/');
+
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('whathood\controller\region');
     }
