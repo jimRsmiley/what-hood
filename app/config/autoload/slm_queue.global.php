@@ -15,6 +15,8 @@ return array(
 
         'worker_strategies' => array(
             'default' => array( // per worker
+                // memory max 512 megs
+                \SlmQueue\Strategy\MaxMemoryStrategy::class => ['max_memory' => 512 * 1024 * 1024],
             ),
             'queues' => array( // per queue
                 'default' => array(
