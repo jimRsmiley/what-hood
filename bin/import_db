@@ -25,12 +25,10 @@ else
   load_functions
 end
 
-abort
-
 BEGIN {
     require_relative '../libs/ruby/Whathood/Util.rb'
     DB_HOST= ENV.has_key?('PGHOST') ? ENV['PGHOST'] : 'wh-postgis'
-    DB_NAME = $DB_NAME
+    DB_NAME = 'whathood'
     DB_PORT="5432"
     DB_USER="docker"
 
