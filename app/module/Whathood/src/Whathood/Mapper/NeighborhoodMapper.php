@@ -194,5 +194,46 @@ class NeighborhoodMapper extends BaseMapper {
             ->setParameter(':no_build_border', $no_build_border)
             ->getResult();
     }
+
+    /**
+     *  returns neighborhoods in order of oldest polygon
+     **/
+    public function sortByOldestBorder(array $neighborhoods) {
+        usort($neighborhoods,array($this,'sortNeighborhoodsByYoungestPolygon'));
+        return $neighborhoods;
+    }
+
+    /**
+     * returns 1 if n1 has a younger(or no) polygon than n2, else if n2 is younger, returns -1, if they're equal, returns 0
+    **/
+    public function sortNeighborhoodsByYoungestPolygon(NeighborhoodEntity $n1, NeighborhoodEntity $n2) {
+        $mapper = $this->m()->neighborhoodPolygonMapper();
+
+        try {
+            $np1 = $mapper->latestByNeighborhood($n1);
+        }
+        catch(\Exception $e) {
+            $np1 = null;
+        }
+
+        try {
+            $np2 = $mapper->latestByNeighborhood($n2);
+        }
+        catch(\Exception $e) {
+            $np2 = null;
+        }
+
+        if ($np1 == null and $np2 == null)
+            return 0;
+        else if ($np1 == null and $np2)
+            return 1;
+        else if ($np1 and $np2 == null)
+            return -1;
+        else if ($np1->getCreatedAt() < $np2->getCreatedAt())
+            return 1;
+        else if ($np1->getCreatedAt() > $np2->getCreatedAt())
+            return -1;
+        return 0;
+    }
 }
 ?>

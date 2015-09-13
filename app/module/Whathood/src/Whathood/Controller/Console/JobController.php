@@ -10,6 +10,9 @@ class JobController extends BaseController {
 
         $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
 
+        $neighborhoods = $this->m()->neighborhoodMapper()
+            ->sortByOldestBorder($neighborhoods);
+
         foreach ($neighborhoods as $neighborhood) {
             $this->logger()->info(sprintf("creating job for %s(%s)",
                 $neighborhood->getName(), $neighborhood->getId() ));
@@ -18,7 +21,12 @@ class JobController extends BaseController {
                 'Whathood\Job\NeighborhoodBorderBuilderJob',
                 array(
                     'neighborhood_id' => $neighborhood->getId()
+                ),
+                'Whathood\Job\HeatmapBuilderJob',
+                array(
+                    'neighborhood_id' => $neighborhood->getId()
                 )
+
             );
         }
     }

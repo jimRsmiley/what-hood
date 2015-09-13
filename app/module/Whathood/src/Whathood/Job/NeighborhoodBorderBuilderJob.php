@@ -16,6 +16,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
 
     protected $_gridResolution;
 
+    protected $_build_heatmap = false;
+
     public static function build(array $data) {
         $job = new static($data);
         if (empty($job->m()))
@@ -46,7 +48,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
 
         $this->processNeighborhood($neighborhood);
 
-        $this->triggerHeatmapJob();
+        if ($this->buildHeatmap())
+            $this->triggerHeatmapJob();
 
         $this->infoLog("job finished");
     }
@@ -137,6 +140,18 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
         ));
         $this->m()->neighborhoodPolygonMapper()->save($neighborhoodPolygon);
         return $neighborhoodPolygon;
+    }
+
+    public function buildHeatmap() {
+        return $this->getBuildHeatmap();
+    }
+
+    public function getBuildHeatmap() {
+        return $this->_build_heatmap;
+    }
+
+    public function setBuildHeatmap($buildHeatmap) {
+        $this->_build_heatmap = $buildHeatmap;
     }
 
     public function setGridResolution($gridResolution) {
