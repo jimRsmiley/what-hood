@@ -8,8 +8,16 @@ return array(
     'slm_queue' => array(
         'queues' => array(
             'message_queue' => array(
-                'deleted_lifetime' => 7,
-                'buried_lifetime' => 120
+
+                /* How long to keep deleted (successful) jobs (in minutes) */
+                'deleted_lifetime' => 60 * 24 * 7,
+
+                /* How long to keep buried (failed) jobs (in minutes) */
+                'buried_lifetime' => 60 * 24 * 7,
+
+                // connection => '',
+
+                // table_name => ''
             )
         ),
 
