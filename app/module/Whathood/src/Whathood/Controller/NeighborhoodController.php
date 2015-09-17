@@ -78,4 +78,6 @@ class NeighborhoodController extends BaseController {
             throw new \Exception('not yet implemented');
         }
     }
+
+    public function listAction() {}
 }

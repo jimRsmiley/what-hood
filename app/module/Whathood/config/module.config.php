@@ -57,7 +57,7 @@ return array(
             ),
 
             // don't put any routes before this one either
-            'neighborhood' => array(
+            'region_neighborhood' => array(
                 'type'    => 'Segment',
                 'options' => array(
                     'route'    => '/:region/:neighborhood[/]',
@@ -159,6 +159,30 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
+            ),
+
+            'neighborhood' => array(
+                'type' => 'segment',
+                'may_terminate' => false,
+                'options' => array(
+                    'route' => '/neighborhood',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Whathood\Controller',
+                        'controller' => 'Whathood\Controller\Neighborhood',
+                        'action'     => 'index'
+                    ),
+                ),
+                'child_routes' => array(
+                    'default' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/:action',
+                            'defaults' => array(
+                                'controller'    => 'Whathood\Controller\Neighborhood',
+                            )
+                        )
+                    ),
+                )
             ),
 
             /**
@@ -352,6 +376,27 @@ return array(
                         )
                     ),
 
+                    'neighborhood' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/neighborhood',
+                            'defaults' => array(
+                                'controller' => 'Whathood\Controller\NeighborhoodRestful',
+                            )
+                        ),
+                        'child_routes' => array(
+                            'data_tables' => array(
+                                'type' => 'segment',
+                                'options' => array(
+                                    'route' => '/data-tables',
+                                    'defaults' => array(
+                                        'controller' => 'Whathood\Controller\NeighborhoodRestful',
+                                        'action' => 'data-tables'
+                                    )
+                                )
+                            ),
+                        )
+                    ),
                     'user_neighborhood' => array(
                         'type' => 'Segment',
                         'options' => array(
@@ -755,6 +800,7 @@ return array(
 
             /* restful controllers */
             'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
+            'Whathood\Controller\NeighborhoodRestful'           => 'Whathood\Controller\Restful\NeighborhoodRestfulController',
             'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\Restful\UserPolygonController',
             'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\PointElectionRestful'          => 'Whathood\Controller\Restful\PointElectionController',
