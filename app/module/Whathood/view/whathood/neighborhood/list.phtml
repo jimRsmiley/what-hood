@@ -1,17 +1,8 @@
-<?=$this->mybreadcrumbs()?>
-
-<?php foreach( $this->neighborhoods as $neighborhood ) : ?>
-    <div class="neighborhood-list">
-        <?php //echo $n->getUser()->getName(); ?>
-        <a href="<?=$this->url('neighborhood_id', array(
-                'neighborhood_id'   => $neighborhood->getId()
-            ));?>"
-        >
-        ( <?=$neighborhood->getId()?> ) <?php echo $neighborhood->getId()
-                    ." "
-                    .$neighborhood->getNeighborhood()->getRegion()->getName()
-                    ." \ "
-                    .$neighborhood->getNeighborhood()->getName(); ?>
-        </a>
-    </div>
-<?php endforeach; ?>
+<div class="display" cellspacing="0" width="100%">
+  <table id="wh-datatable" class="display" cellspacing="0" width="100%"></table>
+</div>
+<script>
+  $(document).ready( function() {
+    window.Whathood.neighborhood.list()
+  });
+</script>
