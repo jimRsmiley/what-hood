@@ -4,13 +4,12 @@ W = window.Whathood
 
 W.user_neighborhood =
   list: () ->
-    console.log "pulling"
-    $('#up_dataTable').DataTable( {
-      "ordering": false,
-      "processing": true,
-      "serverSide": true,
-      "ajax": '/api/v1/user-neighborhood/data-tables'
-    })
+    dataTable = new Whathood.DataTable
+      entity_name: 'user-neighborhood',
+      # match the order up with the neighborhood json object
+      column_names: [ 'id', 'createdAt', 'name'],
+      div_id: "wh_uptable"
+    dataTable.render()
 
 W.user_polygon_view = () ->
   user_polygon_id = $("#user_polygon").attr 'data-id'
