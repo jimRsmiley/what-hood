@@ -31,17 +31,11 @@ else :
                 </div>
 
             </div>
-            <div>
-                <div class="col-sm-9">
-                  <label for "input_ip_address" class="col-sm-3 control-label">IP Address</label>
-                    <p id="input_ip_address" class="form-control-static"><?=$user_polygon->getWhathoodUser()->getIpAddress()?></p>
-                </div>
-            </div>
-                <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
-                    data-x="<?=$this->x?>"
-                    data-y="<?=$this->y?>"
-                    data-neighborhood_name="<?=$user_polygon->getNeighborhood()->getName()?>"
-                >
+            <input type='hidden' name="user_polygon_id" data-user_polygon_id="<?=$user_polygon->getId()?>"
+                data-x="<?=$this->x?>"
+                data-y="<?=$this->y?>"
+                data-neighborhood_name="<?=$user_polygon->getNeighborhood()->getName()?>"
+            >
         </form>
 
         <div class="row">
