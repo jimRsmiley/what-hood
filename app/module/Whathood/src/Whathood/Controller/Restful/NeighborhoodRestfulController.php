@@ -6,7 +6,9 @@ use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
 
 /**
+ *
  * serve neighborhood REST data
+ *
  */
 class NeighborhoodRestfulController extends BaseController {
 
@@ -32,8 +34,8 @@ class NeighborhoodRestfulController extends BaseController {
             ->from('Whathood\Entity\Neighborhood', 'n')
             ->getQuery();
 
-        $paginator = new \Whathood\View\Paginator\Paginator(
-                        new \Whathood\View\Paginator\PaginatorAdapter($query)
+        $paginator = new \Whathood\View\Paginator\NeighborhoodPaginator(
+                        new \Whathood\View\Paginator\NeighborhoodPaginatorAdapter($query)
                 );
         $paginator->setDefaultItemCountPerPage($item_count_per_page);
         $paginator->setCurrentPageNumber($pageNum);

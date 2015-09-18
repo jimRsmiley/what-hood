@@ -23,7 +23,9 @@ module.exports = function(grunt) {
                     'coffeescript/Whathood/*.coffee',
                     'coffeescript/Whathood/NeighborhoodPolygonMap.coffee',
                     // the pages
-                    'coffeescript/**/*.coffee',
+                    'coffeescript/*.coffee',
+                    'coffeescript/pages/*.coffee',
+                    'coffeescript/pages/neighborhood.coffee',
                   ]
                 }
             }
