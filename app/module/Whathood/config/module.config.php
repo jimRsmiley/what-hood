@@ -173,6 +173,15 @@ return array(
                     ),
                 ),
                 'child_routes' => array(
+                    'id' => array(
+                        'type'  => 'Segment',
+                        'options' => array(
+                            'route' => '/id/:id[/]',
+                            'defaults' => array(
+                                'action'        => 'by-id'
+                            )
+                        )
+                    ),
                     'default' => array(
                         'type'  => 'Segment',
                         'options' => array(

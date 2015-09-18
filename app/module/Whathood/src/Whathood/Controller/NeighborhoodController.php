@@ -51,6 +51,48 @@ class NeighborhoodController extends BaseController {
         ));
     }
 
+    public function byIdAction() {
+        $neighborhood_id = $this->params()->fromRoute("id");
+
+        if (empty($neighborhood_id))
+            throw new \InvalidArgumentException("neighborhood_id must be defined");
+
+        try {
+            $neighborhood = $this->m()->neighborhoodMapper()
+                ->byId($neighborhood_id);
+        } catch(\Exception $e) {
+            $viewModel = new ViewModel(array(
+                'message' => sprintf("No neighborhood with id %s",
+                    $neighborhood_id )
+            ));
+            $viewModel->setTemplate('whathood/neighborhood/error_no_neighborhood.phtml');
+            return $viewModel;
+        }
+
+        if (empty($neighborhood))
+            throw new \Exception("no neighborhood was returned");
+
+        $latest_np = null;
+
+        try {
+            $latest_np = $this->m()->neighborhoodPolygonMapper()
+                ->latestByNeighborhood($neighborhood);
+            $user_polygon_count = $latest_np->userPolygonCount();
+        }
+        catch(\Exception $e) {
+            $user_polygon_count = 0;
+        }
+
+        $userPolygons = $this->m()->userPolygonMapper()->byNeighborhood($neighborhood);
+        $viewModel = new ViewModel( array(
+            'neighborhood'       => $neighborhood,
+            'neighborhood_polygon' => $latest_np,
+            'user_polygon_count' => count($userPolygons)
+        ));
+        $viewModel->setTemplate('whathood/neighborhood/show.phtml');
+        return $viewModel;
+    }
+
     public function deleteAction() {
         $neighborhood_id = $this->params()->fromRoute('id');
         $neighborhood_name = $this->paramFromRoute('neighborhood');
