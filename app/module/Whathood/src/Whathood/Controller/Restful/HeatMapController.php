@@ -28,7 +28,11 @@ class HeatMapController extends BaseController {
     }
 
     public function noHeatmapPointsAction() {
-        $this->m()->heatMapPoint()->noHeatmapPoints();
+        $neighborhoods = $this->m()->heatMapPoint()->neighborhoodsWithNoHeatmapPoints();
+
+        foreach($neighborhoods as $n) {
+            print $n->getName();
+        }
     }
 
 }

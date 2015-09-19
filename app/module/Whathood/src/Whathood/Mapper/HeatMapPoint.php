@@ -34,22 +34,20 @@ class HeatMapPoint extends BaseMapper {
     /**
      * return a list of neighborhoods with no heatmap points
      **/
-    public function noHeatmapPoints() {
+    public function neighborhoodsWithNoHeatmapPoints() {
+
+        $notQb = $this->em->createQueryBuilder()
+            ->select("IDENTITY(hmp.neighborhood)")
+            ->from('Whathood\Entity\HeatMapPoint','hmp')
+            ->join('hmp.neighborhood','n');
+
         $qb = $this->em->createQueryBuilder();
-
-        // get the neighborhood ids that have heatmap points
-        $qb1 = $this->em->createQueryBuilder();
-        $qb->select( array('IDENTITY(hmp.neighborhood) AS id') )
-            ->from('Whathood\Entity\HeatMapPoint', 'hmp')
-            ->distinct(true)
-            ->orderBy('id','DESC');
-        $results = $qb->getQuery()->getResult();
-
-        foreach($results as  $row) {
-            print $row['id'].'<br/>';
-        }
-
-        exit;
+        $query = $qb->select("n2")
+            ->from('Whathood\Entity\Neighborhood','n2')
+            ->where($qb->expr()->notIn('n2.id',$notQb->getDQL()))
+            ->getQuery()
+            ;
+        return $query->getResult();
     }
 
     public function deleteByNeighborhood(Neighborhood $neighborhood) {
