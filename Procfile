@@ -2,6 +2,7 @@
 
 
 # watch for coffeescript changes and rebuild if the code changes
-coffee: grunt watch
+grunt_watch: grunt watch
 
-message_queue: rerun --name "Dev Dir Change Queue Worker Monitor" --background --pattern '"*.{php,rb,yaml}"' -d './' --ignore 'vendor/' --ignore 'data/' -- sudo stop wh-worker; sudo start wh-worker
+# current directory implicitly watched
+rerun_message_queue: rerun --name "Dev Dir Change Queue Worker Monitor" --background --pattern '"*.{php,rb,yaml}"' --ignore 'vendor/' --ignore 'data/' -- sudo stop wh-worker; sudo start wh-worker
