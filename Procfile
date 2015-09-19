@@ -5,4 +5,4 @@
 grunt_watch: grunt watch
 
 # current directory implicitly watched
-rerun_message_queue: rerun --name "Dev Dir Change Queue Worker Monitor" --background --pattern '"*.{php,rb,yaml}"' --ignore 'vendor/' --ignore 'data/' -- sudo stop wh-worker; sudo start wh-worker
+rerun_message_queue: rerun --name "Dev Dir Change Queue Worker Monitor" --background -d app --pattern '"*.{php,rb,yaml}"' --ignore 'test/' --ignore 'view/' --ignore 'vendor/' --ignore 'data/' -- sudo stop wh-worker; sudo start wh-worker
