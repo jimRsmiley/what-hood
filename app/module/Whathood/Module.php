@@ -71,7 +71,7 @@ class Module implements ConsoleUsageProviderInterface
         else if ($error == Application::ERROR_ROUTER_NO_MATCH) {
             $request = $e->getApplication()->getRequest();
 
-            $requestUri = '';
+            $requestUriStr = '';
             if ($request instanceof \Zend\Http\PhpEnvironment\Request) {
                 $requestUriStr = "(".$request->getRequestUri().")";
             }
