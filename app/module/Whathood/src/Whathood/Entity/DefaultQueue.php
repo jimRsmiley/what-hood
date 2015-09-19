@@ -4,6 +4,7 @@ namespace Whathood\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use SlmQueue\Worker\WorkerEvent;
 
 /**
  * DefaultQueue
@@ -317,5 +318,39 @@ class DefaultQueue
     public function getTrace()
     {
         return $this->trace;
+    }
+
+    public function getStatusString() {
+
+        switch ($this->getStatus()) {
+            case (WorkerEvent::JOB_STATUS_FAILURE_RECOVERABLE):
+                return "FAILURE_RECOVERABLE";
+                break;
+            case (WorkerEvent::JOB_STATUS_FAILURE):
+                return "FAILURE";
+                break;
+            case (WorkerEvent::JOB_STATUS_SUCCESS):
+                return "SUCCESS";
+                break;
+            case (WorkerEvent::JOB_STATUS_UNKNOWN):
+                return "UNKNOWN";
+                break;
+            default:
+                return "UNKNOWN_STATUS";
+        };
+    }
+
+    public function toArray() {
+        return array(
+            'id'        => $this->getId(),
+            'status'    => $this->getStatus(),
+            'status_string'    => $this->getStatusString(),
+            'created'   => $this->getCreated(),
+            'executed'  => $this->getExecuted(),
+            'scheduled' => $this->getScheduled(),
+            'finished'  => $this->getFinished(),
+            'message'   => $this->getMessage(),
+            'trace'     => $this->getTrace()
+        );
     }
 }

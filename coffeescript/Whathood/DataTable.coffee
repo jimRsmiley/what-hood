@@ -6,25 +6,26 @@ class Whathood.DataTable
   constructor: (@args) ->
     @div_id = @args.div_id
     @entity_name = @args.entity_name
-    @myvar = 0
     @column_names = @args.column_names
     @$tableDiv = $("##{@div_id}")
     @columnDefs = @args.columnDefs
-  render: () ->
     $node = $("##{@div_id}")
     $node.html "<thead><tr></tr></thead>"
     $tr = $node.find('thead tr')
-    for id in @column_names
-      $tr.append "<th>#{id}</th>"
-
+    for column in @args.columns
+      $tr.append "<th>#{column.data}</th>"
     opts =
       "ordering": false,
       "processing": true,
       "serverSide": true,
       "ajax": "/api/v1/#{@entity_name}/data-tables"
+    if @args.columnDefs
+      opts.columnDefs = @args.columnDefs
 
-    if @columnDefs
-      opts.columnDefs = @columnDefs
+    if @args.columns
+      opts.columns = @args.columns
 
     console.log opts
     @$tableDiv.DataTable opts
+
+  render: () ->

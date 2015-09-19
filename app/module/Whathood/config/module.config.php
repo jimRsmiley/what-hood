@@ -324,17 +324,22 @@ return array(
                 'options' => array(
                     'route' => '/api/v1',
                     'defaults' => array(
-                        'controller' => 'Whathood\Controller\Activities',
-                        'action' => 'index',
+                        '__NAMESPACE__' => 'Whathood\Controller\Restful'
                     ),
                 ),
                 'child_routes' => array(
+                    'default' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/:controller/:action'
+                        )
+                    ),
                     'rest_testpoint' => array(
                         'type' => 'segment',
                         'options' => array(
                             'route' => '/testpoint',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\TestPointRestful'
+                                'controller' => 'TestPoint'
                             )
                         )
                     ),
@@ -344,7 +349,7 @@ return array(
                         'options' => array(
                             'route' => '/heatmap-points/neighborhood_id/:neighborhood_id',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\HeatMapRestful',
+                                'controller' => 'Heatmap',
                                 'action' => 'get-list'
                             )
                         )
@@ -355,7 +360,7 @@ return array(
                         'options' => array(
                             'route' => '/neighborhood-border',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
+                                'controller' => 'NeighborhoodPolygon',
                                 'action' => 'get-list'
                             )
                         ),
@@ -366,7 +371,6 @@ return array(
                                 'options' => array(
                                     'route' => '/region/:region[/]',
                                     'defaults' => array(
-                                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
                                         'action' => 'byRegion'
                                     )
                                 )
@@ -377,7 +381,7 @@ return array(
                                 'options' => array(
                                     'route' => '/:neighborhood_id[/]',
                                     'defaults' => array(
-                                        'controller' => 'Whathood\Controller\NeighborhoodPolygonRestful',
+                                        'controller' => 'NeighborhoodPolygon',
                                         'action' => 'get-list'
                                     )
                                 )
@@ -390,7 +394,7 @@ return array(
                         'options' => array(
                             'route' => '/neighborhood',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\NeighborhoodRestful',
+                                'controller' => 'Neighborhood',
                             )
                         ),
                         'child_routes' => array(
@@ -399,7 +403,6 @@ return array(
                                 'options' => array(
                                     'route' => '/data-tables',
                                     'defaults' => array(
-                                        'controller' => 'Whathood\Controller\NeighborhoodRestful',
                                         'action' => 'data-tables'
                                     )
                                 )
@@ -411,7 +414,7 @@ return array(
                         'options' => array(
                             'route' => '/user-neighborhood',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\UserPolygonRestful',
+                                'controller' => 'UserPolygon'
                             )
                         ),
                         'child_routes' => array(
@@ -420,7 +423,6 @@ return array(
                                 'options' => array(
                                     'route' => '/data-tables',
                                     'defaults' => array(
-                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
                                         'action' => 'data-tables'
                                     )
                                 )
@@ -430,7 +432,6 @@ return array(
                                 'options' => array(
                                     'route' => '/list[/page/:page][/count_per_page/:count_per_page]',
                                     'defaults' => array(
-                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
                                         'action' => 'list'
                                     )
                                 )
@@ -439,9 +440,6 @@ return array(
                                 'type' => 'segment',
                                 'options' => array(
                                     'route' => '/:action',
-                                    'defaults' => array(
-                                        'controller' => 'Whathood\Controller\UserPolygonRestful',
-                                    )
                                 )
                             )
                         )
@@ -452,7 +450,7 @@ return array(
                         'options' => array(
                             'route' => '/user-polygon[/:id]',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\UserPolygonRestful',
+                                'controller' => 'UserPolygon',
                                 'action' => 'get'
                             )
                         )
@@ -463,7 +461,7 @@ return array(
                         'options' => array(
                             'route' => '/point-election[/x/:x][/y/:y][/]',
                             'defaults' => array(
-                                'controller' => 'Whathood\Controller\PointElectionRestful',
+                                'controller' => 'PointElection',
                                 'action' => 'get-list'
 
                             )
@@ -806,15 +804,17 @@ return array(
             'Whathood\Controller\Search' => 'Whathood\Controller\SearchController',
             'Whathood\Controller\UserPolygon' => 'Whathood\Controller\UserPolygonController',
             'Whathood\Controller\TestPoint' => 'Whathood\Controller\TestPointController',
+            'Whathood\Controller\Queue' => 'Whathood\Controller\QueueController',
 
             /* restful controllers */
-            'Whathood\Controller\NeighborhoodPolygonRestful'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
-            'Whathood\Controller\NeighborhoodRestful'           => 'Whathood\Controller\Restful\NeighborhoodRestfulController',
-            'Whathood\Controller\UserPolygonRestful'            => 'Whathood\Controller\Restful\UserPolygonController',
-            'Whathood\Controller\RegionRestful'                 => 'Whathood\Controller\RegionRestController',
-            'Whathood\Controller\PointElectionRestful'          => 'Whathood\Controller\Restful\PointElectionController',
-            'Whathood\Controller\TestPointRestful'              => 'Whathood\Controller\Restful\TestPointRestfulController',
-            'Whathood\Controller\HeatMapRestful'                => 'Whathood\Controller\Restful\HeatMapController',
+            'Whathood\Controller\Restful\NeighborhoodPolygon'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
+            'Whathood\Controller\Restful\Neighborhood'           => 'Whathood\Controller\Restful\NeighborhoodRestfulController',
+            'Whathood\Controller\Restful\UserPolygon'            => 'Whathood\Controller\Restful\UserPolygonController',
+            'Whathood\Controller\Restful\Region'                 => 'Whathood\Controller\RegionRestController',
+            'Whathood\Controller\Restful\PointElection'          => 'Whathood\Controller\Restful\PointElectionController',
+            'Whathood\Controller\Restful\TestPoint'              => 'Whathood\Controller\Restful\TestPointRestfulController',
+            'Whathood\Controller\Restful\HeatMap'                => 'Whathood\Controller\Restful\HeatMapController',
+            'Whathood\Controller\Restful\Queue'                  => 'Whathood\Controller\Restful\QueueRestfulController',
 
             /* console controllers */
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
