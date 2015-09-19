@@ -1,18 +1,25 @@
 #!/usr/bin/env ruby
 
+# RUNS OUTSIDE OF THE DOCKER CONTAINER
+
 require 'fileutils'
-backup_dir = get_backup_dir
 
 HOST="0.0.0.0"
 USER="docker"
+NUM_USER_BORDERS=`d-bin/exec run-app up count`
 
-puts "backing up database"
-backup_db backup_dir
-
-puts "data dumperd to directory #{backup_dir}"
-commit_and_push backup_dir
+backup_dir = get_backup_dir()
+rm_old_git_files(backup_dir)
+backup_db(backup_dir)
+commit_and_push(backup_dir)
 
 BEGIN {
+
+    def rm_old_git_files(backup_dir)
+      puts "clearing repo: git rm -f *"
+      Dir.chdir backup_dir
+      system "git rm -f *"
+    end
 
     def get_backup_dir
         bin_dir = File.dirname(__FILE__)
@@ -31,13 +38,13 @@ BEGIN {
     end
 
     def backup_db(backup_dir)
-        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner whathood > #{backup_dir}/whathood_schema.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner whathood > #{backup_dir}/whathood_full_#{NUM_USER_BORDERS}.sql"
 		puts cmd
 		system cmd
-        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --schema-only whathood > #{backup_dir}/whathood_schema_#{NUM_USER_BORDERS}.sql"
 		puts cmd
         system cmd
-        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --disable-triggers --data-only whathood > #{backup_dir}/whathood_data.sql"
+        cmd="pg_dump -h #{HOST} -U #{USER} --no-owner --disable-triggers --data-only whathood > #{backup_dir}/whathood_data_#{NUM_USER_BORDERS}.sql"
 		puts cmd
         system cmd
     end
