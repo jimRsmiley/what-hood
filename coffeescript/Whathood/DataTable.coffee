@@ -25,7 +25,6 @@ class Whathood.DataTable
     if @args.columns
       opts.columns = @args.columns
 
-    console.log opts
     @$tableDiv.DataTable opts
 
   render: () ->

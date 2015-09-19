@@ -1,4 +1,5 @@
 <?php
+
 namespace Whathood\Controller;
 
 use Zend\View\Model\ViewModel;
@@ -15,11 +16,6 @@ use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
 use Whathood\Spatial\PHP\Types\Geometry\LineString;
 use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
 
-/**
- * Description of NeighborhoodController
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
 class NeighborhoodPolygonController extends BaseController
 {
     /**

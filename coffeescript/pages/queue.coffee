@@ -3,7 +3,6 @@ W = window.Whathood
 
 W.pages = {} unless W.pages
 
-console.log "this is happening"
 W.pages.queue =
   dataTables: () ->
     dataTable = new Whathood.DataTable

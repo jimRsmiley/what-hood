@@ -26,4 +26,13 @@ class HeatMapController extends BaseController {
         $heatmap_points = $this->m()->heatMapPoint()->byNeighborhood($neighborhood);
         return new JsonModel(HeatMapPoint::pointsToArray($heatmap_points));
     }
+
+    public function noHeatmapPointsAction() {
+        $neighborhoods = $this->m()->heatMapPoint()->neighborhoodsWithNoHeatmapPoints();
+
+        foreach($neighborhoods as $n) {
+            print $n->getName();
+        }
+    }
+
 }

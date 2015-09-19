@@ -813,7 +813,7 @@ return array(
             'Whathood\Controller\Restful\Region'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\Restful\PointElection'          => 'Whathood\Controller\Restful\PointElectionController',
             'Whathood\Controller\Restful\TestPoint'              => 'Whathood\Controller\Restful\TestPointRestfulController',
-            'Whathood\Controller\Restful\HeatMap'                => 'Whathood\Controller\Restful\HeatMapController',
+            'Whathood\Controller\Restful\HeatmapPoint'                => 'Whathood\Controller\Restful\HeatMapController',
             'Whathood\Controller\Restful\Queue'                  => 'Whathood\Controller\Restful\QueueRestfulController',
 
             /* console controllers */

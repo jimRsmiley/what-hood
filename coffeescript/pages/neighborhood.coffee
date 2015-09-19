@@ -4,14 +4,18 @@ W = window.Whathood
 W.neighborhood =
   list: () ->
     dataTable = new Whathood.DataTable
+      debug: true
       entity_name: 'neighborhood',
-      # match the order up with the neighborhood json object
-      column_names: [ 'id', 'createdAt', 'neighborhood_name', 'region'],
       div_id: "wh-datatable"
+      columns: [
+          {data: 'id'}
+          {data: 'date_time_added'}
+          {data: 'name'}
+      ]
       columnDefs: [
         {
           render: (row_data, type, row) ->
-            return "#{row_data} <a href=\"/neighborhood/id/#{row[0]}\">Show Map</a>"
+            return "#{row_data} <a href=\"/neighborhood/id/#{row.id}\">Show Map</a>"
           targets: 2
         }
       ]
