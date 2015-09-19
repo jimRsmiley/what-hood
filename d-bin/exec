@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cmd="$@"
+docker exec wh-nginx /bin/sh -c "cd /var/www/whathood; ./bin/$cmd"
