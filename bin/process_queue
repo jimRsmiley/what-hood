@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 cd /var/www/whathood/app
-php public/index.php queue doctrine message_queue --start
+
+while true; do
+  result = `php public/index.php queue doctrine message_queue --start`
+  echo `date` "mesage queue finished with status $result; restarting" | tee -a /var/log/whathood/wh-worker.log
+done
