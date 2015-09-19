@@ -2,5 +2,5 @@
 
 while true; do
   sudo docker exec -it wh-nginx /bin/sh -c 'cd /var/www/whathood/app; php public/index.php queue doctrine message_queue --start'
-  echo "message_queue worker just ended" | mail -s "Message Queue just finished; it will be restarted" whathoodisthis@gmail.com
+  echo `date` "message_queue worker just ended" >> /var/log/whathood/wh-worker.log
 done
