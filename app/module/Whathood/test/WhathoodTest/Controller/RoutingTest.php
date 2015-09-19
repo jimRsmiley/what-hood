@@ -9,11 +9,7 @@ use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Stdlib\Parameters;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase,
  ApplicationTest\Bootstrap;
-/**
- * Description of NeighborhoodControllerTest
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
+
 class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
 
     public function setUp() {

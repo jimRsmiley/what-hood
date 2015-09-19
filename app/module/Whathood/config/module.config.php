@@ -344,12 +344,12 @@ return array(
                         )
                     ),
 
-                    'rest_test_point' => array(
+                    'heatmap_point' => array(
                         'type' => 'Segment',
                         'options' => array(
                             'route' => '/heatmap-points/neighborhood_id/:neighborhood_id',
                             'defaults' => array(
-                                'controller' => 'Heatmap',
+                                'controller' => 'HeatmapPoint',
                                 'action' => 'get-list'
                             )
                         )
