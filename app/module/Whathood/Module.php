@@ -107,6 +107,9 @@ class Module implements ConsoleUsageProviderInterface
             array('--grid-res=','override the default grid resolution'),
             array('--target-precision','override the default target precision'),
 
+            // user-neighborhoods
+            'up count' => 'Get a count of the systems user neighborhoods',
+
             // neighborhood-delete
             'neighborhood delete [--id=] [--neighborhood=] [--region=]' => 'Delete neighborhoods',
             array('--id=','specify the neighborhood id to delete'),

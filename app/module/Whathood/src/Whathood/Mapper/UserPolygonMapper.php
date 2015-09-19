@@ -291,5 +291,10 @@ class UserPolygonMapper extends BaseMapper {
             ->getSingleResult();
         return $result['area'];
     }
+
+    public function numUserPolygons() {
+        $dql = "SELECT COUNT(up.id) FROM Whathood\Entity\UserPolygon up";
+        return $this->em->createQuery($dql)->getSingleScalarResult();
+    }
 }
 ?>

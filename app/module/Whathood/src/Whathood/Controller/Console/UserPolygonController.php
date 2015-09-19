@@ -1,24 +1,17 @@
 <?php
 namespace Whathood\Controller\Console;
 
-use Whathood\Spatial\PHP\Types\Geometry\MultiPoint as WhMultiPoint;
-use Whathood\Controller\BaseController;
 use Zend\Json\Json;
+use Zend\View\Model\ViewModel;
+use Whathood\Spatial\PHP\Types\Geometry\MultiPoint as WhMultiPoint;
 
-/**
- * Handle test point actions from the console
- *
- */
-class UserPolygonController extends BaseController
+class UserPolygonController extends AbstractController
 {
-
     /**
-     * return geojson representation of test points given either
-     *
-     *  - neighborhood name and region name
-     */
-    public function consoleDefaultAction() {
-        $userPolygons = $this->m()->userPolygonMapper()->fetchAll();
-        die( "found ".count($userPolygons));
+     * print JUST the number of total user polygons in the system
+     **/
+    public function numUserNeighborhoodsAction() {
+        return (string)$this->m()->userPolygonMapper()
+                                    ->numUserPolygons();
     }
 }
