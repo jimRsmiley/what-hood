@@ -1,0 +1,3 @@
+#!/bin/sh
+
+watch -n .5 "ps aux | grep message_queue | grep -v grep"
