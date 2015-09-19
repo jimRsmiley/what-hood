@@ -476,6 +476,7 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
+
                 'np' => array(
                     'options' => array(
                         'route' => 'np',
@@ -485,15 +486,17 @@ return array(
                         )
                     )
                 ),
-                'up' => array(
+
+                'user_neighborhood_count' => array(
                     'options' => array(
-                        'route' => 'up',
+                        'route' => 'up count',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\UserPolygonConsole',
-                            'action' => 'consoledefault'
-                        )
-                    )
+                            'controller' => 'Whathood\Controller\Console\UserNeighborhood',
+                            'action' => 'num-user-neighborhoods'
+                        ),
+                    ),
                 ),
+
                 'neighborhood' => array(
                     'options' => array(
                         'route' => 'neighborhood',
@@ -813,7 +816,7 @@ return array(
             'Whathood\Controller\Restful\Region'                 => 'Whathood\Controller\RegionRestController',
             'Whathood\Controller\Restful\PointElection'          => 'Whathood\Controller\Restful\PointElectionController',
             'Whathood\Controller\Restful\TestPoint'              => 'Whathood\Controller\Restful\TestPointRestfulController',
-            'Whathood\Controller\Restful\HeatmapPoint'                => 'Whathood\Controller\Restful\HeatMapController',
+            'Whathood\Controller\Restful\HeatmapPoint'           => 'Whathood\Controller\Restful\HeatMapController',
             'Whathood\Controller\Restful\Queue'                  => 'Whathood\Controller\Restful\QueueRestfulController',
 
             /* console controllers */
@@ -821,7 +824,7 @@ return array(
             'Whathood\Controller\JobConsole'                    => 'Whathood\Controller\Console\JobController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
-            'Whathood\Controller\UserPolygonConsole'            => 'Whathood\Controller\Console\UserPolygonController',
+            'Whathood\Controller\Console\UserNeighborhood'      => 'Whathood\Controller\Console\UserPolygonController',
             'Whathood\Controller\NeighborhoodPolygonConsole'    => 'Whathood\Controller\Console\NeighborhoodPolygonController',
         ),
     ),
