@@ -32,7 +32,7 @@ class NeighborhoodControllerTest extends BaseControllerTest {
     public function testNeighborhoodsWithNoBorders() {
         $this->initDb();
         $region = new \Whathood\Entity\Region(array(
-            'name' => "Region_".$this->getTestName()
+            'name' => 'TestRegion'.rand(0,99999999)
         ));
 
         $this->m()->regionMapper()->save($region);

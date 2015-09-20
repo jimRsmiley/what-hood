@@ -25,7 +25,7 @@ $queryString = $this->queryString;
         <div>No Neighborhood Matches</div>
     <?php else : ?>
         <?php foreach( $neighborhoods as $neighborhood ) :?>
-        <div class="neighborhood"><a href="<?=$this->url('neighborhood',
+        <div class="neighborhood"><a href="<?=$this->url('home/region_neighborhood',
                     array(
                         'region' => $neighborhood->getRegion()->getName(),
                         'neighborhood' => $neighborhood->getName()

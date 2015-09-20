@@ -24,7 +24,7 @@ class HeatmapRestfulControllerTest extends BaseControllerTest {
         $neighborhood = new Neighborhood(array(
             'name' => "MY TEST NEIGHBORHOOD",
             'region' => new \Whathood\Entity\Region(array(
-                'name' => 'Philadelphia'
+                'name' => 'TestRegion'.rand(0,9999999)
             ))
         ));
         $this->m()->neighborhoodMapper()->save($neighborhood);

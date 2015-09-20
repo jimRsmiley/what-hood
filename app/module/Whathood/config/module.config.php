@@ -1,48 +1,12 @@
 <?php
 namespace Whathood;
 
-
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 return array(
     'router' => array(
 
 		/*  routes are processed in descending order, put the most important at the bottom! */
 
         'routes' => array(
-
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'constraints' => array(
-                        'regionName'    => 'Philadelphia'
-                    ),
-                    'defaults' => array(
-                        'controller'    => 'Whathood\Controller\Region',
-                        'action'        => 'show',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'about' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => 'about',
-                            'defaults' => array(
-                                'controller'    => 'Whathood\Controller\Index',
-                                'action' => 'about'
-                            )
-                        ),
-                    )
-                )
-            ),
-
             // don't put any routes before this
             'region' => array(
                 'type'    => 'Segment',
@@ -56,18 +20,56 @@ return array(
                 ),
             ),
 
-            // don't put any routes before this one either
-            'region_neighborhood' => array(
-                'type'    => 'Segment',
+            'home' => array(
+                'type' => 'segment',
                 'options' => array(
-                    'route'    => '/:region/:neighborhood[/]',
+                    'route'    => '/',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Neighborhood',
+                        'controller'    => 'Region',
                         'action'        => 'show',
                     ),
                 ),
+                'may_terminate' => true,
+                'child_routes' => array(
+
+                    // don't put any routes before this one either
+                    'region_neighborhood' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => ':region/:neighborhood[/]',
+                            'defaults' => array(
+                                'controller'    => 'Neighborhood',
+                                'action'        => 'show',
+                            ),
+                        ),
+                    ),
+
+                    'about' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => 'about',
+                            'defaults' => array(
+                                'controller'    => 'Index',
+                                'action'        => 'about'
+                            )
+                        )
+                    ),
+                    'search' => array(
+                        'type'    => 'segment',
+                        'options' => array(
+                            'route'    => 'search',
+                            'defaults' => array(
+                                'controller'    => 'Search',
+                                'action'        => 'index',
+                            )
+                        ),
+                        'may_terminate' => true
+                    )
+                )
             ),
+
+
 
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
@@ -131,35 +133,6 @@ return array(
                 ),
             ),
 
-            'whathood_search' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/whathood-search',
-                    'constraints' => array(
-                        'region' => '[a-zA-Z][a-zA-Z0-9_-]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Whathood',
-                        'action'        => 'by-position'
-                    ),
-                ),
-            ),
-
-            'search' => array(
-                'type'    => 'Segment',
-                'options' => array(
-                    'route'    => '/search',
-                    'constraints' => array(
-                        'region' => '[a-zA-Z][a-zA-Z0-9_-]+'
-                    ),
-                    'defaults' => array(
-                        '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Search',
-                        'action'        => 'index',
-                    ),
-                ),
-            ),
 
             'neighborhood' => array(
                 'type' => 'segment',
@@ -289,7 +262,7 @@ return array(
             'about' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/about',
+                    'route'    => '/asdfabout',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
                         'controller'    => 'Index',

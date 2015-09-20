@@ -31,7 +31,7 @@ class UserPolygonControllerTest extends BaseControllerTest {
             ->setPost(
                 new Parameters( array(
                     'neighborhood_name' => 'Fishtown',
-                    'region_name' => 'Philadelphia',
+                    'region_name' => 'TestRegion'.rand(0,99999999),
                     'polygon_json' => $polygon_array
                 ))
             );

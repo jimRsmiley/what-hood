@@ -20,7 +20,7 @@ class RoutingTest extends \Whathood\PHPUnit\BaseControllerTest {
         $this->initDb();
 
         $region = new \Whathood\Entity\Region(array(
-            'name' => 'Philadelphia'
+            'name' => 'TestRegion'.rand(0,99999999)
         ));
         $this->m()->regionMapper()->save($region);
 
