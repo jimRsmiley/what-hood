@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# runs in docker container
+
 require 'fileutils'
 require 'optparse'
 require_relative '../libs/ruby/Whathood/Util.rb'
@@ -51,6 +53,13 @@ BEGIN {
     end
 
     def import_database
+        data_dir = './data/whathood-data'
+
+        files = Dir.entries(data_dir).grep(/whathood_schema_.*\.sql/)
+        schema_file = data_dir + '/' + files[0]
+        files = Dir.entries(data_dir).grep(/whathood_data_.*\.sql/)
+        data_file = data_dir + '/' + files[0]
+
         Whathood::Util.run_cmd "git clone https://github.com/whathood/whathood-data.git data/whathood-data || true"
 
         Whathood::Util.run_cmd "psql -h #{DB_HOST} -U #{DB_USER} -c 'CREATE DATABASE whathood' postgres"
@@ -58,9 +67,9 @@ BEGIN {
         Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION postgis'"
         Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE EXTENSION pgrouting'"
         puts "*     loading whathood schema"
-        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_schema.sql"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f #{schema_file}"
 
-        Whathood::Util.run_cmd "#{PSQL_CMD} -f ./data/whathood-data/whathood_data.sql"
+        Whathood::Util.run_cmd "#{PSQL_CMD} -f #{data_file}"
         puts "*     applying indexes"
         Whathood::Util.run_cmd "#{PSQL_CMD} -c 'CREATE SCHEMA whathood' || true"
 
