@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# add --watch after extension jsx to keep it going
+
+sudo docker run -t --rm \
+    -v $PWD/libs/react:/src \
+    -v $PWD/app/public/js/whathood:/build \
+    --name wh-jsx \
+    whathood/jsx --extension jsx src build
