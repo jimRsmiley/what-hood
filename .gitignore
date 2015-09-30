@@ -3,7 +3,6 @@ application_env
 whathood-local.yaml
 whathood.css
 whathood.js
-package.json
 /test
 /whathood.js.symlink
 /grunt_watch.log
