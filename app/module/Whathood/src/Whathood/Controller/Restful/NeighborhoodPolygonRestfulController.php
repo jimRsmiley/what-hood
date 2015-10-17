@@ -32,11 +32,17 @@ class NeighborhoodPolygonRestfulController extends BaseController {
         // get the neighborhood
         $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
 
-        // get the latest NeighborhoodPolygon
-        $neighborhood_polygon = $this->m()->neighborhoodPolygonMapper()
-            ->latestByNeighborhood($neighborhood);
+        try {
+            // get the latest NeighborhoodPolygon
+            $ret_array = $this->m()->neighborhoodPolygonMapper()
+                ->latestByNeighborhood($neighborhood)->toArray();
 
-        return new JsonModel( $neighborhood_polygon->toArray() );
+        }
+        catch (\Doctrine\ORM\NoResultException $e) {
+            $ret_array = array();
+        }
+
+        return new JsonModel( $ret_array );
     }
 
     public function byRegionAction() {
