@@ -5,6 +5,6 @@
     "grunt": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-contrib-uglify": "*"
+    "grunt-contrib-clean": "*"
   }
 }
