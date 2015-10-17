@@ -1,12 +1,9 @@
+whathood.yml
 Gemfile.lock
-whathood.local.yaml
 application_env
-whathood-local.yaml
 whathood.css
 whathood.js
 /test
-/whathood.js.symlink
-/grunt_watch.log
 /data
 /module.config.php
 /view

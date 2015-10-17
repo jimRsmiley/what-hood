@@ -607,17 +607,9 @@ return array(
                 if (empty($app_root) or $app_root == "")
                     $app_root = ".";
 
-                $whathood_local = "$app_root/../whathood.local.yaml";
-
-                $global_config = $reader->fromFile(
-                     $app_root . '/../whathood.yaml'
+                return $reader->fromFile(
+                     $app_root . '/../whathood.yml'
                 );
-
-                if (file_exists($whathood_local))
-                    $local_config  = $reader->fromFile($whathood_local);
-                else
-                    $local_config = array();
-                return array_replace_recursive($global_config, $local_config);
             },
 
             'Whathood\Config' => function($sm) {

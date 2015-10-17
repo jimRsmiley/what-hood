@@ -1,9 +1,0 @@
-# override whathood.yaml values and rename the file to whathood.local.yaml
-email:
-  smtpHost:
-  smtpPort:
-  smtpUser:
-  smtpPass:
-  fromAddress:
-  toAddress:
-google_ui: xxxxx
