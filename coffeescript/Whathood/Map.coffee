@@ -31,13 +31,15 @@ Whathood.Map = L.Map.extend
       url: url
       context: this
       success: (geojson) ->
-        @geojsonLayer = new L.geoJson geojson
-        .addTo(@)
-        @layerGroup().addLayer( @geojsonLayer )
-        @fitBounds( @geojsonLayer )
 
-        if( ( typeof callback ) != 'undefined' )
-          callback()
+        if geojson.length > 0
+          @geojsonLayer = new L.geoJson geojson
+          .addTo(@)
+          @layerGroup().addLayer( @geojsonLayer )
+          @fitBounds( @geojsonLayer )
+
+        if typeof( callback ) != 'undefined'
+          callback(geojson)
       failure: () ->
         throw new Error "WH.init(): something went wrong loading json source"
     .done () ->

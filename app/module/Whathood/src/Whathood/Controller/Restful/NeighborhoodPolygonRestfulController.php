@@ -36,10 +36,9 @@ class NeighborhoodPolygonRestfulController extends BaseController {
             // get the latest NeighborhoodPolygon
             $ret_array = $this->m()->neighborhoodPolygonMapper()
                 ->latestByNeighborhood($neighborhood)->toArray();
-
         }
         catch (\Doctrine\ORM\NoResultException $e) {
-            $ret_array = array();
+            $ret_array = null;
         }
 
         return new JsonModel( $ret_array );
