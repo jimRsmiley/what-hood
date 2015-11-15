@@ -5,4 +5,4 @@
 # or pass nothing for all tests
 
 test_path=`echo $@ | sed 's/^test\///g'`
-sudo docker exec -it wh-nginx /bin/sh -c "cd /var/www/whathood/app/module/Whathood/test && phpunit --bootstrap Bootstrap.php -c phpunit.xml $test_path"
+sudo docker exec -it wh_nginx-dev /bin/sh -c "cd /var/www/whathood/app/module/Whathood/test && phpunit --bootstrap Bootstrap.php -c phpunit.xml $test_path"
