@@ -1,0 +1,6 @@
+#!/bin/sh
+
+sudo docker run -it \
+    -v /home/vagrant/src/whathood/app/module/Whathood/src:/data \
+    -v /home/vagrant/src/whathood/app/docs/phpdoc:/output \
+    whathood/phpdoc run -d /data  -t /output 
