@@ -6,4 +6,4 @@
 
 ARGS=`echo $@`
 
-sudo docker exec -it wh-nginx /bin/sh -c "cd /var/www/whathood &&  ./bin/run-app $ARGS"
+sudo docker exec -it wh_nginx-dev /bin/sh -c "cd /var/www/whathood &&  ./bin/run-app $ARGS"
