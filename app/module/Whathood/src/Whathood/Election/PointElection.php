@@ -7,6 +7,10 @@ use Whathood\Entity\Neighborhood;
 /**
  * store a point and all the user_polygons that contain it.
  * Provide accessor methods for running an election
+ *
+ * see Whathood.Mapper.PointElectionMapper.html#method_generateBorderPolygon for actually building a border
+ *
+ * @see Whathood.Mapper.PointElectionMapper.html#method_generateBorderPolygon
  */
 class PointElection extends \ArrayObject {
 
@@ -21,15 +25,23 @@ class PointElection extends \ArrayObject {
 
     protected $_logger = null;
 
+    /**
+     * @ignore
+     */
     public function setLogger($logger) {
         $this->_logger = $logger;
     }
 
+    /**
+     * @ignore
+     */
     public function getLogger() {
         return $this->_logger;
     }
 
-    // sugar
+    /**
+     * @ignore
+     */
     public function logger() {
         return $this->getLogger();
     }

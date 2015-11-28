@@ -97,20 +97,24 @@ class Module implements ConsoleUsageProviderInterface
     {
         return array(
 
-            // watcher-route
-            array('queue --rebuild-borders', 'rebuild all neighborhood borders'),
-            array('queue --info', 'display info about the queue'),
-            array('--forever','run watcher in a loop forever'),
-            array('--force','force a rebuild of whole system'),
-            array('--neighbrohood=',"specify the neighborhood name to use, replace white spaces with '+'"),
-            array('--region=','specify the region to use'),
-            array('--grid-res=','override the default grid resolution'),
-            array('--target-precision','override the default target precision'),
+            // managing the queue
+            'queue info'            =>  'display info about the queue',
+
+            'queue rebuild-borders' =>  'rebuild all neighborhood borders',
+
+            array('--forever',          'run watcher in a loop forever'),
+            array('--force',            'force a rebuild of whole system'),
+            array('--neighbrohood=',    "specify the neighborhood name to use, replace white spaces with '+'"),
+            array('--region=',          'specify the region to use'),
+            array('--grid-res=',        'override the default grid resolution'),
+            array('--target-precision', 'override the default target precision'),
 
             // user-neighborhoods
-            'up count' => 'Get a count of the systems user neighborhoods',
+            'up count'              => 'Get a count of the systems user neighborhoods',
 
             // neighborhood-delete
+
+            'neighborhood' => 'print the total count of neighborhoods',
             'neighborhood delete [--id=] [--neighborhood=] [--region=]' => 'Delete neighborhoods',
             array('--id=','specify the neighborhood id to delete'),
             array('--neighbrohood=',"specify the neighborhood name to delete, replace white spaces with '+'"),

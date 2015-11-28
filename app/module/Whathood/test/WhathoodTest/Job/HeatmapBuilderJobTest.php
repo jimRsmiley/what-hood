@@ -10,8 +10,6 @@ use Whathood\Spatial\PHP\Types\Geometry\Point;
 
 /**
  * Description of NeighborhoodControllerTest
- *
- * @author Jim Smiley twitter:@jimRsmiley
  */
 class HeatmapBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
 

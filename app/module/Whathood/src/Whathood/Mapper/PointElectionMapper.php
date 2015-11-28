@@ -25,13 +25,12 @@ class PointElectionMapper extends BaseMapper {
     /**
      * given an array of $user_polygons, returns a polygon representing the border
      *
-     * @param array - user polygons
-     * @param integer - neighborhood id
-     * @param float - test point grid resolution
-     * @param double - concave hull target precision
+     * @param electionCollect \Whathood\Collection - a colelction of ElectionPoints
+     * @param neighbood_id int - the neighborhood id to generate the border for
+     *
      * @return mixed - Polygon object
      */
-    public function generateBorderPolygon($electionCollection,$neighborhood_id) {
+    public function generateBorderPolygon($electionCollection, $neighborhood_id) {
 
         if (empty($electionCollection->getPointElections()))
             throw new \InvalidArgumentException("electionCollection must have points");

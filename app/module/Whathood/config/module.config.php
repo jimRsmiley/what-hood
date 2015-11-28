@@ -481,7 +481,7 @@ return array(
                 ),
                 'queue-info' => array(
                     'options' => array(
-                        'route' => 'queue --info',
+                        'route' => 'queue info',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\JobConsole',
                             'action' => 'info'
@@ -490,7 +490,7 @@ return array(
                 ),
                 'queue' => array(
                     'options' => array(
-                        'route' => 'queue --rebuild-borders',
+                        'route' => 'queue rebuild-borders',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\JobConsole',
                             'action' => 'rebuild-borders'
