@@ -26,16 +26,31 @@ class PointsAsPolygonMapper extends BaseMapper {
      * query the temp table with pgr_pointsAsPolygon to create the neighborhood border
      **/
     public function toPolygon(MultiPoint $multi_point) {
-        if (empty($multi_point->getPoints()))
-            throw new \InvalidArgumentException("multi_point must contain points");
-        if (count($multi_point->getPoints()) < $this->_min_multi_points)
-            throw new \Whathood\Exception("multi_point must contain at least ".$this->_min_multi_points . " points; got ".count($multi_point->getPoints()));
-        $this->_current_multi_point = $multi_point;
-        $this->dropTempTable($this->_tmp_table_name);
-        $this->createTempTable($this->_tmp_table_name);
-        $this->savePoints($multi_point,$this->_tmp_table_name);
-        $polygon = $this->pointsAsPolygon($this->_tmp_table_name,count($multi_point->getPoints()));
-        $this->dropTempTable($this->_tmp_table_name);
+        try {
+            if (empty($multi_point->getPoints()))
+                throw new \InvalidArgumentException("multi_point must contain points");
+            if (count($multi_point->getPoints()) < $this->_min_multi_points)
+                throw new \Whathood\Exception("multi_point must contain at least ".$this->_min_multi_points . " points; got ".count($multi_point->getPoints()));
+            $this->_current_multi_point = $multi_point;
+
+            # db interaction 
+            $this->dropTempTable($this->_tmp_table_name);
+
+            # db interaction 
+            $this->createTempTable($this->_tmp_table_name);
+
+            # db interaction 
+            $this->savePoints($multi_point,$this->_tmp_table_name);
+
+            # db interaction 
+            $polygon = $this->pointsAsPolygon($this->_tmp_table_name,count($multi_point->getPoints()));
+
+            $this->dropTempTable($this->_tmp_table_name);
+        }
+        catch(\Exception $e) {
+            #$this->em->getConnection()->rollback();
+            throw $e;
+        }
         return $polygon;
     }
 
@@ -75,6 +90,7 @@ class PointsAsPolygonMapper extends BaseMapper {
     }
 
     public function savePoints(MultiPoint $multi_point,$tbl_name) {
+
         $db_val = $this->spatialPlatform()->convertToDatabaseValue($multi_point);
 
         $sql = "INSERT INTO $tbl_name(point) (

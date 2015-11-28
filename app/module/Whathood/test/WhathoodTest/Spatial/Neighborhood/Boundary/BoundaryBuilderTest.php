@@ -34,37 +34,37 @@ class BoundaryBuilderTest extends \Whathood\PHPUnit\BaseTest {
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(1,1),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(1,2),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(2,2),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(3,3),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(4,4),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(5,5),
             )),
             PointElection::build(array(
                 'user_polygons' => $userPolygons,
                 'logger' => $logger,
-                'point' => new Point(0,0),
+                'point' => new Point(6,6),
             ))
         );
 
