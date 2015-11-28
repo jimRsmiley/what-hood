@@ -5,23 +5,23 @@ module.exports = function(grunt) {
                 files: {
                   'app/public/js/whathood/whathood-compiled.js': [
                     // always first
-                    'coffeescript/whathood.coffee',
+                    'src/coffee/whathood.coffee',
                     // classes
-                    'coffeescript/Whathood/TemplateManager.coffee',
-                    'coffeescript/Whathood/UrlBuilder.coffee',
-                    'coffeescript/Whathood/Geo.coffee',
-                    'coffeescript/Whathood/GeoSearch.coffee',
-                    'coffeescript/Whathood/AddUserPolygonForm.coffee',
-                    'coffeescript/Whathood/Util.coffee',
-                    'coffeescript/Whathood/Page.coffee',
-                    'coffeescript/Whathood/LeafletControl.coffee',
-                    'coffeescript/Whathood/Search.coffee',
-                    'coffeescript/Whathood/Map.coffee',
-                    'coffeescript/Whathood/RegionMap.coffee',
-                    'coffeescript/Whathood/UserPolygonMap.coffee',
-                    'coffeescript/Whathood/DrawMap.coffee',
+                    'src/coffee/Whathood/TemplateManager.coffee',
+                    'src/coffee/Whathood/UrlBuilder.coffee',
+                    'src/coffee/Whathood/Geo.coffee',
+                    'src/coffee/Whathood/GeoSearch.coffee',
+                    'src/coffee/Whathood/AddUserPolygonForm.coffee',
+                    'src/coffee/Whathood/Util.coffee',
+                    'src/coffee/Whathood/Page.coffee',
+                    'src/coffee/Whathood/LeafletControl.coffee',
+                    'src/coffee/Whathood/Search.coffee',
+                    'src/coffee/Whathood/Map.coffee',
+                    'src/coffee/Whathood/RegionMap.coffee',
+                    'src/coffee/Whathood/UserPolygonMap.coffee',
+                    'src/coffee/Whathood/DrawMap.coffee',
                     // everything else
-                    'coffeescript/**/*.coffee',
+                    'src/coffee/**/*.coffee',
                   ]
                 }
             }
@@ -32,7 +32,7 @@ module.exports = function(grunt) {
         watch: {
             coffee: {
                 files: [
-                  'coffeescript/**/*.coffee'
+                  'src/coffee/**/*.coffee'
                 ],
                 tasks: ['clean','coffee:compile']
             }
