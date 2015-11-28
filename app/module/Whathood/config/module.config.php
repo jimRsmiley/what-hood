@@ -650,6 +650,13 @@ return array(
                 return $logger;
             },
 
+            'Whathood\Spatial\Neighborhood\NeighborhoodBuilder' => function($sm) {
+                $builder = new \Whathood\Spatial\Neighborhood\NeighborhoodBuilder();
+                $builder->addMapper('heatMapPoint', $sm->get('Whathood\Mapper\HeatmapPoint') );
+                $builder->addMapper('neighborhood', $sm->get('Whathood\Mapper\NeighborhoodMapper') );
+                return $builder;
+            },
+
             'Whathood\Emailer' => function($sm) {
                 $config = $sm->get('Whathood\Config');
                 $emailer = \Whathood\Email::build(array_merge($config['email']->toArray(), array('logger' => $sm->get('Whathood\Logger'))));

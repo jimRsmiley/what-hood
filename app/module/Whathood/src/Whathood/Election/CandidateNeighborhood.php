@@ -15,16 +15,22 @@ class CandidateNeighborhood {
 
     protected $_neighborhood;
 
+    /**
+     * return the neighborhood
+     *
+     * @return \Whathood\Entity\Neighborhood
+     */
     public function getNeighborhood() {
         return $this->_neighborhood;
     }
 
-    public function setNeighborhood($neighborhood) {
+    /**
+     * set the neighborhood
+     *
+     * @param neighborhood \Whathood\Entity\Neighborhood
+     */
+    public function setNeighborhood(\Whathood\Entity\Neighborhood $neighborhood) {
         $this->_neighborhood = $neighborhood;
-    }
-
-    public function getName() {
-        return $this->getNeighborhood()->getName();
     }
 
     // sugar
@@ -99,7 +105,7 @@ class CandidateNeighborhood {
 
     public function __toString() {
         return sprintf("name=%s percentage=%s",
-            $this->getName(),
+            $this->getNeighborhood()->getName(),
             $this->percentage()
         );
     }
