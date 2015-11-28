@@ -5,7 +5,7 @@ namespace Whathood\Controller\Console;
 use Zend\View\Model\ConsoleModel;
 
 use Whathood\Controller\BaseController;
-use Whathood\Entity\DefaultQueue;
+use Whathood\Entity\DefaultJob;
 
 class JobController extends BaseController {
 
@@ -30,7 +30,7 @@ class JobController extends BaseController {
 
         foreach ($status_counts as $status => $count) {
             $str .= sprintf("status=%s(%s) count=%s\n",
-                DefaultQueue::statusToString($status), $status, $count );
+                DefaultJob::statusToString($status), $status, $count );
         }
 
         $consoleModel = new ConsoleModel();

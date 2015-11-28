@@ -7,12 +7,12 @@ use DateTime;
 use SlmQueue\Worker\WorkerEvent;
 
 /**
- * DefaultQueue
+ * DefaultJob
  *
  * @ORM\Table(name="queue_default", indexes={@ORM\Index(name="queue_default_idx", columns={"id", "status"})})
  * @ORM\Entity()
  */
-class DefaultQueue
+class DefaultJob
 {
     /**
      * @var integer
@@ -101,7 +101,7 @@ class DefaultQueue
      * Set queue
      *
      * @param string $queue
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setQueue($queue)
     {
@@ -124,7 +124,7 @@ class DefaultQueue
      * Set data
      *
      * @param string $data
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setData($data)
     {
@@ -147,7 +147,7 @@ class DefaultQueue
      * Set status
      *
      * @param int $status
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setStatus($status)
     {
@@ -170,7 +170,7 @@ class DefaultQueue
      * Set created
      *
      * @param \DateTime $created
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setCreated(DateTime $created)
     {
@@ -197,7 +197,7 @@ class DefaultQueue
      * Set scheduled
      *
      * @param \DateTime $scheduled
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setScheduled(DateTime $scheduled)
     {
@@ -224,7 +224,7 @@ class DefaultQueue
      * Set executed
      *
      * @param \DateTime $executed
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setExecuted(DateTime $executed = null)
     {
@@ -251,7 +251,7 @@ class DefaultQueue
      * Set finished
      *
      * @param \DateTime $finished
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setFinished(DateTime $finished = null)
     {
@@ -278,7 +278,7 @@ class DefaultQueue
      * Set message
      *
      * @param string $message
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setMessage($message)
     {
@@ -301,7 +301,7 @@ class DefaultQueue
      * Set trace
      *
      * @param string $trace
-     * @return DefaultQueue
+     * @return DefaultJob
      */
     public function setTrace($trace)
     {

@@ -14,7 +14,7 @@ class QueueRestfulController extends BaseController {
     public function getQuery() {
         return $this->getServiceLocator()->get('doctrine.entitymanager.orm_default')
             ->createQueryBuilder()->select( array( 'entity' ) )
-            ->from('Whathood\Entity\DefaultQueue', 'entity')
+            ->from('Whathood\Entity\DefaultJob', 'entity')
             ->getQuery();
     }
 }
