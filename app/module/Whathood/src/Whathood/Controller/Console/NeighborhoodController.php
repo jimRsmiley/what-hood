@@ -19,6 +19,6 @@ class NeighborhoodController extends BaseController
      */
     public function consoleDefaultAction() {
         $neighborhoods = $this->m()->neighborhoodMapper()->fetchAll();
-        die( "found ".count($neighborhoods));
+        return "total-neighborhoods ".count($neighborhoods)."\n";
     }
 }
