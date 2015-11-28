@@ -1,0 +1,6 @@
+#!/bin/sh
+
+sudo docker run -it \
+  -v /home/vagrant/src/whathood/src/coffee:/data \
+  -v /home/vagrant/src/whathood/docs/coffee:/output \
+  whathood/codo --output /output
