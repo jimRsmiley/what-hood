@@ -1,5 +1,8 @@
 <?php
 namespace Whathood\Mapper;
+
+use CrEOF\Spatial\DBAL\Types\Geometry\Platforms\PostgreSql;
+
 /**
  * Description of BaseMapper
  *
@@ -60,7 +63,7 @@ abstract class BaseMapper {
 
     public function spatialPlatform() {
        if($this->_spatial_platform == null)
-            $this->_spatial_platform = new \CrEOF\Spatial\DBAL\Types\Geometry\Platforms\PostGreSQL();
+            $this->_spatial_platform = new PostgreSql();
         return $this->_spatial_platform;
     }
 
