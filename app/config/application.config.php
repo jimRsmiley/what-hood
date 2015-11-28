@@ -1,6 +1,5 @@
 <?php
 $modules = array(
-    'Whathood',
     'DoctrineModule',
     'DoctrineORMModule',
     'ZfcBase',
@@ -9,7 +8,8 @@ $modules = array(
     'BjyAuthorize',
 	'SamUser',
     'SlmQueue',
-    'SlmQueueDoctrine'
+    'SlmQueueDoctrine',
+    'Whathood'
 );
 
 return array(
