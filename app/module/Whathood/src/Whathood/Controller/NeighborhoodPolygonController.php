@@ -10,13 +10,13 @@ use Whathood\Entity\Neighborhood;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Region;
 use Whathood\Entity\WhathoodUser;
-use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Entity\NeighborhoodBoundary;
 use Whathood\Model\EmailMessageBuilder;
 use Whathood\Spatial\PHP\Types\Geometry\FeatureCollection;
 use Whathood\Spatial\PHP\Types\Geometry\LineString;
-use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
+use Whathood\Doctrine\ORM\Query\NeighborhoodBoundaryQueryBuilder;
 
-class NeighborhoodPolygonController extends BaseController
+class NeighborhoodBoundaryController extends BaseController
 {
     /**
      * show neighborhood polygons by region

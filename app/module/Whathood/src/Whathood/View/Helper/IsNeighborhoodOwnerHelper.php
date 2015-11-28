@@ -13,7 +13,7 @@ class IsNeighborhoodOwnerHelper extends \Zend\View\Helper\AbstractHelper {
     
 
     public function __invoke(
-            \Whathood\Form\NeighborhoodPolygonFieldset $neighborhood, 
+            \Whathood\Form\NeighborhoodBoundaryFieldset $neighborhood, 
             $user ) {
         
         if( empty( $user ) )

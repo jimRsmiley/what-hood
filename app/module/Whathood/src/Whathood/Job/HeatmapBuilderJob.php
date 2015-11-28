@@ -3,7 +3,7 @@
 namespace Whathood\Job;
 
 
-use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Entity\NeighborhoodBoundary;
 use Whathood\Timer;
 use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;

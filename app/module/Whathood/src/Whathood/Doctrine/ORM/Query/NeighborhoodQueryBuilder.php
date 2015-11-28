@@ -4,7 +4,7 @@ namespace Whathood\Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
 /**
- * Description of NeighborhoodPolygonQueryBuilder
+ * Description of NeighborhoodBoundaryQueryBuilder
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */

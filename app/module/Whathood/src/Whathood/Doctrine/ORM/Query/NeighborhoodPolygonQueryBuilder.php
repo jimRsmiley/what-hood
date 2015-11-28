@@ -4,11 +4,11 @@ namespace Whathood\Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr\Join;
 /**
- * Description of NeighborhoodPolygonQueryBuilder
+ * Description of NeighborhoodBoundaryQueryBuilder
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class NeighborhoodPolygonQueryBuilder extends AbstractQueryBuilder {
+class NeighborhoodBoundaryQueryBuilder extends AbstractQueryBuilder {
     
     protected $qb;
     
@@ -18,7 +18,7 @@ class NeighborhoodPolygonQueryBuilder extends AbstractQueryBuilder {
         $this->qb = $qb;
         
         $this->qb->select( array( 'np','n','r','u' ) )
-            ->from('Whathood\Entity\NeighborhoodPolygon', 'np')
+            ->from('Whathood\Entity\NeighborhoodBoundary', 'np')
             ->join('np.neighborhood','n')
             ->join('np.whathoodUser','u')
             ->join('np.region','r')
@@ -26,7 +26,7 @@ class NeighborhoodPolygonQueryBuilder extends AbstractQueryBuilder {
             ;
     }
     
-    public function setNeighborhoodPolygonId($id) {
+    public function setNeighborhoodBoundaryId($id) {
         
         if( empty($id) )
             throw new \InvalidArgumentException( "id must not be empty" );

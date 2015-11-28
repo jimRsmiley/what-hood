@@ -12,7 +12,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  * @ORM\Entity
  * @ORM\Table(name="neighborhood_polygon")
  */
-class NeighborhoodPolygon extends \ArrayObject {
+class NeighborhoodBoundary extends \ArrayObject {
 
     /**
      * @ORM\Id
@@ -225,7 +225,7 @@ class NeighborhoodPolygon extends \ArrayObject {
      * utility function that given an array of neighborhoods, returns a json
      * array
      */
-    public static function jsonToNeighborhoodPolygons( $json ) {
+    public static function jsonToNeighborhoodBoundarys( $json ) {
 
         $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
 

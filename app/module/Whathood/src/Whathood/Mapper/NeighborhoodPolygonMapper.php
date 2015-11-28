@@ -3,15 +3,15 @@ namespace Whathood\Mapper;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Entity\NeighborhoodBoundary;
 use Whathood\Entity\Neighborhood;
 use Doctrine\ORM\Query\Expr\Join;
-use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
+use Whathood\Doctrine\ORM\Query\NeighborhoodBoundaryQueryBuilder;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 use Whathood\Entity\Region;
 use Doctrine\ORM\Query\ResultSetMapping;
 
-class NeighborhoodPolygonMapper extends BaseMapper {
+class NeighborhoodBoundaryMapper extends BaseMapper {
 
     public function byId($neighborhoodPolygonId) {
 
@@ -28,7 +28,7 @@ class NeighborhoodPolygonMapper extends BaseMapper {
     /**
      * return the latest neighborhood polygon by neighborhood id
      *
-     * @return mixed - a NeighborhoodPolygon entity
+     * @return mixed - a NeighborhoodBoundary entity
      */
     public function latestByNeighborhood(Neighborhood $neighborhood) {
         $query = $this->em->createQuery( 'SELECT np'
@@ -42,19 +42,19 @@ class NeighborhoodPolygonMapper extends BaseMapper {
     }
 
     /**
-     * @description returns all the NeighborhoodPolygon objects associated with the given neighborhood
+     * @description returns all the NeighborhoodBoundary objects associated with the given neighborhood
      *
-     * @return array - an array of NeighborhoodPolygon entities
+     * @return array - an array of NeighborhoodBoundary entities
      */
     public function byNeighborhood(Neighborhood $neighborhood) {
-        $dql = "SELECT np FROM Whathood\Entity\NeighborhoodPolygon np
+        $dql = "SELECT np FROM Whathood\Entity\NeighborhoodBoundary np
             WHERE np.neighborhood = :neighborhood";
         $query = $this->em->createQuery($dql)
             ->setParameter(':neighborhood',$neighborhood->getId());
         return $query->getResult();
     }
 
-    public function getNeighborhoodPolygonsAsGeoJsonByRegion(Region $region) {
+    public function getNeighborhoodBoundarysAsGeoJsonByRegion(Region $region) {
 
         if( empty( $region->getId() ) )
             throw new \InvalidArgumentException("region.id must not be null");
@@ -88,14 +88,14 @@ class NeighborhoodPolygonMapper extends BaseMapper {
         return $geojson;
     }
 
-    public function save( NeighborhoodPolygon $np ) {
+    public function save( NeighborhoodBoundary $np ) {
 
         // save the neighborhood polygon
         $this->em->persist( $np );
         $this->em->flush( $np );
         $np_id = $np->getId();
 
-        // now update the up_np table foe every UserPolygon associated with this NeighborhoodPolygon
+        // now update the up_np table foe every UserPolygon associated with this NeighborhoodBoundary
         foreach($np->getUserPolygons() as $up) {
             $sql = "INSERT INTO up_np(up_id,np_id) VALUES (?,?)";
             $this->em->getConnection()->prepare($sql)->execute(array($up->getId(),$np_id));
@@ -104,16 +104,16 @@ class NeighborhoodPolygonMapper extends BaseMapper {
 
     public function fetchAll() {
         $qb = $this->em->createQueryBuilder()->select( array( 'np' ) )
-            ->from('Whathood\Entity\NeighborhoodPolygon', 'np')
+            ->from('Whathood\Entity\NeighborhoodBoundary', 'np')
             ->orderBy('np.id','ASC');
         return $qb->getQuery()->getResult();
     }
 
     protected function getEntityName() {
-        return 'Whathood\Entity\NeighborhoodPolygon';
+        return 'Whathood\Entity\NeighborhoodBoundary';
     }
 
-    public function area(NeighborhoodPolygon $np) {
+    public function area(NeighborhoodBoundary $np) {
         $sql = "SELECT ST_Area(polygon) AS area FROM neighborhood_polygon np WHERE np.id = :np_id";
 
         $rsm = new ResultSetMapping();

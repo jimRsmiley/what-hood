@@ -3,7 +3,7 @@
 namespace Whathood\Controller\Console;
 
 use Whathood\Controller\BaseController;
-use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Entity\NeighborhoodBoundary;
 use Whathood\Timer;
 
 class PostgresController extends BaseController

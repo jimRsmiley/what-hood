@@ -11,7 +11,7 @@ use Whathood\Entity\HeatMap;
 use Whathood\Entity\WhathoodUser;
 use Whathood\Entity\FacebookUser;
 use Whathood\Entity\UserPolygon;
-use Whathood\Entity\NeighborhoodPolygonVote;
+use Whathood\Entity\NeighborhoodBoundaryVote;
 use Whathood\Model\HeatMap\Point as HeatMapPoint;
 /**
  * Description of DummyEntityBuilder
@@ -71,7 +71,7 @@ class DummyEntityBuilder {
     }
     
     public static function neighborhoodPolygonVote() {
-        return new NeighborhoodPolygonVote( array(
+        return new NeighborhoodBoundaryVote( array(
             'dateTimeAdded' => '2013-01-01 12:30:00',
             'whathoodUser'  => self::whathoodUser(),
             'vote'          => -1

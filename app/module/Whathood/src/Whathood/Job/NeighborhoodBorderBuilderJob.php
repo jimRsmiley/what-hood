@@ -8,7 +8,7 @@ use SlmQueue\Queue\QueueInterface;
 use Whathood\Timer;
 use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;
-use Whathood\Entity\NeighborhoodPolygon;
+use Whathood\Entity\NeighborhoodBoundary;
 
 class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements QueueAwareInterface
 {
@@ -97,10 +97,10 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
                 $this->getGridResolution()
             );
 
-            $polygon = $this->buildNeighborhoodPolygon($electionCollection, $neighborhood, $userPolygons);
+            $polygon = $this->buildNeighborhoodBoundary($electionCollection, $neighborhood, $userPolygons);
 
             if ($polygon) {
-                $this->saveNeighborhoodPolygon($neighborhood, $polygon, $userPolygons);
+                $this->saveNeighborhoodBoundary($neighborhood, $polygon, $userPolygons);
                 $this->infoLog(sprintf("saved neighborhood polygon"));
             }
             else {
@@ -118,7 +118,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
      *  build the neighborhood polygon
      *
      **/
-    public function buildNeighborhoodPolygon(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
+    public function buildNeighborhoodBoundary(PointElectionCollection $electionCollection, Neighborhood $neighborhood,$ups) {
         if (empty($electionCollection->getPointElections()))
             throw new \InvalidArgumentException("electionCollection may not be empty");
         $this->infoLog(sprintf("working with %s election points",
@@ -131,8 +131,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
      *  save the neighborhood polygon
      *
      **/
-    public function saveNeighborhoodPolygon($neighborhood, $polygon, $ups) {
-        $neighborhoodPolygon = NeighborhoodPolygon::build( array(
+    public function saveNeighborhoodBoundary($neighborhood, $polygon, $ups) {
+        $neighborhoodPolygon = NeighborhoodBoundary::build( array(
             'geom'              => $polygon,
             'neighborhood'      => $neighborhood,
             'user_polygons'     => $ups,

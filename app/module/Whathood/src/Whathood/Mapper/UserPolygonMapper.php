@@ -6,13 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMapping;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
-use Whathood\Doctrine\ORM\Query\NeighborhoodPolygonQueryBuilder;
+use Whathood\Doctrine\ORM\Query\NeighborhoodBoundaryQueryBuilder;
 use Whathood\Entity\UserPolygon;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\WhathoodUser;
 
 /**
- * Description of NeighborhoodPolygonMapper
+ * Description of NeighborhoodBoundaryMapper
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
@@ -60,7 +60,7 @@ class UserPolygonMapper extends BaseMapper {
         return $result;
     }
 
-    public function getUserPolygonsNotAssociatedWithNeighborhoodPolygons() {
+    public function getUserPolygonsNotAssociatedWithNeighborhoodBoundarys() {
         $sql = "
           SELECT up.id
           FROM user_polygon up
@@ -83,8 +83,8 @@ class UserPolygonMapper extends BaseMapper {
         return $user_polygons;
     }
 
-    public function getNeighborhoodPolygonsByPoint( Point $point ) {
-        return $this->getNeighborhoodPolygonsByLatLng($point->getX(), $point->getY() );
+    public function getNeighborhoodBoundarysByPoint( Point $point ) {
+        return $this->getNeighborhoodBoundarysByLatLng($point->getX(), $point->getY() );
     }
 
     public function byUserId( $userId ) {
@@ -92,7 +92,7 @@ class UserPolygonMapper extends BaseMapper {
         if( empty( $userId ) )
             throw new \InvalidArgumentException( 'userId may not be null' );
 
-        $qb = new NeighborhoodPolygonQueryBuilder(
+        $qb = new NeighborhoodBoundaryQueryBuilder(
                                         $this->em->createQueryBuilder() );
         $qb->setWhathoodUserid( $userId );
 
@@ -234,7 +234,7 @@ class UserPolygonMapper extends BaseMapper {
 		return $qb->getQuery();
     }
     public function getQueryBuilder() {
-        return new NeighborhoodPolygonQueryBuilder(
+        return new NeighborhoodBoundaryQueryBuilder(
                 $this->em->createQueryBuilder() );
     }
 

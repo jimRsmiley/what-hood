@@ -60,7 +60,7 @@ class UserPolygon extends \ArrayObject {
     protected $whathood_user = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="NeighborhoodPolygon",inversedBy="user_polygons")
+     * @ORM\ManyToMany(targetEntity="NeighborhoodBoundary",inversedBy="user_polygons")
      * @ORM\JoinTable(name="up_np",
      *   joinColumns={@ORM\JoinColumn(name="up_id", referencedColumnName="id")},
      *   inverseJoinColumns={@ORM\JoinColumn(name="np_id", referencedColumnName="id")}
@@ -117,11 +117,11 @@ class UserPolygon extends \ArrayObject {
                                 'data must be array or Region object');
     }
 
-    public function getNeighborhoodPolygons() {
+    public function getNeighborhoodBoundarys() {
         return $this->neighborhood_polygons;
     }
 
-    public function setNeighborhoodPolygons($neighborhood_polygons) {
+    public function setNeighborhoodBoundarys($neighborhood_polygons) {
         $this->neighborhood_polygons = $neighborhood_polygons;
     }
 
@@ -216,7 +216,7 @@ class UserPolygon extends \ArrayObject {
      * utility function that given an array of neighborhoods, returns a json
      * array
      */
-    public static function jsonToNeighborhoodPolygons( $json ) {
+    public static function jsonToNeighborhoodBoundarys( $json ) {
 
         $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
 

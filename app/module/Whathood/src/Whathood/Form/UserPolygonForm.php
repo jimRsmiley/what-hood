@@ -28,7 +28,7 @@ class UserPolygonForm extends Form {
          */
         $this->add(array(
             'name'  => 'neighborhoodPolygon',
-            'type' => 'Whathood\Form\NeighborhoodPolygonFieldset',
+            'type' => 'Whathood\Form\NeighborhoodBoundaryFieldset',
             'options' => array(
                 'use_as_base_fieldset' => true
             )

@@ -8,7 +8,7 @@ use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
 use Whathood\Entity\UserPolygon;
 
-class NeighborhoodPolygonFieldset extends Fieldset implements InputFilterProviderInterface {
+class NeighborhoodBoundaryFieldset extends Fieldset implements InputFilterProviderInterface {
 
     public function __construct()
     {

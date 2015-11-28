@@ -10,7 +10,7 @@ use Zend\View\Model\JsonModel;
  * serve neighborhood polygon REST data
  *
  */
-class NeighborhoodPolygonRestfulController extends BaseController {
+class NeighborhoodBoundaryRestfulController extends BaseController {
 
     public function get($id) {
         die("not yet implemented");
@@ -33,7 +33,7 @@ class NeighborhoodPolygonRestfulController extends BaseController {
         $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
 
         try {
-            // get the latest NeighborhoodPolygon
+            // get the latest NeighborhoodBoundary
             $ret_array = $this->m()->neighborhoodPolygonMapper()
                 ->latestByNeighborhood($neighborhood)->toArray();
         }
@@ -50,7 +50,7 @@ class NeighborhoodPolygonRestfulController extends BaseController {
         try {
             $region = $this->m()->regionMapper()->getRegionByName( $regionName );
             $json = $this->m()->neighborhoodPolygonMapper()
-                    ->getNeighborhoodPolygonsAsGeoJsonByRegion( $region );
+                    ->getNeighborhoodBoundarysAsGeoJsonByRegion( $region );
 
             $array = \Zend\Json\Json::decode( $json, \Zend\Json\Json::TYPE_ARRAY );
         }

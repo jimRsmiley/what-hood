@@ -9,7 +9,7 @@ use Zend\Json\Json;
  * Handle test point actions from the console
  *
  */
-class NeighborhoodPolygonController extends BaseController
+class NeighborhoodBoundaryController extends BaseController
 {
 
     /**

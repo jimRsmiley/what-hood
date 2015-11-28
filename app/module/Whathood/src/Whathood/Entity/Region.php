@@ -44,11 +44,11 @@ class Region extends \ArrayObject {
         $this->name = $name;
     }
 
-    public function setNeighborhoodPolygons( $arrayCollection ) {
+    public function setNeighborhoodBoundarys( $arrayCollection ) {
         $this->neighborhoodPolygons = $arrayCollection;
     }
 
-    public function getNeighborhoodPolygons() {
+    public function getNeighborhoodBoundarys() {
         return $this->neighborhoodPolygons;
     }
 

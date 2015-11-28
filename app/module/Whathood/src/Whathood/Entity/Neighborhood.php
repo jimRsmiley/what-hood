@@ -49,7 +49,7 @@ class Neighborhood extends \ArrayObject {
     protected $userPolygons = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="NeighborhoodPolygon",
+     * @ORM\OneToMany(targetEntity="NeighborhoodBoundary",
      *                              mappedBy="neighborhood",cascade="persist")
      */
     protected $neighborhoodPolygons = null;

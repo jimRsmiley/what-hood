@@ -74,7 +74,7 @@ class Builder extends BaseMapper {
     public function neighborhoodPolygonMapper() {
         if( $this->neighborhoodPolygonMapper == null )
             $this->neighborhoodPolygonMapper =
-                $this->sm->get('Whathood\Mapper\NeighborhoodPolygonMapper');
+                $this->sm->get('Whathood\Mapper\NeighborhoodBoundaryMapper');
         return $this->neighborhoodPolygonMapper;
     }
 
