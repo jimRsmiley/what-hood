@@ -2,15 +2,40 @@
 
 namespace Whathood\Controller\Console;
 
+use Zend\View\Model\ConsoleModel;
+
 use Whathood\Controller\BaseController;
+use Whathood\Entity\DefaultQueue;
 
 class JobController extends BaseController {
 
     public function infoAction() {
-        foreach($this->m()->queueMapper()->fetchAll() as $job) {
-            print sprintf("id=%s status=%s %s\n",
-                $job->getId(), $job->getStatus(), $job->getMessage() );
+        $detailed = $this->getRequest()->getParam('verbose');
+        $jobs = $this->m()->queueMapper()->fetchAll();
+
+        $status_counts = array();
+
+        $str = '';
+
+        foreach($jobs as $job) {
+            if ($detailed) {
+                $executed = $job->getExecuted();
+                if ($executed)
+                    $executed = $executed->format('c');
+                $str .= sprintf("id=%s date=%s status-string=%s status=%s %s\n",
+                    $job->getId(), $executed, $job->getStatusString(), $job->getStatus(), $job->getMessage() );
+            }
+            $status_counts[$job->getStatus()]++;
         }
+
+        foreach ($status_counts as $status => $count) {
+            $str .= sprintf("status=%s(%s) count=%s\n",
+                DefaultQueue::statusToString($status), $status, $count );
+        }
+
+        $consoleModel = new ConsoleModel();
+        $consoleModel->setResult($str);
+        return $consoleModel;
     }
 
     /**

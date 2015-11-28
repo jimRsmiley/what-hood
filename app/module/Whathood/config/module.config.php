@@ -481,7 +481,7 @@ return array(
                 ),
                 'queue-info' => array(
                     'options' => array(
-                        'route' => 'queue info',
+                        'route' => 'queue info [--verbose]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\JobConsole',
                             'action' => 'info'

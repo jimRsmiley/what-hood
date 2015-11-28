@@ -320,9 +320,22 @@ class DefaultQueue
         return $this->trace;
     }
 
+    /**
+     * return the default queue job's status
+     * @return string
+     */
     public function getStatusString() {
+        $this->statusToString($this->getStatus());
+    }
 
-        switch ($this->getStatus()) {
+    /**
+     * convert the given status to a string
+     *
+     * @param status int
+     * @return string
+     */
+    public static function statusToString($status) {
+        switch ($status) {
             case (WorkerEvent::JOB_STATUS_FAILURE_RECOVERABLE):
                 return "FAILURE_RECOVERABLE";
                 break;
