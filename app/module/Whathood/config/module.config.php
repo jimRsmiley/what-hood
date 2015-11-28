@@ -490,7 +490,7 @@ return array(
                 ),
                 'queue' => array(
                     'options' => array(
-                        'route' => 'queue rebuild-borders',
+                        'route' => 'queue rebuild-borders [--neighborhood=] [--region=]',
                         'defaults' => array(
                             'controller' => 'Whathood\Controller\JobConsole',
                             'action' => 'rebuild-borders'

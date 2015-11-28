@@ -21,14 +21,15 @@ class NeighborhoodBuilder {
      * @param regionName [String] the name of neighborhoods region
      * @return array \Whathood\Entity\Neighborhood
      */
-    public function buildByName($neighborhoodName, $regionName) {
+    public function byName($neighborhoodName, $regionName) {
+        return $this->getMapper('neighborhood')->getNeighborhoodByName($neighborhoodName, $regionName);
     }
 
     /**
      * build neighborhoods based on whether they have heatmaps
      * @return array \Whathood\Entity\Neighborhood
      */
-    public function buildByHeatmap() {
+    public function allByHeatmapPriority() {
         $arr = array();
         # get neighborhoods with no heatmaps first
         $neighborhoods = $this->getMapper('heatMapPoint')

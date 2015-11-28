@@ -25,10 +25,21 @@ class JobController extends BaseController {
      *
      **/
     public function rebuildBordersAction() {
+        $neighborhoodName   = $this->params()->fromRoute('neighborhood');
+        $regionName         = $this->params()->fromRoute('region');
 
-        $neighborhoods = $this->getServiceLocator()
-            ->get('Whathood\Spatial\Neighborhood\NeighborhoodBuilder')
-                ->buildByHeatmap();
+        $neighborhoodBuilder = $this->getServiceLocator()
+            ->get('Whathood\Spatial\Neighborhood\NeighborhoodBuilder');
+
+        $neighborhoods = array();
+        if ($neighborhoodName and $regionName) {
+            $neighborhoods[] = $neighborhoodBuilder
+                ->byName($neighborhoodName, $regionName);
+        }
+        else {
+            $neighborhoods = $neighborhoodBuilder->allByHeatmapPriority();
+        }
+
         foreach ($neighborhoods as $neighborhood) {
             $this->logger()->info(sprintf("creating job for %s(%s)",
                 $neighborhood->getName(), $neighborhood->getId() ));
