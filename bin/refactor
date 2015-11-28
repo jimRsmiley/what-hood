@@ -1,0 +1,10 @@
+#!/bin/sh
+
+from="$1"
+to="$2"
+
+sedder="s/$from/$to/g"
+find app/module/Whathood/src/ -type f -exec sed -i $sedder {} \;
+
+sed -i $sedder module.config.php
+sed -i $sedder Module.php
