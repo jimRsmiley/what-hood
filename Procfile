@@ -1,5 +1,8 @@
 # THIS RUNS INSIDE THE NGINX CONTAINER
 
+zend: tail -n0 -F /var/log/whathood/php-zend.log
+nginx-error: tail -f /var/log/whathood/nginx-error.log
+nginx-access: tail -f /var/log/whathood/nginx-access.log
 
 # watch for coffeescript changes and rebuild if the code changes
 grunt_watch: bin/grunt watch
