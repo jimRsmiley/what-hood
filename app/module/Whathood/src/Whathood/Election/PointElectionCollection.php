@@ -12,8 +12,11 @@ class PointElectionCollection {
 
     protected $_point_elections;
 
-    public function __construct($points) {
-        $this->_point_elections = $points;
+    public function __construct(array $pointElections = null) {
+
+        if (empty($pointElections))
+            throw new \InvalidArgumentException("pointElections must be an array containing PointElections");
+        $this->_point_elections = $pointElections;
     }
 
     public function getPointElections() {
@@ -38,11 +41,13 @@ class PointElectionCollection {
     /**
      * return the points that belong to the neighborhood
      */
-    public function byNeighborhoodId($n_id) {
+    public function byNeighborhood(Neighborhood $neighborhood) {
+        if (empty($neighborhood))
+            throw new \InvalidArgumentException("neighborhood id must be defined");
         $points = array();
         foreach($this->_point_elections as $p) {
             if (!$p->isTie())
-                if($p->isWinner($n_id))
+                if($p->isWinner($neighborhood))
                     array_push($points,$p);
         }
         return $points;

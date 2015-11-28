@@ -7,7 +7,7 @@ return array(
             'doctrine.entitymanager.orm_default' => function($sm) {
                 $doctrine = $sm->get('Whathood\Doctrine');
 
-                $dbName = getenv("WHATHOOD_DB");
+                $dbName = 'whathood';
                 if (empty($dbName))
                     die("must define WHATHOOD_DB");
 

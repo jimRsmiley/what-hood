@@ -22,33 +22,6 @@ class PointElectionMapper extends BaseMapper {
         return $this->buildPointElectionCollection($test_points);
     }
 
-    /**
-     * given an array of $user_polygons, returns a polygon representing the border
-     *
-     * @param electionCollect \Whathood\Collection - a colelction of ElectionPoints
-     * @param neighbood_id int - the neighborhood id to generate the border for
-     *
-     * @return mixed - Polygon object
-     */
-    public function generateBorderPolygon($electionCollection, $neighborhood_id) {
-
-        if (empty($electionCollection->getPointElections()))
-            throw new \InvalidArgumentException("electionCollection must have points");
-
-        $neighborhood_points = $electionCollection->byNeighborhoodId($neighborhood_id);
-
-        if (empty($neighborhood_points)) {
-            return null;
-        }
-        $points = array();
-        foreach ($neighborhood_points as $p) {
-            array_push($points,$p->getPoint());
-        }
-
-        $polygon = $this->m()->pointsAsPolygonMapper()
-            ->toPolygon(new MultiPoint($points));
-        return $polygon;
-    }
 
     /**
      * given an array of test points, build a collection of election test points

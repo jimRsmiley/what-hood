@@ -333,7 +333,7 @@ return array(
                         'options' => array(
                             'route' => '/neighborhood-border',
                             'defaults' => array(
-                                'controller' => 'NeighborhoodPolygon',
+                                'controller' => 'NeighborhoodBoundary',
                                 'action' => 'get-list'
                             )
                         ),
@@ -354,7 +354,7 @@ return array(
                                 'options' => array(
                                     'route' => '/:neighborhood_id[/]',
                                     'defaults' => array(
-                                        'controller' => 'NeighborhoodPolygon',
+                                        'controller' => 'NeighborhoodBoundary',
                                         'action' => 'get-list'
                                     )
                                 )
@@ -454,7 +454,7 @@ return array(
                     'options' => array(
                         'route' => 'np',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\NeighborhoodPolygonConsole',
+                            'controller' => 'Whathood\Controller\NeighborhoodBoundaryConsole',
                             'action' => 'consoledefault'
                         )
                     )
@@ -650,6 +650,12 @@ return array(
                 return $logger;
             },
 
+            'Whathood\Spatial\Neighborhood\Boundary\BoundaryBuilder' => function($sm) {
+                $builder = new \Whathood\Spatial\Neighborhood\Boundary\BoundaryBuilder();
+                $builder->addMapper('pointsAsPolygon', $sm->get('Whathood\Mapper\PointsAsPolygonMapper') );
+                return $builder;
+            },
+
             'Whathood\Spatial\Neighborhood\NeighborhoodBuilder' => function($sm) {
                 $builder = new \Whathood\Spatial\Neighborhood\NeighborhoodBuilder();
                 $builder->addMapper('heatMapPoint', $sm->get('Whathood\Mapper\HeatmapPoint') );
@@ -741,10 +747,10 @@ return array(
                 return new \Whathood\Spatial\NeighborhoodJsonFile\Upenn();
             },
 
-            'Whathood\Mapper\NeighborhoodPolygonMapper' => function($sm) {
+            'Whathood\Mapper\NeighborhoodBoundaryMapper' => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $cacher = $sm->get('Whathood\Service\Caching');
-                $mapper = new \Whathood\Mapper\NeighborhoodPolygonMapper( $sm, $em, $cacher );
+                $mapper = new \Whathood\Mapper\NeighborhoodBoundaryMapper( $sm, $em, $cacher );
                 return $mapper;
             },
 
@@ -772,7 +778,7 @@ return array(
             'Whathood\Controller\CreateEvent' => 'Whathood\Controller\CreateEventController',
             'Whathood\Controller\Index' => 'Whathood\Controller\IndexController',
             'Whathood\Controller\Neighborhood' => 'Whathood\Controller\NeighborhoodController',
-            'Whathood\Controller\NeighborhoodPolygon' => 'Whathood\Controller\NeighborhoodPolygonController',
+            'Whathood\Controller\NeighborhoodBoundary' => 'Whathood\Controller\NeighborhoodBoundaryController',
             'Whathood\Controller\Region' => 'Whathood\Controller\RegionController',
             'Whathood\Controller\WhathoodUser' => 'Whathood\Controller\WhathoodUserController',
             'Whathood\Controller\HeatMap' => 'Whathood\Controller\HeatMapController',
@@ -782,7 +788,7 @@ return array(
             'Whathood\Controller\Queue' => 'Whathood\Controller\QueueController',
 
             /* restful controllers */
-            'Whathood\Controller\Restful\NeighborhoodPolygon'    => 'Whathood\Controller\Restful\NeighborhoodPolygonRestfulController',
+            'Whathood\Controller\Restful\NeighborhoodBoundary'    => 'Whathood\Controller\Restful\NeighborhoodBoundaryRestfulController',
             'Whathood\Controller\Restful\Neighborhood'           => 'Whathood\Controller\Restful\NeighborhoodRestfulController',
             'Whathood\Controller\Restful\UserPolygon'            => 'Whathood\Controller\Restful\UserPolygonController',
             'Whathood\Controller\Restful\Region'                 => 'Whathood\Controller\RegionRestController',
@@ -797,7 +803,7 @@ return array(
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\Console\UserNeighborhood'      => 'Whathood\Controller\Console\UserPolygonController',
-            'Whathood\Controller\NeighborhoodPolygonConsole'    => 'Whathood\Controller\Console\NeighborhoodPolygonController',
+            'Whathood\Controller\NeighborhoodBoundaryConsole'    => 'Whathood\Controller\Console\NeighborhoodBoundaryController',
         ),
     ),
 

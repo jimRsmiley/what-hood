@@ -8,8 +8,17 @@ use Whathood\Entity\Neighborhood;
  * store a point and all the user_polygons that contain it.
  * Provide accessor methods for running an election
  *
- * see Whathood.Mapper.PointElectionMapper.html#method_generateBorderPolygon for actually building a border
  *
+ * Usage:
+ *
+ *  $pointElection = new PointElection(array(
+ *      'user_polygons' => $user_polygons,
+ *      'point'         => $point
+ *  ));
+ *      
+ *
+ * see Whathood.Mapper.PointElectionMapper.html#method_generateBorderPolygon for actually building a border
+
  * @see Whathood.Mapper.PointElectionMapper.html#method_generateBorderPolygon
  */
 class PointElection extends \ArrayObject {
@@ -79,8 +88,10 @@ class PointElection extends \ArrayObject {
     }
 
     public function __construct(array $data = null) {
-        $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
-        $hydrator->hydrate($data, $this);
+        if ( ! empty($data) ) {
+            $hydrator = new \Zend\Stdlib\Hydrator\ClassMethods();
+            $hydrator->hydrate($data, $this);
+        }
         $this->_candidate_neighborhoods = array();
     }
 
@@ -93,6 +104,9 @@ class PointElection extends \ArrayObject {
             throw new \InvalidArgumentException("logger must be defined");
 
         $election_point = new static($data);
+
+        if ( ! $election_point->getPoint() )
+            throw new \Exception("point must be defined");
         $election_point->runElection();
 
         return $election_point;
