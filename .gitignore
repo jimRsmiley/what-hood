@@ -1,3 +1,4 @@
+app/module/Whathood/test/data/DoctrineORMModule
 docs
 whathood.yml
 Gemfile.lock
@@ -18,7 +19,6 @@ whathood.js
 /app/draft/
 /app/public/js/whathood/
 /app/data/DoctrineORMModule
-/app/module/Whathood/test/ApplicationTest/data/DoctrineORMModule/Proxy
 composer.lock
 composer.phar
 ._*
