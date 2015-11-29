@@ -18,5 +18,15 @@ class QueueMapper extends BaseMapper {
             ->from('Whathood\Entity\DefaultJob','q');
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * remove all entites
+     * @return int the number of entities deleted
+     */
+    public function removeAll() {
+        $query = $this->em->createQuery("DELETE FROM Whathood\Entity\DefaultJob");
+        $numDeleted = $query->execute();
+        return $numDeleted;
+    }
 }
 ?>

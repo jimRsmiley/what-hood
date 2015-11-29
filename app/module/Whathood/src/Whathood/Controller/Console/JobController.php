@@ -9,6 +9,12 @@ use Whathood\Entity\DefaultJob;
 
 class JobController extends BaseController {
 
+    public function clearQueueAction() {
+        $numJobs = $this->m()->queueMapper()->removeAll();
+        return "cleared $numJobs queue\n";
+    }
+
+
     public function infoAction() {
         $detailed = $this->getRequest()->getParam('verbose');
         $jobs = $this->m()->queueMapper()->fetchAll();

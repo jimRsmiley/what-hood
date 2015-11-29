@@ -479,6 +479,17 @@ return array(
                         )
                     )
                 ),
+
+                'queue-remove-all' => array(
+                    'options' => array(
+                        'route' => 'queue remove-all',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\JobConsole',
+                            'action' => 'clear-queue'
+                        )
+                    )
+                ),
+
                 'queue-info' => array(
                     'options' => array(
                         'route' => 'queue info [--verbose]',
