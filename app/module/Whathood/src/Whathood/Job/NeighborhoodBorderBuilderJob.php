@@ -113,7 +113,6 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
             $polygon = $this->buildNeighborhoodBoundary($electionCollection, $neighborhood, $userPolygons);
 
             if ($polygon) {
-                $this->infoLog(\Zend\Debug\Debug::dump($polygon));
                 $this->saveNeighborhoodBoundary($neighborhood, $polygon, $userPolygons);
                 $this->infoLog(sprintf("saved neighborhood polygon"));
             }
