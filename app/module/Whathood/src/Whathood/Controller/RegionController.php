@@ -50,8 +50,6 @@ class RegionController extends BaseController {
         $neighborhoods = $this->m()->neighborhoodMapper()
                                 ->getAuthoritativeNeghborhoodsByRegionName($regionName);
 
-        \Zend\Debug\Debug::dump($neighborhoods);
-        exit;
         $userName = $neighborhoods[0]->getUser()->getName();
 
         $viewModel = new ViewModel(
