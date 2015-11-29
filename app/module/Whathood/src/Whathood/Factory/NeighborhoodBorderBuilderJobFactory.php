@@ -20,7 +20,8 @@ class NeighborhoodBorderBuilderJobFactory implements FactoryInterface {
             'gridResolution'        => $config->gridResolution(),
             'mapperBuilder'         => $serviceLocator->get('Whathood\Mapper\Builder'),
             'logger'                => $serviceLocator->get('Whathood\Logger'),
-            'queue'                 => $serviceLocator->get('Whathood\Service\MessageQueue')
+            'queue'                 => $serviceLocator->get('Whathood\Service\MessageQueue'),
+            'boundary_builder'      => $serviceLocator->get('Whathood\Spatial\Neighborhood\Boundary\BoundaryBuilder')
         ));
         return $job;
     }

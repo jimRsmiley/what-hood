@@ -18,6 +18,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
 
     protected $_build_heatmap = false;
 
+    protected $_boundary_builder;
+
     public static function build(array $data) {
         $job = new static($data);
         if (empty($job->m()))
@@ -26,7 +28,17 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
             throw new \InvalidArgumentException("gridResolution may not be empty");
         if (empty($job->getQueue()))
             throw new \InvalidArgumentException("queue may not be empty");
+        if (empty($job->getBoundaryBuilder()))
+            throw new \InvalidArgumentException("boundary_builder may not be empty");
         return $job;
+    }
+
+    public function setBoundaryBuilder($builder) {
+        $this->_boundary_builder = $builder;
+    }
+
+    public function getBoundaryBuilder() {
+        return $this->_boundary_builder;
     }
 
     public function setContent($content) {
@@ -58,6 +70,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
      *  trigger a heatmap job
      **/
     public function triggerHeatmapJob() {
+        $this->infoLog("triggering heatmap job");
         $queue   = $this->getQueue();
         $job     = $queue->getJobPluginManager()
             ->get('Whathood\Job\HeatmapBuilderJob');
@@ -100,6 +113,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
             $polygon = $this->buildNeighborhoodBoundary($electionCollection, $neighborhood, $userPolygons);
 
             if ($polygon) {
+                $this->infoLog(\Zend\Debug\Debug::dump($polygon));
                 $this->saveNeighborhoodBoundary($neighborhood, $polygon, $userPolygons);
                 $this->infoLog(sprintf("saved neighborhood polygon"));
             }
@@ -108,6 +122,7 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
             }
         }
         catch(\Exception $e) {
+            $this->infoLog("There was an error building the neighborhood");
             $this->infoLog($e->getMessage());
             $this->infoLog($e->getTraceAsString());
             throw $e;
@@ -123,8 +138,15 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
             throw new \InvalidArgumentException("electionCollection may not be empty");
         $this->infoLog(sprintf("working with %s election points",
             count($electionCollection->getPointElections()) ));
-        return $this->m()->pointElectionMapper()
-            ->generateBorderPolygon($electionCollection, $neighborhood);
+
+        try {
+            return $this->getBoundaryBuilder()
+                ->build($electionCollection, $neighborhood);
+        }
+        catch(\Exception $e) {
+            $this->infoLog("failed to generate border");
+            $this->infoLog($e);
+        }
     }
 
     /**

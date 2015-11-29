@@ -16,6 +16,7 @@ class Builder extends BaseMapper {
     protected $_points_as_polygon_mapper;
     protected $_heatmap_point;
     protected $_queue_mapper;
+    protected $_neighborhood_boundary;
 
     public function __construct( $serviceManager, $doctrineEntityManager ) {
         if( !($serviceManager instanceof \Zend\ServiceManager\ServiceManager) )
@@ -35,6 +36,13 @@ class Builder extends BaseMapper {
 
     public function pointElectionMapper() {
         return $this->sm->get('Whathood\Mapper\PointElectionMapper');
+    }
+
+    public function neighborhoodBoundaryMapper() {
+        if ($this->_neighborhood_boundary == null) {
+            $this->_neighborhood_boundary = $this->sm->get('Whathood\Mapper\NeighborhoodBoundaryMapper');
+        }
+        return $this->_neighborhood_boundary;
     }
 
     public function heatMapPoint() {
