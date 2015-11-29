@@ -31,7 +31,7 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
 
         $job->setGridResolution(1);
         $region = new \Whathood\Entity\Region(array(
-            'name' => "Region_".$this->getTestName()
+            'name' => "Region_".$this->getTestName().$this->rand()
         ));
 
         $this->m()->regionMapper()->save($region);
