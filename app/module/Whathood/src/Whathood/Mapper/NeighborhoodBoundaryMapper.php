@@ -54,6 +54,12 @@ class NeighborhoodBoundaryMapper extends BaseMapper {
         return $query->getResult();
     }
 
+    /**
+     * pull the neighborhood boundary as geojson
+     * 
+     * first trying to get it from the cache, then going into the database
+     * @return String the geojson
+     */
     public function getNeighborhoodBoundarysAsGeoJsonByRegion(Region $region) {
 
         if( empty( $region->getId() ) )

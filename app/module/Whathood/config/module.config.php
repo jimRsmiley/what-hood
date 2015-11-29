@@ -526,6 +526,15 @@ return array(
                         )
                     )
                 ),
+                'memcached_flush' => array(
+                    'options' => array(
+                        'route' => 'memcached flush',
+                        'defaults' => array(
+                            'controller' => 'Whathood\Controller\MemcachedConsole',
+                            'action' => 'flush'
+                        )
+                    )
+                ),
                 'db-size-route' => array(
                     'options' => array(
                         'route' => 'postgres size',
@@ -809,6 +818,7 @@ return array(
             'Whathood\Controller\Restful\Queue'                  => 'Whathood\Controller\Restful\QueueRestfulController',
 
             /* console controllers */
+            'Whathood\Controller\MemcachedConsole'               => 'Whathood\Controller\Console\MemcachedController',
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
             'Whathood\Controller\JobConsole'                    => 'Whathood\Controller\Console\JobController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
