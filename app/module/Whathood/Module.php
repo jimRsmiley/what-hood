@@ -99,6 +99,7 @@ class Module implements ConsoleUsageProviderInterface
 
             // managing the queue
             'queue info'            =>  'display info about the queue',
+            'queue remove-all'      =>  'clear the job queue',
 
             'queue rebuild-borders' =>  'rebuild all neighborhood borders',
 
