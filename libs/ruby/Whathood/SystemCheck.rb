@@ -6,7 +6,7 @@ module Whathood
                                                                                           
     @_any_failure = false                                                                 
                                                                                           
-    BASE_URL = 'http://localhost:8080'                                                    
+    BASE_URL = 'http://localhost:80'                                                    
                                                                                           
     def run                                                                               
       check_http_status("/")                                                              
