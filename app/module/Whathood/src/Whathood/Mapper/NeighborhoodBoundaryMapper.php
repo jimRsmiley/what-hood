@@ -64,27 +64,31 @@ class NeighborhoodBoundaryMapper extends BaseMapper {
         $geojson = $this->cache()->getItem($key, $success);
 
         if (!$success) {
-            $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
-
-            $rsm = new ResultSetMapping();
-            $rsm->addScalarResult('geojson', 'geojson');
-
-            $query = $this->em->createNativeQuery($sql,$rsm);
-            $query->setParameter('regionId', $region->getId() );
-
-            $result = $query->getSingleResult();
-
-            $geojson = $result['geojson'];
-            if (preg_match('/"features":null/',$geojson))
-                throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
-
-            $this->logger()->info("data was pulled from cache w key $key");
+            $geojson = $this->getBoundaryAsGeoJsonFromDb($region);
+            $this->logger()->info("data was pulled from db; saving in cache w key $key");
             $this->cache()->setItem($key, $geojson);
         }
         else {
-            $this->logger()->info("key $key was pulled from cache");
+            $this->logger()->info("found key $key in cache");
         }
 
+        return $geojson;
+    }
+
+    private function getBoundaryAsGeoJsonFromDb(Region $region) {
+        $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('geojson', 'geojson');
+
+        $query = $this->em->createNativeQuery($sql,$rsm);
+        $query->setParameter('regionId', $region->getId() );
+
+        $result = $query->getSingleResult();
+
+        $geojson = $result['geojson'];
+        if (preg_match('/"features":null/',$geojson))
+            throw new \Exception("no neighborhood polygons returned for region '".$region->getName()."'");
         return $geojson;
     }
 
