@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker exec -it wh-nginx bash
+docker exec -it $WH_NGINX_CONTAINER bash
