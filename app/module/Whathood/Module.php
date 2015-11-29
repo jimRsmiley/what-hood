@@ -109,6 +109,7 @@ class Module implements ConsoleUsageProviderInterface
             array('--grid-res=',        'override the default grid resolution'),
             array('--target-precision', 'override the default target precision'),
 
+            'cache flush'       => 'flush cache',
             // user-neighborhoods
             'up count'              => 'Get a count of the systems user neighborhoods',
 

@@ -528,9 +528,9 @@ return array(
                 ),
                 'memcached_flush' => array(
                     'options' => array(
-                        'route' => 'memcached flush',
+                        'route' => 'cache flush',
                         'defaults' => array(
-                            'controller' => 'Whathood\Controller\MemcachedConsole',
+                            'controller' => 'Whathood\Controller\CacheConsole',
                             'action' => 'flush'
                         )
                     )
@@ -808,7 +808,7 @@ return array(
             'Whathood\Controller\Queue' => 'Whathood\Controller\QueueController',
 
             /* restful controllers */
-            'Whathood\Controller\Restful\NeighborhoodBoundary'    => 'Whathood\Controller\Restful\NeighborhoodBoundaryRestfulController',
+            'Whathood\Controller\Restful\NeighborhoodBoundary'   => 'Whathood\Controller\Restful\NeighborhoodBoundaryRestfulController',
             'Whathood\Controller\Restful\Neighborhood'           => 'Whathood\Controller\Restful\NeighborhoodRestfulController',
             'Whathood\Controller\Restful\UserPolygon'            => 'Whathood\Controller\Restful\UserPolygonController',
             'Whathood\Controller\Restful\Region'                 => 'Whathood\Controller\RegionRestController',
@@ -818,13 +818,13 @@ return array(
             'Whathood\Controller\Restful\Queue'                  => 'Whathood\Controller\Restful\QueueRestfulController',
 
             /* console controllers */
-            'Whathood\Controller\MemcachedConsole'               => 'Whathood\Controller\Console\MemcachedController',
+            'Whathood\Controller\CacheConsole'                  => 'Whathood\Controller\Console\CacheController',
             'Whathood\Controller\PostgresConsole'               => 'Whathood\Controller\Console\PostgresController',
             'Whathood\Controller\JobConsole'                    => 'Whathood\Controller\Console\JobController',
             'Whathood\Controller\TestPointConsole'              => 'Whathood\Controller\Console\TestPointController',
             'Whathood\Controller\NeighborhoodConsole'           => 'Whathood\Controller\Console\NeighborhoodController',
             'Whathood\Controller\Console\UserNeighborhood'      => 'Whathood\Controller\Console\UserPolygonController',
-            'Whathood\Controller\NeighborhoodBoundaryConsole'    => 'Whathood\Controller\Console\NeighborhoodBoundaryController',
+            'Whathood\Controller\NeighborhoodBoundaryConsole'   => 'Whathood\Controller\Console\NeighborhoodBoundaryController',
         ),
     ),
 
