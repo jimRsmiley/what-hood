@@ -1,1 +1,2 @@
-* `docker exec wh-nginx /bin/sh -c 'cd /var/www/whathood; bin/run-app watcher --force'`
+* to proecess the queue: d-bin/process_queue 
+* to get the watch processes running: nf --procfile DevProcfile start
