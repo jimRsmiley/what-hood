@@ -70,7 +70,6 @@ class BoundaryBuilderTest extends \Whathood\PHPUnit\BaseTest {
 
         $pointElectionCollection = new PointElectionCollection($pointElections);
 
-        die($pointElections[0]->getWinningPercentage());
         $builder = $this->getServiceLocator()
             ->get('Whathood\Spatial\Neighborhood\Boundary\BoundaryBuilder');
 
@@ -78,6 +77,8 @@ class BoundaryBuilderTest extends \Whathood\PHPUnit\BaseTest {
 
         $this->assertNotNull($boundary);
 
-        \Zend\Debug\Debug::dump($boundary);
+        $points = $pointElectionCollection->byNeighborhood($neighborhood1);
+
+        $this->assertTrue( 7 == count($points) );
     }
 }

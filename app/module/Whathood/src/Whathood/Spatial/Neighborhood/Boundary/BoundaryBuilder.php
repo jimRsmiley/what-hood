@@ -9,6 +9,7 @@ use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
 class BoundaryBuilder {
 
     use \Whathood\Mapper\MapperTrait;
+
     /**
      * given a collection of ElectionPoints, builds the neighborhood border for the given neighborhood id
      *
@@ -19,6 +20,7 @@ class BoundaryBuilder {
      */
     public function build(PointElectionCollection $pointElectionCollection, Neighborhood $neighborhood) {
 
+        
         if (empty($pointElectionCollection))
             throw new \InvalidArgumentException("pointElectionCollection must be defined");
         if (empty($pointElectionCollection->getPointElections()))
