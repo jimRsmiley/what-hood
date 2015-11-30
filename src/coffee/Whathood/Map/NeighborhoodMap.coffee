@@ -1,7 +1,13 @@
-root = exports ? this
-Whathood = root.Whathood
-
+# a Neighborhood map is a map displays:
+#
+# * the boundary for the neighborhood
+# * the heatmap for the neighborhood
+#
+# usage:
+# map = NeighborhoodMap.build('#neighborhood_map', neighborhood_id)
+#
 class Whathood.Map.NeighborhoodMap extends Whathood.Map
+
 
   @heatmap_cfg : () ->
     "radius": 8,
@@ -33,6 +39,9 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
         map.addNeighborhoodBorder url, (geojson) ->
           heatmapLayer.setData(testData)
           map.fitBounds(heatmapLayer)
+
+          # add the neighborhood boundary
+          new L.geoJson(geojson).addTo(map)
         return map
 
   # sugar

@@ -1,8 +1,6 @@
-window = exports ? this
-Whathood = window.Whathood
-
+# a base map
+#
 Whathood.Map = L.Map.extend
-
 
   _layerGroup: null,
   _geojsonTileLayer : null

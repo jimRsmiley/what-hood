@@ -1,6 +1,5 @@
-window = exports ? this
-Whathood = window.Whathood
-
+# the region map
+#
 Whathood.RegionMap = Whathood.Map.extend
 
   _neighborhood_color: '5487b8'
@@ -96,11 +95,9 @@ Whathood.RegionMap = Whathood.Map.extend
         Whathood.RegionMap.getPopupHtml pointElection
       ).openPopup()
 
-  #
-  #/*
-  #* add the ability to click on the map, and have a whathood popup telling what
-  #* neighborhoods it matches
-  #*/
+  # add the ability to click on the map, and have a whathood popup telling what
+  # neighborhoods it matches
+  # 
   whathoodClick: ( bool ) ->
     if( bool != true )
       return
