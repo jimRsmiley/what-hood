@@ -2,19 +2,35 @@
 namespace Whathood\Controller\Restful;
 
 use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
-use Whathood\Controller\BaseRestfulController;
+use Whathood\Controller\Restful\BaseController;
 use Zend\View\Model\JsonModel;
 /**
  * Handle test point actions
- *
  */
-class TestPointRestfulController extends BaseRestfulController
+class TestPointRestfulController extends BaseController
 {
 
     /**
-     * return geojson representation of test points given either
+     * @api {get} /testpoint
+     * @apiName getTestPoints
+     * @apiGroup TestPoint
      *
-     *  - neighborhood name and region name
+     * @apiParam {String} neighborhoodName the name of the neighborhood
+     * @apiParam {String} regionName the name of the region
+     *
+     * @apiSuccess {String} type the geometry type
+     * @apiSuccess {String} coordinates  an array of coordinates
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *       "type": "MultiPoint",
+     *       "coordinates": [
+     *          [1,2],
+     *          [3,4],
+     *          .....
+     *       ]
+     *     }
      */
     public function getList() {
         $neighborhood_name = $this->getRequestParameter('neighborhood_name');

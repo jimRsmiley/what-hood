@@ -20,7 +20,6 @@ class BoundaryBuilder {
      */
     public function build(PointElectionCollection $pointElectionCollection, Neighborhood $neighborhood) {
 
-        
         if (empty($pointElectionCollection))
             throw new \InvalidArgumentException("pointElectionCollection must be defined");
         if (empty($pointElectionCollection->getPointElections()))

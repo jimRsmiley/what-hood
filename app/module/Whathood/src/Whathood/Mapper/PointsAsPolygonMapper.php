@@ -44,8 +44,6 @@ class PointsAsPolygonMapper extends BaseMapper {
 
             # db interaction 
             $polygon = $this->pointsAsPolygon($this->_tmp_table_name,count($multi_point->getPoints()));
-
-            $this->dropTempTable($this->_tmp_table_name);
         }
         catch(\Exception $e) {
             #$this->em->getConnection()->rollback();
@@ -84,6 +82,7 @@ class PointsAsPolygonMapper extends BaseMapper {
         $sql = "DROP TABLE IF EXISTS $tbl_name";
         $this->em->getConnection()->query($sql);
     }
+        
     public function createTempTable($tbl_name) {
         $sql = "CREATE TEMP TABLE $tbl_name (point geometry)";
         $this->em->getConnection()->query($sql);
