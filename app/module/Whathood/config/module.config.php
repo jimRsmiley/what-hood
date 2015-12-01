@@ -349,6 +349,16 @@ return array(
                         ),
                         'child_routes' => array(
 
+                            'debug_build' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => '/debug-build/:region/:neighborhood/:grid_res[/]',
+                                    'defaults' => array(
+                                        'action' => 'debugBuild'
+                                    )
+                                )
+                            ),
+
                             'by_region' => array(
                                 'type' => 'Segment',
                                 'options' => array(

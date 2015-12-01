@@ -46,9 +46,14 @@ class PointElectionCollection {
             throw new \InvalidArgumentException("neighborhood id must be defined");
         $points = array();
         foreach($this->_point_elections as $p) {
-            if (!$p->isTie())
-                if($p->isWinner($neighborhood))
+            if (!$p->isTie()) {
+                if($p->isWinner($neighborhood)) {
                     array_push($points,$p);
+                }
+                else {
+                    throw new \Exception("why was this point not the winner?");
+                }
+            }
         }
         return $points;
     }

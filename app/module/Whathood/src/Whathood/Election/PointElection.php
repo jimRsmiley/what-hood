@@ -97,6 +97,8 @@ class PointElection extends \ArrayObject {
 
     /**
      * create a new election point and have it count it's user polygons
+     * @param array data
+     * @return PointElection
      */
     public static function build(array $data = null) {
 
@@ -143,6 +145,7 @@ class PointElection extends \ArrayObject {
 
     /**
      * throw exception if there's more or less than one winner
+     * @return \Whathood\Election\CandidateNeighborhood
      */
     public function getSingleWinner() {
         $count = count($this->getWinningCandidates());
@@ -221,17 +224,17 @@ class PointElection extends \ArrayObject {
      * @return array - an array of CandidateNeighborhoods
      */
     public function getWinningCandidates() {
-
         $mostVoteCNs = array();
-
         $mostVotes = 0;
+        $totalVotes = $this->getTotalVotes();
         foreach( $this->getCandidateNeighborhoods() as $cn ) {
             $test_num_votes = $cn->getNumVotes();
+            $challenger_name = $cn->getNeighborhood()->getName();
             // if it's the sole winner, blow out the array and make it the only
             // unit
             if( $test_num_votes > $mostVotes ) {
                 $mostVoteIds = array();
-                $mostVoteCNs[] = $cn;
+                $mostVoteCNs = array($cn);
                 $mostVotes = $test_num_votes;
             }
             // if it only ties, add it to the mostVoteIds total
@@ -239,7 +242,6 @@ class PointElection extends \ArrayObject {
                 $mostVoteCNs[] = $cn;
             }
         }
-
         return $mostVoteCNs;
     }
 
@@ -271,6 +273,14 @@ class PointElection extends \ArrayObject {
         throw new \Exception("no CandidateNeighborhoods, so cannot get Region");
     }
 
+    public static function allToArrays($pointElections) {
+        $arr = array();
+        foreach ($pointElections as $pe) {
+            array_push($arr, $pe->toArray());
+        }
+        return $arr;
+    }
+
     public function toArray() {
 
         $neighborhoods_array = array();
@@ -296,11 +306,18 @@ class PointElection extends \ArrayObject {
             $region_arr = $this->getRegion()->toArray();
         }
 
+        $single_winner = null;
+        if (! $this->isTie() ) {
+            $single_winner = $this->getSingleWinner()->getNeighborhood()->toArray();
+        }
+
         return array(
-            'region'        => $region_arr,
-            'winners'       => $winners,
-            'candidate_neighborhoods' => $neighborhoods_array,
-            'total_votes'   => $this->getTotalVotes(),
+            'region'                    => $region_arr,
+            'winners'                   => $winners,
+            'candidate_neighborhoods'   => $neighborhoods_array,
+            'is_tie'                    => $this->isTie(),
+            'single_winner'             => $single_winner,
+            'total_votes'               => $this->getTotalVotes(),
             'point' => array(
                 'x' => $this->getPoint()->getX(),
                 'y' => $this->getPoint()->getY()
@@ -308,12 +325,11 @@ class PointElection extends \ArrayObject {
         );
     }
 
-
     public function __toString() {
         $winner_str = "";
         $winner_arr = array();
         foreach ($this->getWinningCandidates() as $cn) {
-            array_push($winner_arr, $cn->getName());
+            array_push($winner_arr, $cn->getNeighborhood()->getName());
         }
         $winner_str = join(',',$winner_arr);
         return sprintf("point=[%s] num-candidates=%s winning-percentage=%s is-tie=%s num-winners=%s winners=[%s]",

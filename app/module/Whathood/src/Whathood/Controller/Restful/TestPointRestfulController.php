@@ -15,8 +15,9 @@ class TestPointRestfulController extends BaseController
      * @apiName getTestPoints
      * @apiGroup TestPoint
      *
-     * @apiParam {String} neighborhoodName the name of the neighborhood
-     * @apiParam {String} regionName the name of the region
+     * @apiParam {String} neighborhood the name of the neighborhood
+     * @apiParam {String} region the name of the region
+     * @apiParam {String} grid_res the name of the region
      *
      * @apiSuccess {String} type the geometry type
      * @apiSuccess {String} coordinates  an array of coordinates
@@ -33,13 +34,14 @@ class TestPointRestfulController extends BaseController
      *     }
      */
     public function getList() {
-        $neighborhood_name = $this->getRequestParameter('neighborhood_name');
-        $region_name       = $this->getRequestParameter('region_name');
+        $neighborhood_name = $this->getRequestParameter('neighborhood');
+        $region_name       = $this->getRequestParameter('region');
         $grid_resolution   = $this->getRequestParameter('grid_res');
 
         if (empty($neighborhood_name) or empty($region_name) or empty($grid_resolution))
             return $this->badRequestJson("neighborhood_name,region_name and grid_res must all be defined");
-        $neighborhood = $this->m()->neighborhoodMapper()->byName($neighborhood_name,$region_name);
+        $neighborhood = $this->m()->neighborhoodMapper()
+            ->byName($neighborhood_name,$region_name);
 
         if (empty($neighborhood))
             return $this->badRequestJson("no neighborhood found");
@@ -48,7 +50,8 @@ class TestPointRestfulController extends BaseController
         if (empty($user_polygons))
             return $this->badRequestJson("no user polygons found for neighborhood");
 
-        $points = $this->m()->testPointMapper()->createByUserPolygons($user_polygons,$grid_resolution);
+        $points = $this->m()->testPointMapper()
+            ->createByUserPolygons($user_polygons,$grid_resolution);
 
         if (empty($points))
             return $this->badRequestJson("no points returned with grid_resolution $grid_resolution");

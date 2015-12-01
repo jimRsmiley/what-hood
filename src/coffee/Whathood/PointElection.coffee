@@ -3,10 +3,27 @@ Whathood = window.Whathood
 
 class Whathood.PointElection
 
+  constructor: (@args) ->
+    
   @api_url: (x,y) ->
     Whathood.UrlBuilder.point_election x, y
 
-  constructor: (args) ->
+  toHtml: () ->
+    data =
+      total_votes: @totalVotes()
+      is_tie: @isTie()
+    html = "" 
+    for key, value of data
+      html = html + "<div>"+key+" : "+ value + "</div>"
+    return '<div>'+ html + '</div>'
+
+  isTie: () -> @args.is_tie
+
+  totalVotes: () ->
+    @args.total_votes
+
+  point: () ->
+    @args.point
 
   @build: (x,y,cb) ->
     $.ajax
