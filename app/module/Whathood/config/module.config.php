@@ -307,7 +307,17 @@ return array(
                             'route' => '/:controller/:action'
                         )
                     ),
-                    'rest_testpoint' => array(
+
+                    'point_election' => array(
+                        'type' => 'segment',
+                        'options' => array(
+                            'route' => '/point-election',
+                            'defaults' => array(
+                                'controller' => 'PointElection'
+                            )
+                        )
+                    ),
+                    'testpoint' => array(
                         'type' => 'segment',
                         'options' => array(
                             'route' => '/testpoint',
@@ -382,6 +392,7 @@ return array(
                             ),
                         )
                     ),
+
                     'user_neighborhood' => array(
                         'type' => 'Segment',
                         'options' => array(
