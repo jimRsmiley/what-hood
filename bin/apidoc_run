@@ -1,0 +1,4 @@
+#!/bin/sh
+
+apidoc -i W/ -o docs/apidoc/
+return 1
