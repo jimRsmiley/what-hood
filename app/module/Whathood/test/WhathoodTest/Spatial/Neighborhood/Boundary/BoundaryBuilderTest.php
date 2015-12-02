@@ -12,72 +12,55 @@ class BoundaryBuilderTest extends \Whathood\PHPUnit\BaseTest {
 
     public function testGenerateBorderPolygonTest() {
 
-        $neighborhood1 = new Neighborhood(array(
-            'id' => 1 ));
-        $neighborhood2 = new Neighborhood(array(
-            'id' => 2 ));
+        $neighborhood1 = $this->buildTestNeighborhood();
+        $neighborhood2 = $this->buildTestNeighborhood();
 
         $userPolygons = array(
-            new UserPolygon(array(
+            static::buildTestUserPolygon(array(
                 'neighborhood' => $neighborhood1
             )),
-            new UserPolygon(array(
+            static::buildTestUserPolygon(array(
                 'neighborhood' => $neighborhood1
             )),
-            new UserPolygon(array(
+            static::buildTestUserPolygon(array(
                 'neighborhood' => $neighborhood2
             ))
         );
 
-        $logger = $this->getServiceLocator()->get('Whathood\Logger');
-        $pointElections = array(
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(1,1),
+        // create 5 PointElections
+        $objects = array(
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(1,2),
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(2,2),
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(3,3),
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(4,4),
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(5,5),
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
             )),
-            PointElection::build(array(
-                'user_polygons' => $userPolygons,
-                'logger' => $logger,
-                'point' => new Point(6,6),
-            ))
+            $this->buildTestPointElection(array(
+                'user_polygons' => $userPolygons
+            )),
         );
-
-        $pointElectionCollection = new PointElectionCollection($pointElections);
+        $peCollection = new PointElectionCollection($objects);
 
         $builder = $this->getServiceLocator()
             ->get('Whathood\Spatial\Neighborhood\Boundary\BoundaryBuilder');
 
-        $boundary = $builder->build($pointElectionCollection, $neighborhood1);
+        $boundary = $builder->build($peCollection, $neighborhood1);
 
         $this->assertNotNull($boundary);
 
-        $points = $pointElectionCollection->byNeighborhood($neighborhood1);
+        $points = $peCollection->byNeighborhood($neighborhood1);
 
         $this->assertTrue( 7 == count($points) );
     }

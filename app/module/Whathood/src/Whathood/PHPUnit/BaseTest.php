@@ -32,6 +32,10 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
         $this->setTestName($testName);
     }
 
+    public static function rand_int() {
+        return rand();
+    }
+
     public static function rand($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -91,8 +95,10 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
             static::buildTestUserPolygon()
         );
 
+        $x = static::rand_int();
+        $y = static::rand_int();
         $defaults = array(
-            'point' => Point::buildFromText('POINT(1 0)'),
+            'point' => Point::buildFromText("POINT($x $y)"),
             'user_polygons' => $user_polygons,
             'logger' => new \Whathood\Logger()
         );
