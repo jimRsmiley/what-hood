@@ -50,9 +50,6 @@ class PointElectionCollection {
                 if($p->isWinner($neighborhood)) {
                     array_push($points,$p);
                 }
-                else {
-                    throw new \Exception("why was this point not the winner?");
-                }
             }
         }
         return $points;
