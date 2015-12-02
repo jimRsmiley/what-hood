@@ -15,5 +15,6 @@ use Whathood\Spatial\PHP\Types\Geometry\Point;
  */
 class PointElectionTest extends \Whathood\PHPUnit\BaseTest {
 
+    $pe = new PointElection();
 }
 

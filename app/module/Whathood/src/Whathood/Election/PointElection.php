@@ -110,7 +110,8 @@ class PointElection extends \ArrayObject {
         if ( ! $election_point->getPoint() )
             throw new \Exception("point must be defined");
         $election_point->runElection();
-
+        if ( empty($election_point->getCandidateNeighborhoods() ) )
+            throw new \Exception("no candidate neighborhoods were found");
         return $election_point;
     }
 
@@ -140,6 +141,9 @@ class PointElection extends \ArrayObject {
     }
 
     public function getWinningPercentage() {
+        if (empty($this->getWinningCandidates())) {
+            return 0;
+        }
         return $this->getWinningCandidates()[0]->percentage();
     }
 

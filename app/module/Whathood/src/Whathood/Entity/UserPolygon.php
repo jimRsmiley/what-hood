@@ -13,6 +13,8 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
  */
 class UserPolygon extends \ArrayObject {
 
+    use \Whathood\ArgumentValidatorTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -172,6 +174,17 @@ class UserPolygon extends \ArrayObject {
         }
     }
 
+    /**
+     * build a "valid" UserPolygon
+     *
+     * ensures, that neighborhood has been set"
+     * @return UserPolygon
+     */
+    public static function build(array $data = null) {
+        $up = new static($data);
+        static::validateNotEmpty($up->getNeighborhood(),'neighborhood');
+        return $up;
+    }
 
     public static function polygonToGeoJsonArray( $polygon ) {
 
