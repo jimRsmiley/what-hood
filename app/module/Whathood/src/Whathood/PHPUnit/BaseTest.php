@@ -75,10 +75,25 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
 
     public static function buildUserPolygon($data) {
         $defaults = array(
-            'neighborhood' => $neighborhood1
+            'neighborhood' => static::buildTestNeighborhood(),
+            'polygon' => static::buildTestPolygon(0, 100)
         );
 
         return new UserPolygon(array_merge($defaults, $data));
+    }
+
+    public static function buildTestPolygon($low, $high, $srid) {
+        $start = new Point(rand($low, $high), rand($low, $high));
+        return Polygon::build(array(
+                new LineString( array(
+                    $start,
+                    new Point(rand($low, $high), rand($low, $high)),
+                    new Point(rand($low, $high), rand($low, $high)),
+                    new Point(rand($low, $high), rand($low, $high)),
+                    $start
+                    )
+                ),
+            ),$srid);
     }
 
     /**

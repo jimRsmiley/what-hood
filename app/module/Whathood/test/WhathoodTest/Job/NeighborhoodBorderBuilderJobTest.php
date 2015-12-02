@@ -30,39 +30,20 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
         $job = $factory->createService(\WhathoodTest\Bootstrap::getServiceManager());
 
         $job->setGridResolution(1);
-        $region = new \Whathood\Entity\Region(array(
-            'name' => "Region_".$this->getTestName().$this->rand()
-        ));
-
+        $neighborhood = $this->buildTestNeighborhood(); 
+        $region = $neighborhood->getRegion(); 
         $this->m()->regionMapper()->save($region);
 
         $whathoodUser = new \Whathood\Entity\WhathoodUser(array(
             'ipAddress' => '0.0.0.0'
         ));
 
-        $neighborhood = new Neighborhood(array(
-            'id'   => 1,
-            'name' => "MyTest" . $this->getTestName(),
-            'region' => $region,
-        ));
-
-        $userPolygon =
-            new UserPolygon(array(
-                'polygon' => Polygon::build(array(
-                    new LineString( array(
-                            new Point(30,40),
-                            new Point(30,50),
-                            new Point(40,50),
-                            new Point(30,40)
-                            )
-                        ),
-                    ),
-                    4326
-                ),
+        $userPolygon = $this->buildUserPolygon(array(
                 'neighborhood' => $neighborhood,
                 'region' => $region,
                 'whathoodUser' => $whathoodUser
-            ));
+        ));
+
         $this->m()->userPolygonMapper()->save($userPolygon);
 
         $ups = $this->m()->userPolygonMapper()->fetchAll();
@@ -75,7 +56,12 @@ class NeighborhoodBorderBuilderJobTest extends \Whathood\PHPUnit\BaseTest {
             'neighborhood_id' => $neighborhood->getId()
         ));
 
-        $job->execute();
+        try {
+            $job->execute();
+        }
+        catch(\Exception $e) {
+            $this->fail("border job should not have thrown an exception: $e");
+        }
     }
 }
 ?>

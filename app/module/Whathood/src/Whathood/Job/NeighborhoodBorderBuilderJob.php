@@ -10,7 +10,15 @@ use Whathood\Election\PointElectionCollection;
 use Whathood\Entity\Neighborhood;
 use Whathood\Entity\NeighborhoodBoundary;
 
-class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements QueueAwareInterface
+/**
+ * Take a neigborhood id as a payload,
+ *
+ *  pull its user polygons
+ *  create a point election collection
+ *  and build the border
+ */
+class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob
+                                    implements QueueAwareInterface
 {
     use QueueAwareTrait;
 
@@ -138,14 +146,8 @@ class NeighborhoodBorderBuilderJob extends \Whathood\Job\AbstractJob implements 
         $this->infoLog(sprintf("working with %s election points",
             count($electionCollection->getPointElections()) ));
 
-        try {
-            return $this->getBoundaryBuilder()
-                ->build($electionCollection, $neighborhood);
-        }
-        catch(\Exception $e) {
-            $this->infoLog("failed to generate border");
-            $this->infoLog($e);
-        }
+        return $this->getBoundaryBuilder()
+            ->build($electionCollection, $neighborhood);
     }
 
     /**

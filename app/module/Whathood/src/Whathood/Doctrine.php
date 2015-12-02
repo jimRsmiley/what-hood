@@ -166,7 +166,9 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     *  Initialize a database. Drop it if it already exists.
+     *  Initialize a database
+     *
+     *  Drop the database if it already exists.
      **/
     public function initDb($dbName) {
         if (static::$DEBUG) print "initializing database $dbName\n";
