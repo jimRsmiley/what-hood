@@ -82,7 +82,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
         return new UserPolygon(array_merge($defaults, $data));
     }
 
-    public static function buildTestPolygon($low, $high, $srid) {
+    public static function buildTestPolygon($low = 0, $high = 100, $srid = 4326) {
         $start = new Point(rand($low, $high), rand($low, $high));
         return Polygon::build(array(
                 new LineString( array(
