@@ -101,9 +101,9 @@ class NeighborhoodController extends BaseController {
         $this->logger()->info("deleting neighborhood with id ".$neighborhood_id);
 
         if ($neighborhood_id) {
-            $neighborhood = $this->neighborhoodMapper()->byId($neighborhood_id);
+            $neighborhood = $this->m()->neighborhoodMapper()->byId($neighborhood_id);
 
-            $this->prompt_user(
+            \Whathood\Util::prompt_user(
                 sprintf("are you sure you want to delete neighborhood?\n\tid=%s\n\tname=%s\n\tregion=%s\n",
                     $neighborhood->getId(),
                     $neighborhood->getName(),
@@ -112,8 +112,8 @@ class NeighborhoodController extends BaseController {
             );
 
 
-            $this->neighborhoodMapper()->delete(
-                $neighborhood,$this->userPolygonMapper(),$this->neighborhoodPolygonMapper());
+            $this->m()->neighborhoodMapper()->delete(
+                $neighborhood,$this->m()->userPolygonMapper(),$this->m()->neighborhoodPolygonMapper());
             $this->logger()->info("neighborhood deleted");
         }
         else {
