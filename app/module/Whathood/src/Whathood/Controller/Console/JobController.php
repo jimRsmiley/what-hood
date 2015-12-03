@@ -15,15 +15,33 @@ class JobController extends BaseController {
     }
 
 
+    /**
+     * print information about the status of the job queue
+     * @param verbose
+     */
     public function infoAction() {
         $detailed = $this->getRequest()->getParam('verbose');
         $jobs = $this->m()->queueMapper()->fetchAll();
 
+        $status_counts = $this->assembleStatusCounts($jobs, $detailed);
+
+        return $this->statusesToString($status_counts);
+    }
+
+    private function statusesToString($status_counts) {
+        $str = "STATUS DESCRIPTION COUNT\n";
+        foreach ($status_counts as $status => $count) {
+            $str .= sprintf("%s %s %d\n",
+                $status, DefaultJob::statusToString($status), $count );
+        }
+
+        return $str;
+    }
+
+    private function assembleStatusCounts($jobs, $detailed) {
         $status_counts = array();
-
-        $str = '';
-
         foreach($jobs as $job) {
+            $status_id = $job->getStatus();
             if ($detailed) {
                 $executed = $job->getExecuted();
                 if ($executed)
@@ -31,19 +49,14 @@ class JobController extends BaseController {
                 $str .= sprintf("id=%s date=%s status-string=%s status=%s %s\n",
                     $job->getId(), $executed, $job->getStatusString(), $job->getStatus(), $job->getMessage() );
             }
-            $status_counts[$job->getStatus()]++;
+
+            if ( ! array_key_exists($status_id, $status_counts) )
+                $status_counts[$status_id] = 0;
+            $status_counts[$status_id]++;
         }
 
-        foreach ($status_counts as $status => $count) {
-            $str .= sprintf("status=%s(%s) count=%s\n",
-                DefaultJob::statusToString($status), $status, $count );
-        }
-
-        $consoleModel = new ConsoleModel();
-        $consoleModel->setResult($str);
-        return $consoleModel;
+        return $status_counts;
     }
-
     /**
      * rebuild all neighborhood borders,
      *
