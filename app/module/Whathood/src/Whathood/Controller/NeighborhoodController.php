@@ -113,7 +113,7 @@ class NeighborhoodController extends BaseController {
 
 
             $this->m()->neighborhoodMapper()->delete(
-                $neighborhood,$this->m()->userPolygonMapper(),$this->m()->neighborhoodPolygonMapper());
+                $neighborhood,$this->m()->userPolygonMapper(),$this->m()->neighborhoodPolygonMapper(), $this->m()->heatMapPoint());
             $this->logger()->info("neighborhood deleted");
         }
         else {

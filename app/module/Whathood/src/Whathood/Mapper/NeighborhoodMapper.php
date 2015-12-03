@@ -150,11 +150,12 @@ class NeighborhoodMapper extends BaseMapper {
 
 
     /**
+     * delete a neighborhood
      *
      * when deleting, must delete associated UserPolygons
      *
      **/
-    public function delete($neighborhood,$userPolygonMapper,$neighborhoodPolygonMapper) {
+    public function delete($neighborhood,$userPolygonMapper,$neighborhoodPolygonMapper, $heatmapPointMapper) {
         $this->begin_trans();
 
         try {
@@ -164,10 +165,18 @@ class NeighborhoodMapper extends BaseMapper {
                 $this->remove($up);
             }
 
-            $neighborhood_polygons = $neighborhoodPolygonMapper->byNeighborhood($neighborhood);
+            // remove the neighborhood polygons
+            $neighborhood_polygons = $neighborhoodPolygonMapper
+                ->byNeighborhood($neighborhood);
 
             foreach($neighborhood_polygons as $np) {
                 $this->remove($np);
+            }
+
+            // remove heatmap points
+            $heatmap_points = $heatmapPointMapper->byNeighborhood($neighborhood);
+            foreach($heatmap_points as $hp) {
+                $this->remove($hp);
             }
 
             // and finally remove the neighborhood
