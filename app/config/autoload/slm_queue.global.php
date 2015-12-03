@@ -9,11 +9,11 @@ return array(
         'queues' => array(
             'message_queue' => array(
 
-                /* How long to keep deleted (successful) jobs (in minutes) */
-                'deleted_lifetime' => 60 * 24 * 7,
+                /* How long to keep deleted (successful) jobs (in minutes). */
+                'deleted_lifetime' => 0,
 
                 /* How long to keep buried (failed) jobs (in minutes) */
-                'buried_lifetime' => 60 * 24 * 7,
+                'buried_lifetime' => 60,
 
                 // connection => '',
 
