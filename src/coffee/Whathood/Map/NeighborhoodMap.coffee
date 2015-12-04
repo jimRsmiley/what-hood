@@ -46,7 +46,7 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
           # add the neighborhood boundary
           new L.geoJson(geojson).addTo(map)
 
-        if true
+        if false
           get_args = 
               neighborhood: neighborhood_name
               region: region_name
