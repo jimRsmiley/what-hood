@@ -5,6 +5,7 @@ nginx-error:    tail -n0 -f /var/log/whathood/nginx-error.log
 nginx-access:   tail -n0 -f /var/log/whathood/nginx-access.log
 apidoc:         supervisor -t -w W/Controller/Restful -e .php -x /bin/sh -n error -- ./bin/apidoc_run
 phpdoc:         supervisor -t -w W/ -e .php -x /bin/sh -n error -- ./d-bin/phpdoc_run
+worker:         d-bin/process_queue
 
 # watch for coffeescript changes and rebuild if the code changes
 grunt_watch: bin/grunt watch

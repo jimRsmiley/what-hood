@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo docker run \
+sudo docker run --rm \
     -v /home/vagrant/src/whathood/app/module/Whathood:/data \
     -v /home/vagrant/src/whathood/docs/phpdoc:/output \
     whathood/phpdoc run --visibility=public -d /data  -t /output 
