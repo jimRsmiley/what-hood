@@ -29,12 +29,30 @@ module.exports = function(grunt) {
         clean: [
             'app/public/js/whathood/whathood-compiled.js'
         ],
+        'angular-builder': {
+            options: {
+                mainModule: 'myApp'
+            },
+            app: {
+                src: [
+                    'app/public/app/**/*.js',
+                    'node_modules/angular-route/**/*.js'
+                ],
+                dest: 'app/public/js/whathood/whathood-angular.js'
+            } 
+        },
         watch: {
             coffee: {
                 files: [
                   'src/coffee/**/*.coffee'
                 ],
                 tasks: ['clean','coffee:compile']
+            },
+            'angular-builder': {
+                files: [
+                  'app/public/app/**/*'
+                ],
+                tasks: ['angular-builder']
             }
         }
     });
@@ -42,6 +60,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-angular-builder');
 
     grunt.registerTask('default',['coffee:compile', 'watch']);
+    grunt.registerTask ('release', ['angular-builder']);
+    grunt.registerTask ('debug', ['angular-builder::debug']);
 };

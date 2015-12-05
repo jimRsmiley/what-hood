@@ -1,3 +1,3 @@
 #!/bin/sh
 
-sudo docker run --rm -v `pwd`:/data quay.io/whathood/nodejs-bower-grunt grunt $@
+sudo docker run -t --rm -v `pwd`:/data quay.io/whathood/nodejs-bower-grunt grunt $@
