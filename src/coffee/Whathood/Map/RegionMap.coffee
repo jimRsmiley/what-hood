@@ -1,6 +1,6 @@
 # the region map
 #
-Whathood.RegionMap = Whathood.Map.extend
+Whathood.Map.RegionMap = Whathood.Map.extend
 
   _neighborhood_color: '5487b8'
   locationMarker: null
@@ -92,7 +92,7 @@ Whathood.RegionMap = Whathood.Map.extend
     # send a point election api request and popup the marker with it's result
     pointElection = Whathood.PointElection.build lng, lat, (pointElection) =>
       @locationMarker.bindPopup(
-        Whathood.RegionMap.getPopupHtml pointElection
+        Whathood.Map.RegionMap.getPopupHtml pointElection
       ).openPopup()
 
   # add the ability to click on the map, and have a whathood popup telling what
@@ -103,6 +103,6 @@ Whathood.RegionMap = Whathood.Map.extend
       return
     @on 'click', @mapClickEventHandler
 
-Whathood.RegionMap.getPopupHtml = (point_election_data) ->
+Whathood.Map.RegionMap.getPopupHtml = (point_election_data) ->
     url = Whathood.UrlBuilder.user_neighborhood_by_point(point_election_data.point.x, point_election_data.point.y)
     return React.renderToString( React.createElement(PointElection, {browse_url: url, point_election: point_election_data}), document.getElementById('reactpopup') )

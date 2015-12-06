@@ -28,7 +28,7 @@ class Whathood.GeoSearch extends L.Control.GeoSearch
       y = result.Y
       super result
       Whathood.Search.by_coordinates x, y, (point_election_data) =>
-        @_positionMarker.bindPopup(Whathood.RegionMap.getPopupHtml(point_election_data)).openPopup()
+        @_positionMarker.bindPopup(Whathood.Map.RegionMap.getPopupHtml(point_election_data)).openPopup()
 
     geosearch: (value, region_name) ->
       throw new Error("value must be defined") unless value
