@@ -28,52 +28,19 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
       success: (heatmap_points) =>
 
         streetLayer = Whathood.Map.streetLayer()
-        heatmapLayer = new HeatmapOverlay(Whathood.Map.NeighborhoodMap.heatmap_cfg())
+        heatmapLayer = new Whathood.Map.HeatmapLayer(Whathood.Map.NeighborhoodMap.heatmap_cfg())
         map = new Whathood.Map.NeighborhoodMap css_id,
           center: new L.LatLng(39.962863586971,-75.126734904035)
           zoom: 14
           layers: [streetLayer,heatmapLayer]
-        if heatmap_points.length > 0
-          testData =
-            max: 10
-            data: heatmap_points
+        heatmapLayer.buildData neighborhood_id, () ->
+            url = Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id)
+            map.addNeighborhoodBorder url, (geojson) ->
+              console.log heatmapLayer
+              map.fitBounds(heatmapLayer)
 
-        url = Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id)
-        map.addNeighborhoodBorder url, (geojson) ->
-          heatmapLayer.setData(testData)
-          map.fitBounds(heatmapLayer)
-
-          # add the neighborhood boundary
-          new L.geoJson(geojson).addTo(map)
-
-        if false
-          get_args = 
-              neighborhood: neighborhood_name
-              region: region_name
-              grid_res: grid_resolution
-          $.ajax
-            url: '/api/v1/neighborhood-border/debug-build/Philadelphia/Rittenhouse/0.0015'
-            success: (data) ->
-              console.log "got data for build debug"
-              total_points = data.all_point_elections.length
-              neib_wins = 0
-              RedIcon = new L.Icon({
-                iconUrl: '/images/marker-icon-red.png'
-                iconAnchor: new L.Point(32, 32)
-              })
-              for pe_data in data.all_point_elections
-                point_election = new Whathood.PointElection pe_data 
-                point = point_election.point()
-                
-                if point_election.isTie()
-                  if point_election.totalVotes() > 2
-                    console.log pe_data
-                  ++neib_wins
-                  marker = L.marker([point.y, point.x], {icon: RedIcon}).addTo(map)
-                else
-                  marker = L.marker([point.y, point.x]).addTo(map)
-                marker.bindPopup point_election.toHtml()
-
+              # add the neighborhood boundary
+              new L.geoJson(geojson).addTo(map)
         return map
 
   # sugar
