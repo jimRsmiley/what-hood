@@ -36,7 +36,6 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
         heatmapLayer.buildData neighborhood_id, () ->
             url = Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id)
             map.addNeighborhoodBorder url, (geojson) ->
-              console.log heatmapLayer
               map.fitBounds(heatmapLayer)
 
               # add the neighborhood boundary
