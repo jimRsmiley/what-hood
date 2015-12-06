@@ -2,6 +2,10 @@
 
 myApp = angular.module 'myApp', []
 
+myApp.controller 'WhathoodNeighborhoodController', [ () ->
+  window.Whathood.neighborhood_polygon_show();
+]
+
 myApp.controller 'WhathoodRegionController', [ () ->
   W = window.Whathood
   get_region_name = () ->

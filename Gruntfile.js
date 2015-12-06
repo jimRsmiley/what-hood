@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         },
         clean: {
             coffee: ['app/public/js/whathood/whathood-compiled.js'],
-            less: ['app/public/css/whathood-less.css']
+            less:   ['app/public/css/whathood-less.css']
         },
         'angular-builder': {
             options: {
@@ -53,12 +53,12 @@ module.exports = function(grunt) {
                 files: [
                   'src/coffee/**/*.coffee'
                 ],
-                tasks: ['clean:coffee','coffee:compile']
+                tasks: ['coffee:compile']
             },
             less: {
                 files: [
                   'src/less/**/*.less' ],
-                tasks: [ 'clean:less', 'less' ]
+                tasks: ['less']
             }
         }
     });
@@ -69,7 +69,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-angular-builder');
 
-    grunt.registerTask('default',['coffee:compile', 'watch']);
-    grunt.registerTask ('release', ['angular-builder']);
-    grunt.registerTask ('debug', ['angular-builder::debug']);
+    grunt.registerTask('default',['coffee:compile','less', 'watch']);
 };

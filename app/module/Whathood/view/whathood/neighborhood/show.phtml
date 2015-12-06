@@ -13,10 +13,6 @@ $this->headTitle()->prepend($this->neighborhood->getName() . ' / ' . $this->neig
         <?=$this->user_polygon_count?> user drawn borders
     </a>
 </p>
-<div id="map" class="map" data-neighborhood-id="<?=$neighborhood->getId()?>" data-neighborhood-polygon-created-at="<?php if ($np) echo date_format($np->getCreatedAt(),'Y-m-d H:i:s')?>" data-neighborhood-polygon-id="<?php if ($np) echo $np->getId() ?>" data-np-grid-resolution="<?php if ($np) echo $np->getGridResolution() ?>" data-np-target-precision="<?php if ($np) echo $np->getTargetPrecision()?>"></div>
+<div ></div>
+<div id="map" ng-controller="WhathoodNeighborhoodController" class="map" data-neighborhood-id="<?=$neighborhood->getId()?>" data-neighborhood-polygon-created-at="<?php if ($np) echo date_format($np->getCreatedAt(),'Y-m-d H:i:s')?>" data-neighborhood-polygon-id="<?php if ($np) echo $np->getId() ?>" data-np-grid-resolution="<?php if ($np) echo $np->getGridResolution() ?>" data-np-target-precision="<?php if ($np) echo $np->getTargetPrecision()?>"></div>
 
-<script>
-    $('document').ready( function() {
-        window.Whathood.neighborhood_polygon_show();
-    });
-</script>
