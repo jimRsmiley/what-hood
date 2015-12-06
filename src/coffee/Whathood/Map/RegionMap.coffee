@@ -11,21 +11,7 @@ Whathood.Map.RegionMap = Whathood.Map.extend
         url: url,
         success: (geojson) =>
             # control that shows state info on hover
-            info = L.control()
-            info.onAdd = (map) ->
-                this._div = L.DomUtil.create('div', 'info')
-                this.update()
-                return this._div
-            info.update = (props) ->
-              if props
-                this._div.innerHTML = '<h4>What Hood Neighborhoods</h4>' +
-                  '<b>' + props.name + '</b><br />'
-                  +'<b>Number of users who contributed to these borders:</b>'+props.num_user_polygons+'<br/>'
-                  +'<br/>'
-                  +'<a href="/Philadelphia/'+props.name+'">Go to ' + name + " identity heatmap</a>"
-              else
-                this._div.innerHTML = '<h4>What Hood Neighborhoods</h4>' +
-                  'Click a neighborhood'
+            info = new Whathood.Map.BaseControl()
             info.addTo(self)
 
             style = (feature) =>
