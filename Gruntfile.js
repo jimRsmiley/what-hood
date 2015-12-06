@@ -17,7 +17,6 @@ module.exports = function(grunt) {
                     'src/coffee/Whathood/LeafletControl.coffee',
                     'src/coffee/Whathood/Search.coffee',
                     'src/coffee/Whathood/Map.coffee',
-                    'src/coffee/Whathood/RegionMap.coffee',
                     'src/coffee/Whathood/UserPolygonMap.coffee',
                     'src/coffee/Whathood/DrawMap.coffee',
                     // everything else

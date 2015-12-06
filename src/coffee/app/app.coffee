@@ -24,7 +24,7 @@ myApp.controller 'WhathoodRegionController', [ () ->
   $geo_search = $('div.leaflet-top.leaflet-center')
 
   # create a new region map
-  map = new W.RegionMap('map')
+  map = new W.Map.RegionMap('map')
   map.addStreetLayer()
   map.whathoodClick true
 
