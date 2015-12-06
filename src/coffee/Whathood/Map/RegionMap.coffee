@@ -6,60 +6,60 @@ Whathood.Map.RegionMap = Whathood.Map.extend
   locationMarker: null
 
   addNeighborhoods: ( url, callback ) ->
-    self = this
     $.ajax
-        url: url,
-        success: (geojson) =>
-            # control that shows state info on hover
-            info = new Whathood.Map.BaseControl()
-            info.addTo(self)
+      url: url,
+      success: (geojson) =>
+        @addRegionGeoJson geojson
+        if ( typeof callback ) != 'undefined'
+          callback()
+      failure: () ->
+        throw new Error "WH.init(): something went wrong loading json source"
 
-            style = (feature) =>
-              weight: 3,
-              opacity: 1,
-              color: 'white',
-              dashArray: '3',
-              fillOpacity: 0.7,
-              fillColor: @_neighborhood_color
+  addRegionGeoJson: (geojson) ->
+    self = @
+    # control that shows state info on hover
+    info = new Whathood.Map.RegionMapControl()
+    info.addTo @
 
-            highlightFeature = (e) ->
-              layer = e.target
-              layer.setStyle
-                  weight: 5,
-                  color: '#666',
-                  dashArray: '',
-                  fillOpacity: 0.7
-              if (!L.Browser.ie && !L.Browser.opera)
-                layer.bringToFront()
-              updateInfo e
+    style = (feature) =>
+      weight: 3,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7,
+      fillColor: @_neighborhood_color
 
-            updateInfo = (e) ->
-                layer = e.target
-                info.update(layer.feature.properties)
+    highlightFeature = (e) ->
+      layer = e.target
+      layer.setStyle
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+      if (!L.Browser.ie && !L.Browser.opera)
+        layer.bringToFront()
+      updateInfo e
 
-            resetHighlight = (e) ->
-                self.geojsonLayer.resetStyle(e.target)
+    updateInfo = (e) ->
+        layer = e.target
+        info.update(layer.feature.properties)
 
-            onEachFeature = (feature,layer) =>
-                layer.on
-                  mouseover: highlightFeature
-                  click: (e) =>
-                    @mapClickEventHandler e
-                  mouseout: resetHighlight
+    resetHighlight = (e) ->
+        @geojsonLayer.resetStyle(e.target)
 
-            self.geojsonLayer = new L.geoJson(geojson, {
-                style: style,
-                id: 'geojson',
-                onEachFeature: onEachFeature
-            }).addTo(self)
-            self.layerGroup().addLayer( self.geojsonLayer )
+    onEachFeature = (feature,layer) =>
+        layer.on
+          mouseover: highlightFeature
+          click: (e) =>
+            @mapClickEventHandler e
+          mouseout: resetHighlight
 
-            if( ( typeof callback ) != 'undefined' )
-                callback()
-        failure: () ->
-            throw new Error "WH.init(): something went wrong loading json source"
-    .done () ->
-      self.spin(false)
+    @geojsonLayer = new L.geoJson(geojson, {
+        style: style,
+        id: 'geojson',
+        onEachFeature: onEachFeature
+    }).addTo @
+    @layerGroup().addLayer @geojsonLayer
 
   # when a user clicks on the map, get the lat,lng and send a request for a
   # point election, then display it

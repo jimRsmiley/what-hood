@@ -1,9 +1,4 @@
-class Whathood.Map.BaseControl extends L.Control
-
-  onAdd: (map) ->
-    @_div = L.DomUtil.create('div', 'info')
-    @update()
-    return @_div
+class Whathood.Map.RegionMapControl extends Whathood.Map.BaseControl
 
   update: (props) ->
     if props
