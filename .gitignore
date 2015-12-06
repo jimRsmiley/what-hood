@@ -3,7 +3,7 @@ docs
 whathood.yml
 Gemfile.lock
 application_env
-whathood.css
+app/public/css/
 whathood.js
 /test
 /data
