@@ -2,11 +2,13 @@
 #
 class Whathood.Map.HeatmapLayer extends HeatmapOverlay
 
+  # return the heatmap config
   heatmap_cfg: () ->
-    "radius": 8,
-    "maxOpacity": .65,
-    latField: 'y',
-    lngField: 'x',
+    radius: .0017
+    scaleRadius: true
+    "maxOpacity": .65
+    latField: 'y'
+    lngField: 'x'
     valueField: 'weight'
 
   constructor: () ->
