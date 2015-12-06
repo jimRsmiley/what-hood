@@ -15,7 +15,7 @@ W.user_polygon_view = () ->
   user_polygon_id = $("#user_polygon").attr 'data-id'
   throw new Error "user_polygon_id is not defined" unless user_polygon_id
   geoJsonUrl = "/api/v1/user-polygon/#{user_polygon_id}"
-  map = new W.UserPolygonMap('map')
+  map = new W.Map.UserPolygonMap('map')
   map.addNeighborhoodBorder geoJsonUrl
   map.addStreetLayer()
 
@@ -27,7 +27,7 @@ W.user_polygon_page_id = () ->
     $.ajax
       url: url
       success: (user_polygon) ->
-        map = new W.UserPolygonMap 'map'
+        map = new W.Map.UserPolygonMap 'map'
         map.addStreetLayer()
         map._add_geojson user_polygon
       error: (xhr,textStatus) ->
@@ -44,7 +44,7 @@ W.user_polygon_page_center = () ->
         $name = $('input[name="neighborhood_name"]')
         $name.val user_polygon.neighborhood.name
 
-        map = new W.UserPolygonMap 'map'
+        map = new W.Map.UserPolygonMap 'map'
         map.addStreetLayer()
         map._add_geojson user_polygon
       error: (xhr,textStatus) ->

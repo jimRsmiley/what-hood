@@ -1,7 +1,7 @@
 root = exports ? this
 Whathood = root.Whathood
 
-Whathood.UserPolygonMap = Whathood.Map.extend
+Whathood.Map.UserPolygonMap = Whathood.Map.extend
 
   _add_geojson: (geojson) ->
     @geojsonLayer = new L.geoJson(geojson)
