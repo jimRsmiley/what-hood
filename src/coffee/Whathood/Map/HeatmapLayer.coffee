@@ -2,12 +2,15 @@
 #
 class Whathood.Map.HeatmapLayer extends HeatmapOverlay
 
-  @heatmap_cfg : () ->
+  heatmap_cfg: () ->
     "radius": 8,
     "maxOpacity": .65,
     latField: 'y',
     lngField: 'x',
     valueField: 'weight'
+
+  constructor: () ->
+    super @heatmap_cfg()
 
   buildData: (neighborhood_id, callback) ->
     throw new Error "neighborhood_id must be defined" unless neighborhood_id
@@ -19,4 +22,10 @@ class Whathood.Map.HeatmapLayer extends HeatmapOverlay
             max: 10
             data: heatmap_points
           @setData(testData)
+        else
+          console.log "no heatmap data for neighborhood id #{neighborhood_id}"
         callback @
+
+  # redraw the map
+  redraw: () ->
+    @_draw()
