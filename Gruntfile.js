@@ -7,7 +7,6 @@ module.exports = function(grunt) {
                     // always first
                     'src/coffee/whathood.coffee',
                     // classes
-                    'src/coffee/Whathood/TemplateManager.coffee',
                     'src/coffee/Whathood/UrlBuilder.coffee',
                     'src/coffee/Whathood/Geo.coffee',
                     'src/coffee/Whathood/GeoSearch.coffee',
