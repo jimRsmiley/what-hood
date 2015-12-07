@@ -40,11 +40,11 @@ Whathood.Map.RegionMap = Whathood.Map.extend
         layer.bringToFront()
       updateInfo e
 
-    updateInfo = (e) ->
-        layer = e.target
-        info.update(layer.feature.properties)
+    updateInfo = (e) =>
+      layer = e.target
+      info.update(layer.feature.properties)
 
-    resetHighlight = (e) ->
+    resetHighlight = (e) =>
         @geojsonLayer.resetStyle(e.target)
 
     onEachFeature = (feature,layer) =>
