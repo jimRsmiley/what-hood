@@ -28,13 +28,17 @@ class Whathood.Map.NeighborhoodMap extends Whathood.Map
           zoom: 14
           layers: [streetLayer,heatmapLayer]
 
+        info = new Whathood.Map.NeighborhoodMapControl()
+        info.addTo map
+        info.update $("#map").data()
+
         heatmapLayer.buildData neighborhood_id, () ->
-            url = Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id)
-            map.addNeighborhoodBorder url, (geojson) ->
-              map.fitBounds(heatmapLayer)
-              heatmapLayer.redraw()
-              # add the neighborhood boundary
-              new L.geoJson(geojson).addTo(map)
+          url = Whathood.UrlBuilder.neighborhood_border_by_id(neighborhood_id)
+          map.addNeighborhoodBorder url, (geojson) ->
+            map.fitBounds(heatmapLayer)
+            heatmapLayer.redraw()
+            # add the neighborhood boundary
+            new L.geoJson(geojson).addTo(map)
         return map
 
   # sugar
