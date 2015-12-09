@@ -31,5 +31,5 @@ class Whathood.PointElection
       context: document.body
       success: (data) ->
         cb data
-      fail: (xhr,textStatus) ->
-        throw new Error "PointElection request failed"
+      error: (xhr,textStatus) ->
+        cb()

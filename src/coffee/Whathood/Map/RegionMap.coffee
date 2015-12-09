@@ -77,10 +77,15 @@ Whathood.Map.RegionMap = Whathood.Map.extend
 
     # send a point election api request and popup the marker with it's result
     pointElection = Whathood.PointElection.build lng, lat, (pointElection) =>
-      @locationMarker.bindPopup(
-        Whathood.Map.RegionMap.getPopupHtml pointElection
-      ).openPopup()
 
+      if pointElection
+        @locationMarker.bindPopup(
+          Whathood.Map.RegionMap.getPopupHtml pointElection
+        ).openPopup()
+      else
+        @locationMarker.bindPopup(
+          'No neighborhoods were found at that location'
+        ).openPopup()
   # add the ability to click on the map, and have a whathood popup telling what
   # neighborhoods it matches
   # 
