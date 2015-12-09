@@ -72,11 +72,13 @@ class JobController extends BaseController {
         $neighborhoodName   = $this->params()->fromRoute('neighborhood');
         $regionName         = $this->params()->fromRoute('region');
 
+
         $neighborhoodBuilder = $this->getServiceLocator()
             ->get('Whathood\Spatial\Neighborhood\NeighborhoodBuilder');
 
         $neighborhoods = array();
         if ($neighborhoodName and $regionName) {
+            $neighborhoodName = str_replace('+',' ', $neighborhoodName);
             $neighborhoods[] = $neighborhoodBuilder
                 ->byName($neighborhoodName, $regionName);
         }
