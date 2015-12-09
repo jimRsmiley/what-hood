@@ -4,9 +4,9 @@ namespace Whathood;
 
 class Util {
 
-	public static function getHostname() {
-		return gethostname();
-	}
+	  public static function getHostname() {
+		    return gethostname();
+  	}
 
     public static function memory_usage() {
         $bytes = memory_get_usage();
@@ -22,9 +22,9 @@ class Util {
         return $env;
     }
 
-	public static function is_production() {
-		return static::environment() == 'production';
-	}
+    public static function is_production() {
+      return static::environment() == 'production';
+    }
 
     public static function prompt_user($msg) {
         print $msg;

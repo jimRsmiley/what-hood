@@ -18,6 +18,7 @@
          */
         echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0') . "\n"; ?>
 
+        <?php echo $this->partial( 'layout/partial/rollbar.phtml' ); ?>
 <script type="text/javascript">
     if (window.location.hash == '#_=_'){
         window.location.hash = '';
@@ -28,6 +29,10 @@
 
     </head>
     <body>
+
+      <div id="wh-config" style="display: none"
+        data-wh-environment="<?= \Whathood\Util::environment() ?>">
+      </div>
 
     <?php echo $this->partial( 'layout/navbar.phtml' ); ?>
 
