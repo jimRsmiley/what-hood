@@ -29,14 +29,17 @@ class PointElectionController extends BaseController {
 
         if (empty($userPolygons)) {
             $userPolygons = array();
+            return $this->badRequestJson(
+              array('msg' => "no neighborhoods at this location"));
         }
+        else {
+          $electionPoint = PointElection::Build(array(
+              'point' => $point,
+              'user_polygons' => $userPolygons,
+              'logger' => $this->logger() ));
 
-        $electionPoint = PointElection::Build(array(
-            'point' => $point,
-            'user_polygons' => $userPolygons,
-            'logger' => $this->logger() ));
-
-        return new JsonModel($electionPoint->toArray());
+          return new JsonModel($electionPoint->toArray());
+        }
     }
 
 }

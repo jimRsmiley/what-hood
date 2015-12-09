@@ -19,9 +19,23 @@ class BaseController extends AbstractRestfulController {
         return $this->_mapper_builder;
     }
 
+    /**
+     * returns a json model and configures reponse for bad request
+     *
+     * set the response status code to 412
+     * and return a json model with 
+     * @param $msg [String or array]  the err message if string, or the entire json response if array
+     */
     public function badRequestJson($msg) {
-        $this->getResponse()->setStatusCode(400);
-        return new JsonModel(array('msg'=>$msg));
+        $this->getResponse()->setStatusCode(412);
+
+        $array;
+        if (is_array($msg))
+          $array = $msg;
+        else 
+          $array = array('msg' => $msg);
+
+        return new JsonModel($array);
     }
 
     // a more accurate function description
