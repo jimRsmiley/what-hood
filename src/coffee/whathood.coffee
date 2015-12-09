@@ -1,6 +1,12 @@
 root = exports ? this
 root.Whathood = {}
 
+# from https://danlimerick.wordpress.com/2014/01/18/how-to-catch-javascript-errors-with-window-onerror-even-on-chrome-and-firefox/
+#window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+#    alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
+#    + ' Column: ' + column + ' StackTrace: ' +  errorObj);
+#}
+
 HeatmapOverlay.prototype.getBounds = () ->
 
   if (!this._southWest and !this._northEast)
