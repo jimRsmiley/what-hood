@@ -9,5 +9,4 @@ ln -s app/module/Whathood/config/module.config.php $PWD/module.config.php
 ln -s app/module/Whathood/test $PWD/test
 ln -s app/module/Whathood/view $PWD/view
 ln -s app/module/Whathood/Module.php $PWD/Module.php
-ln -s app/public/css/style.css $PWD/whathood.css
 ln -s app/public/js/whathood $PWD/js
