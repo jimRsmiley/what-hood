@@ -1,6 +1,6 @@
 <script>
 var _rollbarConfig = {
-  accessToken: "8a83858d21374089ba09144291e2cfee",
+  accessToken: "<?= $this->config('rollbar_access_token') ?>",
   captureUncaught: true,
   payload: {
     environment: "<?= \Whathood\Util::environment() ?>"

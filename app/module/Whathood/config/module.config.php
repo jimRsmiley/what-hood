@@ -883,6 +883,12 @@ return array(
         ),
 
         'factories' => array(
+            'config' => function( $helperPluginManager ) {
+                $serviceLocator = $helperPluginManager->getServiceLocator();
+                $viewHelper = new \Whathood\View\Helper\Config();
+                $viewHelper->setConfig($serviceLocator->get('Whathood\Config'));
+                return $viewHelper;
+            },
             'auth'    => function( $helperPluginManager ) {
                 $serviceLocator = $helperPluginManager->getServiceLocator();
                 $viewHelper = new \Whathood\View\Helper\Auth();
