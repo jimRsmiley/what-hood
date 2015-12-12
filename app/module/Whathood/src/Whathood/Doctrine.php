@@ -176,7 +176,7 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
      *
      *  Drop the database if it already exists.
      **/
-    public function initDb($dbName) {
+    public function createDbWithSchema($dbName) {
         if (static::$DEBUG) print "initializing database $dbName\n";
 
         $conn = $this->getPostgresConnection('postgres');

@@ -68,7 +68,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
         $doctrine = $this->getServiceLocator()
             ->get('Whathood\Doctrine');
 
-        $doctrine->initDb($this->getTestName());
+        $doctrine->createDbWithSchema($this->getTestName());
     }
 
     public function tearDown() {

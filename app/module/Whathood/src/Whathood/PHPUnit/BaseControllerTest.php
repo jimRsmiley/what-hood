@@ -53,7 +53,7 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
 
     public function initDb() {
         $doctrine = $this->sm->get('Whathood\Doctrine');
-        $doctrine->initDb($this->getTestName());
+        $doctrine->createDbWithSchema($this->getTestName());
     }
 
     public function m() {
