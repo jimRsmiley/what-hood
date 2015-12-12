@@ -67,6 +67,12 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         return getenv("APPLICATION_ROOT");
     }
 
+    /**
+     * create a new database
+     *
+     * @param conn - Doctrine db connection
+     * @param db_name [String] the database name
+     */
     public static function createDb($conn, $db_name) {
 
         if (static::dbExists($conn,$db_name))
@@ -166,7 +172,7 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     *  Initialize a database
+     *  Initialize a database and load whathood's schema
      *
      *  Drop the database if it already exists.
      **/

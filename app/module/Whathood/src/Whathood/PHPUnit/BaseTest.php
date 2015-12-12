@@ -50,14 +50,24 @@ class BaseTest extends \PHPUnit_Framework_TestCase {
         $this->initTestName();
     }
 
+    /**
+     * sets the database name by setting the environment variable
+     * WHATHOOD_DB
+     */
     public function setDbName() {
         putenv("WHATHOOD_DB=".$this->getTestName());
     }
 
+    /**
+     * initialize a new database
+     *
+     * sets the db name using setDbName()
+     */
     public function initDb() {
         $this->setDbName();
         $doctrine = $this->getServiceLocator()
             ->get('Whathood\Doctrine');
+
         $doctrine->initDb($this->getTestName());
     }
 
