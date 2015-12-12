@@ -63,9 +63,10 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    public static function applicationRoot() {
+/*    public static function applicationRoot() {
         return getenv("APPLICATION_ROOT");
     }
+ */
 
     /**
      * create a new database
