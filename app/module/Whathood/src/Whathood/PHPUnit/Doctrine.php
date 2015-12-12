@@ -1,6 +1,6 @@
 <?php
 
-namespace Whathood;
+namespace Whathood\PHPUnit;
 
 use WhathoodTest\Bootstrap;
 

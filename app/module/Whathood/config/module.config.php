@@ -621,7 +621,7 @@ return array(
             'Whathood\Doctrine' => function($sm) {
                 $eventManager = $sm->get('doctrine.eventmanager.orm_default');
                 $emConfig = $sm->get('doctrine.configuration.orm_default');
-                return new \Whathood\Doctrine(
+                return new \Whathood\PHPUnit\Doctrine(
                     array(
                         'config' => $emConfig,
                         'eventManager' => $eventManager
