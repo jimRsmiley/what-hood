@@ -10,9 +10,10 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
  */
 class BaseControllerTest extends AbstractHttpControllerTestCase {
 
+    use TestUtilTrait;
+
     protected $sm;
     protected $_entityManager;
-    protected $_testName;
 
     public function setUp()
     {
@@ -27,24 +28,6 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         $this->setDbName();
     }
 
-    public function tearDown() {
-        /*$doctrine = $this->sm->get('Whathood\Doctrine');
-        $doctrine->dropDb(
-            $doctrine->getPostgresConnection($this->getTestName()),
-            $this->getTestName()
-        );*/
-    }
-
-    public function initTestName() {
-        $reflect = new \ReflectionClass($this);
-        $testName = strtolower($reflect->getShortName()."_".$this->getName());
-        $this->setTestName($testName);
-    }
-
-    public function setDbName() {
-        putenv("WHATHOOD_DB=".$this->getTestName());
-    }
-
     public function setRemoteAddr() {
         $serverParams = $this->getRequest()->getServer();
         $serverParams->set("REMOTE_ADDR","0.0.0.0");
@@ -56,25 +39,7 @@ class BaseControllerTest extends AbstractHttpControllerTestCase {
         $doctrine->createDbWithSchema($this->getTestName());
     }
 
-    public function m() {
-        return $this->sm->get('Whathood\Mapper\Builder');
-    }
-
     public function printResponse() {
         print $this->getResponse();
     }
-
-    public function random_number() {
-        return rand(0,10000000);
-    }
-
-    public function setTestName($testName) {
-        $this->_testName = $testName;
-    }
-
-    public function getTestName() {
-        return $this->_testName;
-    }
-
 }
-?>

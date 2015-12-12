@@ -63,10 +63,6 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         }
     }
 
-/*    public static function applicationRoot() {
-        return getenv("APPLICATION_ROOT");
-    }
- */
 
     /**
      * create a new database
@@ -228,7 +224,7 @@ class Doctrine extends \PHPUnit_Framework_TestCase {
         $tool->createSchema($classes);
         if( static::$DEBUG ) print "schema created\n";
 
-        exec(static::applicationRoot()."/../bin/import_db --load-functions-only --db-name $dbName 2>&1 >> /dev/null");
+        exec(\Whathood\Util::getApplicationRoot()."/../bin/import_db --load-functions-only --db-name $dbName 2>&1 >> /dev/null");
 
         // don't really know why we have to clear this but it works to stop
         // it when the entity manager doesn't seem to persist shit

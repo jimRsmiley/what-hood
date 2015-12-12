@@ -15,6 +15,15 @@ class Util {
         return round($mbytes,3);
     }
 
+    public static function getApplicationRoot() {
+        $var = getenv("APPLICATION_ROOT");
+
+        if (empty($var)) {
+          throw new \Exception("APPLICATION_ROOT var must be defined");
+        }
+        return $var;
+    }
+
     public static function environment() {
         $env = getenv("APPLICATION_ENV");
         if (!$env)
