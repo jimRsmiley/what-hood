@@ -30,7 +30,8 @@ return array(
                 'string_functions' => array(
                     'ST_Within'     => 'Whathood\Spatial\ORM\Query\AST\Functions\MySql\STWithin',
                     'ST_Point'      => 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STPoint',
-                    'ST_SetSRID'    => 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSetSRID'
+                    'ST_SetSRID'    => 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSetSRID',
+                    'ST_Simplify'   => 'CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STSimplify'
                 )
             )
         ),

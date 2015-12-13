@@ -730,6 +730,12 @@ return array(
                 return new \Whathood\SchemaTool($sm);
             },
 
+            'Whathood\Mapper\StSimplifyMapper'  => function($sm) {
+                $em = $sm->get('doctrine.entitymanager.orm_default');
+                $mapper = new \Whathood\Mapper\StSimplifyMapper( $sm, $em );
+                return $mapper;
+            },
+
             'Whathood\Mapper\QueueMapper'  => function($sm) {
                 $em = $sm->get('mydoctrineentitymanager');
                 $mapper = new \Whathood\Mapper\QueueMapper( $sm, $em );
