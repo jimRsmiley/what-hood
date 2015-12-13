@@ -5,6 +5,7 @@ namespace Whathood\Mapper;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 use Whathood\Spatial\PHP\Types\Geometry\Polygon;
+use CrEOF\Spatial\PHP\Types\Geometry\Polygon as CrEOFPolygon;
 
 class StSimplifyMapper extends BaseMapper {
 
@@ -16,7 +17,7 @@ class StSimplifyMapper extends BaseMapper {
      *
      * @return Polygon CrEOF type polygon
      */
-    public function simplify(Polygon $polygon, $tolerance) {
+    public function simplify(CrEOFPolygon $polygon, $tolerance) {
 
         $sql = "SELECT ST_AsEWKB(ST_Simplify(ST_GeomFromText(:geom_text), :tolerance)) as simplified";
 
@@ -29,11 +30,11 @@ class StSimplifyMapper extends BaseMapper {
         $result = $query->getSingleResult();
 
         $geom_type = \Doctrine\DBAL\Types\Type::getType('polygon');
-        $polygon = $geom_type->convertToPHPValue(
+        $creof_polygon = $geom_type->convertToPHPValue(
             $result['simplified'],
             $this->em->getConnection()->getDatabasePlatform());
 
-        return $polygon;
+        return Polygon::buildFromParent($creof_polygon);
     }
 
 

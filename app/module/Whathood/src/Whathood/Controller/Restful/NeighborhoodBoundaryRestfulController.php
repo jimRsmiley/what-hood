@@ -85,8 +85,10 @@ class NeighborhoodBoundaryRestfulController extends BaseController {
 
         try {
             // get the latest NeighborhoodBoundary
-            $ret_array = $this->m()->neighborhoodPolygonMapper()
-                ->latestByNeighborhood($neighborhood)->toArray();
+            $polygon = $this->m()->neighborhoodPolygonMapper()
+                ->latestByNeighborhood($neighborhood);
+            $this->m()->stSimplifyMapper()->simplify($polygon->getGeometry(),1);
+            $ret_array = $polygon->toArray();
         }
         catch (\Doctrine\ORM\NoResultException $e) {
             $ret_array = null;

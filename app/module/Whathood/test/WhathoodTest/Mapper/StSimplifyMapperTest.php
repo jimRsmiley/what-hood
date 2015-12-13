@@ -2,6 +2,8 @@
 
 namespace WhathoodTest\Mapper;
 
+use Whathood\Spatial\PHP\Types\Polygon;
+
 class StSimplifyMapperTest extends \Whathood\PHPUnit\BaseTest {
 
     public function testSimplify() {
@@ -14,5 +16,6 @@ class StSimplifyMapperTest extends \Whathood\PHPUnit\BaseTest {
         $new_polygon = $object->simplify($polygon, 1);
 
         $this->assertNotNull($new_polygon);
+        $this->assertInstanceOf('Whathood\Spatial\PHP\Types\Geometry\Polygon', $new_polygon);
     }
 }
