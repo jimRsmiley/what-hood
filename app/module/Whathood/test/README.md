@@ -1,3 +1,6 @@
+# PHPUnit Tests
+
+run with `./bin/phpunit .`
 ### Test Databases
 
 * The test database can be set using the environment variable WH_PHPUNIT_DB_NAME
