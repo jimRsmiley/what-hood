@@ -3,11 +3,7 @@ namespace Whathood\PHPUnit;
 
 use WhathoodTest\Bootstrap;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-/**
- * Description of NeighborhoodControllerTest
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
+
 class BaseControllerTest extends AbstractHttpControllerTestCase {
 
     use TestUtilTrait;

@@ -1,9 +1,6 @@
 <?php
 namespace Whathood\PHPUnit;
 
-/**
- * responsible for anything to do with the database
- */
 class BaseTest extends \PHPUnit_Framework_TestCase {
 
     use TestUtilTrait;

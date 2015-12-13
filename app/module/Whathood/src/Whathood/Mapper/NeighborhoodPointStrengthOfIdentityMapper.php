@@ -5,11 +5,7 @@ use Whathood\Model\HeatMap;
 use Whathood\Entity\Neighborhood;
 use \Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMapping;
-/**
- * Description of HeatMapMapper
- *
- * @author Jim Smiley twitter:@jimRsmiley
- */
+
 class NeighborhoodPointStrengthOfIdentityMapper extends BaseMapper {
     
     public function getHeatMapByNeighborhood( Neighborhood $neighborhood ) {
