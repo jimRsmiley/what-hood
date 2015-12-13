@@ -3,7 +3,9 @@
 sudo docker run --rm \
     -v /home/vagrant/src/whathood/app/module/Whathood:/data \
     -v /home/vagrant/src/whathood/docs/phpdoc:/output \
-    whathood/phpdoc run --visibility=public -d /data  -t /output 
+    --name phpdoc \
+    whathood/phpdoc run --visibility=public -d /data  -t /output \
+    2>&1 > /dev/null
 
 sudo docker stop docs
 sudo docker start docs
