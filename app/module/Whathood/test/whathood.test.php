@@ -7,9 +7,9 @@ return array(
             'doctrine.entitymanager.orm_default' => function($sm) {
                 $doctrine = $sm->get('Whathood\Database');
 
-                $dbName = getenv("WHATHOOD_DB");
+                $dbName = getenv("WH_PHPUNIT_DB_NAME");
                 if (empty($dbName))
-                    die("must define WHATHOOD_DB");
+                    die("must define WH_PHPUNIT_DB_NAME");
 
                 return $doctrine->buildEntityManager($doctrine->getConfig(),
                     $doctrine->getEventManager(),
@@ -19,9 +19,9 @@ return array(
 
             'doctrine.connection.orm_default' => function($sm) {
                 $config = $sm->get('doctrine.configuration.orm_default');
-                $dbName = getenv("WHATHOOD_DB");
+                $dbName = getenv("WH_PHPUNIT_DB_NAME");
                 if (empty($dbName))
-                    die("must define WHATHOOD_DB");
+                    die("must define WH_PHPUNIT_DB_NAME");
                 $params = array(
                     'driver'   =>  'pdo_pgsql',
                     'host'     =>  (getenv('PGHOST') ? getenv('PGHOST') : 'wh-postgis'),

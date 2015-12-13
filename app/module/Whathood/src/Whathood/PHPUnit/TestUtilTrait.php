@@ -55,7 +55,7 @@ trait TestUtilTrait {
      * WHATHOOD_DB
      */
     public function setDbName() {
-        putenv("WHATHOOD_DB=".$this->getTestName());
+        putenv("WH_PHPUNIT_DB_NAME=".$this->getTestName());
     }
 
     /**
