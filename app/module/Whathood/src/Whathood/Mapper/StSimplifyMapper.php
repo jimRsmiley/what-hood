@@ -24,7 +24,7 @@ class StSimplifyMapper extends BaseMapper {
         $rsm->addScalarResult('simplified', 'simplified');
 
         $query = $this->em->createNativeQuery($sql, $rsm);
-        $query->setParameter('geom_text', $polygon->__toString() );
+        $query->setParameter('geom_text', sprintf("POLYGON(%s)",$polygon->__toString()) );
         $query->setParameter('tolerance', $tolerance );
         $result = $query->getSingleResult();
 
