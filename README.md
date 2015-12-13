@@ -13,6 +13,10 @@ location.
 
 Check the [Whathood Vagrant repository](https://github.com/whathood/vagrant) to download and install a development enviroment and edit away.
 
+### See Also
+
+[Development Docs](docs/DEVELOPMENT_DOCS.md)
+
 ### License (MIT)
 
     Copyright (c) 2014 James Smiley
