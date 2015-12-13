@@ -4,8 +4,11 @@ namespace Whathood\Controller\Restful;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
+
+//whathood
 use Whathood\Election\PointElection;
 use Whathood\Spatial\PHP\Types\Geometry\MultiPoint;
+use Whathood\Spatial\PHP\Types\Geometry\Polygon;
 
 /**
  *
@@ -97,6 +100,9 @@ class NeighborhoodBoundaryRestfulController extends BaseController {
         return new JsonModel( $ret_array );
     }
 
+    /**
+     * get neighborhood boundaries by a region
+     **/
     public function byRegionAction() {
         $regionName = $this->getUriParameter('region');
 

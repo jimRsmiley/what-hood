@@ -5,6 +5,14 @@ use CrEOF\Spatial\PHP\Types\Geometry\Polygon as CrEOFPolygon;
 
 class Polygon extends CrEOFPolygon {
 
+    public function getNumPoints() {
+        $count = 0;
+        foreach($this->getRings() as $ring) {
+            $count += count($ring->toArray());
+        }
+        return $count;
+    }
+
     /**
      * build a new Polygon given rings and srid
      */

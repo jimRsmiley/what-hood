@@ -34,6 +34,8 @@ class StSimplifyMapper extends BaseMapper {
             $result['simplified'],
             $this->em->getConnection()->getDatabasePlatform());
 
+        if (empty($creof_polygon))
+            return;
         return Polygon::buildFromParent($creof_polygon);
     }
 
