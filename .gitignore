@@ -1,5 +1,5 @@
 app/module/Whathood/test/data/DoctrineORMModule
-docs
+docs/phpdoc
 whathood.yml
 Gemfile.lock
 application_env
