@@ -9,7 +9,7 @@ use WhathoodTest\Bootstrap;
  *
  * @author Jim Smiley twitter:@jimRsmiley
  */
-class Doctrine extends \PHPUnit_Framework_TestCase {
+class Database extends \PHPUnit_Framework_TestCase {
 
     protected static $DEBUG = false;
 

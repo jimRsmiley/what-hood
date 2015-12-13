@@ -5,7 +5,7 @@ return array(
         'factories' => array(
 
             'doctrine.entitymanager.orm_default' => function($sm) {
-                $doctrine = $sm->get('Whathood\Doctrine');
+                $doctrine = $sm->get('Whathood\Database');
 
                 $dbName = 'whathood';
                 if (empty($dbName))

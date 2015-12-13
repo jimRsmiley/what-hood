@@ -618,10 +618,10 @@ return array(
                 return new \Whathood\Event\TimerListener($sm->get('Whathood\Logger'));
             },
 
-            'Whathood\Doctrine' => function($sm) {
+            'Whathood\Database' => function($sm) {
                 $eventManager = $sm->get('doctrine.eventmanager.orm_default');
                 $emConfig = $sm->get('doctrine.configuration.orm_default');
-                return new \Whathood\PHPUnit\Doctrine(
+                return new \Whathood\PHPUnit\Database(
                     array(
                         'config' => $emConfig,
                         'eventManager' => $eventManager

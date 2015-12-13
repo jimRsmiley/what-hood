@@ -66,7 +66,7 @@ trait TestUtilTrait {
     public function initDb() {
         $this->setDbName();
         $doctrine = $this->getServiceLocator()
-            ->get('Whathood\Doctrine');
+            ->get('Whathood\Database');
 
         $doctrine->createDbWithSchema($this->getTestName());
     }
