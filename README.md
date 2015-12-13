@@ -9,9 +9,7 @@ Whathood aims to settle the neighborhood border debate for all time by aggregati
 neighborhood borders drawn by users into heatmaps showing the "identity" of a
 location.
 
-### Development
-
-Check the [Whathood Vagrant repository](https://github.com/whathood/vagrant) to download and install a development enviroment and edit away.
+The system works by allowing web visitors to draw their own understanding of a neighborhood's borders and aggregates all of those borders together into one neighborhood border.
 
 ### See Also
 
