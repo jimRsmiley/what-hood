@@ -19,3 +19,10 @@ test: phpunit
 
 phpunit:
 	phpunit -c app/module/Whathood/test
+
+composer-install:
+	@mkdir --parent /var/tmp/composer
+	@sudo docker run -ti \
+		-v `pwd`/app:/srv \
+		-v /var/tmp/composer:/root/.composer \
+		quay.io/whathood/composer install
