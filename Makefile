@@ -25,4 +25,4 @@ composer-install:
 	@sudo docker run -ti \
 		-v `pwd`/app:/srv \
 		-v /var/tmp/composer:/root/.composer \
-		quay.io/whathood/composer install
+		whathood/composer install
