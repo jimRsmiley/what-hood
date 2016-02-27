@@ -26,3 +26,10 @@ composer-install:
 		-v `pwd`/app:/srv \
 		-v /var/tmp/composer:/root/.composer \
 		whathood/composer install
+
+composer-dumpautoload:
+	@mkdir --parent /var/tmp/composer
+	@sudo docker run -ti \
+		-v `pwd`/app:/srv \
+		-v /var/tmp/composer:/root/.composer \
+		whathood/composer dumpautoload -o
