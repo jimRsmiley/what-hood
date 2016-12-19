@@ -22,14 +22,14 @@ phpunit:
 
 composer-install:
 	@mkdir --parent /var/tmp/composer
-	@sudo docker run -ti \
+	@sudo docker run \
 		-v `pwd`/app:/srv \
 		-v /var/tmp/composer:/root/.composer \
 		whathood/composer install
 
 composer-dumpautoload:
 	@mkdir --parent /var/tmp/composer
-	@sudo docker run -ti \
+	@sudo docker run \
 		-v `pwd`/app:/srv \
 		-v /var/tmp/composer:/root/.composer \
 		whathood/composer dumpautoload -o
