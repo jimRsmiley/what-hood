@@ -24,6 +24,21 @@ module.exports = function(grunt) {
                 }
             }
         },
+        uglify: {
+          my_target : {
+            options : {
+              sourceMap : true,
+              sourceMapName : 'sourceMap.map'
+            },
+            files : {
+                'app/public/js/bundle.js' : [
+                  'app/public/js/whathood/whathood.js',
+                  'app/public/js/whathood/whathood-compiled.js',
+                  'app/public/js/whathood/WhathoodReact.js'
+                ]
+            }
+            }
+        },
         less: {
             development: {
                 files: {
@@ -67,6 +82,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-angular-builder');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('default',['coffee:compile','less', 'watch']);
 };
