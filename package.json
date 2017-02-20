@@ -12,6 +12,7 @@
     "grunt-contrib-coffee": "*",
     "grunt-contrib-cssmin": "^2.0.0",
     "grunt-contrib-less": "*",
-    "grunt-contrib-watch": "*"
+    "grunt-contrib-watch": "*",
+    "grunt-foreman": "0.0.10"
   }
 }

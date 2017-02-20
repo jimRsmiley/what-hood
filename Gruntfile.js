@@ -67,16 +67,16 @@ module.exports = function(grunt) {
             less:   ['app/public/css/whathood-less.css']
         },
         watch: {
-            coffee: {
+            javascript: {
                 files: [
                   'src/coffee/**/*.coffee'
                 ],
-                tasks: ['coffee:compile']
+                tasks: ['javascript']
             },
-            less: {
+            css: {
                 files: [
                   'src/less/**/*.less' ],
-                tasks: ['less']
+                tasks: ['css']
             }
         },
         cssmin: {
@@ -102,5 +102,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default',['coffee:compile','less', 'watch']);
+
+    // setup foreman
+    grunt.loadNpmTasks("grunt-foreman");
+    grunt.registerTask("serve", "foreman");
+
+    grunt.registerTask('javascript', ['coffee:compile', 'uglify']);
+    grunt.registerTask('css', ['less']);
+
 };
