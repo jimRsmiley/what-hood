@@ -35,6 +35,7 @@ module.exports = function(grunt) {
                 'libs/javascript/spin.min.js',
                 'libs/javascript/leaflet.spin.js',
                 'libs/javascript/leaflet.draw.js',
+                'libs/Leaflet.markercluster/dist/leaflet.markercluster.js',
                 'libs/javascript/whathood.js',
                 'app/public/js/whathood/whathood-compiled.js',
                 'app/public/js/whathood/WhathoodReact.js'
