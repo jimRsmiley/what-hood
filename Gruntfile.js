@@ -31,14 +31,15 @@ module.exports = function(grunt) {
               sourceMapName : 'app/public/js/whathoodSourceMap.map'
             },
             files : {
-                'app/public/js/bundle.js' : [
-                  'libs/javascript/spin.min.js',
-                  'libs/javascript/whathood.js',
-                  'app/public/js/whathood/whathood-compiled.js',
-                  'app/public/js/whathood/WhathoodReact.js'
-                ]
+              'app/public/js/bundle.js' : [
+                'libs/javascript/spin.min.js',
+                'libs/javascript/leaflet.spin.js',
+                'libs/javascript/whathood.js',
+                'app/public/js/whathood/whathood-compiled.js',
+                'app/public/js/whathood/WhathoodReact.js'
+              ]
             }
-            }
+          }
         },
         less: {
             development: {
