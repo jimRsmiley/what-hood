@@ -18,6 +18,7 @@ whathood.js
 /app/draft
 /app/draft/
 /app/public/js/whathood/
+/app/public/js/bundle.js
 /app/data/DoctrineORMModule
 composer.lock
 composer.phar
