@@ -33,3 +33,4 @@ composer.phar
 *.symlink
 *.swp
 Module.php
+app/public/js/whathoodSourceMap.map
