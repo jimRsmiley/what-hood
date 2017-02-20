@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             files : {
                 'app/public/js/bundle.js' : [
                   'libs/javascript/spin.min.js',
-                  'app/public/js/whathood/whathood.js',
+                  'libs/javascript/whathood.js',
                   'app/public/js/whathood/whathood-compiled.js',
                   'app/public/js/whathood/WhathoodReact.js'
                 ]
