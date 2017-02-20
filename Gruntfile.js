@@ -52,7 +52,13 @@ module.exports = function(grunt) {
         less: {
             development: {
                 files: {
-                  "app/public/css/whathood-less.css": [ "src/less/whathood.less" ]
+                  "app/public/css/whathood.css": [
+                      'libs/javascript/leaflet-draw/css/leaflet.draw.css',
+                      'libs/javascript/DataTables-1.10.8/media/css/jquery.dataTables.css',
+                      'libs/javascript/Leaflet.markercluster/dist/MarkerCluster.css',
+                      'libs/javascript/Leaflet.markercluster/dist/MarkerCluster.Default.css',
+                      "src/less/whathood.less"
+                  ]
                 }
             }
         },
