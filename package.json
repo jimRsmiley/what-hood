@@ -1,18 +1,17 @@
 {
   "name": "whathood",
   "version": "0.1.0",
-  "license" : "MIT",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/whathood/whathood.git"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whathood/whathood.git"
   },
-  "devDependencies": {
-    "angular": "^1.4.8",
-    "angular-route": "^1.4.8",
+  "dependencies": {
     "grunt": "*",
     "grunt-contrib-clean": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-contrib-less": "*"
+    "grunt-contrib-cssmin": "^2.0.0",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-watch": "*"
   }
 }
