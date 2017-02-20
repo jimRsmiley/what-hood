@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         less: {
             development: {
                 files: {
-                  "app/public/css/whathood.css": [
+                  "app/public/whathood.css": [
                       'libs/javascript/leaflet-draw/css/leaflet.draw.css',
                       'libs/javascript/DataTables-1.10.8/media/css/jquery.dataTables.css',
                       'libs/javascript/Leaflet.markercluster/dist/MarkerCluster.css',

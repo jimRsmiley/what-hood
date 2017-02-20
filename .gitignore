@@ -3,8 +3,10 @@ docs/phpdoc
 whathood.yml
 Gemfile.lock
 application_env
-app/public/css/
-whathood.js
+app/public/whathood.css
+app/public/js/whathood.css
+
+# shortcuts
 /test
 /data
 /module.config.php
