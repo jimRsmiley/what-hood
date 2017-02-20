@@ -1,6 +1,7 @@
 {
   "name": "whathood",
   "version": "0.1.0",
+  "license" : "MIT",
   "devDependencies": {
     "angular": "^1.4.8",
     "angular-route": "^1.4.8",
