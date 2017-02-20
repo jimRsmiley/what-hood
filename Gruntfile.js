@@ -28,10 +28,11 @@ module.exports = function(grunt) {
           my_target : {
             options : {
               sourceMap : true,
-              sourceMapName : 'sourceMap.map'
+              sourceMapName : 'app/public/js/whathoodSourceMap.map'
             },
             files : {
                 'app/public/js/bundle.js' : [
+                  'libs/javascript/spin.min.js',
                   'app/public/js/whathood/whathood.js',
                   'app/public/js/whathood/whathood-compiled.js',
                   'app/public/js/whathood/WhathoodReact.js'
