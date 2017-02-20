@@ -60,18 +60,6 @@ module.exports = function(grunt) {
             coffee: ['app/public/js/whathood/whathood-compiled.js'],
             less:   ['app/public/css/whathood-less.css']
         },
-        'angular-builder': {
-            options: {
-                mainModule: 'myApp'
-            },
-            app: {
-                src: [
-                    'app/public/app/**/*.js',
-                    'node_modules/angular-route/**/*.js'
-                ],
-                dest: 'app/public/js/whathood/whathood-angular.js'
-            } 
-        },
         watch: {
             coffee: {
                 files: [
@@ -84,6 +72,19 @@ module.exports = function(grunt) {
                   'src/less/**/*.less' ],
                 tasks: ['less']
             }
+        },
+        cssmin: {
+          options: {
+            mergeIntoShorthands: false,
+            roundingPrecision: -1
+          },
+          target: {
+            files: {
+              'app/public/css/whathood.css': [
+                'libs/javascript/**/*.css',
+              ]
+            }
+          }
         }
     });
 
@@ -93,6 +94,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-angular-builder');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     grunt.registerTask('default',['coffee:compile','less', 'watch']);
 };
