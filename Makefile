@@ -1,19 +1,27 @@
-SRC_DIR="/var/www/whathood"
+GRUNT_BIN="./bin/grunt"
 
+all: javascript
 
-all: grunt
+javascript:
+	$(GRUNT_BIN) javascript
+
+coffee:
+	$(GRUNT_BIN) coffee
 
 grunt:
-	$(SRC_DIR)/bin/node_install.rb
-	grunt coffee
+	$(GRUNT_BIN) coffee
 
-clean-grunt:
-	rm -rf /var/www/whathood/node_modules
-	rm -rf /var/www/whathood/app/public/js/whathood/whathood-compiled.js
+clean: clean-build clean-node-modules
 
-clean: clean-grunt
-	rm -rf /opt/whathood/*
-	rm -rf /var/www/whathood/node_modules
+clean-public:
+	rm -rf app/public/js/*
+	rm -rf app/public/*.css
+
+clean-node-modules:
+	rm -rf ./node_modules
+
+clean-build:
+	rm -rf ./build
 
 test: phpunit
 

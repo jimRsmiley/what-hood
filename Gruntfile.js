@@ -122,17 +122,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-angular-builder');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-babel');
-    grunt.loadNpmTasks('grunt-babel');
-
-
-    // setup foreman
     grunt.loadNpmTasks("grunt-foreman");
+
     grunt.registerTask("serve", "foreman");
     grunt.registerTask('css', ['less']);
-
     grunt.registerTask('javascript', ['uglify:vendors', 'babel', 'coffee:compile', 'uglify:whathood']);
 };
