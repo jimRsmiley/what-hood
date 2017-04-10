@@ -1,6 +1,6 @@
 'use strict'
 
-myApp = angular.module 'myApp', []
+myApp = angular.module 'myApp', ['ngRoute']
 
 myApp.controller 'WhathoodNeighborhoodController', [ () ->
   window.Whathood.neighborhood_polygon_show();

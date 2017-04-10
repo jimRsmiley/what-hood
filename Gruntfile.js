@@ -1,9 +1,26 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        BUILD_DIR: "./build/js",
+        DIST_DIR: "app/public/js",
+        babel: {
+            options: {
+                plugins: ['transform-react-jsx'], // npm install babel-plugin-transform-react-jsx
+                presets: ['es2015', 'react'] // npm install babel-preset-es2015 babel-preset-react
+            },
+            jsx: {
+                      files: [{
+                                expand: true,
+                                cwd: 'libs/react/',
+                                src: ['*.jsx'],
+                                dest: 'build/react/',
+                                ext: '.js'
+                              }]
+            }
+        },
         coffee: {
             compile: {
                 files: {
-                  'app/public/js/whathood/whathood-compiled.js': [
+                  '<%= BUILD_DIR %>/whathood-compiled.js': [
                     // always first
                     'src/coffee/whathood.coffee',
                     // classes
@@ -25,13 +42,9 @@ module.exports = function(grunt) {
             }
         },
         uglify: {
-          my_target : {
-            options : {
-              sourceMap : true,
-              sourceMapName : 'app/public/js/whathoodSourceMap.map'
-            },
+          vendors : {
             files : {
-              'app/public/js/bundle.js' : [
+              '<%= DIST_DIR %>/vendors.js' : [
                 'libs/javascript/spin.min.js',
                 'libs/javascript/leaflet.spin.js',
                 'libs/javascript/leaflet.draw.js',
@@ -42,9 +55,20 @@ module.exports = function(grunt) {
                 'libs/javascript/heatmap.min.js',
                 'libs/javascript/leaflet-heatmap.js',
                 'libs/javascript/DataTables-1.10.8/media/js/jquery.dataTables.js',
+              ]
+            }
+          },
+          whathood : {
+            options : {
+              sourceMap : true,
+              sourceMapName : 'app/public/js/sourcemap/whathood.map'
+            },
+            files : {
+              '<%= DIST_DIR %>/bundle.js' : [
                 'libs/javascript/whathood.js',
-                'app/public/js/whathood/whathood-compiled.js',
-                'app/public/js/whathood/WhathoodReact.js'
+                '<%= BUILD_DIR %>/whathood-compiled.js',
+                '<%= BUILD_DIR %>/../react/WhathoodReact.js',
+                'libs/javascript/whathood.js'
               ]
             }
           }
@@ -101,13 +125,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-angular-builder');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-babel');
 
 
     // setup foreman
     grunt.loadNpmTasks("grunt-foreman");
     grunt.registerTask("serve", "foreman");
-
-    grunt.registerTask('javascript', ['coffee:compile', 'uglify']);
     grunt.registerTask('css', ['less']);
 
+    grunt.registerTask('javascript', ['uglify:vendors', 'babel', 'coffee:compile', 'uglify:whathood']);
 };

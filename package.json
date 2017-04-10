@@ -13,6 +13,21 @@
     "grunt-contrib-cssmin": "^2.0.0",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",
-    "grunt-foreman": "0.0.10"
+    "grunt-foreman": "0.0.10",
+    "webpack": "*",
+    "jsx-loader": "*",
+    "react": "*",
+    "cjsx-loader": "*",
+    "coffee-loader": "*"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-cssmin": "^2.0.0",
+    "grunt-contrib-uglify": "^2.3.0",
+    "grunt-foreman": "0.0.10",
+    "grunt-jsx": "^0.1.8"
   }
 }
