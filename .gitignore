@@ -4,8 +4,8 @@ whathood.yml
 Gemfile.lock
 application_env
 app/public/whathood.css
-app/public/js/whathood.css
-
+app/public/js/
+build/
 # shortcuts
 /test
 /data
