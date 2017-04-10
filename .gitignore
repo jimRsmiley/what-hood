@@ -16,11 +16,6 @@ app/public/js/whathood.css
 /app/node_modules/
 /W
 /app/vendor
-/app/public/test
-/app/draft
-/app/draft/
-/app/public/js/whathood/
-/app/public/js/bundle.js
 /app/data/DoctrineORMModule
 composer.lock
 composer.phar
@@ -35,4 +30,3 @@ composer.phar
 *.symlink
 *.swp
 Module.php
-app/public/js/whathoodSourceMap.map
