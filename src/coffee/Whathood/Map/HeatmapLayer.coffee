@@ -2,17 +2,17 @@
 #
 class Whathood.Map.HeatmapLayer extends HeatmapOverlay
 
-  # return the heatmap config
-  heatmap_cfg: () ->
-    radius: .0017
-    scaleRadius: true
-    "maxOpacity": .65
-    latField: 'y'
-    lngField: 'x'
-    valueField: 'weight'
 
   constructor: () ->
-    super @heatmap_cfg()
+    heatmap_cfg =
+        radius: .0017
+        scaleRadius: true
+        "maxOpacity": .65
+        latField: 'y'
+        lngField: 'x'
+        valueField: 'weight'
+
+    super(heatmap_cfg)
 
   buildData: (neighborhood_id, callback) ->
     throw new Error "neighborhood_id must be defined" unless neighborhood_id
