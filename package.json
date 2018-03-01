@@ -17,7 +17,7 @@
     "grunt-contrib-coffee": "*",
     "grunt-contrib-cssmin": "^2.0.0",
     "grunt-contrib-less": "*",
-    "grunt-contrib-uglify": "^2.3.0",
+    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "*",
     "grunt-foreman": "0.0.10"
   }
