@@ -17,7 +17,6 @@ build/
 /W
 /app/vendor
 /app/data/DoctrineORMModule
-composer.lock
 composer.phar
 ._*
 .~lock.*
