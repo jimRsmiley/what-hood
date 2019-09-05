@@ -28,13 +28,6 @@ test: phpunit
 phpunit:
 	phpunit -c app/module/Whathood/test
 
-composer-install:
-	@mkdir --parent /var/tmp/composer
-	@sudo docker run \
-		-v `pwd`/app:/srv \
-		-v /var/tmp/composer:/root/.composer \
-		whathood/composer install
-
 composer-dumpautoload:
 	@mkdir --parent /var/tmp/composer
 	@sudo docker run \
