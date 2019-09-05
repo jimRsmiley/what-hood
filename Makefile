@@ -11,7 +11,10 @@ coffee:
 grunt:
 	$(GRUNT_BIN) coffee
 
-clean: clean-build clean-node-modules
+clean: clean-build clean-node-modules clean-vendor
+
+clean-vendor:
+	rm -rf app/vendor
 
 clean-public:
 	rm -rf app/public/js/*
