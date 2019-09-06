@@ -1,28 +1,20 @@
 <?php
-/**
- * This makes our life easier when dealing with paths. Everything is relative
- * to the application root now.
- */
+
+date_default_timezone_set('America/New_York');
 
 // Report all PHP errors (see changelog)
 error_reporting(E_ALL);
 
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
 $APP_ROOT = dirname(__DIR__);
 chdir($APP_ROOT);
 
 putenv("APPLICATION_ROOT=$APP_ROOT");
 
-$app_env_file = "../application_env";
-
-if (file_exists($app_env_file)) {
-    $application_env = trim(file_get_contents("../application_env"));
-}
-else {
-    // assume it's production
-    $application_env = 'production';
-}
-
-putenv("APPLICATION_ENV=$application_env");
+$application_env = getenv('APPLICATION_ENV');
 
 if ($application_env == 'development') {
     ini_set("display_errors",'On');

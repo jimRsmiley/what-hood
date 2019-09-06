@@ -1,4 +1,7 @@
 <?php
+
+$application_env = $_SERVER['APPLICATION_ENV'];
+
 $modules = array(
     'DoctrineModule',
     'DoctrineORMModule',
@@ -9,8 +12,13 @@ $modules = array(
 	'SamUser',
     'SlmQueue',
     'SlmQueueDoctrine',
-    'Whathood'
+    'Whathood',
 );
+
+if ('development' == $application_env) {
+    // put developer tools at the beginning of the modules to load
+    array_unshift($modules, 'ZendDeveloperTools');
+}
 
 return array(
     'listeners' => array(
@@ -35,6 +43,7 @@ return array(
         // modules are loaded. These effectively overide configuration
         // provided by modules themselves. Paths may use GLOB_BRACE notation.
         'config_glob_paths' => array(
+            'config/autoload/*.local.php',
             'config/autoload/whathood.db.php',
             'config/autoload/*.global.php'
         ),

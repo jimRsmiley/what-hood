@@ -1,3 +1,5 @@
+--ignore-dir=volumes
+--ignore-dir=.composer
 --ignore-dir=docs
 --ignore-dir=app/vendor
 --ignore-dir=app/public/js/sourcemap
