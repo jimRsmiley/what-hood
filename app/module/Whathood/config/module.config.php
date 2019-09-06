@@ -660,14 +660,18 @@ return array(
             },
 
             'Whathood\Logger' => function($sm) {
+                $logger = new \Whathood\Logger;
                 $config = $sm->get('Whathood\Config');
+                $filter = new \Zend\Log\Filter\Priority(Logger::INFO);
 
                 $file_writer = new \Zend\Log\Writer\Stream($config->log_file);
-
-                $filter = new \Zend\Log\Filter\Priority(Logger::INFO);
                 $file_writer->addFilter($filter);
-                $logger = new \Whathood\Logger;
+
+                $console_writer = new \Zend\Log\Writer\Stream('php://output');
+                $console_writer->addFilter($filter);
+                
                 $logger->addWriter($file_writer);
+                //$logger->addWriter($console_writer);
 
                 // DO NOT THINK THIS IS WORKING register the logger to handle php errors
                 #\Zend\Log\Logger::registerErrorHandler($logger);
