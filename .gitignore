@@ -1,3 +1,4 @@
+log/
 .composer/
 app/module/Whathood/test/data/DoctrineORMModule
 docs/phpdoc
