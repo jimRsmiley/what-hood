@@ -9,9 +9,9 @@ return array(
                     'host'     =>  (getenv('PGHOST') ? getenv('PGHOST') : 'postgres'),
                     'port'     => '5432',
                     'dbname'   => 'whathood',
-                    'user'     => 'docker',
+                    'user'     => 'whathood',
                     # we don't allow remote sql connections
-                    'password' => null
+                    'password' => 'whathood'
                 ),
                 'doctrine_type_mappings' => array(
                     'geometry' => 'geometry',

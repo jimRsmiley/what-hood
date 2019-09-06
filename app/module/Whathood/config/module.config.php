@@ -26,8 +26,8 @@ return array(
                     'route'    => '/',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Whathood\Controller',
-                        'controller'    => 'Region',
-                        'action'        => 'show',
+                        'controller'    => 'Index',
+                        'action'        => 'index',
                     ),
                 ),
                 'may_terminate' => true,
