@@ -11,9 +11,7 @@ use Zend\View\Model\ViewModel;
 class IndexController extends BaseController {
 
     public function indexAction() {
-        $regions = $this->regionMapper()->fetchDistinctRegionNames();
-
-        return new ViewModel( array( 'regionNames' => $regions ) );
+        return new ViewModel();
 	}
 
     public function navigationAction() {
@@ -22,11 +20,6 @@ class IndexController extends BaseController {
 
     public function aboutAction() {
         return new ViewModel();
-    }
-
-    public function testExceptionLoggingAction() {
-        throw new \Exception(
-            'this is a test in IndexController\testExceptionLogging');
     }
 }
 
