@@ -10,7 +10,6 @@ return array(
                     'port'     => '5432',
                     'dbname'   => 'whathood',
                     'user'     => 'whathood',
-                    # we don't allow remote sql connections
                     'password' => 'whathood'
                 ),
                 'doctrine_type_mappings' => array(

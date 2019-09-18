@@ -1,6 +1,6 @@
-DROP FUNCTION IF EXISTS whathood.latest_neighborhoods_geojson( test_region_id integer );
+DROP FUNCTION IF EXISTS latest_neighborhoods_geojson( test_region_id integer );
 
-CREATE OR REPLACE FUNCTION whathood.latest_neighborhoods_geojson( test_region_id integer )
+CREATE OR REPLACE FUNCTION latest_neighborhoods_geojson( test_region_id integer )
 RETURNS varchar
 AS
 $BODY$
