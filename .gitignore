@@ -1,3 +1,4 @@
+volumes/postgres/data
 log/
 .composer/
 app/module/Whathood/test/data/DoctrineORMModule
