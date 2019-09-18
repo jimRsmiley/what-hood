@@ -11,10 +11,6 @@ location.
 
 The system works by allowing web visitors to draw their own understanding of a neighborhood's borders and aggregates all of those borders together into one neighborhood border.
 
-### See Also
-
-[Development Docs](docs/DEVELOPMENT_DOCS.md)
-
 ### License (MIT)
 
     Copyright (c) 2014 James Smiley
