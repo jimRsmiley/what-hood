@@ -82,7 +82,7 @@ class NeighborhoodBoundaryMapper extends BaseMapper {
     }
 
     private function getBoundaryAsGeoJsonFromDb(Region $region) {
-        $sql = "SELECT whathood.latest_neighborhoods_geojson(:regionId) as geojson";
+        $sql = "SELECT latest_neighborhoods_geojson(:regionId) as geojson";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('geojson', 'geojson');
